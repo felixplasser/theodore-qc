@@ -1,0 +1,8 @@
+Pyrrole computed at the ADC(2)/cc-pVDZ level with Q-Chem
+
+Omega/dens_ana.in.OmAt  - test OmAt construction from libwfa
+Omega/dens_ana.in.parse - test parsing of libwfa output
+
+dens_ana.in.nos - test analysis from NO files
+   This should yield the same as dens_ana.in.parse.
+   The accuracy is about 0.01 because of the cutoff used for NO file print-out

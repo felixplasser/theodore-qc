@@ -1,0 +1,25 @@
+$molecule
+  read coord.qchem
+$end
+
+$rem
+jobtype         sp
+method          adc(2)
+ee_singlets     [1,2,1,0]
+ee_triplets	[1,2,0,1]
+adc_nguess_singles 3
+adc_prop_es     true
+adc_print       3
+adc_davidson_conv       5
+adc_davidson_maxsubspace 50
+mem_total	 64000
+mem_static      1000
+cc_symmetry     true
+basis           cc-pVDZ
+n_frozen_core   fc
+adc_state_analysis true
+make_cube_files false
+molden_format   true
+nto_pairs       5
+$end
+

@@ -1,0 +1,14 @@
+rtype='ricc2'
+rfile='ricc2.out'
+mo_file='molden.input'
+coor_file='coord'
+coor_format='tmol'
+at_lists=[[1, 3, 5, 7],[2, 4, 6, 8]]
+comp_ntos=True
+jmol_orbitals=True
+coor_file='coord'
+coor_format='tmol'
+prop_list=['Om', 'CT', 'COH', 'COHh', 'PRNTO', 'RMSeh']
+output_file='tden_summ.txt.ricc2'
+molden_orbitals=True
+mcfmt='% .5f'

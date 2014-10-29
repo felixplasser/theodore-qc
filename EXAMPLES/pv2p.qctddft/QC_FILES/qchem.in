@@ -1,0 +1,22 @@
+$molecule
+ read coord.qchem
+$end
+
+$rem
+jobtyp		sp
+exchange	B3LYP
+basis		VDZ*
+mem_total	 16000
+mem_static	5000
+cis_n_roots	4
+cis_singlets	true
+cis_triplets	false
+cistr_print	true
+cis_ampl_print	1
+rpa		true
+cis_ampl_anal	true
+nto_pairs	5
+print_orbitals	500
+molden_format	true
+$end
+

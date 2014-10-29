@@ -1,0 +1,3460 @@
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+
+ Q-Chem 4.2, Q-Chem, Inc., Pleasanton, CA (2014).
+
+ Y. Shao,  Z. Gan,  E. Epifanovsky,  A. T. B. Gilbert,  M. Wormit,  
+ J. Kussmann,  A. W. Lange,  A. Behn,  J. Deng,  X. Feng,  D. Ghosh,  
+ M. Goldey,  P. R. Horn,  L. D. Jacobson,  I. Kaliman,  R. Z. Khaliullin,  
+ T. Kus,  A. Landau,  J. Liu,  E. I. Proynov,  Y. M. Rhee,  R. M. Richard,  
+ M. A. Rohrdanz,  R. P. Steele,  E. J. Sundstrom,  H. L. Woodcock III,  
+ P. M. Zimmerman,  D. Zuev,  B. Albrecht,  E. Alguire,  B. Austin,  
+ G. J. O. Beran,  Y. A. Bernard,  E. Berquist,  K. Brandhorst,  
+ K. B. Bravaya,  S. T. Brown,  D. Casanova,  C.-M. Chang,  Y. Chen,  
+ S. H. Chien,  K. D. Closser,  D. L. Crittenden,  M. Diedenhofen,  
+ R. A. DiStasio Jr.,  H. Do,  A. D. Dutoi,  R. G. Edgar,  S. Fatehi,  
+ L. Fusti-Molnar,  A. Ghysels,  A. Golubeva-Zadorozhnaya,  J. Gomes,  
+ M. W. D. Hanson-Heine,  P. H. P. Harbach,  A. W. Hauser,  E. G. Hohenstein,  
+ Z. C. Holden,  T.-C. Jagau,  H. Ji,  B. Kaduk,  K. Khistyaev,  Jaehoon Kim,  
+ Jihan Kim,  R. A. King,  P. Klunzinger,  D. Kosenkov,  T. Kowalczyk,  
+ C. M. Krauter,  K. U. Lao,  A. Laurent,  K. V. Lawler,  S. V. Levchenko,  
+ C. Y. Lin,  F. Liu,  E. Livshits,  R. C. Lochan,  A. Luenser,  P. Manohar,  
+ S. F. Manzer,  S.-P. Mao,  N. Mardirossian,  A. V. Marenich,  S. A. Maurer,  
+ N. J. Mayhall,  C. M. Oana,  R. Olivares-Amaya,  D. P. O'Neill,  
+ J. A. Parkhill,  T. M. Perrine,  R. Peverati,  P. A. Pieniazek,  A. Prociuk,  
+ D. R. Rehn,  E. Rosta,  N. J. Russ,  N. Sergueev,  S. M. Sharada,  
+ S. Sharma,  D. W. Small,  A. Sodt,  T. Stein,  D. Stuck,  Y.-C. Su,  
+ A. J. W. Thom,  T. Tsuchimochi,  L. Vogt,  O. Vydrov,  T. Wang,  
+ M. A. Watson,  J. Wenzel,  A. White,  C. F. Williams,  V. Vanovschi,  
+ S. Yeganeh,  S. R. Yost,  Z.-Q. You,  I. Y. Zhang,  X. Zhang,  Y. Zhao,  
+ B. R. Brooks,  G. K. L. Chan,  D. M. Chipman,  C. J. Cramer,  
+ W. A. Goddard III,  M. S. Gordon,  W. J. Hehre,  A. Klamt,  
+ H. F. Schaefer III,  M. W. Schmidt,  C. D. Sherrill,  D. G. Truhlar,  
+ A. Warshel,  X. Xu,  A. Aspuru-Guzik,  R. Baer,  A. T. Bell,  N. A. Besley,  
+ J.-D. Chai,  A. Dreuw,  B. D. Dunietz,  T. R. Furlani,  S. R. Gwaltney,  
+ C.-P. Hsu,  Y. Jung,  J. Kong,  D. S. Lambrecht,  W. Liang,  C. Ochsenfeld,  
+ V. A. Rassolov,  L. V. Slipchenko,  J. E. Subotnik,  T. Van Voorhis,  
+ J. M. Herbert,  A. I. Krylov,  P. M. W. Gill,  M. Head-Gordon
+
+ Contributors to earlier versions of Q-Chem not listed above: 
+ R. D. Adamson,  J. Baker,  E. F. C. Byrd,  A. K. Chakraborty,  C.-L. Cheng,  
+ H. Dachsel,  R. J. Doerksen,  G. Hawkins,  A. Heyden,  S. Hirata,  
+ G. Kedziora,  F. J. Keil,  C. Kelley,  P. P. Korambath,  W. Kurlancheek,  
+ A. M. Lee,  M. S. Lee,  D. Liotard,  I. Lotan,  P. E. Maslen,  N. Nair,  
+ D. Neuhauser,  R. Olson,  B. Peters,  J. Ritchie,  N. E. Schultz,  
+ N. Shenvi,  A. C. Simmonett,  K. S. Thanthiriwatte,  Q. Wu,  W. Zhang
+
+ Q-Chem 4.2.0 for Intel X86 EM64T Linux
+
+ Parts of Q-Chem use Armadillo 4.100.2 (Dirt Cruiser).
+ http://arma.sourceforge.net/
+
+ Q-Chem begins on Fri Oct 24 08:40:20 2014  
+
+
+Host: 0
+
+     Scratch files written to /scratch/fplasser/128290.Meister/SAVEDIR//
+ Oct2314 |export|data|fplasser|programs|QChem|qchem_svn.heidelberg|libmdc|qstr_info.C -1
+Checking the input file for consistency...	...done.
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$molecule
+ read coord.qchem
+$end
+
+$rem
+jobtyp		sp
+exchange	omegaB97
+ecp		lanl2dz
+basis		gen
+mem_total	 64000
+mem_static	1500
+cis_n_roots	6
+cis_singlets	true
+cis_triplets	false
+rpa		true
+cis_ampl_anal	true
+nto_pairs	3
+cis_ampl_print  1
+$end
+
+$basis
+   Ir
+   lanl2dz
+****
+   C
+   6-31G*
+****
+   N
+   6-31G*
+****
+   H
+   6-31G*
+$end
+--------------------------------------------------------------
+ ----------------------------------------------------------------
+             Standard Nuclear Orientation (Angstroms)
+    I     Atom           X                Y                Z
+ ----------------------------------------------------------------
+    1      Ir     -0.0000004232     0.0000000051    -0.0210067683
+    2      N      -0.9707419154    -1.5162385384     1.1004330703
+    3      N       1.7984718046    -0.0825675371     1.1004335365
+    4      C       0.5004741496     1.5913383386    -1.1012966867
+    5      C      -1.6283810760    -0.3622448495    -1.1012970434
+    6      C      -2.0824114043    -1.9292059357     0.5781128829
+    7      C      -2.4826022069    -1.3246650391    -0.6441771861
+    8      N      -0.8277317288     1.5988060975     1.1004330883
+    9      C       1.1279062056    -1.2290934805    -1.1012965748
+   10      C      -0.6295384283     2.7680232315     0.5781131195
+   11      C       0.0941122870     2.8123268449    -0.6441767580
+   12      C       2.7119482584    -0.8388172771     0.5781136928
+   13      C       2.3884989661    -1.4876619138    -0.6441763607
+   14      H      -1.8769715889     0.1300181146    -2.0424970865
+   15      H      -3.3931097751    -1.6322965673    -1.1468373397
+   16      H      -2.6707034301    -2.7081779337     1.0636927848
+   17      H      -1.0099930187     3.6669894846     1.0636930532
+   18      H       0.2829463015     3.7546695485    -1.1468367280
+   19      H       1.0510852878     1.5604924864    -2.0424965934
+   20      H       3.1101627759    -2.1223729728    -1.1468362372
+   21      H       0.8258860586    -1.6905105981    -2.0424966250
+   22      H       3.6807046272    -0.9588116485     1.0636938571
+   23      H      -0.6907700460    -1.9574825231     1.9659431187
+   24      H      -1.3498398088     1.5769679016     1.9659429999
+   25      H       2.0406075755     0.3805146487     1.9659435766
+ ----------------------------------------------------------------
+ Molecular Point Group                 C1    NOp =  1
+ Largest Abelian Subgroup              C1    NOp =  1
+ Nuclear Repulsion Energy =   938.8130180101 hartrees
+ There are       52 alpha and       52 beta electrons
+
+ Q-Chem warning in module /export/data/fplasser/programs/QChem/qchem_svn.heidelberg/forms1/BasisType.C, line 1209:
+
+ Setting pure/cartesian flag to 2111 for general basis
+
+
+ Requested basis set is non-standard
+ There are 80 shells and 214 basis functions
+
+Total QAlloc Memory Limit  64000 MB
+Mega-Array Size      1467 MB
+MEM_STATIC part      1500 MB
+ A cutoff of  1.0D-11 yielded   2709 shell pairs
+ There are     20478 function pairs (     23118 Cartesian)
+ Requested basis set is non-standard
+ Compound shells will be simplified
+Warning: Basis Set and ECP do not match
+ There are 104 shells and 214 basis functions
+ A cutoff of  1.0D-11 yielded   4746 shell pairs
+ There are     20406 function pairs (     23046 Cartesian)
+ Smallest overlap matrix eigenvalue = 1.29E-03
+
+  Scale SEOQF with 1.000000e-01/1.000000e-01/1.000000e-01
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =     0.0000000177 hartrees
+ Guess MOs from core Hamiltonian diagonalization
+ Long-range K will be added via erf
+ Coulomb attenuation parameter = 0.4 bohr**(-1)
+ A restricted Kohn-Sham SCF calculation will be
+ performed using Pulay DIIS extrapolation
+ Exchange:  wB97 + LR-HF      Correlation:  wB97
+ Using SG-1 standard quadrature grid
+ SCF converges when DIIS error is below 1.0E-08
+ using 4 threads for integral computing 
+
+ -------------------------------------------------------
+ OpenMP Integral Computing Module                       
+ Release: version 1.0, May 2013, Q-Chem Inc. Pittsburgh 
+ -------------------------------------------------------
+ Integral Job Info:
+ Integral job number is                      20
+ Integral operator is                         1
+ short-range coefficients               -999999
+ long-range coefficients                -999999
+ Omega coefficients                         400
+ if combine SR and LR in K              -999999
+ Integral screening is                        1
+ Integral computing path is                   2
+ max size of driver memory is            800000
+ size of driver memory is                593606
+ size of scratch memory is               997080
+ max col of scratch BK array               1296
+ max len of scratch array in speh3          155
+ max len of scratch index in speh4           18
+ max int batch size is                       50
+ min int batch size is                       15
+ fixed nKL is                                15
+ max L of basis functions is                  2
+ order of int derivative is                   0
+ number of shells is                         80
+ number of basis is                         228
+ number of cartesian basis is               228
+ number of contracted shell pairs          2709
+ number of primitive shell pairs           9761
+ maxK2 (contraction) of shell pair           36
+ max number of K2 of shell pair               1
+ max number of CS2 of shell pair            321
+ max number of PS2 of shell pair           1116
+ mem total for path MDJ                   54904
+ -------------------------------------------------------
+         cpu   3.21 wall   0.80
+ using 4 threads for integral computing 
+         cpu   7.90 wall   1.98
+ K construction time:  CPU 7.96 s  wall 2.02 s
+ -------------------------------------------------------
+ OpenMP BLAS3 based DFT computing Module                
+ Release: version 1.0, May 2013, Q-Chem Inc. Pittsburgh 
+ -------------------------------------------------------
+in dftxc.C, eleTot sum is:104.000370, tauTot is:0.000000
+ ---------------------------------------
+  Cycle       Energy         DIIS Error
+ ---------------------------------------
+    1    -508.0176867012      9.19E-02
+         cpu   3.16 wall   0.79
+         cpu   7.80 wall   1.95
+ K construction time:  CPU 7.86 s  wall 1.99 s
+in dftxc.C, eleTot sum is:103.995579, tauTot is:0.000000
+    2    -367.5498364939      1.05E-01
+         cpu   3.17 wall   0.79
+         cpu   7.86 wall   1.97
+ K construction time:  CPU 7.91 s  wall 2.01 s
+in dftxc.C, eleTot sum is:103.998671, tauTot is:0.000000
+    3    -591.2433183452      5.30E-02
+         cpu   3.13 wall   0.78
+         cpu   7.70 wall   1.93
+ K construction time:  CPU 7.75 s  wall 1.96 s
+in dftxc.C, eleTot sum is:104.000108, tauTot is:0.000000
+    4    -611.9070801673      3.23E-02
+         cpu   3.09 wall   0.77
+         cpu   7.58 wall   1.89
+ K construction time:  CPU 7.63 s  wall 1.94 s
+in dftxc.C, eleTot sum is:104.000092, tauTot is:0.000000
+    5    -617.1997452510      1.70E-02
+         cpu   3.04 wall   0.76
+         cpu   7.45 wall   1.86
+ K construction time:  CPU 7.49 s  wall 1.90 s
+in dftxc.C, eleTot sum is:104.000282, tauTot is:0.000000
+    6    -618.5318489655      8.42E-03
+         cpu   2.98 wall   0.75
+         cpu   7.30 wall   1.82
+ K construction time:  CPU 7.35 s  wall 1.86 s
+in dftxc.C, eleTot sum is:104.000281, tauTot is:0.000000
+    7    -618.9204235393      1.22E-03
+         cpu   2.88 wall   0.72
+         cpu   6.99 wall   1.75
+ K construction time:  CPU 7.04 s  wall 1.79 s
+in dftxc.C, eleTot sum is:104.000303, tauTot is:0.000000
+    8    -618.9347982110      3.94E-04
+         cpu   2.76 wall   0.69
+         cpu   6.74 wall   1.68
+ K construction time:  CPU 6.79 s  wall 1.72 s
+in dftxc.C, eleTot sum is:104.000300, tauTot is:0.000000
+    9    -618.9370850740      3.74E-04
+         cpu   2.73 wall   0.68
+         cpu   6.66 wall   1.66
+ K construction time:  CPU 6.71 s  wall 1.71 s
+in dftxc.C, eleTot sum is:104.000303, tauTot is:0.000000
+   10    -618.9381455133      2.16E-04
+         cpu   2.67 wall   0.67
+         cpu   6.48 wall   1.62
+ K construction time:  CPU 6.54 s  wall 1.66 s
+in dftxc.C, eleTot sum is:104.000302, tauTot is:0.000000
+   11    -618.9384155764      8.65E-05
+         cpu   2.57 wall   0.64
+         cpu   6.26 wall   1.56
+ K construction time:  CPU 6.32 s  wall 1.61 s
+in dftxc.C, eleTot sum is:104.000301, tauTot is:0.000000
+   12    -618.9384620068      1.83E-05
+         cpu   2.43 wall   0.61
+         cpu   5.81 wall   1.45
+ K construction time:  CPU 5.87 s  wall 1.50 s
+in dftxc.C, eleTot sum is:104.000301, tauTot is:0.000000
+   13    -618.9384650223      5.81E-06
+         cpu   2.32 wall   0.58
+         cpu   5.58 wall   1.39
+ K construction time:  CPU 5.62 s  wall 1.43 s
+in dftxc.C, eleTot sum is:104.000301, tauTot is:0.000000
+   14    -618.9384656343      2.66E-06
+         cpu   2.26 wall   0.56
+         cpu   5.41 wall   1.35
+ K construction time:  CPU 5.46 s  wall 1.39 s
+in dftxc.C, eleTot sum is:104.000301, tauTot is:0.000000
+   15    -618.9384657820      6.93E-07
+         cpu   3.08 wall   0.77
+         cpu   7.56 wall   1.89
+ K construction time:  CPU 7.61 s  wall 1.93 s
+in dftxc.C, eleTot sum is:104.000301, tauTot is:0.000000
+   16    -618.9384657929      3.69E-07
+         cpu   1.94 wall   0.48
+         cpu   4.55 wall   1.14
+ K construction time:  CPU 4.60 s  wall 1.18 s
+in dftxc.C, eleTot sum is:104.000301, tauTot is:0.000000
+   17    -618.9384657950      1.04E-07
+         cpu   1.76 wall   0.44
+         cpu   4.04 wall   1.01
+ K construction time:  CPU 4.08 s  wall 1.04 s
+in dftxc.C, eleTot sum is:104.000301, tauTot is:0.000000
+   18    -618.9384657955      4.59E-08
+         cpu   1.59 wall   0.40
+         cpu   3.55 wall   0.89
+ K construction time:  CPU 3.60 s  wall 0.93 s
+in dftxc.C, eleTot sum is:104.000301, tauTot is:0.000000
+   19    -618.9384657954      2.06E-08
+         cpu   1.50 wall   0.37
+         cpu   3.25 wall   0.81
+ K construction time:  CPU 3.30 s  wall 0.85 s
+in dftxc.C, eleTot sum is:104.000301, tauTot is:0.000000
+   20    -618.9384657962      1.97E-08
+         cpu   1.36 wall   0.34
+         cpu   2.85 wall   0.71
+ K construction time:  CPU 2.90 s  wall 0.75 s
+in dftxc.C, eleTot sum is:104.000301, tauTot is:0.000000
+   21    -618.9384657963      5.56E-09 Convergence criterion met
+ ---------------------------------------
+ SCF time:  CPU 315.82 s  wall 85.79 s
+ SCF   energy in the final basis set = -618.9384657963
+ Total energy in the final basis set = -618.9384657963
+OV_DIM:  Setting MaxSz  = 180
+OV_DIM:  Setting MaxSpc = 180
+ Direct TDDFT/TDA calculation will be performed
+ Exchange:  wB97 + LR-HF      Correlation:  wB97
+ Using SG-1 standard quadrature grid
+ Singlet excitation energies requested
+ CIS energy converged when residual is below 10e- 6
+ ---------------------------------------------------
+ Iter    Rts Conv    Rts Left    Ttl Dev     Max Dev
+ ---------------------------------------------------
+   1         0           6      0.004748    0.001167
+   2         0           6      0.001991    0.000352
+   3         0           6      0.000862    0.000220
+   4         0           6      0.000486    0.000143
+   5         0           6      0.000450    0.000145
+   6         0           6      0.000354    0.000137
+   7         0           6      0.000489    0.000370
+   8         0           6      0.000211    0.000158
+   9         0           6      0.000089    0.000065
+  10         2           4      0.000040    0.000029
+  11         3           3      0.000016    0.000011
+  12         5           1      0.000008    0.000006
+  13         5           1      0.000005    0.000003
+  14         5           1      0.000004    0.000002
+  15         6           0      0.000003    0.000001    Roots Converged
+ ---------------------------------------------------
+
+
+ ---------------------------------------------------
+         TDDFT/TDA Excitation Energies              
+ ---------------------------------------------------
+
+ Excited state   1: excitation energy (eV) =    4.0482
+    Total energy for state   1:   -618.789696688019
+    Multiplicity: Singlet 
+    Trans. Mom.:  0.0035 X  -0.0031 Y  -0.5751 Z
+    Strength   :  0.0328
+    D( 36) --> V(  7) amplitude = -0.0177
+    D( 37) --> V(  8) amplitude =  0.0176
+    D( 41) --> V(  2) amplitude = -0.0234
+    D( 41) --> V(  8) amplitude =  0.0167
+    D( 42) --> V(  3) amplitude =  0.0234
+    D( 42) --> V(  7) amplitude =  0.0167
+    D( 43) --> V(  1) amplitude =  0.0428
+    D( 44) --> V(  2) amplitude = -0.0147
+    D( 44) --> V(  3) amplitude = -0.0272
+    D( 44) --> V(  8) amplitude =  0.0241
+    D( 45) --> V(  2) amplitude = -0.0271
+    D( 45) --> V(  3) amplitude =  0.0149
+    D( 45) --> V(  7) amplitude =  0.0242
+    D( 46) --> V(  1) amplitude =  0.1761
+    D( 46) --> V(  4) amplitude = -0.0196
+    D( 46) --> V(  9) amplitude = -0.0188
+    D( 46) --> V( 12) amplitude =  0.0252
+    D( 46) --> V( 25) amplitude =  0.0147
+    D( 47) --> V(  1) amplitude =  0.0306
+    D( 48) --> V(  2) amplitude =  0.0198
+    D( 48) --> V(  3) amplitude =  0.0743
+    D( 48) --> V( 11) amplitude = -0.0151
+    D( 49) --> V(  2) amplitude = -0.0752
+    D( 49) --> V(  3) amplitude =  0.0197
+    D( 49) --> V( 10) amplitude =  0.0152
+    D( 50) --> V(  2) amplitude =  0.1603
+    D( 50) --> V(  3) amplitude = -0.0428
+    D( 50) --> V(  5) amplitude =  0.0229
+    D( 50) --> V(  7) amplitude = -0.0161
+    D( 51) --> V(  2) amplitude =  0.0434
+    D( 51) --> V(  3) amplitude =  0.1585
+    D( 51) --> V(  6) amplitude = -0.0226
+    D( 51) --> V(  8) amplitude = -0.0160
+    D( 52) --> V(  1) amplitude =  0.9333
+    D( 52) --> V(  4) amplitude = -0.0870
+    D( 52) --> V( 12) amplitude =  0.0281
+    D( 52) --> V( 25) amplitude =  0.0300
+
+ Excited state   2: excitation energy (eV) =    4.1024
+    Total energy for state   2:   -618.787707174588
+    Multiplicity: Singlet 
+    Trans. Mom.: -0.1822 X   0.5441 Y  -0.0044 Z
+    Strength   :  0.0331
+    D( 32) --> V(  7) amplitude = -0.0162
+    D( 35) --> V(  2) amplitude =  0.0219
+    D( 36) --> V(  1) amplitude =  0.0242
+    D( 43) --> V(  2) amplitude =  0.0417
+    D( 44) --> V(  7) amplitude =  0.0224
+    D( 45) --> V(  1) amplitude = -0.0242
+    D( 45) --> V(  8) amplitude =  0.0225
+    D( 46) --> V(  2) amplitude =  0.1760
+    D( 46) --> V(  3) amplitude =  0.0202
+    D( 46) --> V(  5) amplitude =  0.0323
+    D( 46) --> V(  7) amplitude =  0.0170
+    D( 46) --> V(  8) amplitude = -0.0401
+    D( 46) --> V( 10) amplitude =  0.0321
+    D( 47) --> V(  2) amplitude =  0.0584
+    D( 47) --> V(  3) amplitude =  0.0351
+    D( 47) --> V(  8) amplitude = -0.0363
+    D( 48) --> V(  2) amplitude =  0.0199
+    D( 48) --> V(  3) amplitude =  0.0525
+    D( 49) --> V(  1) amplitude = -0.0226
+    D( 49) --> V(  2) amplitude =  0.0513
+    D( 49) --> V(  3) amplitude = -0.0197
+    D( 49) --> V( 12) amplitude =  0.0197
+    D( 50) --> V(  1) amplitude =  0.2227
+    D( 50) --> V(  2) amplitude = -0.1161
+    D( 50) --> V(  4) amplitude = -0.0237
+    D( 50) --> V(  5) amplitude = -0.0147
+    D( 51) --> V(  1) amplitude =  0.2312
+    D( 51) --> V(  3) amplitude =  0.1193
+    D( 51) --> V(  4) amplitude = -0.0218
+    D( 51) --> V(  6) amplitude = -0.0151
+    D( 51) --> V( 12) amplitude =  0.0173
+    D( 52) --> V(  2) amplitude =  0.8720
+    D( 52) --> V(  3) amplitude =  0.1250
+    D( 52) --> V(  5) amplitude =  0.1056
+    D( 52) --> V(  7) amplitude =  0.0364
+    D( 52) --> V(  8) amplitude = -0.0957
+    D( 52) --> V( 10) amplitude =  0.0347
+    D( 52) --> V( 14) amplitude = -0.0293
+    D( 52) --> V( 19) amplitude = -0.0161
+    D( 52) --> V( 29) amplitude =  0.0155
+    D( 52) --> V( 32) amplitude =  0.0153
+    D( 52) --> V( 37) amplitude = -0.0179
+
+ Excited state   3: excitation energy (eV) =    4.1029
+    Total energy for state   3:   -618.787686668670
+    Multiplicity: Singlet 
+    Trans. Mom.:  0.5437 X   0.1829 Y   0.0014 Z
+    Strength   :  0.0331
+    D( 32) --> V(  8) amplitude = -0.0161
+    D( 35) --> V(  3) amplitude =  0.0219
+    D( 37) --> V(  1) amplitude = -0.0242
+    D( 43) --> V(  3) amplitude =  0.0416
+    D( 44) --> V(  1) amplitude = -0.0242
+    D( 44) --> V(  8) amplitude = -0.0225
+    D( 45) --> V(  7) amplitude =  0.0224
+    D( 46) --> V(  2) amplitude = -0.0202
+    D( 46) --> V(  3) amplitude =  0.1760
+    D( 46) --> V(  6) amplitude = -0.0322
+    D( 46) --> V(  7) amplitude =  0.0401
+    D( 46) --> V(  8) amplitude =  0.0170
+    D( 46) --> V( 11) amplitude =  0.0321
+    D( 47) --> V(  2) amplitude = -0.0353
+    D( 47) --> V(  3) amplitude =  0.0584
+    D( 47) --> V(  7) amplitude =  0.0364
+    D( 48) --> V(  1) amplitude =  0.0225
+    D( 48) --> V(  2) amplitude =  0.0519
+    D( 48) --> V(  3) amplitude = -0.0200
+    D( 48) --> V( 12) amplitude = -0.0198
+    D( 49) --> V(  2) amplitude = -0.0195
+    D( 49) --> V(  3) amplitude = -0.0519
+    D( 50) --> V(  1) amplitude = -0.2314
+    D( 50) --> V(  3) amplitude =  0.1188
+    D( 50) --> V(  4) amplitude =  0.0219
+    D( 50) --> V(  6) amplitude = -0.0150
+    D( 50) --> V( 12) amplitude = -0.0175
+    D( 51) --> V(  1) amplitude =  0.2225
+    D( 51) --> V(  2) amplitude =  0.1184
+    D( 51) --> V(  3) amplitude = -0.0154
+    D( 51) --> V(  4) amplitude = -0.0238
+    D( 51) --> V(  5) amplitude =  0.0149
+    D( 52) --> V(  2) amplitude = -0.1247
+    D( 52) --> V(  3) amplitude =  0.8718
+    D( 52) --> V(  6) amplitude = -0.1054
+    D( 52) --> V(  7) amplitude =  0.0958
+    D( 52) --> V(  8) amplitude =  0.0365
+    D( 52) --> V( 10) amplitude = -0.0142
+    D( 52) --> V( 11) amplitude =  0.0348
+    D( 52) --> V( 13) amplitude = -0.0293
+    D( 52) --> V( 18) amplitude = -0.0161
+    D( 52) --> V( 30) amplitude =  0.0155
+    D( 52) --> V( 33) amplitude =  0.0152
+    D( 52) --> V( 38) amplitude =  0.0179
+
+ Excited state   4: excitation energy (eV) =    4.4514
+    Total energy for state   4:   -618.774878035805
+    Multiplicity: Singlet 
+    Trans. Mom.: -0.6381 X   0.2312 Y   0.0042 Z
+    Strength   :  0.0502
+    D( 36) --> V(  1) amplitude =  0.0357
+    D( 38) --> V(  1) amplitude = -0.0181
+    D( 38) --> V(  3) amplitude =  0.0264
+    D( 39) --> V(  1) amplitude =  0.0426
+    D( 39) --> V(  2) amplitude = -0.0278
+    D( 41) --> V(  1) amplitude =  0.0283
+    D( 41) --> V(  2) amplitude = -0.0284
+    D( 42) --> V(  1) amplitude =  0.0236
+    D( 42) --> V(  3) amplitude = -0.0278
+    D( 43) --> V(  2) amplitude =  0.0205
+    D( 44) --> V(  1) amplitude = -0.0503
+    D( 44) --> V(  3) amplitude =  0.0242
+    D( 44) --> V(  7) amplitude =  0.0207
+    D( 45) --> V(  1) amplitude =  0.0298
+    D( 45) --> V(  2) amplitude = -0.0253
+    D( 45) --> V(  8) amplitude =  0.0211
+    D( 46) --> V(  2) amplitude = -0.1405
+    D( 46) --> V(  3) amplitude =  0.1042
+    D( 46) --> V(  5) amplitude = -0.0190
+    D( 46) --> V(  6) amplitude = -0.0270
+    D( 46) --> V(  8) amplitude =  0.0227
+    D( 47) --> V(  2) amplitude =  0.0242
+    D( 47) --> V(  3) amplitude =  0.0161
+    D( 47) --> V(  8) amplitude = -0.0294
+    D( 47) --> V( 10) amplitude =  0.0170
+    D( 48) --> V(  1) amplitude =  0.1365
+    D( 48) --> V(  2) amplitude = -0.0389
+    D( 48) --> V(  3) amplitude = -0.0191
+    D( 48) --> V(  4) amplitude = -0.0166
+    D( 48) --> V( 10) amplitude =  0.0154
+    D( 48) --> V( 12) amplitude =  0.0149
+    D( 49) --> V(  1) amplitude =  0.0891
+    D( 49) --> V(  2) amplitude = -0.0215
+    D( 49) --> V(  3) amplitude =  0.0361
+    D( 49) --> V(  4) amplitude = -0.0173
+    D( 49) --> V(  9) amplitude = -0.0159
+    D( 49) --> V( 11) amplitude = -0.0157
+    D( 49) --> V( 12) amplitude =  0.0249
+    D( 50) --> V(  1) amplitude =  0.7837
+    D( 50) --> V(  2) amplitude = -0.2783
+    D( 50) --> V(  3) amplitude = -0.0892
+    D( 50) --> V(  4) amplitude = -0.0775
+    D( 50) --> V(  5) amplitude = -0.0354
+    D( 50) --> V(  7) amplitude =  0.0217
+    D( 50) --> V(  8) amplitude =  0.0235
+    D( 50) --> V(  9) amplitude = -0.0192
+    D( 50) --> V( 12) amplitude =  0.0423
+    D( 50) --> V( 14) amplitude =  0.0151
+    D( 50) --> V( 25) amplitude =  0.0160
+    D( 51) --> V(  1) amplitude = -0.1049
+    D( 51) --> V(  2) amplitude = -0.0900
+    D( 51) --> V(  3) amplitude =  0.2617
+    D( 51) --> V(  6) amplitude = -0.0334
+    D( 51) --> V(  7) amplitude =  0.0216
+    D( 51) --> V(  8) amplitude = -0.0216
+    D( 51) --> V( 13) amplitude = -0.0144
+    D( 52) --> V(  2) amplitude = -0.2406
+    D( 52) --> V(  3) amplitude =  0.2072
+    D( 52) --> V(  6) amplitude = -0.0285
+    D( 52) --> V(  8) amplitude =  0.0664
+    D( 52) --> V( 10) amplitude = -0.0479
+    D( 52) --> V( 11) amplitude =  0.0276
+
+ Excited state   5: excitation energy (eV) =    4.4517
+    Total energy for state   5:   -618.774868313835
+    Multiplicity: Singlet 
+    Trans. Mom.:  0.2308 X   0.6390 Y   0.0048 Z
+    Strength   :  0.0503
+    D( 37) --> V(  1) amplitude = -0.0357
+    D( 38) --> V(  1) amplitude =  0.0425
+    D( 38) --> V(  2) amplitude =  0.0273
+    D( 39) --> V(  1) amplitude =  0.0181
+    D( 39) --> V(  3) amplitude =  0.0269
+    D( 41) --> V(  1) amplitude =  0.0234
+    D( 41) --> V(  3) amplitude =  0.0280
+    D( 42) --> V(  1) amplitude = -0.0281
+    D( 42) --> V(  2) amplitude = -0.0283
+    D( 43) --> V(  3) amplitude =  0.0204
+    D( 44) --> V(  1) amplitude =  0.0298
+    D( 44) --> V(  2) amplitude =  0.0257
+    D( 44) --> V(  8) amplitude = -0.0212
+    D( 45) --> V(  1) amplitude =  0.0503
+    D( 45) --> V(  3) amplitude =  0.0240
+    D( 45) --> V(  7) amplitude =  0.0206
+    D( 46) --> V(  2) amplitude = -0.1043
+    D( 46) --> V(  3) amplitude = -0.1405
+    D( 46) --> V(  5) amplitude = -0.0270
+    D( 46) --> V(  6) amplitude =  0.0189
+    D( 46) --> V(  7) amplitude = -0.0227
+    D( 47) --> V(  2) amplitude = -0.0158
+    D( 47) --> V(  3) amplitude =  0.0240
+    D( 47) --> V(  7) amplitude =  0.0296
+    D( 47) --> V( 11) amplitude =  0.0170
+    D( 48) --> V(  1) amplitude = -0.0892
+    D( 48) --> V(  2) amplitude = -0.0218
+    D( 48) --> V(  3) amplitude =  0.0387
+    D( 48) --> V(  4) amplitude =  0.0173
+    D( 48) --> V(  9) amplitude =  0.0159
+    D( 48) --> V( 11) amplitude = -0.0152
+    D( 48) --> V( 12) amplitude = -0.0251
+    D( 49) --> V(  1) amplitude =  0.1365
+    D( 49) --> V(  2) amplitude =  0.0366
+    D( 49) --> V(  3) amplitude =  0.0186
+    D( 49) --> V(  4) amplitude = -0.0166
+    D( 49) --> V( 10) amplitude = -0.0160
+    D( 49) --> V( 12) amplitude =  0.0148
+    D( 50) --> V(  1) amplitude =  0.1047
+    D( 50) --> V(  2) amplitude = -0.0982
+    D( 50) --> V(  3) amplitude =  0.2704
+    D( 50) --> V(  6) amplitude = -0.0346
+    D( 50) --> V(  7) amplitude =  0.0225
+    D( 50) --> V(  8) amplitude = -0.0206
+    D( 50) --> V( 13) amplitude = -0.0148
+    D( 51) --> V(  1) amplitude =  0.7833
+    D( 51) --> V(  2) amplitude =  0.2708
+    D( 51) --> V(  3) amplitude =  0.0823
+    D( 51) --> V(  4) amplitude = -0.0776
+    D( 51) --> V(  5) amplitude =  0.0342
+    D( 51) --> V(  7) amplitude = -0.0224
+    D( 51) --> V(  8) amplitude = -0.0223
+    D( 51) --> V(  9) amplitude = -0.0193
+    D( 51) --> V( 12) amplitude =  0.0425
+    D( 51) --> V( 14) amplitude = -0.0148
+    D( 51) --> V( 25) amplitude =  0.0160
+    D( 52) --> V(  2) amplitude = -0.2062
+    D( 52) --> V(  3) amplitude = -0.2408
+    D( 52) --> V(  5) amplitude = -0.0284
+    D( 52) --> V(  7) amplitude = -0.0666
+    D( 52) --> V( 10) amplitude = -0.0276
+    D( 52) --> V( 11) amplitude = -0.0478
+
+ Excited state   6: excitation energy (eV) =    4.4636
+    Total energy for state   6:   -618.774432563864
+    Multiplicity: Singlet 
+    Trans. Mom.: -0.0059 X   0.0114 Y  -0.3485 Z
+    Strength   :  0.0133
+    D( 36) --> V(  2) amplitude =  0.0252
+    D( 37) --> V(  3) amplitude = -0.0252
+    D( 38) --> V(  3) amplitude =  0.0553
+    D( 39) --> V(  2) amplitude =  0.0545
+    D( 41) --> V(  2) amplitude =  0.0211
+    D( 41) --> V(  8) amplitude =  0.0158
+    D( 42) --> V(  3) amplitude = -0.0217
+    D( 42) --> V(  7) amplitude =  0.0159
+    D( 43) --> V(  1) amplitude =  0.0382
+    D( 44) --> V(  2) amplitude = -0.0642
+    D( 44) --> V(  3) amplitude =  0.0409
+    D( 44) --> V(  8) amplitude =  0.0217
+    D( 45) --> V(  2) amplitude =  0.0404
+    D( 45) --> V(  3) amplitude =  0.0650
+    D( 45) --> V(  7) amplitude =  0.0222
+    D( 46) --> V(  1) amplitude = -0.1413
+    D( 46) --> V(  4) amplitude =  0.0235
+    D( 48) --> V(  2) amplitude =  0.1213
+    D( 48) --> V(  3) amplitude = -0.0858
+    D( 48) --> V(  5) amplitude =  0.0174
+    D( 48) --> V(  6) amplitude =  0.0221
+    D( 48) --> V(  7) amplitude = -0.0190
+    D( 48) --> V( 11) amplitude = -0.0225
+    D( 49) --> V(  2) amplitude =  0.0862
+    D( 49) --> V(  3) amplitude =  0.1228
+    D( 49) --> V(  5) amplitude =  0.0222
+    D( 49) --> V(  6) amplitude = -0.0176
+    D( 49) --> V(  8) amplitude = -0.0193
+    D( 49) --> V( 10) amplitude =  0.0218
+    D( 50) --> V(  2) amplitude =  0.6401
+    D( 50) --> V(  3) amplitude = -0.0249
+    D( 50) --> V(  5) amplitude =  0.0715
+    D( 50) --> V(  6) amplitude =  0.0187
+    D( 50) --> V(  8) amplitude = -0.0729
+    D( 50) --> V( 10) amplitude =  0.0331
+    D( 50) --> V( 14) amplitude = -0.0253
+    D( 51) --> V(  2) amplitude =  0.0290
+    D( 51) --> V(  3) amplitude =  0.6498
+    D( 51) --> V(  5) amplitude =  0.0193
+    D( 51) --> V(  6) amplitude = -0.0726
+    D( 51) --> V(  7) amplitude =  0.0730
+    D( 51) --> V( 11) amplitude =  0.0334
+    D( 51) --> V( 13) amplitude = -0.0256
+    D( 52) --> V(  1) amplitude = -0.1928
+    D( 52) --> V(  4) amplitude =  0.0203
+    D( 52) --> V(  9) amplitude =  0.0226
+    D( 52) --> V( 12) amplitude = -0.0439
+
+ ---------------------------------------------------
+ Direct TDDFT calculation will be performed
+ Exchange:  wB97 + LR-HF      Correlation:  wB97
+ Using SG-1 standard quadrature grid
+ ---------------------------------------------------
+ Iter    Rts Conv    Rts Left    Ttl Dev     Max Dev
+ ---------------------------------------------------
+   1         0           6      0.000040    0.000009
+   2         0           6      0.000349    0.000075
+   3         0           6      0.000246    0.000060
+   4         0           6      0.000145    0.000029
+   5         0           6      0.000095    0.000018
+   6         0           6      0.000061    0.000014
+   7         0           6      0.000028    0.000007
+   8         0           6      0.000013    0.000004
+   9         3           3      0.000008    0.000003
+  10         4           2      0.000005    0.000001
+  11         6           0      0.000003    0.000001    Roots Converged
+ ---------------------------------------------------
+
+
+ ---------------------------------------------------
+             TDDFT Excitation Energies              
+ ---------------------------------------------------
+
+ Excited state   1: excitation energy (eV) =    3.9478
+    Total energy for state   1:   -618.793385619103
+    Multiplicity: Singlet 
+    Trans. Mom.:  0.0037 X  -0.0025 Y  -0.5634 Z
+    Strength   :  0.0307
+    X: D( 36) --> V(  7) amplitude = -0.0165
+    X: D( 37) --> V(  8) amplitude =  0.0164
+    X: D( 41) --> V(  2) amplitude = -0.0195
+    X: D( 41) --> V(  8) amplitude =  0.0163
+    X: D( 42) --> V(  3) amplitude =  0.0195
+    X: D( 42) --> V(  7) amplitude =  0.0163
+    X: D( 43) --> V(  1) amplitude =  0.0380
+    X: D( 44) --> V(  3) amplitude = -0.0272
+    X: D( 44) --> V(  8) amplitude =  0.0213
+    X: D( 45) --> V(  2) amplitude = -0.0272
+    X: D( 45) --> V(  7) amplitude =  0.0214
+    X: D( 46) --> V(  1) amplitude =  0.1206
+    Y: D( 46) --> V(  1) amplitude =  0.0155
+    X: D( 46) --> V(  9) amplitude = -0.0163
+    X: D( 46) --> V( 12) amplitude =  0.0218
+    X: D( 46) --> V( 25) amplitude =  0.0151
+    X: D( 47) --> V(  1) amplitude =  0.0263
+    X: D( 48) --> V(  2) amplitude =  0.0198
+    X: D( 48) --> V(  3) amplitude =  0.0922
+    Y: D( 48) --> V(  3) amplitude = -0.0167
+    X: D( 48) --> V(  6) amplitude = -0.0143
+    X: D( 48) --> V( 11) amplitude = -0.0159
+    X: D( 49) --> V(  2) amplitude = -0.0933
+    Y: D( 49) --> V(  2) amplitude =  0.0169
+    X: D( 49) --> V(  3) amplitude =  0.0197
+    X: D( 49) --> V(  5) amplitude = -0.0144
+    X: D( 49) --> V( 10) amplitude =  0.0160
+    X: D( 50) --> V(  2) amplitude =  0.2333
+    Y: D( 50) --> V(  2) amplitude = -0.0163
+    X: D( 50) --> V(  3) amplitude = -0.0965
+    X: D( 50) --> V(  5) amplitude =  0.0315
+    X: D( 50) --> V(  6) amplitude =  0.0175
+    X: D( 50) --> V(  7) amplitude = -0.0155
+    X: D( 51) --> V(  2) amplitude =  0.0980
+    X: D( 51) --> V(  3) amplitude =  0.2311
+    Y: D( 51) --> V(  3) amplitude = -0.0161
+    X: D( 51) --> V(  5) amplitude =  0.0177
+    X: D( 51) --> V(  6) amplitude = -0.0311
+    X: D( 51) --> V(  8) amplitude = -0.0153
+    X: D( 52) --> V(  1) amplitude =  0.9041
+    Y: D( 52) --> V(  1) amplitude = -0.0229
+    X: D( 52) --> V(  4) amplitude = -0.0890
+    X: D( 52) --> V( 12) amplitude =  0.0236
+    X: D( 52) --> V( 25) amplitude =  0.0257
+
+ Excited state   2: excitation energy (eV) =    3.9994
+    Total energy for state   2:   -618.791492092759
+    Multiplicity: Singlet 
+    Trans. Mom.: -0.1750 X   0.5728 Y  -0.0045 Z
+    Strength   :  0.0352
+    X: D( 32) --> V(  7) amplitude = -0.0142
+    X: D( 35) --> V(  2) amplitude =  0.0189
+    X: D( 36) --> V(  1) amplitude =  0.0223
+    X: D( 43) --> V(  2) amplitude =  0.0365
+    X: D( 44) --> V(  7) amplitude =  0.0218
+    X: D( 45) --> V(  1) amplitude = -0.0241
+    X: D( 45) --> V(  8) amplitude =  0.0218
+    X: D( 46) --> V(  2) amplitude =  0.1213
+    X: D( 46) --> V(  5) amplitude =  0.0216
+    X: D( 46) --> V(  8) amplitude = -0.0370
+    X: D( 46) --> V( 10) amplitude =  0.0276
+    X: D( 47) --> V(  2) amplitude =  0.0501
+    X: D( 47) --> V(  3) amplitude =  0.0319
+    X: D( 47) --> V(  8) amplitude = -0.0335
+    X: D( 48) --> V(  1) amplitude =  0.0163
+    X: D( 48) --> V(  2) amplitude =  0.0303
+    X: D( 48) --> V(  3) amplitude =  0.0641
+    X: D( 49) --> V(  1) amplitude = -0.0487
+    Y: D( 49) --> V(  1) amplitude =  0.0234
+    X: D( 49) --> V(  2) amplitude =  0.0627
+    X: D( 49) --> V(  3) amplitude = -0.0301
+    X: D( 49) --> V( 12) amplitude =  0.0196
+    X: D( 50) --> V(  1) amplitude =  0.2957
+    X: D( 50) --> V(  2) amplitude = -0.1730
+    Y: D( 50) --> V(  2) amplitude =  0.0149
+    X: D( 50) --> V(  4) amplitude = -0.0329
+    X: D( 50) --> V(  5) amplitude = -0.0243
+    X: D( 51) --> V(  1) amplitude =  0.2859
+    X: D( 51) --> V(  3) amplitude =  0.1772
+    Y: D( 51) --> V(  3) amplitude = -0.0152
+    X: D( 51) --> V(  4) amplitude = -0.0296
+    X: D( 51) --> V(  6) amplitude = -0.0248
+    X: D( 51) --> V( 12) amplitude =  0.0166
+    X: D( 52) --> V(  2) amplitude =  0.8280
+    Y: D( 52) --> V(  2) amplitude = -0.0242
+    X: D( 52) --> V(  3) amplitude =  0.1241
+    X: D( 52) --> V(  5) amplitude =  0.1064
+    X: D( 52) --> V(  7) amplitude =  0.0291
+    X: D( 52) --> V(  8) amplitude = -0.0790
+    X: D( 52) --> V( 10) amplitude =  0.0280
+    X: D( 52) --> V( 14) amplitude = -0.0272
+    X: D( 52) --> V( 19) amplitude = -0.0145
+    X: D( 52) --> V( 37) amplitude = -0.0169
+
+ Excited state   3: excitation energy (eV) =    4.0000
+    Total energy for state   3:   -618.791468859263
+    Multiplicity: Singlet 
+    Trans. Mom.:  0.5720 X   0.1761 Y   0.0022 Z
+    Strength   :  0.0351
+    X: D( 35) --> V(  3) amplitude =  0.0189
+    X: D( 37) --> V(  1) amplitude = -0.0223
+    X: D( 43) --> V(  3) amplitude =  0.0365
+    X: D( 44) --> V(  1) amplitude = -0.0241
+    X: D( 44) --> V(  8) amplitude = -0.0219
+    X: D( 45) --> V(  7) amplitude =  0.0217
+    X: D( 46) --> V(  3) amplitude =  0.1216
+    X: D( 46) --> V(  6) amplitude = -0.0216
+    X: D( 46) --> V(  7) amplitude =  0.0370
+    X: D( 46) --> V( 11) amplitude =  0.0276
+    X: D( 47) --> V(  2) amplitude = -0.0321
+    X: D( 47) --> V(  3) amplitude =  0.0501
+    X: D( 47) --> V(  7) amplitude =  0.0336
+    X: D( 48) --> V(  1) amplitude =  0.0485
+    Y: D( 48) --> V(  1) amplitude = -0.0232
+    X: D( 48) --> V(  2) amplitude =  0.0634
+    X: D( 48) --> V(  3) amplitude = -0.0306
+    X: D( 48) --> V( 12) amplitude = -0.0197
+    X: D( 49) --> V(  1) amplitude =  0.0166
+    X: D( 49) --> V(  2) amplitude = -0.0298
+    X: D( 49) --> V(  3) amplitude = -0.0635
+    X: D( 50) --> V(  1) amplitude = -0.2854
+    X: D( 50) --> V(  3) amplitude =  0.1764
+    Y: D( 50) --> V(  3) amplitude = -0.0151
+    X: D( 50) --> V(  4) amplitude =  0.0296
+    X: D( 50) --> V(  6) amplitude = -0.0247
+    X: D( 50) --> V( 12) amplitude = -0.0167
+    X: D( 51) --> V(  1) amplitude =  0.2952
+    X: D( 51) --> V(  2) amplitude =  0.1754
+    Y: D( 51) --> V(  2) amplitude = -0.0149
+    X: D( 51) --> V(  4) amplitude = -0.0329
+    X: D( 51) --> V(  5) amplitude =  0.0244
+    X: D( 52) --> V(  2) amplitude = -0.1238
+    X: D( 52) --> V(  3) amplitude =  0.8280
+    Y: D( 52) --> V(  3) amplitude = -0.0242
+    X: D( 52) --> V(  6) amplitude = -0.1062
+    X: D( 52) --> V(  7) amplitude =  0.0792
+    X: D( 52) --> V(  8) amplitude =  0.0291
+    X: D( 52) --> V( 11) amplitude =  0.0281
+    X: D( 52) --> V( 13) amplitude = -0.0272
+    X: D( 52) --> V( 18) amplitude = -0.0146
+    X: D( 52) --> V( 38) amplitude =  0.0169
+
+ Excited state   4: excitation energy (eV) =    4.4084
+    Total energy for state   4:   -618.776459849967
+    Multiplicity: Singlet 
+    Trans. Mom.:  0.4058 X   0.4541 Y   0.0033 Z
+    Strength   :  0.0401
+    X: D( 37) --> V(  1) amplitude = -0.0304
+    X: D( 38) --> V(  1) amplitude =  0.0429
+    X: D( 38) --> V(  2) amplitude =  0.0271
+    X: D( 39) --> V(  3) amplitude =  0.0269
+    X: D( 41) --> V(  2) amplitude =  0.0151
+    X: D( 41) --> V(  3) amplitude =  0.0243
+    X: D( 42) --> V(  1) amplitude = -0.0338
+    X: D( 42) --> V(  2) amplitude = -0.0245
+    X: D( 42) --> V(  3) amplitude =  0.0158
+    X: D( 44) --> V(  1) amplitude =  0.0479
+    X: D( 44) --> V(  2) amplitude =  0.0189
+    X: D( 44) --> V(  8) amplitude = -0.0173
+    X: D( 45) --> V(  1) amplitude =  0.0324
+    X: D( 45) --> V(  3) amplitude =  0.0175
+    X: D( 45) --> V(  7) amplitude =  0.0170
+    X: D( 46) --> V(  2) amplitude = -0.0492
+    X: D( 46) --> V(  3) amplitude = -0.2070
+    X: D( 46) --> V(  5) amplitude = -0.0205
+    X: D( 46) --> V(  6) amplitude =  0.0345
+    X: D( 46) --> V(  7) amplitude = -0.0279
+    X: D( 46) --> V( 11) amplitude = -0.0157
+    X: D( 47) --> V(  2) amplitude = -0.0231
+    X: D( 47) --> V(  7) amplitude =  0.0212
+    X: D( 47) --> V( 11) amplitude =  0.0170
+    X: D( 48) --> V(  1) amplitude = -0.1224
+    X: D( 48) --> V(  3) amplitude =  0.0279
+    X: D( 48) --> V(  4) amplitude =  0.0192
+    X: D( 48) --> V(  9) amplitude =  0.0162
+    X: D( 48) --> V( 12) amplitude = -0.0250
+    X: D( 49) --> V(  1) amplitude =  0.0837
+    X: D( 49) --> V(  2) amplitude =  0.0263
+    X: D( 50) --> V(  1) amplitude = -0.1966
+    X: D( 50) --> V(  2) amplitude = -0.0312
+    X: D( 50) --> V(  3) amplitude =  0.2637
+    X: D( 50) --> V(  4) amplitude =  0.0215
+    X: D( 50) --> V(  6) amplitude = -0.0345
+    X: D( 50) --> V(  8) amplitude = -0.0210
+    X: D( 50) --> V(  9) amplitude =  0.0162
+    X: D( 51) --> V(  1) amplitude =  0.7251
+    X: D( 51) --> V(  2) amplitude =  0.2633
+    X: D( 51) --> V(  3) amplitude =  0.0176
+    X: D( 51) --> V(  4) amplitude = -0.0730
+    X: D( 51) --> V(  5) amplitude =  0.0339
+    X: D( 51) --> V(  7) amplitude = -0.0222
+    X: D( 51) --> V( 12) amplitude =  0.0382
+    X: D( 51) --> V( 25) amplitude =  0.0154
+    X: D( 52) --> V(  2) amplitude = -0.1127
+    X: D( 52) --> V(  3) amplitude = -0.4079
+    X: D( 52) --> V(  5) amplitude = -0.0247
+    X: D( 52) --> V(  6) amplitude =  0.0332
+    X: D( 52) --> V(  7) amplitude = -0.0837
+    X: D( 52) --> V(  8) amplitude = -0.0200
+    X: D( 52) --> V( 11) amplitude = -0.0578
+    X: D( 52) --> V( 13) amplitude =  0.0154
+
+ Excited state   5: excitation energy (eV) =    4.4097
+    Total energy for state   5:   -618.776412735161
+    Multiplicity: Singlet 
+    Trans. Mom.: -0.4550 X   0.4095 Y   0.0029 Z
+    Strength   :  0.0405
+    X: D( 36) --> V(  1) amplitude =  0.0304
+    X: D( 38) --> V(  3) amplitude =  0.0263
+    X: D( 39) --> V(  1) amplitude =  0.0430
+    X: D( 39) --> V(  2) amplitude = -0.0276
+    X: D( 41) --> V(  1) amplitude =  0.0337
+    X: D( 41) --> V(  2) amplitude = -0.0245
+    X: D( 41) --> V(  3) amplitude =  0.0154
+    X: D( 42) --> V(  2) amplitude = -0.0156
+    X: D( 42) --> V(  3) amplitude = -0.0239
+    X: D( 44) --> V(  1) amplitude = -0.0324
+    X: D( 44) --> V(  3) amplitude =  0.0178
+    X: D( 44) --> V(  7) amplitude =  0.0170
+    X: D( 45) --> V(  1) amplitude =  0.0478
+    X: D( 45) --> V(  2) amplitude = -0.0187
+    X: D( 45) --> V(  8) amplitude =  0.0175
+    X: D( 46) --> V(  2) amplitude = -0.2071
+    X: D( 46) --> V(  3) amplitude =  0.0491
+    X: D( 46) --> V(  5) amplitude = -0.0346
+    X: D( 46) --> V(  6) amplitude = -0.0205
+    X: D( 46) --> V(  8) amplitude =  0.0278
+    X: D( 46) --> V( 10) amplitude = -0.0157
+    X: D( 47) --> V(  3) amplitude =  0.0230
+    X: D( 47) --> V(  8) amplitude = -0.0212
+    X: D( 47) --> V( 10) amplitude =  0.0170
+    X: D( 48) --> V(  1) amplitude =  0.0836
+    X: D( 48) --> V(  2) amplitude = -0.0281
+    X: D( 49) --> V(  1) amplitude =  0.1221
+    X: D( 49) --> V(  3) amplitude =  0.0259
+    X: D( 49) --> V(  4) amplitude = -0.0191
+    X: D( 49) --> V(  9) amplitude = -0.0162
+    X: D( 49) --> V( 12) amplitude =  0.0248
+    X: D( 50) --> V(  1) amplitude =  0.7252
+    X: D( 50) --> V(  2) amplitude = -0.2707
+    X: D( 50) --> V(  3) amplitude = -0.0230
+    X: D( 50) --> V(  4) amplitude = -0.0728
+    X: D( 50) --> V(  5) amplitude = -0.0352
+    X: D( 50) --> V(  7) amplitude =  0.0218
+    X: D( 50) --> V( 12) amplitude =  0.0380
+    X: D( 50) --> V( 25) amplitude =  0.0153
+    X: D( 51) --> V(  1) amplitude =  0.1959
+    X: D( 51) --> V(  2) amplitude = -0.0241
+    X: D( 51) --> V(  3) amplitude =  0.2564
+    X: D( 51) --> V(  4) amplitude = -0.0214
+    X: D( 51) --> V(  6) amplitude = -0.0335
+    X: D( 51) --> V(  8) amplitude = -0.0217
+    X: D( 51) --> V(  9) amplitude = -0.0162
+    X: D( 52) --> V(  2) amplitude = -0.4079
+    X: D( 52) --> V(  3) amplitude =  0.1129
+    X: D( 52) --> V(  5) amplitude = -0.0332
+    X: D( 52) --> V(  6) amplitude = -0.0248
+    X: D( 52) --> V(  7) amplitude = -0.0203
+    X: D( 52) --> V(  8) amplitude =  0.0832
+    X: D( 52) --> V( 10) amplitude = -0.0578
+    X: D( 52) --> V( 14) amplitude =  0.0153
+
+ Excited state   6: excitation energy (eV) =    4.4256
+    Total energy for state   6:   -618.775829658211
+    Multiplicity: Singlet 
+    Trans. Mom.: -0.0006 X   0.0097 Y  -0.2772 Z
+    Strength   :  0.0083
+    X: D( 36) --> V(  2) amplitude =  0.0223
+    X: D( 37) --> V(  3) amplitude = -0.0223
+    X: D( 38) --> V(  3) amplitude =  0.0546
+    X: D( 39) --> V(  2) amplitude =  0.0541
+    X: D( 41) --> V(  2) amplitude =  0.0244
+    X: D( 41) --> V(  8) amplitude =  0.0146
+    X: D( 42) --> V(  3) amplitude = -0.0246
+    X: D( 42) --> V(  7) amplitude =  0.0147
+    X: D( 43) --> V(  1) amplitude =  0.0289
+    X: D( 44) --> V(  2) amplitude = -0.0562
+    X: D( 44) --> V(  3) amplitude =  0.0404
+    X: D( 44) --> V(  7) amplitude =  0.0150
+    X: D( 44) --> V(  8) amplitude =  0.0153
+    X: D( 45) --> V(  2) amplitude =  0.0402
+    X: D( 45) --> V(  3) amplitude =  0.0569
+    X: D( 45) --> V(  7) amplitude =  0.0158
+    X: D( 45) --> V(  8) amplitude = -0.0147
+    X: D( 46) --> V(  1) amplitude = -0.1834
+    X: D( 46) --> V(  4) amplitude =  0.0287
+    X: D( 48) --> V(  2) amplitude =  0.1065
+    X: D( 48) --> V(  3) amplitude = -0.0804
+    X: D( 48) --> V(  5) amplitude =  0.0159
+    X: D( 48) --> V(  6) amplitude =  0.0198
+    X: D( 48) --> V(  7) amplitude = -0.0205
+    X: D( 48) --> V( 11) amplitude = -0.0211
+    X: D( 49) --> V(  2) amplitude =  0.0807
+    X: D( 49) --> V(  3) amplitude =  0.1073
+    X: D( 49) --> V(  5) amplitude =  0.0199
+    X: D( 49) --> V(  6) amplitude = -0.0161
+    X: D( 49) --> V(  8) amplitude = -0.0207
+    X: D( 49) --> V( 10) amplitude =  0.0206
+    X: D( 50) --> V(  2) amplitude =  0.6181
+    X: D( 50) --> V(  3) amplitude = -0.0642
+    X: D( 50) --> V(  5) amplitude =  0.0683
+    X: D( 50) --> V(  6) amplitude =  0.0243
+    X: D( 50) --> V(  8) amplitude = -0.0741
+    X: D( 50) --> V( 10) amplitude =  0.0336
+    X: D( 50) --> V( 14) amplitude = -0.0257
+    X: D( 51) --> V(  2) amplitude =  0.0693
+    X: D( 51) --> V(  3) amplitude =  0.6252
+    X: D( 51) --> V(  5) amplitude =  0.0250
+    X: D( 51) --> V(  6) amplitude = -0.0690
+    X: D( 51) --> V(  7) amplitude =  0.0740
+    X: D( 51) --> V( 11) amplitude =  0.0339
+    X: D( 51) --> V( 13) amplitude = -0.0258
+    X: D( 52) --> V(  1) amplitude = -0.2994
+    X: D( 52) --> V(  4) amplitude =  0.0282
+    X: D( 52) --> V(  9) amplitude =  0.0250
+    X: D( 52) --> V( 12) amplitude = -0.0485
+
+ ---------------------------------------------------
+  Timing summary (seconds)
+  CPU time       1342.49s
+  System time       0.00s
+  Wall time      1342.19s
+ =======================================================
+   TDA excitation amplitudes in the canonical MO basis
+              (Print if |ampl| > 0.01)
+ =======================================================
+  Excited state  1:  4.0482 eV (singlet)
+    D( 36) --> V(  7)  ampl = -0.0177   ( 0.0 %)
+    D( 37) --> V(  8)  ampl =  0.0176   ( 0.0 %)
+    D( 41) --> V(  2)  ampl = -0.0234   ( 0.1 %)
+    D( 41) --> V(  8)  ampl =  0.0167   ( 0.0 %)
+    D( 42) --> V(  3)  ampl =  0.0234   ( 0.1 %)
+    D( 42) --> V(  7)  ampl =  0.0167   ( 0.0 %)
+    D( 43) --> V(  1)  ampl =  0.0428   ( 0.2 %)
+    D( 44) --> V(  2)  ampl = -0.0147   ( 0.0 %)
+    D( 44) --> V(  3)  ampl = -0.0272   ( 0.1 %)
+    D( 44) --> V(  8)  ampl =  0.0241   ( 0.1 %)
+    D( 45) --> V(  2)  ampl = -0.0271   ( 0.1 %)
+    D( 45) --> V(  3)  ampl =  0.0149   ( 0.0 %)
+    D( 45) --> V(  7)  ampl =  0.0242   ( 0.1 %)
+    D( 46) --> V(  1)  ampl =  0.1761   ( 3.1 %)
+    D( 46) --> V(  4)  ampl = -0.0196   ( 0.0 %)
+    D( 46) --> V(  9)  ampl = -0.0188   ( 0.0 %)
+    D( 46) --> V( 12)  ampl =  0.0252   ( 0.1 %)
+    D( 46) --> V( 25)  ampl =  0.0147   ( 0.0 %)
+    D( 47) --> V(  1)  ampl =  0.0306   ( 0.1 %)
+    D( 48) --> V(  2)  ampl =  0.0198   ( 0.0 %)
+    D( 48) --> V(  3)  ampl =  0.0743   ( 0.6 %)
+    D( 48) --> V( 11)  ampl = -0.0151   ( 0.0 %)
+    D( 49) --> V(  2)  ampl = -0.0752   ( 0.6 %)
+    D( 49) --> V(  3)  ampl =  0.0197   ( 0.0 %)
+    D( 49) --> V( 10)  ampl =  0.0152   ( 0.0 %)
+    D( 50) --> V(  2)  ampl =  0.1603   ( 2.6 %)
+    D( 50) --> V(  3)  ampl = -0.0428   ( 0.2 %)
+    D( 50) --> V(  5)  ampl =  0.0229   ( 0.1 %)
+    D( 50) --> V(  7)  ampl = -0.0161   ( 0.0 %)
+    D( 51) --> V(  2)  ampl =  0.0434   ( 0.2 %)
+    D( 51) --> V(  3)  ampl =  0.1585   ( 2.5 %)
+    D( 51) --> V(  6)  ampl = -0.0226   ( 0.1 %)
+    D( 51) --> V(  8)  ampl = -0.0160   ( 0.0 %)
+    D( 52) --> V(  1)  ampl =  0.9333   (87.1 %)
+    D( 52) --> V(  4)  ampl = -0.0870   ( 0.8 %)
+    D( 52) --> V( 12)  ampl =  0.0281   ( 0.1 %)
+    D( 52) --> V( 25)  ampl =  0.0300   ( 0.1 %)
+  These amplitudes account for 99.0 % of the total amplitude
+
+  Excited state  2:  4.1024 eV (singlet)
+    D( 32) --> V(  7)  ampl = -0.0162   ( 0.0 %)
+    D( 35) --> V(  2)  ampl =  0.0219   ( 0.0 %)
+    D( 36) --> V(  1)  ampl =  0.0242   ( 0.1 %)
+    D( 43) --> V(  2)  ampl =  0.0417   ( 0.2 %)
+    D( 44) --> V(  7)  ampl =  0.0224   ( 0.1 %)
+    D( 45) --> V(  1)  ampl = -0.0242   ( 0.1 %)
+    D( 45) --> V(  8)  ampl =  0.0225   ( 0.1 %)
+    D( 46) --> V(  2)  ampl =  0.1760   ( 3.1 %)
+    D( 46) --> V(  3)  ampl =  0.0202   ( 0.0 %)
+    D( 46) --> V(  5)  ampl =  0.0323   ( 0.1 %)
+    D( 46) --> V(  7)  ampl =  0.0170   ( 0.0 %)
+    D( 46) --> V(  8)  ampl = -0.0401   ( 0.2 %)
+    D( 46) --> V( 10)  ampl =  0.0321   ( 0.1 %)
+    D( 47) --> V(  2)  ampl =  0.0584   ( 0.3 %)
+    D( 47) --> V(  3)  ampl =  0.0351   ( 0.1 %)
+    D( 47) --> V(  8)  ampl = -0.0363   ( 0.1 %)
+    D( 48) --> V(  2)  ampl =  0.0199   ( 0.0 %)
+    D( 48) --> V(  3)  ampl =  0.0525   ( 0.3 %)
+    D( 49) --> V(  1)  ampl = -0.0226   ( 0.1 %)
+    D( 49) --> V(  2)  ampl =  0.0513   ( 0.3 %)
+    D( 49) --> V(  3)  ampl = -0.0197   ( 0.0 %)
+    D( 49) --> V( 12)  ampl =  0.0197   ( 0.0 %)
+    D( 50) --> V(  1)  ampl =  0.2227   ( 5.0 %)
+    D( 50) --> V(  2)  ampl = -0.1161   ( 1.3 %)
+    D( 50) --> V(  4)  ampl = -0.0237   ( 0.1 %)
+    D( 50) --> V(  5)  ampl = -0.0147   ( 0.0 %)
+    D( 51) --> V(  1)  ampl =  0.2312   ( 5.3 %)
+    D( 51) --> V(  3)  ampl =  0.1193   ( 1.4 %)
+    D( 51) --> V(  4)  ampl = -0.0218   ( 0.0 %)
+    D( 51) --> V(  6)  ampl = -0.0151   ( 0.0 %)
+    D( 51) --> V( 12)  ampl =  0.0173   ( 0.0 %)
+    D( 52) --> V(  2)  ampl =  0.8720   (76.0 %)
+    D( 52) --> V(  3)  ampl =  0.1250   ( 1.6 %)
+    D( 52) --> V(  5)  ampl =  0.1056   ( 1.1 %)
+    D( 52) --> V(  7)  ampl =  0.0364   ( 0.1 %)
+    D( 52) --> V(  8)  ampl = -0.0957   ( 0.9 %)
+    D( 52) --> V( 10)  ampl =  0.0347   ( 0.1 %)
+    D( 52) --> V( 14)  ampl = -0.0293   ( 0.1 %)
+    D( 52) --> V( 19)  ampl = -0.0161   ( 0.0 %)
+    D( 52) --> V( 29)  ampl =  0.0155   ( 0.0 %)
+    D( 52) --> V( 32)  ampl =  0.0153   ( 0.0 %)
+    D( 52) --> V( 37)  ampl = -0.0179   ( 0.0 %)
+  These amplitudes account for 98.6 % of the total amplitude
+
+  Excited state  3:  4.1029 eV (singlet)
+    D( 32) --> V(  8)  ampl = -0.0161   ( 0.0 %)
+    D( 35) --> V(  3)  ampl =  0.0219   ( 0.0 %)
+    D( 37) --> V(  1)  ampl = -0.0242   ( 0.1 %)
+    D( 43) --> V(  3)  ampl =  0.0416   ( 0.2 %)
+    D( 44) --> V(  1)  ampl = -0.0242   ( 0.1 %)
+    D( 44) --> V(  8)  ampl = -0.0225   ( 0.1 %)
+    D( 45) --> V(  7)  ampl =  0.0224   ( 0.1 %)
+    D( 46) --> V(  2)  ampl = -0.0202   ( 0.0 %)
+    D( 46) --> V(  3)  ampl =  0.1760   ( 3.1 %)
+    D( 46) --> V(  6)  ampl = -0.0322   ( 0.1 %)
+    D( 46) --> V(  7)  ampl =  0.0401   ( 0.2 %)
+    D( 46) --> V(  8)  ampl =  0.0170   ( 0.0 %)
+    D( 46) --> V( 11)  ampl =  0.0321   ( 0.1 %)
+    D( 47) --> V(  2)  ampl = -0.0353   ( 0.1 %)
+    D( 47) --> V(  3)  ampl =  0.0584   ( 0.3 %)
+    D( 47) --> V(  7)  ampl =  0.0364   ( 0.1 %)
+    D( 48) --> V(  1)  ampl =  0.0225   ( 0.1 %)
+    D( 48) --> V(  2)  ampl =  0.0519   ( 0.3 %)
+    D( 48) --> V(  3)  ampl = -0.0200   ( 0.0 %)
+    D( 48) --> V( 12)  ampl = -0.0198   ( 0.0 %)
+    D( 49) --> V(  2)  ampl = -0.0195   ( 0.0 %)
+    D( 49) --> V(  3)  ampl = -0.0519   ( 0.3 %)
+    D( 50) --> V(  1)  ampl = -0.2314   ( 5.4 %)
+    D( 50) --> V(  3)  ampl =  0.1188   ( 1.4 %)
+    D( 50) --> V(  4)  ampl =  0.0219   ( 0.0 %)
+    D( 50) --> V(  6)  ampl = -0.0150   ( 0.0 %)
+    D( 50) --> V( 12)  ampl = -0.0175   ( 0.0 %)
+    D( 51) --> V(  1)  ampl =  0.2225   ( 5.0 %)
+    D( 51) --> V(  2)  ampl =  0.1184   ( 1.4 %)
+    D( 51) --> V(  3)  ampl = -0.0154   ( 0.0 %)
+    D( 51) --> V(  4)  ampl = -0.0238   ( 0.1 %)
+    D( 51) --> V(  5)  ampl =  0.0149   ( 0.0 %)
+    D( 52) --> V(  2)  ampl = -0.1247   ( 1.6 %)
+    D( 52) --> V(  3)  ampl =  0.8718   (76.0 %)
+    D( 52) --> V(  6)  ampl = -0.1054   ( 1.1 %)
+    D( 52) --> V(  7)  ampl =  0.0958   ( 0.9 %)
+    D( 52) --> V(  8)  ampl =  0.0365   ( 0.1 %)
+    D( 52) --> V( 10)  ampl = -0.0142   ( 0.0 %)
+    D( 52) --> V( 11)  ampl =  0.0348   ( 0.1 %)
+    D( 52) --> V( 13)  ampl = -0.0293   ( 0.1 %)
+    D( 52) --> V( 18)  ampl = -0.0161   ( 0.0 %)
+    D( 52) --> V( 30)  ampl =  0.0155   ( 0.0 %)
+    D( 52) --> V( 33)  ampl =  0.0152   ( 0.0 %)
+    D( 52) --> V( 38)  ampl =  0.0179   ( 0.0 %)
+  These amplitudes account for 98.7 % of the total amplitude
+
+  Excited state  4:  4.4514 eV (singlet)
+    D( 36) --> V(  1)  ampl =  0.0357   ( 0.1 %)
+    D( 38) --> V(  1)  ampl = -0.0181   ( 0.0 %)
+    D( 38) --> V(  3)  ampl =  0.0264   ( 0.1 %)
+    D( 39) --> V(  1)  ampl =  0.0426   ( 0.2 %)
+    D( 39) --> V(  2)  ampl = -0.0278   ( 0.1 %)
+    D( 41) --> V(  1)  ampl =  0.0283   ( 0.1 %)
+    D( 41) --> V(  2)  ampl = -0.0284   ( 0.1 %)
+    D( 42) --> V(  1)  ampl =  0.0236   ( 0.1 %)
+    D( 42) --> V(  3)  ampl = -0.0278   ( 0.1 %)
+    D( 43) --> V(  2)  ampl =  0.0205   ( 0.0 %)
+    D( 44) --> V(  1)  ampl = -0.0503   ( 0.3 %)
+    D( 44) --> V(  3)  ampl =  0.0242   ( 0.1 %)
+    D( 44) --> V(  7)  ampl =  0.0207   ( 0.0 %)
+    D( 45) --> V(  1)  ampl =  0.0298   ( 0.1 %)
+    D( 45) --> V(  2)  ampl = -0.0253   ( 0.1 %)
+    D( 45) --> V(  8)  ampl =  0.0211   ( 0.0 %)
+    D( 46) --> V(  2)  ampl = -0.1405   ( 2.0 %)
+    D( 46) --> V(  3)  ampl =  0.1042   ( 1.1 %)
+    D( 46) --> V(  5)  ampl = -0.0190   ( 0.0 %)
+    D( 46) --> V(  6)  ampl = -0.0270   ( 0.1 %)
+    D( 46) --> V(  8)  ampl =  0.0227   ( 0.1 %)
+    D( 47) --> V(  2)  ampl =  0.0242   ( 0.1 %)
+    D( 47) --> V(  3)  ampl =  0.0161   ( 0.0 %)
+    D( 47) --> V(  8)  ampl = -0.0294   ( 0.1 %)
+    D( 47) --> V( 10)  ampl =  0.0170   ( 0.0 %)
+    D( 48) --> V(  1)  ampl =  0.1365   ( 1.9 %)
+    D( 48) --> V(  2)  ampl = -0.0389   ( 0.2 %)
+    D( 48) --> V(  3)  ampl = -0.0191   ( 0.0 %)
+    D( 48) --> V(  4)  ampl = -0.0166   ( 0.0 %)
+    D( 48) --> V( 10)  ampl =  0.0154   ( 0.0 %)
+    D( 48) --> V( 12)  ampl =  0.0149   ( 0.0 %)
+    D( 49) --> V(  1)  ampl =  0.0891   ( 0.8 %)
+    D( 49) --> V(  2)  ampl = -0.0215   ( 0.0 %)
+    D( 49) --> V(  3)  ampl =  0.0361   ( 0.1 %)
+    D( 49) --> V(  4)  ampl = -0.0173   ( 0.0 %)
+    D( 49) --> V(  9)  ampl = -0.0159   ( 0.0 %)
+    D( 49) --> V( 11)  ampl = -0.0157   ( 0.0 %)
+    D( 49) --> V( 12)  ampl =  0.0249   ( 0.1 %)
+    D( 50) --> V(  1)  ampl =  0.7837   (61.4 %)
+    D( 50) --> V(  2)  ampl = -0.2783   ( 7.7 %)
+    D( 50) --> V(  3)  ampl = -0.0892   ( 0.8 %)
+    D( 50) --> V(  4)  ampl = -0.0775   ( 0.6 %)
+    D( 50) --> V(  5)  ampl = -0.0354   ( 0.1 %)
+    D( 50) --> V(  7)  ampl =  0.0217   ( 0.0 %)
+    D( 50) --> V(  8)  ampl =  0.0235   ( 0.1 %)
+    D( 50) --> V(  9)  ampl = -0.0192   ( 0.0 %)
+    D( 50) --> V( 12)  ampl =  0.0423   ( 0.2 %)
+    D( 50) --> V( 14)  ampl =  0.0151   ( 0.0 %)
+    D( 50) --> V( 25)  ampl =  0.0160   ( 0.0 %)
+    D( 51) --> V(  1)  ampl = -0.1049   ( 1.1 %)
+    D( 51) --> V(  2)  ampl = -0.0900   ( 0.8 %)
+    D( 51) --> V(  3)  ampl =  0.2617   ( 6.8 %)
+    D( 51) --> V(  6)  ampl = -0.0334   ( 0.1 %)
+    D( 51) --> V(  7)  ampl =  0.0216   ( 0.0 %)
+    D( 51) --> V(  8)  ampl = -0.0216   ( 0.0 %)
+    D( 51) --> V( 13)  ampl = -0.0144   ( 0.0 %)
+    D( 52) --> V(  2)  ampl = -0.2406   ( 5.8 %)
+    D( 52) --> V(  3)  ampl =  0.2072   ( 4.3 %)
+    D( 52) --> V(  6)  ampl = -0.0285   ( 0.1 %)
+    D( 52) --> V(  8)  ampl =  0.0664   ( 0.4 %)
+    D( 52) --> V( 10)  ampl = -0.0479   ( 0.2 %)
+    D( 52) --> V( 11)  ampl =  0.0276   ( 0.1 %)
+  These amplitudes account for 99.0 % of the total amplitude
+
+  Excited state  5:  4.4517 eV (singlet)
+    D( 37) --> V(  1)  ampl = -0.0357   ( 0.1 %)
+    D( 38) --> V(  1)  ampl =  0.0425   ( 0.2 %)
+    D( 38) --> V(  2)  ampl =  0.0273   ( 0.1 %)
+    D( 39) --> V(  1)  ampl =  0.0181   ( 0.0 %)
+    D( 39) --> V(  3)  ampl =  0.0269   ( 0.1 %)
+    D( 41) --> V(  1)  ampl =  0.0234   ( 0.1 %)
+    D( 41) --> V(  3)  ampl =  0.0280   ( 0.1 %)
+    D( 42) --> V(  1)  ampl = -0.0281   ( 0.1 %)
+    D( 42) --> V(  2)  ampl = -0.0283   ( 0.1 %)
+    D( 43) --> V(  3)  ampl =  0.0204   ( 0.0 %)
+    D( 44) --> V(  1)  ampl =  0.0298   ( 0.1 %)
+    D( 44) --> V(  2)  ampl =  0.0257   ( 0.1 %)
+    D( 44) --> V(  8)  ampl = -0.0212   ( 0.0 %)
+    D( 45) --> V(  1)  ampl =  0.0503   ( 0.3 %)
+    D( 45) --> V(  3)  ampl =  0.0240   ( 0.1 %)
+    D( 45) --> V(  7)  ampl =  0.0206   ( 0.0 %)
+    D( 46) --> V(  2)  ampl = -0.1043   ( 1.1 %)
+    D( 46) --> V(  3)  ampl = -0.1405   ( 2.0 %)
+    D( 46) --> V(  5)  ampl = -0.0270   ( 0.1 %)
+    D( 46) --> V(  6)  ampl =  0.0189   ( 0.0 %)
+    D( 46) --> V(  7)  ampl = -0.0227   ( 0.1 %)
+    D( 47) --> V(  2)  ampl = -0.0158   ( 0.0 %)
+    D( 47) --> V(  3)  ampl =  0.0240   ( 0.1 %)
+    D( 47) --> V(  7)  ampl =  0.0296   ( 0.1 %)
+    D( 47) --> V( 11)  ampl =  0.0170   ( 0.0 %)
+    D( 48) --> V(  1)  ampl = -0.0892   ( 0.8 %)
+    D( 48) --> V(  2)  ampl = -0.0218   ( 0.0 %)
+    D( 48) --> V(  3)  ampl =  0.0387   ( 0.1 %)
+    D( 48) --> V(  4)  ampl =  0.0173   ( 0.0 %)
+    D( 48) --> V(  9)  ampl =  0.0159   ( 0.0 %)
+    D( 48) --> V( 11)  ampl = -0.0152   ( 0.0 %)
+    D( 48) --> V( 12)  ampl = -0.0251   ( 0.1 %)
+    D( 49) --> V(  1)  ampl =  0.1365   ( 1.9 %)
+    D( 49) --> V(  2)  ampl =  0.0366   ( 0.1 %)
+    D( 49) --> V(  3)  ampl =  0.0186   ( 0.0 %)
+    D( 49) --> V(  4)  ampl = -0.0166   ( 0.0 %)
+    D( 49) --> V( 10)  ampl = -0.0160   ( 0.0 %)
+    D( 49) --> V( 12)  ampl =  0.0148   ( 0.0 %)
+    D( 50) --> V(  1)  ampl =  0.1047   ( 1.1 %)
+    D( 50) --> V(  2)  ampl = -0.0982   ( 1.0 %)
+    D( 50) --> V(  3)  ampl =  0.2704   ( 7.3 %)
+    D( 50) --> V(  6)  ampl = -0.0346   ( 0.1 %)
+    D( 50) --> V(  7)  ampl =  0.0225   ( 0.1 %)
+    D( 50) --> V(  8)  ampl = -0.0206   ( 0.0 %)
+    D( 50) --> V( 13)  ampl = -0.0148   ( 0.0 %)
+    D( 51) --> V(  1)  ampl =  0.7833   (61.4 %)
+    D( 51) --> V(  2)  ampl =  0.2708   ( 7.3 %)
+    D( 51) --> V(  3)  ampl =  0.0823   ( 0.7 %)
+    D( 51) --> V(  4)  ampl = -0.0776   ( 0.6 %)
+    D( 51) --> V(  5)  ampl =  0.0342   ( 0.1 %)
+    D( 51) --> V(  7)  ampl = -0.0224   ( 0.1 %)
+    D( 51) --> V(  8)  ampl = -0.0223   ( 0.0 %)
+    D( 51) --> V(  9)  ampl = -0.0193   ( 0.0 %)
+    D( 51) --> V( 12)  ampl =  0.0425   ( 0.2 %)
+    D( 51) --> V( 14)  ampl = -0.0148   ( 0.0 %)
+    D( 51) --> V( 25)  ampl =  0.0160   ( 0.0 %)
+    D( 52) --> V(  2)  ampl = -0.2062   ( 4.3 %)
+    D( 52) --> V(  3)  ampl = -0.2408   ( 5.8 %)
+    D( 52) --> V(  5)  ampl = -0.0284   ( 0.1 %)
+    D( 52) --> V(  7)  ampl = -0.0666   ( 0.4 %)
+    D( 52) --> V( 10)  ampl = -0.0276   ( 0.1 %)
+    D( 52) --> V( 11)  ampl = -0.0478   ( 0.2 %)
+  These amplitudes account for 99.0 % of the total amplitude
+
+  Excited state  6:  4.4636 eV (singlet)
+    D( 36) --> V(  2)  ampl =  0.0252   ( 0.1 %)
+    D( 37) --> V(  3)  ampl = -0.0252   ( 0.1 %)
+    D( 38) --> V(  3)  ampl =  0.0553   ( 0.3 %)
+    D( 39) --> V(  2)  ampl =  0.0545   ( 0.3 %)
+    D( 41) --> V(  2)  ampl =  0.0211   ( 0.0 %)
+    D( 41) --> V(  8)  ampl =  0.0158   ( 0.0 %)
+    D( 42) --> V(  3)  ampl = -0.0217   ( 0.0 %)
+    D( 42) --> V(  7)  ampl =  0.0159   ( 0.0 %)
+    D( 43) --> V(  1)  ampl =  0.0382   ( 0.1 %)
+    D( 44) --> V(  2)  ampl = -0.0642   ( 0.4 %)
+    D( 44) --> V(  3)  ampl =  0.0409   ( 0.2 %)
+    D( 44) --> V(  8)  ampl =  0.0217   ( 0.0 %)
+    D( 45) --> V(  2)  ampl =  0.0404   ( 0.2 %)
+    D( 45) --> V(  3)  ampl =  0.0650   ( 0.4 %)
+    D( 45) --> V(  7)  ampl =  0.0222   ( 0.0 %)
+    D( 46) --> V(  1)  ampl = -0.1413   ( 2.0 %)
+    D( 46) --> V(  4)  ampl =  0.0235   ( 0.1 %)
+    D( 48) --> V(  2)  ampl =  0.1213   ( 1.5 %)
+    D( 48) --> V(  3)  ampl = -0.0858   ( 0.7 %)
+    D( 48) --> V(  5)  ampl =  0.0174   ( 0.0 %)
+    D( 48) --> V(  6)  ampl =  0.0221   ( 0.0 %)
+    D( 48) --> V(  7)  ampl = -0.0190   ( 0.0 %)
+    D( 48) --> V( 11)  ampl = -0.0225   ( 0.1 %)
+    D( 49) --> V(  2)  ampl =  0.0862   ( 0.7 %)
+    D( 49) --> V(  3)  ampl =  0.1228   ( 1.5 %)
+    D( 49) --> V(  5)  ampl =  0.0222   ( 0.0 %)
+    D( 49) --> V(  6)  ampl = -0.0176   ( 0.0 %)
+    D( 49) --> V(  8)  ampl = -0.0193   ( 0.0 %)
+    D( 49) --> V( 10)  ampl =  0.0218   ( 0.0 %)
+    D( 50) --> V(  2)  ampl =  0.6401   (41.0 %)
+    D( 50) --> V(  3)  ampl = -0.0249   ( 0.1 %)
+    D( 50) --> V(  5)  ampl =  0.0715   ( 0.5 %)
+    D( 50) --> V(  6)  ampl =  0.0187   ( 0.0 %)
+    D( 50) --> V(  8)  ampl = -0.0729   ( 0.5 %)
+    D( 50) --> V( 10)  ampl =  0.0331   ( 0.1 %)
+    D( 50) --> V( 14)  ampl = -0.0253   ( 0.1 %)
+    D( 51) --> V(  2)  ampl =  0.0290   ( 0.1 %)
+    D( 51) --> V(  3)  ampl =  0.6498   (42.2 %)
+    D( 51) --> V(  5)  ampl =  0.0193   ( 0.0 %)
+    D( 51) --> V(  6)  ampl = -0.0726   ( 0.5 %)
+    D( 51) --> V(  7)  ampl =  0.0730   ( 0.5 %)
+    D( 51) --> V( 11)  ampl =  0.0334   ( 0.1 %)
+    D( 51) --> V( 13)  ampl = -0.0256   ( 0.1 %)
+    D( 52) --> V(  1)  ampl = -0.1928   ( 3.7 %)
+    D( 52) --> V(  4)  ampl =  0.0203   ( 0.0 %)
+    D( 52) --> V(  9)  ampl =  0.0226   ( 0.1 %)
+    D( 52) --> V( 12)  ampl = -0.0439   ( 0.2 %)
+  These amplitudes account for 99.0 % of the total amplitude
+
+ =======================================================
+   RPA excitation amplitudes in the canonical MO basis
+              (Print if |ampl| > 0.01)
+ =======================================================
+  Excited state  1:  3.9478 eV (singlet)
+  Norm of X vector = 1.006e+00
+  Norm of Y vector = 5.993e-03
+    X: D( 36) --> V(  7)  ampl = -0.0165   ( 0.0 %)
+    X: D( 37) --> V(  8)  ampl =  0.0164   ( 0.0 %)
+    X: D( 41) --> V(  2)  ampl = -0.0195   ( 0.0 %)
+    X: D( 41) --> V(  8)  ampl =  0.0163   ( 0.0 %)
+    X: D( 42) --> V(  3)  ampl =  0.0195   ( 0.0 %)
+    X: D( 42) --> V(  7)  ampl =  0.0163   ( 0.0 %)
+    X: D( 43) --> V(  1)  ampl =  0.0380   ( 0.1 %)
+    X: D( 44) --> V(  3)  ampl = -0.0272   ( 0.1 %)
+    X: D( 44) --> V(  8)  ampl =  0.0213   ( 0.0 %)
+    X: D( 45) --> V(  2)  ampl = -0.0272   ( 0.1 %)
+    X: D( 45) --> V(  7)  ampl =  0.0214   ( 0.0 %)
+    X: D( 46) --> V(  1)  ampl =  0.1206   ( 1.4 %)
+    Y: D( 46) --> V(  1)  ampl =  0.0155   ( 0.0 %)
+    X: D( 46) --> V(  9)  ampl = -0.0163   ( 0.0 %)
+    X: D( 46) --> V( 12)  ampl =  0.0218   ( 0.0 %)
+    X: D( 46) --> V( 25)  ampl =  0.0151   ( 0.0 %)
+    X: D( 47) --> V(  1)  ampl =  0.0263   ( 0.1 %)
+    X: D( 48) --> V(  2)  ampl =  0.0198   ( 0.0 %)
+    X: D( 48) --> V(  3)  ampl =  0.0922   ( 0.8 %)
+    Y: D( 48) --> V(  3)  ampl = -0.0167   ( 0.0 %)
+    X: D( 48) --> V(  6)  ampl = -0.0143   ( 0.0 %)
+    X: D( 48) --> V( 11)  ampl = -0.0159   ( 0.0 %)
+    X: D( 49) --> V(  2)  ampl = -0.0933   ( 0.9 %)
+    Y: D( 49) --> V(  2)  ampl =  0.0169   ( 0.0 %)
+    X: D( 49) --> V(  3)  ampl =  0.0197   ( 0.0 %)
+    X: D( 49) --> V(  5)  ampl = -0.0144   ( 0.0 %)
+    X: D( 49) --> V( 10)  ampl =  0.0160   ( 0.0 %)
+    X: D( 50) --> V(  2)  ampl =  0.2333   ( 5.4 %)
+    Y: D( 50) --> V(  2)  ampl = -0.0163   ( 0.0 %)
+    X: D( 50) --> V(  3)  ampl = -0.0965   ( 0.9 %)
+    X: D( 50) --> V(  5)  ampl =  0.0315   ( 0.1 %)
+    X: D( 50) --> V(  6)  ampl =  0.0175   ( 0.0 %)
+    X: D( 50) --> V(  7)  ampl = -0.0155   ( 0.0 %)
+    X: D( 51) --> V(  2)  ampl =  0.0980   ( 0.9 %)
+    X: D( 51) --> V(  3)  ampl =  0.2311   ( 5.3 %)
+    Y: D( 51) --> V(  3)  ampl = -0.0161   ( 0.0 %)
+    X: D( 51) --> V(  5)  ampl =  0.0177   ( 0.0 %)
+    X: D( 51) --> V(  6)  ampl = -0.0311   ( 0.1 %)
+    X: D( 51) --> V(  8)  ampl = -0.0153   ( 0.0 %)
+    X: D( 52) --> V(  1)  ampl =  0.9041   (80.8 %)
+    Y: D( 52) --> V(  1)  ampl = -0.0229   ( 0.1 %)
+    X: D( 52) --> V(  4)  ampl = -0.0890   ( 0.8 %)
+    X: D( 52) --> V( 12)  ampl =  0.0236   ( 0.1 %)
+    X: D( 52) --> V( 25)  ampl =  0.0257   ( 0.1 %)
+  These amplitudes account for 98.7 % of the total amplitude
+
+  Excited state  2:  3.9994 eV (singlet)
+  Norm of X vector = 1.006e+00
+  Norm of Y vector = 6.255e-03
+    X: D( 32) --> V(  7)  ampl = -0.0142   ( 0.0 %)
+    X: D( 35) --> V(  2)  ampl =  0.0189   ( 0.0 %)
+    X: D( 36) --> V(  1)  ampl =  0.0223   ( 0.0 %)
+    X: D( 43) --> V(  2)  ampl =  0.0365   ( 0.1 %)
+    X: D( 44) --> V(  7)  ampl =  0.0218   ( 0.0 %)
+    X: D( 45) --> V(  1)  ampl = -0.0241   ( 0.1 %)
+    X: D( 45) --> V(  8)  ampl =  0.0218   ( 0.0 %)
+    X: D( 46) --> V(  2)  ampl =  0.1213   ( 1.5 %)
+    X: D( 46) --> V(  5)  ampl =  0.0216   ( 0.0 %)
+    X: D( 46) --> V(  8)  ampl = -0.0370   ( 0.1 %)
+    X: D( 46) --> V( 10)  ampl =  0.0276   ( 0.1 %)
+    X: D( 47) --> V(  2)  ampl =  0.0501   ( 0.2 %)
+    X: D( 47) --> V(  3)  ampl =  0.0319   ( 0.1 %)
+    X: D( 47) --> V(  8)  ampl = -0.0335   ( 0.1 %)
+    X: D( 48) --> V(  1)  ampl =  0.0163   ( 0.0 %)
+    X: D( 48) --> V(  2)  ampl =  0.0303   ( 0.1 %)
+    X: D( 48) --> V(  3)  ampl =  0.0641   ( 0.4 %)
+    X: D( 49) --> V(  1)  ampl = -0.0487   ( 0.2 %)
+    Y: D( 49) --> V(  1)  ampl =  0.0234   ( 0.1 %)
+    X: D( 49) --> V(  2)  ampl =  0.0627   ( 0.4 %)
+    X: D( 49) --> V(  3)  ampl = -0.0301   ( 0.1 %)
+    X: D( 49) --> V( 12)  ampl =  0.0196   ( 0.0 %)
+    X: D( 50) --> V(  1)  ampl =  0.2957   ( 8.6 %)
+    X: D( 50) --> V(  2)  ampl = -0.1730   ( 3.0 %)
+    Y: D( 50) --> V(  2)  ampl =  0.0149   ( 0.0 %)
+    X: D( 50) --> V(  4)  ampl = -0.0329   ( 0.1 %)
+    X: D( 50) --> V(  5)  ampl = -0.0243   ( 0.1 %)
+    X: D( 51) --> V(  1)  ampl =  0.2859   ( 8.1 %)
+    X: D( 51) --> V(  3)  ampl =  0.1772   ( 3.1 %)
+    Y: D( 51) --> V(  3)  ampl = -0.0152   ( 0.0 %)
+    X: D( 51) --> V(  4)  ampl = -0.0296   ( 0.1 %)
+    X: D( 51) --> V(  6)  ampl = -0.0248   ( 0.1 %)
+    X: D( 51) --> V( 12)  ampl =  0.0166   ( 0.0 %)
+    X: D( 52) --> V(  2)  ampl =  0.8280   (67.7 %)
+    Y: D( 52) --> V(  2)  ampl = -0.0242   ( 0.1 %)
+    X: D( 52) --> V(  3)  ampl =  0.1241   ( 1.5 %)
+    X: D( 52) --> V(  5)  ampl =  0.1064   ( 1.1 %)
+    X: D( 52) --> V(  7)  ampl =  0.0291   ( 0.1 %)
+    X: D( 52) --> V(  8)  ampl = -0.0790   ( 0.6 %)
+    X: D( 52) --> V( 10)  ampl =  0.0280   ( 0.1 %)
+    X: D( 52) --> V( 14)  ampl = -0.0272   ( 0.1 %)
+    X: D( 52) --> V( 19)  ampl = -0.0145   ( 0.0 %)
+    X: D( 52) --> V( 37)  ampl = -0.0169   ( 0.0 %)
+  These amplitudes account for 98.3 % of the total amplitude
+
+  Excited state  3:  4.0000 eV (singlet)
+  Norm of X vector = 1.006e+00
+  Norm of Y vector = 6.242e-03
+    X: D( 35) --> V(  3)  ampl =  0.0189   ( 0.0 %)
+    X: D( 37) --> V(  1)  ampl = -0.0223   ( 0.0 %)
+    X: D( 43) --> V(  3)  ampl =  0.0365   ( 0.1 %)
+    X: D( 44) --> V(  1)  ampl = -0.0241   ( 0.1 %)
+    X: D( 44) --> V(  8)  ampl = -0.0219   ( 0.0 %)
+    X: D( 45) --> V(  7)  ampl =  0.0217   ( 0.0 %)
+    X: D( 46) --> V(  3)  ampl =  0.1216   ( 1.5 %)
+    X: D( 46) --> V(  6)  ampl = -0.0216   ( 0.0 %)
+    X: D( 46) --> V(  7)  ampl =  0.0370   ( 0.1 %)
+    X: D( 46) --> V( 11)  ampl =  0.0276   ( 0.1 %)
+    X: D( 47) --> V(  2)  ampl = -0.0321   ( 0.1 %)
+    X: D( 47) --> V(  3)  ampl =  0.0501   ( 0.2 %)
+    X: D( 47) --> V(  7)  ampl =  0.0336   ( 0.1 %)
+    X: D( 48) --> V(  1)  ampl =  0.0485   ( 0.2 %)
+    Y: D( 48) --> V(  1)  ampl = -0.0232   ( 0.1 %)
+    X: D( 48) --> V(  2)  ampl =  0.0634   ( 0.4 %)
+    X: D( 48) --> V(  3)  ampl = -0.0306   ( 0.1 %)
+    X: D( 48) --> V( 12)  ampl = -0.0197   ( 0.0 %)
+    X: D( 49) --> V(  1)  ampl =  0.0166   ( 0.0 %)
+    X: D( 49) --> V(  2)  ampl = -0.0298   ( 0.1 %)
+    X: D( 49) --> V(  3)  ampl = -0.0635   ( 0.4 %)
+    X: D( 50) --> V(  1)  ampl = -0.2854   ( 8.0 %)
+    X: D( 50) --> V(  3)  ampl =  0.1764   ( 3.1 %)
+    Y: D( 50) --> V(  3)  ampl = -0.0151   ( 0.0 %)
+    X: D( 50) --> V(  4)  ampl =  0.0296   ( 0.1 %)
+    X: D( 50) --> V(  6)  ampl = -0.0247   ( 0.1 %)
+    X: D( 50) --> V( 12)  ampl = -0.0167   ( 0.0 %)
+    X: D( 51) --> V(  1)  ampl =  0.2952   ( 8.6 %)
+    X: D( 51) --> V(  2)  ampl =  0.1754   ( 3.0 %)
+    Y: D( 51) --> V(  2)  ampl = -0.0149   ( 0.0 %)
+    X: D( 51) --> V(  4)  ampl = -0.0329   ( 0.1 %)
+    X: D( 51) --> V(  5)  ampl =  0.0244   ( 0.1 %)
+    X: D( 52) --> V(  2)  ampl = -0.1238   ( 1.5 %)
+    X: D( 52) --> V(  3)  ampl =  0.8280   (67.7 %)
+    Y: D( 52) --> V(  3)  ampl = -0.0242   ( 0.1 %)
+    X: D( 52) --> V(  6)  ampl = -0.1062   ( 1.1 %)
+    X: D( 52) --> V(  7)  ampl =  0.0792   ( 0.6 %)
+    X: D( 52) --> V(  8)  ampl =  0.0291   ( 0.1 %)
+    X: D( 52) --> V( 11)  ampl =  0.0281   ( 0.1 %)
+    X: D( 52) --> V( 13)  ampl = -0.0272   ( 0.1 %)
+    X: D( 52) --> V( 18)  ampl = -0.0146   ( 0.0 %)
+    X: D( 52) --> V( 38)  ampl =  0.0169   ( 0.0 %)
+  These amplitudes account for 98.3 % of the total amplitude
+
+  Excited state  4:  4.4084 eV (singlet)
+  Norm of X vector = 1.002e+00
+  Norm of Y vector = 2.106e-03
+    X: D( 37) --> V(  1)  ampl = -0.0304   ( 0.1 %)
+    X: D( 38) --> V(  1)  ampl =  0.0429   ( 0.2 %)
+    X: D( 38) --> V(  2)  ampl =  0.0271   ( 0.1 %)
+    X: D( 39) --> V(  3)  ampl =  0.0269   ( 0.1 %)
+    X: D( 41) --> V(  2)  ampl =  0.0151   ( 0.0 %)
+    X: D( 41) --> V(  3)  ampl =  0.0243   ( 0.1 %)
+    X: D( 42) --> V(  1)  ampl = -0.0338   ( 0.1 %)
+    X: D( 42) --> V(  2)  ampl = -0.0245   ( 0.1 %)
+    X: D( 42) --> V(  3)  ampl =  0.0158   ( 0.0 %)
+    X: D( 44) --> V(  1)  ampl =  0.0479   ( 0.2 %)
+    X: D( 44) --> V(  2)  ampl =  0.0189   ( 0.0 %)
+    X: D( 44) --> V(  8)  ampl = -0.0173   ( 0.0 %)
+    X: D( 45) --> V(  1)  ampl =  0.0324   ( 0.1 %)
+    X: D( 45) --> V(  3)  ampl =  0.0175   ( 0.0 %)
+    X: D( 45) --> V(  7)  ampl =  0.0170   ( 0.0 %)
+    X: D( 46) --> V(  2)  ampl = -0.0492   ( 0.2 %)
+    X: D( 46) --> V(  3)  ampl = -0.2070   ( 4.3 %)
+    X: D( 46) --> V(  5)  ampl = -0.0205   ( 0.0 %)
+    X: D( 46) --> V(  6)  ampl =  0.0345   ( 0.1 %)
+    X: D( 46) --> V(  7)  ampl = -0.0279   ( 0.1 %)
+    X: D( 46) --> V( 11)  ampl = -0.0157   ( 0.0 %)
+    X: D( 47) --> V(  2)  ampl = -0.0231   ( 0.1 %)
+    X: D( 47) --> V(  7)  ampl =  0.0212   ( 0.0 %)
+    X: D( 47) --> V( 11)  ampl =  0.0170   ( 0.0 %)
+    X: D( 48) --> V(  1)  ampl = -0.1224   ( 1.5 %)
+    X: D( 48) --> V(  3)  ampl =  0.0279   ( 0.1 %)
+    X: D( 48) --> V(  4)  ampl =  0.0192   ( 0.0 %)
+    X: D( 48) --> V(  9)  ampl =  0.0162   ( 0.0 %)
+    X: D( 48) --> V( 12)  ampl = -0.0250   ( 0.1 %)
+    X: D( 49) --> V(  1)  ampl =  0.0837   ( 0.7 %)
+    X: D( 49) --> V(  2)  ampl =  0.0263   ( 0.1 %)
+    X: D( 50) --> V(  1)  ampl = -0.1966   ( 3.9 %)
+    X: D( 50) --> V(  2)  ampl = -0.0312   ( 0.1 %)
+    X: D( 50) --> V(  3)  ampl =  0.2637   ( 6.9 %)
+    X: D( 50) --> V(  4)  ampl =  0.0215   ( 0.0 %)
+    X: D( 50) --> V(  6)  ampl = -0.0345   ( 0.1 %)
+    X: D( 50) --> V(  8)  ampl = -0.0210   ( 0.0 %)
+    X: D( 50) --> V(  9)  ampl =  0.0162   ( 0.0 %)
+    X: D( 51) --> V(  1)  ampl =  0.7251   (52.4 %)
+    X: D( 51) --> V(  2)  ampl =  0.2633   ( 6.9 %)
+    X: D( 51) --> V(  3)  ampl =  0.0176   ( 0.0 %)
+    X: D( 51) --> V(  4)  ampl = -0.0730   ( 0.5 %)
+    X: D( 51) --> V(  5)  ampl =  0.0339   ( 0.1 %)
+    X: D( 51) --> V(  7)  ampl = -0.0222   ( 0.0 %)
+    X: D( 51) --> V( 12)  ampl =  0.0382   ( 0.1 %)
+    X: D( 51) --> V( 25)  ampl =  0.0154   ( 0.0 %)
+    X: D( 52) --> V(  2)  ampl = -0.1127   ( 1.3 %)
+    X: D( 52) --> V(  3)  ampl = -0.4079   (16.6 %)
+    X: D( 52) --> V(  5)  ampl = -0.0247   ( 0.1 %)
+    X: D( 52) --> V(  6)  ampl =  0.0332   ( 0.1 %)
+    X: D( 52) --> V(  7)  ampl = -0.0837   ( 0.7 %)
+    X: D( 52) --> V(  8)  ampl = -0.0200   ( 0.0 %)
+    X: D( 52) --> V( 11)  ampl = -0.0578   ( 0.3 %)
+    X: D( 52) --> V( 13)  ampl =  0.0154   ( 0.0 %)
+  These amplitudes account for 98.9 % of the total amplitude
+
+  Excited state  5:  4.4097 eV (singlet)
+  Norm of X vector = 1.002e+00
+  Norm of Y vector = 2.034e-03
+    X: D( 36) --> V(  1)  ampl =  0.0304   ( 0.1 %)
+    X: D( 38) --> V(  3)  ampl =  0.0263   ( 0.1 %)
+    X: D( 39) --> V(  1)  ampl =  0.0430   ( 0.2 %)
+    X: D( 39) --> V(  2)  ampl = -0.0276   ( 0.1 %)
+    X: D( 41) --> V(  1)  ampl =  0.0337   ( 0.1 %)
+    X: D( 41) --> V(  2)  ampl = -0.0245   ( 0.1 %)
+    X: D( 41) --> V(  3)  ampl =  0.0154   ( 0.0 %)
+    X: D( 42) --> V(  2)  ampl = -0.0156   ( 0.0 %)
+    X: D( 42) --> V(  3)  ampl = -0.0239   ( 0.1 %)
+    X: D( 44) --> V(  1)  ampl = -0.0324   ( 0.1 %)
+    X: D( 44) --> V(  3)  ampl =  0.0178   ( 0.0 %)
+    X: D( 44) --> V(  7)  ampl =  0.0170   ( 0.0 %)
+    X: D( 45) --> V(  1)  ampl =  0.0478   ( 0.2 %)
+    X: D( 45) --> V(  2)  ampl = -0.0187   ( 0.0 %)
+    X: D( 45) --> V(  8)  ampl =  0.0175   ( 0.0 %)
+    X: D( 46) --> V(  2)  ampl = -0.2071   ( 4.3 %)
+    X: D( 46) --> V(  3)  ampl =  0.0491   ( 0.2 %)
+    X: D( 46) --> V(  5)  ampl = -0.0346   ( 0.1 %)
+    X: D( 46) --> V(  6)  ampl = -0.0205   ( 0.0 %)
+    X: D( 46) --> V(  8)  ampl =  0.0278   ( 0.1 %)
+    X: D( 46) --> V( 10)  ampl = -0.0157   ( 0.0 %)
+    X: D( 47) --> V(  3)  ampl =  0.0230   ( 0.1 %)
+    X: D( 47) --> V(  8)  ampl = -0.0212   ( 0.0 %)
+    X: D( 47) --> V( 10)  ampl =  0.0170   ( 0.0 %)
+    X: D( 48) --> V(  1)  ampl =  0.0836   ( 0.7 %)
+    X: D( 48) --> V(  2)  ampl = -0.0281   ( 0.1 %)
+    X: D( 49) --> V(  1)  ampl =  0.1221   ( 1.5 %)
+    X: D( 49) --> V(  3)  ampl =  0.0259   ( 0.1 %)
+    X: D( 49) --> V(  4)  ampl = -0.0191   ( 0.0 %)
+    X: D( 49) --> V(  9)  ampl = -0.0162   ( 0.0 %)
+    X: D( 49) --> V( 12)  ampl =  0.0248   ( 0.1 %)
+    X: D( 50) --> V(  1)  ampl =  0.7252   (52.4 %)
+    X: D( 50) --> V(  2)  ampl = -0.2707   ( 7.3 %)
+    X: D( 50) --> V(  3)  ampl = -0.0230   ( 0.1 %)
+    X: D( 50) --> V(  4)  ampl = -0.0728   ( 0.5 %)
+    X: D( 50) --> V(  5)  ampl = -0.0352   ( 0.1 %)
+    X: D( 50) --> V(  7)  ampl =  0.0218   ( 0.0 %)
+    X: D( 50) --> V( 12)  ampl =  0.0380   ( 0.1 %)
+    X: D( 50) --> V( 25)  ampl =  0.0153   ( 0.0 %)
+    X: D( 51) --> V(  1)  ampl =  0.1959   ( 3.8 %)
+    X: D( 51) --> V(  2)  ampl = -0.0241   ( 0.1 %)
+    X: D( 51) --> V(  3)  ampl =  0.2564   ( 6.5 %)
+    X: D( 51) --> V(  4)  ampl = -0.0214   ( 0.0 %)
+    X: D( 51) --> V(  6)  ampl = -0.0335   ( 0.1 %)
+    X: D( 51) --> V(  8)  ampl = -0.0217   ( 0.0 %)
+    X: D( 51) --> V(  9)  ampl = -0.0162   ( 0.0 %)
+    X: D( 52) --> V(  2)  ampl = -0.4079   (16.6 %)
+    X: D( 52) --> V(  3)  ampl =  0.1129   ( 1.3 %)
+    X: D( 52) --> V(  5)  ampl = -0.0332   ( 0.1 %)
+    X: D( 52) --> V(  6)  ampl = -0.0248   ( 0.1 %)
+    X: D( 52) --> V(  7)  ampl = -0.0203   ( 0.0 %)
+    X: D( 52) --> V(  8)  ampl =  0.0832   ( 0.7 %)
+    X: D( 52) --> V( 10)  ampl = -0.0578   ( 0.3 %)
+    X: D( 52) --> V( 14)  ampl =  0.0153   ( 0.0 %)
+  These amplitudes account for 98.9 % of the total amplitude
+
+  Excited state  6:  4.4256 eV (singlet)
+  Norm of X vector = 1.002e+00
+  Norm of Y vector = 2.038e-03
+    X: D( 36) --> V(  2)  ampl =  0.0223   ( 0.0 %)
+    X: D( 37) --> V(  3)  ampl = -0.0223   ( 0.0 %)
+    X: D( 38) --> V(  3)  ampl =  0.0546   ( 0.3 %)
+    X: D( 39) --> V(  2)  ampl =  0.0541   ( 0.3 %)
+    X: D( 41) --> V(  2)  ampl =  0.0244   ( 0.1 %)
+    X: D( 41) --> V(  8)  ampl =  0.0146   ( 0.0 %)
+    X: D( 42) --> V(  3)  ampl = -0.0246   ( 0.1 %)
+    X: D( 42) --> V(  7)  ampl =  0.0147   ( 0.0 %)
+    X: D( 43) --> V(  1)  ampl =  0.0289   ( 0.1 %)
+    X: D( 44) --> V(  2)  ampl = -0.0562   ( 0.3 %)
+    X: D( 44) --> V(  3)  ampl =  0.0404   ( 0.2 %)
+    X: D( 44) --> V(  7)  ampl =  0.0150   ( 0.0 %)
+    X: D( 44) --> V(  8)  ampl =  0.0153   ( 0.0 %)
+    X: D( 45) --> V(  2)  ampl =  0.0402   ( 0.2 %)
+    X: D( 45) --> V(  3)  ampl =  0.0569   ( 0.3 %)
+    X: D( 45) --> V(  7)  ampl =  0.0158   ( 0.0 %)
+    X: D( 45) --> V(  8)  ampl = -0.0147   ( 0.0 %)
+    X: D( 46) --> V(  1)  ampl = -0.1834   ( 3.4 %)
+    X: D( 46) --> V(  4)  ampl =  0.0287   ( 0.1 %)
+    X: D( 48) --> V(  2)  ampl =  0.1065   ( 1.1 %)
+    X: D( 48) --> V(  3)  ampl = -0.0804   ( 0.6 %)
+    X: D( 48) --> V(  5)  ampl =  0.0159   ( 0.0 %)
+    X: D( 48) --> V(  6)  ampl =  0.0198   ( 0.0 %)
+    X: D( 48) --> V(  7)  ampl = -0.0205   ( 0.0 %)
+    X: D( 48) --> V( 11)  ampl = -0.0211   ( 0.0 %)
+    X: D( 49) --> V(  2)  ampl =  0.0807   ( 0.6 %)
+    X: D( 49) --> V(  3)  ampl =  0.1073   ( 1.1 %)
+    X: D( 49) --> V(  5)  ampl =  0.0199   ( 0.0 %)
+    X: D( 49) --> V(  6)  ampl = -0.0161   ( 0.0 %)
+    X: D( 49) --> V(  8)  ampl = -0.0207   ( 0.0 %)
+    X: D( 49) --> V( 10)  ampl =  0.0206   ( 0.0 %)
+    X: D( 50) --> V(  2)  ampl =  0.6181   (38.0 %)
+    X: D( 50) --> V(  3)  ampl = -0.0642   ( 0.4 %)
+    X: D( 50) --> V(  5)  ampl =  0.0683   ( 0.5 %)
+    X: D( 50) --> V(  6)  ampl =  0.0243   ( 0.1 %)
+    X: D( 50) --> V(  8)  ampl = -0.0741   ( 0.5 %)
+    X: D( 50) --> V( 10)  ampl =  0.0336   ( 0.1 %)
+    X: D( 50) --> V( 14)  ampl = -0.0257   ( 0.1 %)
+    X: D( 51) --> V(  2)  ampl =  0.0693   ( 0.5 %)
+    X: D( 51) --> V(  3)  ampl =  0.6252   (38.9 %)
+    X: D( 51) --> V(  5)  ampl =  0.0250   ( 0.1 %)
+    X: D( 51) --> V(  6)  ampl = -0.0690   ( 0.5 %)
+    X: D( 51) --> V(  7)  ampl =  0.0740   ( 0.5 %)
+    X: D( 51) --> V( 11)  ampl =  0.0339   ( 0.1 %)
+    X: D( 51) --> V( 13)  ampl = -0.0258   ( 0.1 %)
+    X: D( 52) --> V(  1)  ampl = -0.2994   ( 8.9 %)
+    X: D( 52) --> V(  4)  ampl =  0.0282   ( 0.1 %)
+    X: D( 52) --> V(  9)  ampl =  0.0250   ( 0.1 %)
+    X: D( 52) --> V( 12)  ampl = -0.0485   ( 0.2 %)
+  These amplitudes account for 99.0 % of the total amplitude
+
+ =====================================
+    Mulliken & Loewdin analysis of   
+    e-/h+ contributions to (Delta)P  
+ =====================================
+  Mulliken analysis of TDA State    1
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.0759   0.6273   0.5515
+      2  -0.0672   0.0352  -0.0319
+      3  -0.0671   0.0351  -0.0320
+      4  -0.1234   0.0192  -0.1043
+      5  -0.1198   0.0187  -0.1011
+      6  -0.1044   0.0039  -0.1005
+      7  -0.0136   0.0593   0.0457
+      8  -0.0691   0.0359  -0.0332
+      9  -0.1196   0.0188  -0.1008
+     10  -0.1075   0.0039  -0.1035
+     11  -0.0140   0.0604   0.0463
+     12  -0.1042   0.0039  -0.1003
+     13  -0.0136   0.0589   0.0453
+     14  -0.0001   0.0051   0.0050
+     15  -0.0000   0.0002   0.0002
+     16  -0.0003   0.0001  -0.0002
+     17  -0.0003   0.0001  -0.0002
+     18  -0.0000   0.0002   0.0002
+     19  -0.0001   0.0051   0.0049
+     20  -0.0001   0.0002   0.0002
+     21  -0.0001   0.0051   0.0050
+     22  -0.0003   0.0001  -0.0002
+     23   0.0002   0.0011   0.0013
+     24   0.0002   0.0011   0.0013
+     25   0.0002   0.0011   0.0013
+  Sum:   -1.0000   1.0000  -0.0000
+ -------------------------------------
+  Loewdin analysis of TDA State    1
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.0536   0.6166   0.5630
+      2  -0.0747   0.0365  -0.0383
+      3  -0.0748   0.0363  -0.0385
+      4  -0.1223   0.0214  -0.1009
+      5  -0.1190   0.0210  -0.0979
+      6  -0.1007   0.0056  -0.0950
+      7  -0.0171   0.0581   0.0410
+      8  -0.0767   0.0371  -0.0396
+      9  -0.1187   0.0211  -0.0976
+     10  -0.1037   0.0057  -0.0980
+     11  -0.0175   0.0591   0.0416
+     12  -0.1005   0.0057  -0.0948
+     13  -0.0170   0.0576   0.0406
+     14  -0.0003   0.0045   0.0042
+     15  -0.0001   0.0002   0.0001
+     16  -0.0004   0.0001  -0.0003
+     17  -0.0004   0.0001  -0.0003
+     18  -0.0001   0.0002   0.0001
+     19  -0.0003   0.0045   0.0042
+     20  -0.0001   0.0002   0.0001
+     21  -0.0003   0.0045   0.0042
+     22  -0.0004   0.0001  -0.0003
+     23  -0.0004   0.0013   0.0008
+     24  -0.0004   0.0012   0.0008
+     25  -0.0005   0.0013   0.0008
+  Sum:   -1.0000   1.0000  -0.0000
+ -------------------------------------
+  Mulliken analysis of TDA State    2
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.1675   0.6368   0.4693
+      2  -0.0594   0.0358  -0.0236
+      3  -0.0226   0.0153  -0.0073
+      4  -0.1915   0.0265  -0.1651
+      5  -0.1107   0.0200  -0.0908
+      6  -0.0968   0.0025  -0.0943
+      7  -0.0111   0.0644   0.0533
+      8  -0.1133   0.0476  -0.0657
+      9  -0.0184   0.0068  -0.0116
+     10  -0.1594   0.0058  -0.1536
+     11  -0.0223   0.0896   0.0674
+     12  -0.0122   0.0058  -0.0064
+     13  -0.0045   0.0254   0.0209
+     14  -0.0007   0.0047   0.0040
+     15  -0.0001   0.0003   0.0002
+     16  -0.0000   0.0001   0.0001
+     17  -0.0006   0.0001  -0.0005
+     18  -0.0001   0.0004   0.0002
+     19  -0.0000   0.0036   0.0036
+     20  -0.0003   0.0002  -0.0000
+     21  -0.0013   0.0044   0.0031
+     22  -0.0001   0.0001  -0.0001
+     23  -0.0008   0.0012   0.0005
+     24  -0.0019   0.0011  -0.0008
+     25  -0.0043   0.0013  -0.0030
+  Sum:   -1.0000   1.0000   0.0000
+ -------------------------------------
+  Loewdin analysis of TDA State    2
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.1612   0.6257   0.4646
+      2  -0.0621   0.0373  -0.0248
+      3  -0.0313   0.0169  -0.0144
+      4  -0.1805   0.0281  -0.1524
+      5  -0.1060   0.0220  -0.0839
+      6  -0.0958   0.0044  -0.0914
+      7  -0.0141   0.0631   0.0490
+      8  -0.1179   0.0490  -0.0689
+      9  -0.0206   0.0092  -0.0114
+     10  -0.1559   0.0079  -0.1480
+     11  -0.0282   0.0874   0.0592
+     12  -0.0133   0.0068  -0.0065
+     13  -0.0052   0.0255   0.0203
+     14  -0.0005   0.0041   0.0036
+     15  -0.0001   0.0003   0.0002
+     16  -0.0000   0.0001   0.0001
+     17  -0.0007   0.0001  -0.0006
+     18  -0.0001   0.0003   0.0002
+     19  -0.0003   0.0033   0.0030
+     20  -0.0002   0.0002  -0.0000
+     21  -0.0009   0.0039   0.0030
+     22  -0.0005   0.0001  -0.0005
+     23  -0.0007   0.0014   0.0008
+     24  -0.0012   0.0013   0.0001
+     25  -0.0028   0.0015  -0.0012
+  Sum:   -1.0000   1.0000  -0.0000
+ -------------------------------------
+  Mulliken analysis of TDA State    3
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.1675   0.6368   0.4694
+      2  -0.0714   0.0303  -0.0411
+      3  -0.1083   0.0507  -0.0576
+      4  -0.0199   0.0088  -0.0111
+      5  -0.1041   0.0157  -0.0884
+      6  -0.0831   0.0069  -0.0762
+      7  -0.0142   0.0557   0.0415
+      8  -0.0156   0.0177   0.0021
+      9  -0.1966   0.0288  -0.1678
+     10  -0.0174   0.0036  -0.0138
+     11  -0.0027   0.0291   0.0264
+     12  -0.1679   0.0035  -0.1644
+     13  -0.0209   0.0947   0.0737
+     14  -0.0006   0.0037   0.0031
+     15  -0.0003   0.0003   0.0001
+     16  -0.0005   0.0000  -0.0004
+     17   0.0001   0.0001   0.0002
+     18  -0.0002   0.0002   0.0001
+     19  -0.0013   0.0049   0.0036
+     20  -0.0001   0.0004   0.0003
+     21  -0.0001   0.0041   0.0041
+     22  -0.0003   0.0001  -0.0002
+     23  -0.0039   0.0012  -0.0027
+     24  -0.0027   0.0013  -0.0014
+     25  -0.0004   0.0011   0.0008
+  Sum:   -1.0000   1.0000  -0.0000
+ -------------------------------------
+  Loewdin analysis of TDA State    3
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.1612   0.6257   0.4646
+      2  -0.0794   0.0318  -0.0476
+      3  -0.1102   0.0521  -0.0581
+      4  -0.0220   0.0112  -0.0108
+      5  -0.0997   0.0177  -0.0820
+      6  -0.0819   0.0084  -0.0735
+      7  -0.0177   0.0547   0.0370
+      8  -0.0217   0.0193  -0.0024
+      9  -0.1854   0.0305  -0.1549
+     10  -0.0187   0.0048  -0.0139
+     11  -0.0031   0.0290   0.0259
+     12  -0.1645   0.0059  -0.1586
+     13  -0.0267   0.0923   0.0656
+     14  -0.0006   0.0034   0.0028
+     15  -0.0002   0.0003   0.0000
+     16  -0.0008   0.0000  -0.0007
+     17  -0.0001   0.0001  -0.0000
+     18  -0.0001   0.0002   0.0001
+     19  -0.0008   0.0042   0.0034
+     20  -0.0001   0.0003   0.0003
+     21  -0.0002   0.0037   0.0034
+     22  -0.0003   0.0001  -0.0002
+     23  -0.0025   0.0014  -0.0010
+     24  -0.0019   0.0015  -0.0004
+     25  -0.0003   0.0013   0.0010
+  Sum:   -1.0000   1.0000  -0.0000
+ -------------------------------------
+  Mulliken analysis of TDA State    4
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.0986   0.6297   0.5311
+      2  -0.0196   0.0165  -0.0031
+      3  -0.0726   0.0257  -0.0469
+      4  -0.2044   0.0327  -0.1718
+      5  -0.0346   0.0123  -0.0224
+      6  -0.0244   0.0255   0.0011
+      7  -0.0059   0.0261   0.0202
+      8  -0.1000   0.0289  -0.0711
+      9  -0.1374   0.0145  -0.1229
+     10  -0.1509   0.0081  -0.1428
+     11  -0.0266   0.0447   0.0180
+     12  -0.1037   0.0211  -0.0826
+     13  -0.0174   0.0841   0.0667
+     14  -0.0003   0.0014   0.0011
+     15  -0.0001   0.0001  -0.0001
+     16  -0.0003   0.0003   0.0000
+     17  -0.0001   0.0007   0.0006
+     18  -0.0001   0.0002   0.0002
+     19  -0.0004   0.0141   0.0138
+     20  -0.0002   0.0001  -0.0001
+     21  -0.0000   0.0074   0.0074
+     22  -0.0005   0.0002  -0.0003
+     23  -0.0005   0.0010   0.0005
+     24  -0.0001   0.0033   0.0031
+     25  -0.0011   0.0012   0.0000
+  Sum:   -1.0000   1.0000  -0.0000
+ -------------------------------------
+  Loewdin analysis of TDA State    4
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.0854   0.6170   0.5316
+      2  -0.0254   0.0188  -0.0065
+      3  -0.0832   0.0263  -0.0569
+      4  -0.1971   0.0337  -0.1634
+      5  -0.0378   0.0139  -0.0239
+      6  -0.0239   0.0267   0.0028
+      7  -0.0065   0.0264   0.0199
+      8  -0.1034   0.0304  -0.0730
+      9  -0.1312   0.0176  -0.1136
+     10  -0.1474   0.0092  -0.1382
+     11  -0.0318   0.0442   0.0124
+     12  -0.1005   0.0218  -0.0787
+     13  -0.0213   0.0843   0.0630
+     14  -0.0005   0.0012   0.0007
+     15  -0.0001   0.0001  -0.0000
+     16  -0.0004   0.0003  -0.0001
+     17  -0.0001   0.0008   0.0006
+     18  -0.0001   0.0003   0.0003
+     19  -0.0002   0.0135   0.0133
+     20  -0.0002   0.0002  -0.0000
+     21  -0.0004   0.0073   0.0069
+     22  -0.0007   0.0002  -0.0005
+     23  -0.0009   0.0011   0.0002
+     24  -0.0004   0.0034   0.0031
+     25  -0.0010   0.0012   0.0002
+  Sum:   -1.0000   1.0000  -0.0000
+ -------------------------------------
+  Mulliken analysis of TDA State    5
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.0986   0.6298   0.5312
+      2  -0.1061   0.0307  -0.0754
+      3  -0.0557   0.0221  -0.0337
+      4  -0.0515   0.0075  -0.0440
+      5  -0.2115   0.0269  -0.1846
+      6  -0.1579   0.0112  -0.1468
+      7  -0.0268   0.0764   0.0497
+      8  -0.0304   0.0184  -0.0119
+      9  -0.1135   0.0250  -0.0886
+     10  -0.0387   0.0283  -0.0104
+     11  -0.0073   0.0581   0.0508
+     12  -0.0824   0.0153  -0.0671
+     13  -0.0158   0.0203   0.0045
+     14  -0.0002   0.0136   0.0134
+     15  -0.0001   0.0002   0.0001
+     16  -0.0003   0.0005   0.0002
+     17  -0.0005   0.0001  -0.0004
+     18  -0.0002   0.0001  -0.0001
+     19  -0.0001   0.0016   0.0014
+     20  -0.0000   0.0001   0.0001
+     21  -0.0005   0.0078   0.0074
+     22  -0.0001   0.0006   0.0005
+     23  -0.0007   0.0025   0.0019
+     24  -0.0010   0.0004  -0.0006
+     25  -0.0001   0.0025   0.0024
+  Sum:   -1.0000   1.0000  -0.0000
+ -------------------------------------
+  Loewdin analysis of TDA State    5
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.0853   0.6171   0.5318
+      2  -0.1135   0.0313  -0.0822
+      3  -0.0585   0.0244  -0.0342
+      4  -0.0516   0.0102  -0.0414
+      5  -0.2017   0.0291  -0.1726
+      6  -0.1537   0.0120  -0.1417
+      7  -0.0325   0.0762   0.0437
+      8  -0.0399   0.0199  -0.0200
+      9  -0.1128   0.0258  -0.0870
+     10  -0.0374   0.0291  -0.0082
+     11  -0.0087   0.0586   0.0499
+     12  -0.0808   0.0166  -0.0643
+     13  -0.0185   0.0202   0.0017
+     14  -0.0003   0.0132   0.0129
+     15  -0.0001   0.0003   0.0002
+     16  -0.0004   0.0005   0.0001
+     17  -0.0007   0.0001  -0.0006
+     18  -0.0002   0.0001  -0.0001
+     19  -0.0005   0.0014   0.0009
+     20  -0.0001   0.0002   0.0002
+     21  -0.0004   0.0073   0.0069
+     22  -0.0001   0.0007   0.0005
+     23  -0.0006   0.0027   0.0021
+     24  -0.0011   0.0005  -0.0006
+     25  -0.0005   0.0026   0.0021
+  Sum:   -1.0000   1.0000  -0.0000
+ -------------------------------------
+  Mulliken analysis of TDA State    6
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.1731   0.6449   0.4718
+      2  -0.0655   0.0223  -0.0432
+      3  -0.0630   0.0218  -0.0412
+      4  -0.1059   0.0192  -0.0867
+      5  -0.1154   0.0201  -0.0953
+      6  -0.0879   0.0196  -0.0683
+      7  -0.0152   0.0471   0.0319
+      8  -0.0609   0.0221  -0.0389
+      9  -0.1105   0.0198  -0.0907
+     10  -0.0807   0.0199  -0.0608
+     11  -0.0140   0.0468   0.0328
+     12  -0.0843   0.0199  -0.0644
+     13  -0.0147   0.0454   0.0308
+     14  -0.0006   0.0082   0.0076
+     15  -0.0001   0.0001  -0.0000
+     16  -0.0002   0.0004   0.0002
+     17  -0.0002   0.0004   0.0002
+     18  -0.0001   0.0001  -0.0000
+     19  -0.0006   0.0075   0.0070
+     20  -0.0001   0.0001  -0.0000
+     21  -0.0006   0.0079   0.0073
+     22  -0.0002   0.0004   0.0002
+     23  -0.0021   0.0020  -0.0001
+     24  -0.0021   0.0019  -0.0002
+     25  -0.0020   0.0019  -0.0001
+  Sum:   -1.0000   1.0000   0.0000
+ -------------------------------------
+  Loewdin analysis of TDA State    6
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.1668   0.6305   0.4637
+      2  -0.0706   0.0239  -0.0468
+      3  -0.0679   0.0234  -0.0445
+      4  -0.1011   0.0215  -0.0796
+      5  -0.1099   0.0223  -0.0876
+      6  -0.0872   0.0206  -0.0666
+      7  -0.0184   0.0474   0.0290
+      8  -0.0663   0.0236  -0.0427
+      9  -0.1055   0.0220  -0.0835
+     10  -0.0802   0.0209  -0.0593
+     11  -0.0170   0.0471   0.0301
+     12  -0.0837   0.0209  -0.0628
+     13  -0.0177   0.0457   0.0280
+     14  -0.0006   0.0078   0.0072
+     15  -0.0001   0.0002   0.0001
+     16  -0.0004   0.0004   0.0000
+     17  -0.0004   0.0004  -0.0000
+     18  -0.0001   0.0001   0.0000
+     19  -0.0006   0.0072   0.0066
+     20  -0.0001   0.0002   0.0001
+     21  -0.0006   0.0075   0.0069
+     22  -0.0004   0.0004   0.0000
+     23  -0.0015   0.0021   0.0006
+     24  -0.0015   0.0019   0.0004
+     25  -0.0014   0.0020   0.0006
+  Sum:   -1.0000   1.0000  -0.0000
+ -------------------------------------
+ =====================================
+    Mulliken & Loewdin analysis of   
+    e-/h+ contributions to (Delta)P  
+ =====================================
+  Mulliken analysis of RPA State    1
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.0790   0.5632   0.4842
+      2  -0.0690   0.0430  -0.0261
+      3  -0.0685   0.0425  -0.0260
+      4  -0.1229   0.0253  -0.0976
+      5  -0.1197   0.0247  -0.0950
+      6  -0.1066   0.0044  -0.1022
+      7  -0.0134   0.0714   0.0580
+      8  -0.0708   0.0438  -0.0270
+      9  -0.1187   0.0246  -0.0941
+     10  -0.1093   0.0045  -0.1049
+     11  -0.0137   0.0727   0.0590
+     12  -0.1058   0.0045  -0.1013
+     13  -0.0132   0.0705   0.0572
+     14  -0.0002   0.0043   0.0042
+     15  -0.0000   0.0002   0.0002
+     16  -0.0003   0.0001  -0.0001
+     17  -0.0003   0.0001  -0.0001
+     18  -0.0001   0.0002   0.0002
+     19  -0.0002   0.0043   0.0041
+     20  -0.0001   0.0002   0.0002
+     21  -0.0002   0.0043   0.0041
+     22  -0.0003   0.0001  -0.0001
+     23   0.0000   0.0010   0.0010
+     24   0.0000   0.0010   0.0010
+     25   0.0000   0.0010   0.0010
+  Sum:   -1.0120   1.0120  -0.0000
+ -------------------------------------
+  Loewdin analysis of RPA State    1
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.0603   0.5551   0.4949
+      2  -0.0761   0.0439  -0.0322
+      3  -0.0758   0.0435  -0.0323
+      4  -0.1212   0.0272  -0.0940
+      5  -0.1183   0.0266  -0.0917
+      6  -0.1029   0.0064  -0.0965
+      7  -0.0168   0.0697   0.0529
+      8  -0.0779   0.0448  -0.0332
+      9  -0.1173   0.0265  -0.0907
+     10  -0.1056   0.0065  -0.0991
+     11  -0.0172   0.0710   0.0538
+     12  -0.1021   0.0064  -0.0956
+     13  -0.0166   0.0688   0.0522
+     14  -0.0004   0.0038   0.0034
+     15  -0.0001   0.0002   0.0001
+     16  -0.0004   0.0001  -0.0002
+     17  -0.0004   0.0001  -0.0002
+     18  -0.0001   0.0002   0.0001
+     19  -0.0004   0.0037   0.0034
+     20  -0.0001   0.0002   0.0001
+     21  -0.0004   0.0038   0.0034
+     22  -0.0004   0.0001  -0.0003
+     23  -0.0005   0.0011   0.0006
+     24  -0.0005   0.0011   0.0006
+     25  -0.0005   0.0011   0.0006
+  Sum:   -1.0120   1.0120  -0.0000
+ -------------------------------------
+  Mulliken analysis of RPA State    2
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.1521   0.5697   0.4176
+      2  -0.0632   0.0441  -0.0191
+      3  -0.0213   0.0127  -0.0086
+      4  -0.1961   0.0375  -0.1586
+      5  -0.1148   0.0270  -0.0878
+      6  -0.1018   0.0027  -0.0991
+      7  -0.0116   0.0771   0.0655
+      8  -0.1171   0.0634  -0.0537
+      9  -0.0184   0.0069  -0.0115
+     10  -0.1677   0.0066  -0.1611
+     11  -0.0223   0.1207   0.0985
+     12  -0.0130   0.0073  -0.0057
+     13  -0.0041   0.0215   0.0174
+     14  -0.0007   0.0046   0.0039
+     15  -0.0001   0.0003   0.0002
+     16  -0.0000   0.0001   0.0001
+     17  -0.0005   0.0001  -0.0004
+     18  -0.0001   0.0004   0.0002
+     19  -0.0001   0.0026   0.0025
+     20  -0.0002   0.0002   0.0000
+     21  -0.0012   0.0038   0.0026
+     22  -0.0002   0.0001  -0.0001
+     23  -0.0006   0.0013   0.0006
+     24  -0.0018   0.0009  -0.0009
+     25  -0.0037   0.0011  -0.0025
+  Sum:   -1.0125   1.0125  -0.0000
+ -------------------------------------
+  Loewdin analysis of RPA State    2
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.1474   0.5614   0.4139
+      2  -0.0657   0.0452  -0.0205
+      3  -0.0294   0.0142  -0.0152
+      4  -0.1849   0.0387  -0.1462
+      5  -0.1102   0.0288  -0.0814
+      6  -0.1003   0.0048  -0.0955
+      7  -0.0147   0.0752   0.0605
+      8  -0.1217   0.0644  -0.0573
+      9  -0.0205   0.0089  -0.0116
+     10  -0.1636   0.0092  -0.1544
+     11  -0.0283   0.1175   0.0893
+     12  -0.0138   0.0082  -0.0056
+     13  -0.0048   0.0216   0.0168
+     14  -0.0005   0.0039   0.0034
+     15  -0.0001   0.0002   0.0002
+     16  -0.0001   0.0001   0.0001
+     17  -0.0006   0.0001  -0.0005
+     18  -0.0001   0.0003   0.0002
+     19  -0.0003   0.0024   0.0021
+     20  -0.0002   0.0002  -0.0000
+     21  -0.0008   0.0033   0.0025
+     22  -0.0005   0.0001  -0.0004
+     23  -0.0006   0.0015   0.0008
+     24  -0.0011   0.0010  -0.0001
+     25  -0.0024   0.0014  -0.0011
+  Sum:   -1.0125   1.0125  -0.0000
+ -------------------------------------
+  Mulliken analysis of RPA State    3
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.1522   0.5699   0.4178
+      2  -0.0716   0.0363  -0.0353
+      3  -0.1140   0.0678  -0.0462
+      4  -0.0211   0.0097  -0.0114
+      5  -0.1053   0.0208  -0.0846
+      6  -0.0872   0.0084  -0.0788
+      7  -0.0137   0.0695   0.0558
+      8  -0.0160   0.0159  -0.0000
+      9  -0.2028   0.0409  -0.1618
+     10  -0.0185   0.0045  -0.0140
+     11  -0.0028   0.0242   0.0214
+     12  -0.1768   0.0037  -0.1731
+     13  -0.0214   0.1255   0.1041
+     14  -0.0006   0.0027   0.0021
+     15  -0.0002   0.0003   0.0001
+     16  -0.0004   0.0001  -0.0004
+     17   0.0000   0.0001   0.0001
+     18  -0.0001   0.0002   0.0001
+     19  -0.0012   0.0047   0.0035
+     20  -0.0001   0.0004   0.0003
+     21  -0.0001   0.0035   0.0034
+     22  -0.0003   0.0001  -0.0002
+     23  -0.0034   0.0009  -0.0025
+     24  -0.0023   0.0013  -0.0010
+     25  -0.0004   0.0010   0.0006
+  Sum:   -1.0125   1.0125  -0.0000
+ -------------------------------------
+  Loewdin analysis of RPA State    3
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.1475   0.5616   0.4141
+      2  -0.0793   0.0376  -0.0417
+      3  -0.1160   0.0687  -0.0472
+      4  -0.0233   0.0119  -0.0115
+      5  -0.1007   0.0223  -0.0784
+      6  -0.0855   0.0101  -0.0754
+      7  -0.0172   0.0680   0.0508
+      8  -0.0215   0.0174  -0.0041
+      9  -0.1914   0.0422  -0.1492
+     10  -0.0194   0.0055  -0.0139
+     11  -0.0033   0.0241   0.0208
+     12  -0.1728   0.0066  -0.1662
+     13  -0.0273   0.1221   0.0948
+     14  -0.0006   0.0025   0.0019
+     15  -0.0002   0.0003   0.0001
+     16  -0.0007   0.0001  -0.0007
+     17  -0.0002   0.0001  -0.0001
+     18  -0.0001   0.0002   0.0001
+     19  -0.0008   0.0040   0.0032
+     20  -0.0001   0.0003   0.0003
+     21  -0.0003   0.0031   0.0028
+     22  -0.0003   0.0001  -0.0001
+     23  -0.0022   0.0011  -0.0011
+     24  -0.0017   0.0015  -0.0001
+     25  -0.0003   0.0012   0.0009
+  Sum:   -1.0125   1.0125  -0.0000
+ -------------------------------------
+  Mulliken analysis of RPA State    4
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.1081   0.6472   0.5391
+      2  -0.0910   0.0253  -0.0658
+      3  -0.0830   0.0251  -0.0579
+      4  -0.0268   0.0094  -0.0174
+      5  -0.1756   0.0165  -0.1590
+      6  -0.1302   0.0173  -0.1129
+      7  -0.0225   0.0809   0.0584
+      8  -0.0178   0.0185   0.0007
+      9  -0.1725   0.0287  -0.1438
+     10  -0.0192   0.0242   0.0050
+     11  -0.0048   0.0374   0.0325
+     12  -0.1254   0.0088  -0.1166
+     13  -0.0228   0.0349   0.0121
+     14  -0.0001   0.0101   0.0101
+     15  -0.0002   0.0001  -0.0001
+     16  -0.0005   0.0002  -0.0003
+     17  -0.0003   0.0002  -0.0001
+     18  -0.0002   0.0000  -0.0002
+     19  -0.0003   0.0010   0.0007
+     20  -0.0000   0.0001   0.0001
+     21  -0.0004   0.0124   0.0120
+     22  -0.0001   0.0006   0.0005
+     23  -0.0011   0.0016   0.0005
+     24  -0.0012   0.0007  -0.0005
+     25   0.0000   0.0029   0.0029
+  Sum:   -1.0042   1.0042   0.0000
+ -------------------------------------
+  Loewdin analysis of RPA State    4
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.0959   0.6339   0.5380
+      2  -0.1003   0.0260  -0.0743
+      3  -0.0856   0.0270  -0.0586
+      4  -0.0296   0.0115  -0.0180
+      5  -0.1670   0.0197  -0.1473
+      6  -0.1266   0.0180  -0.1086
+      7  -0.0274   0.0810   0.0536
+      8  -0.0254   0.0207  -0.0048
+      9  -0.1671   0.0299  -0.1372
+     10  -0.0189   0.0253   0.0064
+     11  -0.0053   0.0376   0.0323
+     12  -0.1228   0.0098  -0.1130
+     13  -0.0271   0.0345   0.0074
+     14  -0.0003   0.0097   0.0094
+     15  -0.0002   0.0002  -0.0000
+     16  -0.0007   0.0002  -0.0004
+     17  -0.0005   0.0002  -0.0003
+     18  -0.0002   0.0000  -0.0001
+     19  -0.0005   0.0008   0.0003
+     20  -0.0000   0.0002   0.0002
+     21  -0.0003   0.0118   0.0115
+     22  -0.0001   0.0006   0.0005
+     23  -0.0009   0.0017   0.0008
+     24  -0.0012   0.0008  -0.0004
+     25  -0.0003   0.0031   0.0027
+  Sum:   -1.0042   1.0042   0.0000
+ -------------------------------------
+  Mulliken analysis of RPA State    5
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.1081   0.6470   0.5390
+      2  -0.0344   0.0206  -0.0138
+      3  -0.0457   0.0211  -0.0246
+      4  -0.2267   0.0274  -0.1993
+      5  -0.0693   0.0194  -0.0499
+      6  -0.0492   0.0163  -0.0329
+      7  -0.0103   0.0210   0.0107
+      8  -0.1117   0.0271  -0.0846
+      9  -0.0789   0.0078  -0.0711
+     10  -0.1665   0.0093  -0.1572
+     11  -0.0291   0.0638   0.0347
+     12  -0.0589   0.0246  -0.0343
+     13  -0.0108   0.0683   0.0576
+     14  -0.0005   0.0053   0.0048
+     15  -0.0001   0.0001  -0.0000
+     16  -0.0001   0.0004   0.0003
+     17  -0.0003   0.0005   0.0002
+     18  -0.0001   0.0002   0.0001
+     19  -0.0002   0.0150   0.0148
+     20  -0.0003   0.0001  -0.0002
+     21  -0.0001   0.0034   0.0032
+     22  -0.0005   0.0001  -0.0004
+     23  -0.0004   0.0018   0.0014
+     24  -0.0003   0.0028   0.0025
+     25  -0.0015   0.0006  -0.0009
+  Sum:   -1.0041   1.0041  -0.0000
+ -------------------------------------
+  Loewdin analysis of RPA State    5
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.0960   0.6338   0.5378
+      2  -0.0382   0.0231  -0.0151
+      3  -0.0562   0.0224  -0.0339
+      4  -0.2163   0.0296  -0.1867
+      5  -0.0707   0.0206  -0.0501
+      6  -0.0486   0.0176  -0.0310
+      7  -0.0117   0.0208   0.0092
+      8  -0.1167   0.0282  -0.0886
+      9  -0.0766   0.0109  -0.0657
+     10  -0.1624   0.0100  -0.1524
+     11  -0.0351   0.0635   0.0284
+     12  -0.0571   0.0254  -0.0317
+     13  -0.0130   0.0686   0.0556
+     14  -0.0005   0.0048   0.0044
+     15  -0.0001   0.0001   0.0000
+     16  -0.0002   0.0005   0.0003
+     17  -0.0003   0.0005   0.0002
+     18  -0.0001   0.0003   0.0001
+     19  -0.0002   0.0144   0.0141
+     20  -0.0002   0.0001  -0.0002
+     21  -0.0005   0.0032   0.0027
+     22  -0.0007   0.0001  -0.0006
+     23  -0.0007   0.0019   0.0012
+     24  -0.0004   0.0030   0.0026
+     25  -0.0013   0.0007  -0.0006
+  Sum:   -1.0041   1.0041  -0.0000
+ -------------------------------------
+  Mulliken analysis of RPA State    6
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.1657   0.6499   0.4842
+      2  -0.0654   0.0223  -0.0431
+      3  -0.0623   0.0221  -0.0402
+      4  -0.1105   0.0192  -0.0913
+      5  -0.1187   0.0199  -0.0988
+      6  -0.0880   0.0183  -0.0697
+      7  -0.0159   0.0474   0.0314
+      8  -0.0616   0.0225  -0.0391
+      9  -0.1123   0.0196  -0.0927
+     10  -0.0820   0.0184  -0.0635
+     11  -0.0149   0.0479   0.0331
+     12  -0.0834   0.0185  -0.0648
+     13  -0.0151   0.0463   0.0311
+     14  -0.0005   0.0086   0.0081
+     15  -0.0001   0.0001  -0.0000
+     16  -0.0002   0.0004   0.0001
+     17  -0.0002   0.0003   0.0001
+     18  -0.0001   0.0001  -0.0001
+     19  -0.0005   0.0080   0.0075
+     20  -0.0001   0.0001  -0.0000
+     21  -0.0005   0.0082   0.0077
+     22  -0.0002   0.0003   0.0001
+     23  -0.0019   0.0020   0.0001
+     24  -0.0019   0.0019  -0.0001
+     25  -0.0019   0.0019   0.0000
+  Sum:   -1.0041   1.0041   0.0000
+ -------------------------------------
+  Loewdin analysis of RPA State    6
+ -------------------------------------
+   Atom      e-      h+     (Del)q    
+ -------------------------------------
+      1  -0.1597   0.6355   0.4758
+      2  -0.0707   0.0239  -0.0467
+      3  -0.0675   0.0238  -0.0437
+      4  -0.1054   0.0215  -0.0839
+      5  -0.1130   0.0222  -0.0908
+      6  -0.0872   0.0192  -0.0680
+      7  -0.0191   0.0475   0.0284
+      8  -0.0671   0.0241  -0.0430
+      9  -0.1071   0.0218  -0.0854
+     10  -0.0813   0.0194  -0.0619
+     11  -0.0179   0.0481   0.0303
+     12  -0.0827   0.0195  -0.0632
+     13  -0.0181   0.0464   0.0283
+     14  -0.0005   0.0082   0.0077
+     15  -0.0001   0.0001   0.0000
+     16  -0.0004   0.0004  -0.0001
+     17  -0.0005   0.0004  -0.0001
+     18  -0.0001   0.0001   0.0000
+     19  -0.0005   0.0076   0.0071
+     20  -0.0001   0.0001   0.0000
+     21  -0.0005   0.0078   0.0072
+     22  -0.0004   0.0004  -0.0001
+     23  -0.0014   0.0021   0.0007
+     24  -0.0014   0.0019   0.0005
+     25  -0.0014   0.0020   0.0006
+  Sum:   -1.0041   1.0041  -0.0000
+ -------------------------------------
+Created directory /scratch/fplasser/128290.Meister/SAVEDIR/NTOs
+ ======================================================
+      TDA excitation amplitudes in the NTO basis  
+               (Print if |ampl| > 0.01)
+ ======================================================
+  Excited state 1:   4.0482 eV (singlet)
+    e-/hole pair  1:  ampl =  0.9574   (91.7 %)
+    e-/hole pair  2:  ampl =  0.1921   ( 3.7 %)
+    e-/hole pair  3:  ampl =  0.1902   ( 3.6 %)
+    e-/hole pair  4:  ampl =  0.0507   ( 0.3 %)
+    e-/hole pair  5:  ampl =  0.0503   ( 0.3 %)
+    e-/hole pair  6:  ampl =  0.0346   ( 0.1 %)
+    e-/hole pair  7:  ampl =  0.0243   ( 0.1 %)
+    e-/hole pair  8:  ampl =  0.0204   ( 0.0 %)
+    e-/hole pair  9:  ampl =  0.0202   ( 0.0 %)
+    e-/hole pair 10:  ampl =  0.0177   ( 0.0 %)
+    e-/hole pair 11:  ampl =  0.0170   ( 0.0 %)
+    e-/hole pair 12:  ampl =  0.0169   ( 0.0 %)
+    e-/hole pair 13:  ampl =  0.0167   ( 0.0 %)
+    e-/hole pair 14:  ampl =  0.0127   ( 0.0 %)
+    e-/hole pair 15:  ampl =  0.0126   ( 0.0 %)
+    e-/hole pair 16:  ampl =  0.0122   ( 0.0 %)
+    e-/hole pair 17:  ampl =  0.0112   ( 0.0 %)
+    e-/hole pair 18:  ampl =  0.0110   ( 0.0 %)
+  These amplitudes account for 99.9 % of total amplitude
+
+  Excited state 2:   4.1024 eV (singlet)
+    e-/hole pair  1:  ampl =  0.9283   (86.2 %)
+    e-/hole pair  2:  ampl =  0.3453   (11.9 %)
+    e-/hole pair  3:  ampl =  0.0830   ( 0.7 %)
+    e-/hole pair  4:  ampl =  0.0583   ( 0.3 %)
+    e-/hole pair  5:  ampl =  0.0447   ( 0.2 %)
+    e-/hole pair  6:  ampl =  0.0412   ( 0.2 %)
+    e-/hole pair  7:  ampl =  0.0312   ( 0.1 %)
+    e-/hole pair  8:  ampl =  0.0273   ( 0.1 %)
+    e-/hole pair  9:  ampl =  0.0240   ( 0.1 %)
+    e-/hole pair 10:  ampl =  0.0226   ( 0.1 %)
+    e-/hole pair 11:  ampl =  0.0181   ( 0.0 %)
+    e-/hole pair 12:  ampl =  0.0163   ( 0.0 %)
+    e-/hole pair 13:  ampl =  0.0155   ( 0.0 %)
+    e-/hole pair 14:  ampl =  0.0150   ( 0.0 %)
+    e-/hole pair 15:  ampl =  0.0139   ( 0.0 %)
+    e-/hole pair 16:  ampl =  0.0118   ( 0.0 %)
+    e-/hole pair 17:  ampl =  0.0114   ( 0.0 %)
+    e-/hole pair 18:  ampl =  0.0108   ( 0.0 %)
+    e-/hole pair 19:  ampl =  0.0106   ( 0.0 %)
+  These amplitudes account for 99.9 % of total amplitude
+
+  Excited state 3:   4.1029 eV (singlet)
+    e-/hole pair  1:  ampl =  0.9293   (86.4 %)
+    e-/hole pair  2:  ampl =  0.3303   (10.9 %)
+    e-/hole pair  3:  ampl =  0.1264   ( 1.6 %)
+    e-/hole pair  4:  ampl =  0.0570   ( 0.3 %)
+    e-/hole pair  5:  ampl =  0.0420   ( 0.2 %)
+    e-/hole pair  6:  ampl =  0.0399   ( 0.2 %)
+    e-/hole pair  7:  ampl =  0.0303   ( 0.1 %)
+    e-/hole pair  8:  ampl =  0.0240   ( 0.1 %)
+    e-/hole pair  9:  ampl =  0.0227   ( 0.1 %)
+    e-/hole pair 10:  ampl =  0.0192   ( 0.0 %)
+    e-/hole pair 11:  ampl =  0.0185   ( 0.0 %)
+    e-/hole pair 12:  ampl =  0.0177   ( 0.0 %)
+    e-/hole pair 13:  ampl =  0.0159   ( 0.0 %)
+    e-/hole pair 14:  ampl =  0.0147   ( 0.0 %)
+    e-/hole pair 15:  ampl =  0.0126   ( 0.0 %)
+    e-/hole pair 16:  ampl =  0.0120   ( 0.0 %)
+    e-/hole pair 17:  ampl =  0.0114   ( 0.0 %)
+    e-/hole pair 18:  ampl =  0.0104   ( 0.0 %)
+  These amplitudes account for 99.9 % of total amplitude
+
+  Excited state 4:   4.4514 eV (singlet)
+    e-/hole pair  1:  ampl =  0.8754   (76.6 %)
+    e-/hole pair  2:  ampl =  0.4578   (21.0 %)
+    e-/hole pair  3:  ampl =  0.1246   ( 1.6 %)
+    e-/hole pair  4:  ampl =  0.0458   ( 0.2 %)
+    e-/hole pair  5:  ampl =  0.0432   ( 0.2 %)
+    e-/hole pair  6:  ampl =  0.0348   ( 0.1 %)
+    e-/hole pair  7:  ampl =  0.0306   ( 0.1 %)
+    e-/hole pair  8:  ampl =  0.0202   ( 0.0 %)
+    e-/hole pair  9:  ampl =  0.0168   ( 0.0 %)
+    e-/hole pair 10:  ampl =  0.0162   ( 0.0 %)
+    e-/hole pair 11:  ampl =  0.0149   ( 0.0 %)
+    e-/hole pair 12:  ampl =  0.0141   ( 0.0 %)
+    e-/hole pair 13:  ampl =  0.0139   ( 0.0 %)
+    e-/hole pair 14:  ampl =  0.0131   ( 0.0 %)
+    e-/hole pair 15:  ampl =  0.0115   ( 0.0 %)
+    e-/hole pair 16:  ampl =  0.0103   ( 0.0 %)
+  These amplitudes account for 99.9 % of total amplitude
+
+  Excited state 5:   4.4517 eV (singlet)
+    e-/hole pair  1:  ampl =  0.8762   (76.8 %)
+    e-/hole pair  2:  ampl =  0.4013   (16.1 %)
+    e-/hole pair  3:  ampl =  0.2483   ( 6.2 %)
+    e-/hole pair  4:  ampl =  0.0550   ( 0.3 %)
+    e-/hole pair  5:  ampl =  0.0425   ( 0.2 %)
+    e-/hole pair  6:  ampl =  0.0329   ( 0.1 %)
+    e-/hole pair  7:  ampl =  0.0275   ( 0.1 %)
+    e-/hole pair  8:  ampl =  0.0252   ( 0.1 %)
+    e-/hole pair  9:  ampl =  0.0175   ( 0.0 %)
+    e-/hole pair 10:  ampl =  0.0166   ( 0.0 %)
+    e-/hole pair 11:  ampl =  0.0158   ( 0.0 %)
+    e-/hole pair 12:  ampl =  0.0148   ( 0.0 %)
+    e-/hole pair 13:  ampl =  0.0129   ( 0.0 %)
+    e-/hole pair 14:  ampl =  0.0112   ( 0.0 %)
+    e-/hole pair 15:  ampl =  0.0107   ( 0.0 %)
+    e-/hole pair 16:  ampl =  0.0101   ( 0.0 %)
+  These amplitudes account for 99.9 % of total amplitude
+
+  Excited state 6:   4.4636 eV (singlet)
+    e-/hole pair  1:  ampl =  0.6876   (47.3 %)
+    e-/hole pair  2:  ampl =  0.6768   (45.8 %)
+    e-/hole pair  3:  ampl =  0.2492   ( 6.2 %)
+    e-/hole pair  4:  ampl =  0.0404   ( 0.2 %)
+    e-/hole pair  5:  ampl =  0.0397   ( 0.2 %)
+    e-/hole pair  6:  ampl =  0.0294   ( 0.1 %)
+    e-/hole pair  7:  ampl =  0.0260   ( 0.1 %)
+    e-/hole pair  8:  ampl =  0.0254   ( 0.1 %)
+    e-/hole pair  9:  ampl =  0.0209   ( 0.0 %)
+    e-/hole pair 10:  ampl =  0.0145   ( 0.0 %)
+    e-/hole pair 11:  ampl =  0.0144   ( 0.0 %)
+    e-/hole pair 12:  ampl =  0.0114   ( 0.0 %)
+    e-/hole pair 13:  ampl =  0.0113   ( 0.0 %)
+    e-/hole pair 14:  ampl =  0.0109   ( 0.0 %)
+  These amplitudes account for 100.0 % of total amplitude
+
+ ======================================================
+      RPA excitation amplitudes in the NTO basis  
+               (Print if |ampl| > 0.01)
+ ======================================================
+  Excited state 1:   3.9478 eV (singlet)
+    e-/hole pair  1:  ampl =  0.8988   (84.5 %)
+    e-/hole pair  2:  ampl =  0.2544   ( 6.8 %)
+    e-/hole pair  3:  ampl =  0.2520   ( 6.6 %)
+    e-/hole pair  4:  ampl =  0.0684   ( 0.5 %)
+    e-/hole pair  5:  ampl =  0.0680   ( 0.5 %)
+    e-/hole pair  6:  ampl =  0.0463   ( 0.2 %)
+    e-/hole pair  7:  ampl =  0.0329   ( 0.1 %)
+    e-/hole pair  8:  ampl =  0.0327   ( 0.1 %)
+    e-/hole pair  9:  ampl =  0.0317   ( 0.1 %)
+    e-/hole pair 10:  ampl =  0.0276   ( 0.1 %)
+    e-/hole pair 11:  ampl =  0.0274   ( 0.1 %)
+    e-/hole pair 12:  ampl =  0.0268   ( 0.1 %)
+    e-/hole pair 13:  ampl =  0.0227   ( 0.1 %)
+    e-/hole pair 14:  ampl =  0.0195   ( 0.0 %)
+    e-/hole pair 15:  ampl =  0.0173   ( 0.0 %)
+    e-/hole pair 16:  ampl =  0.0172   ( 0.0 %)
+    e-/hole pair 17:  ampl =  0.0151   ( 0.0 %)
+    e-/hole pair 18:  ampl =  0.0150   ( 0.0 %)
+    e-/hole pair 19:  ampl =  0.0147   ( 0.0 %)
+    e-/hole pair 20:  ampl =  0.0131   ( 0.0 %)
+    e-/hole pair 21:  ampl =  0.0130   ( 0.0 %)
+    e-/hole pair 22:  ampl =  0.0128   ( 0.0 %)
+    e-/hole pair 23:  ampl =  0.0124   ( 0.0 %)
+    e-/hole pair 24:  ampl =  0.0123   ( 0.0 %)
+    e-/hole pair 25:  ampl =  0.0115   ( 0.0 %)
+    e-/hole pair 26:  ampl =  0.0101   ( 0.0 %)
+  These amplitudes account for 100.0 % of total amplitude
+
+  Excited state 2:   3.9994 eV (singlet)
+    e-/hole pair  1:  ampl =  0.8589   (77.6 %)
+    e-/hole pair  2:  ampl =  0.4218   (18.7 %)
+    e-/hole pair  3:  ampl =  0.1126   ( 1.3 %)
+    e-/hole pair  4:  ampl =  0.0738   ( 0.6 %)
+    e-/hole pair  5:  ampl =  0.0649   ( 0.4 %)
+    e-/hole pair  6:  ampl =  0.0536   ( 0.3 %)
+    e-/hole pair  7:  ampl =  0.0434   ( 0.2 %)
+    e-/hole pair  8:  ampl =  0.0382   ( 0.2 %)
+    e-/hole pair  9:  ampl =  0.0349   ( 0.1 %)
+    e-/hole pair 10:  ampl =  0.0307   ( 0.1 %)
+    e-/hole pair 11:  ampl =  0.0268   ( 0.1 %)
+    e-/hole pair 12:  ampl =  0.0239   ( 0.1 %)
+    e-/hole pair 13:  ampl =  0.0223   ( 0.1 %)
+    e-/hole pair 14:  ampl =  0.0211   ( 0.0 %)
+    e-/hole pair 15:  ampl =  0.0205   ( 0.0 %)
+    e-/hole pair 16:  ampl =  0.0170   ( 0.0 %)
+    e-/hole pair 17:  ampl =  0.0162   ( 0.0 %)
+    e-/hole pair 18:  ampl =  0.0160   ( 0.0 %)
+    e-/hole pair 19:  ampl =  0.0149   ( 0.0 %)
+    e-/hole pair 20:  ampl =  0.0136   ( 0.0 %)
+    e-/hole pair 21:  ampl =  0.0125   ( 0.0 %)
+    e-/hole pair 22:  ampl =  0.0116   ( 0.0 %)
+    e-/hole pair 23:  ampl =  0.0110   ( 0.0 %)
+    e-/hole pair 24:  ampl =  0.0108   ( 0.0 %)
+  These amplitudes account for 100.0 % of total amplitude
+
+  Excited state 3:   4.0000 eV (singlet)
+    e-/hole pair  1:  ampl =  0.8619   (78.1 %)
+    e-/hole pair  2:  ampl =  0.4051   (17.2 %)
+    e-/hole pair  3:  ampl =  0.1534   ( 2.5 %)
+    e-/hole pair  4:  ampl =  0.0712   ( 0.5 %)
+    e-/hole pair  5:  ampl =  0.0562   ( 0.3 %)
+    e-/hole pair  6:  ampl =  0.0547   ( 0.3 %)
+    e-/hole pair  7:  ampl =  0.0420   ( 0.2 %)
+    e-/hole pair  8:  ampl =  0.0369   ( 0.1 %)
+    e-/hole pair  9:  ampl =  0.0308   ( 0.1 %)
+    e-/hole pair 10:  ampl =  0.0285   ( 0.1 %)
+    e-/hole pair 11:  ampl =  0.0271   ( 0.1 %)
+    e-/hole pair 12:  ampl =  0.0247   ( 0.1 %)
+    e-/hole pair 13:  ampl =  0.0238   ( 0.1 %)
+    e-/hole pair 14:  ampl =  0.0202   ( 0.0 %)
+    e-/hole pair 15:  ampl =  0.0192   ( 0.0 %)
+    e-/hole pair 16:  ampl =  0.0169   ( 0.0 %)
+    e-/hole pair 17:  ampl =  0.0163   ( 0.0 %)
+    e-/hole pair 18:  ampl =  0.0145   ( 0.0 %)
+    e-/hole pair 19:  ampl =  0.0140   ( 0.0 %)
+    e-/hole pair 20:  ampl =  0.0127   ( 0.0 %)
+    e-/hole pair 21:  ampl =  0.0117   ( 0.0 %)
+    e-/hole pair 22:  ampl =  0.0110   ( 0.0 %)
+    e-/hole pair 23:  ampl =  0.0102   ( 0.0 %)
+  These amplitudes account for 99.9 % of total amplitude
+
+  Excited state 4:   4.4084 eV (singlet)
+    e-/hole pair  1:  ampl =  0.8132   (67.1 %)
+    e-/hole pair  2:  ampl =  0.5535   (31.1 %)
+    e-/hole pair  3:  ampl =  0.0816   ( 0.7 %)
+    e-/hole pair  4:  ampl =  0.0543   ( 0.3 %)
+    e-/hole pair  5:  ampl =  0.0442   ( 0.2 %)
+    e-/hole pair  6:  ampl =  0.0374   ( 0.1 %)
+    e-/hole pair  7:  ampl =  0.0323   ( 0.1 %)
+    e-/hole pair  8:  ampl =  0.0260   ( 0.1 %)
+    e-/hole pair  9:  ampl =  0.0218   ( 0.0 %)
+    e-/hole pair 10:  ampl =  0.0189   ( 0.0 %)
+    e-/hole pair 11:  ampl =  0.0177   ( 0.0 %)
+    e-/hole pair 12:  ampl =  0.0159   ( 0.0 %)
+    e-/hole pair 13:  ampl =  0.0156   ( 0.0 %)
+    e-/hole pair 14:  ampl =  0.0140   ( 0.0 %)
+    e-/hole pair 15:  ampl =  0.0137   ( 0.0 %)
+    e-/hole pair 16:  ampl =  0.0131   ( 0.0 %)
+    e-/hole pair 17:  ampl =  0.0105   ( 0.0 %)
+  These amplitudes account for 99.9 % of total amplitude
+
+  Excited state 5:   4.4097 eV (singlet)
+    e-/hole pair  1:  ampl =  0.8376   (71.2 %)
+    e-/hole pair  2:  ampl =  0.4498   (20.5 %)
+    e-/hole pair  3:  ampl =  0.2654   ( 7.1 %)
+    e-/hole pair  4:  ampl =  0.0540   ( 0.3 %)
+    e-/hole pair  5:  ampl =  0.0476   ( 0.2 %)
+    e-/hole pair  6:  ampl =  0.0365   ( 0.1 %)
+    e-/hole pair  7:  ampl =  0.0327   ( 0.1 %)
+    e-/hole pair  8:  ampl =  0.0209   ( 0.0 %)
+    e-/hole pair  9:  ampl =  0.0200   ( 0.0 %)
+    e-/hole pair 10:  ampl =  0.0181   ( 0.0 %)
+    e-/hole pair 11:  ampl =  0.0176   ( 0.0 %)
+    e-/hole pair 12:  ampl =  0.0169   ( 0.0 %)
+    e-/hole pair 13:  ampl =  0.0149   ( 0.0 %)
+    e-/hole pair 14:  ampl =  0.0137   ( 0.0 %)
+    e-/hole pair 15:  ampl =  0.0131   ( 0.0 %)
+    e-/hole pair 16:  ampl =  0.0129   ( 0.0 %)
+    e-/hole pair 17:  ampl =  0.0119   ( 0.0 %)
+    e-/hole pair 18:  ampl =  0.0111   ( 0.0 %)
+    e-/hole pair 19:  ampl =  0.0104   ( 0.0 %)
+  These amplitudes account for 99.9 % of total amplitude
+
+  Excited state 6:   4.4256 eV (singlet)
+    e-/hole pair  1:  ampl =  0.6499   (43.4 %)
+    e-/hole pair  2:  ampl =  0.6410   (42.2 %)
+    e-/hole pair  3:  ampl =  0.3634   (13.6 %)
+    e-/hole pair  4:  ampl =  0.0448   ( 0.2 %)
+    e-/hole pair  5:  ampl =  0.0441   ( 0.2 %)
+    e-/hole pair  6:  ampl =  0.0291   ( 0.1 %)
+    e-/hole pair  7:  ampl =  0.0287   ( 0.1 %)
+    e-/hole pair  8:  ampl =  0.0278   ( 0.1 %)
+    e-/hole pair  9:  ampl =  0.0218   ( 0.0 %)
+    e-/hole pair 10:  ampl =  0.0159   ( 0.0 %)
+    e-/hole pair 11:  ampl =  0.0157   ( 0.0 %)
+    e-/hole pair 12:  ampl =  0.0141   ( 0.0 %)
+    e-/hole pair 13:  ampl =  0.0138   ( 0.0 %)
+    e-/hole pair 14:  ampl =  0.0136   ( 0.0 %)
+    e-/hole pair 15:  ampl =  0.0105   ( 0.0 %)
+  These amplitudes account for 99.9 % of total amplitude
+
+ =======================================================
+ Analysis of SCF Wavefunction
+
+ --------------------------------------------------------------
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+
+ Alpha MOs
+ -- Occupied --
+-14.248 -14.248 -14.248 -10.182 -10.182 -10.182 -10.123 -10.123
+-10.123 -10.100 -10.100 -10.100  -3.755  -2.183  -2.183  -2.175
+ -1.058  -1.053  -1.053  -0.890  -0.889  -0.889  -0.772  -0.754
+ -0.754  -0.661  -0.656  -0.656  -0.641  -0.641  -0.640  -0.559
+ -0.538  -0.538  -0.513  -0.507  -0.507  -0.487  -0.487  -0.472
+ -0.459  -0.459  -0.456  -0.381  -0.381  -0.371  -0.363  -0.347
+ -0.347  -0.290  -0.290  -0.283
+ -- Virtual --
+  0.056   0.068   0.068   0.109   0.127   0.127   0.191   0.191
+  0.204   0.214   0.214   0.216   0.227   0.227   0.253   0.286
+  0.286   0.294   0.294   0.298   0.334   0.334   0.356   0.394
+  0.412   0.418   0.418   0.433   0.457   0.457   0.462   0.488
+  0.488   0.589   0.593   0.593   0.654   0.654   0.670   0.693
+  0.700   0.700   0.720   0.720   0.721   0.728   0.743   0.743
+  0.766   0.772   0.772   0.811   0.825   0.825   0.848   0.856
+  0.856   0.886   0.928   0.928   0.951   0.960   0.960   0.980
+  0.989   0.989   1.021   1.021   1.028   1.037   1.037   1.065
+  1.065   1.084   1.098   1.098   1.101   1.112   1.112   1.118
+  1.128   1.204   1.204   1.235   1.252   1.252   1.281   1.318
+  1.318   1.332   1.346   1.346   1.394   1.411   1.411   1.441
+  1.491   1.491   1.509   1.553   1.573   1.573   1.647   1.647
+  1.664   1.673   1.673   1.720   1.783   1.783   1.901   1.901
+  1.926   1.926   1.942   1.951   1.986   2.032   2.032   2.038
+  2.083   2.129   2.129   2.148   2.207   2.207   2.244   2.244
+  2.263   2.301   2.301   2.349   2.388   2.391   2.391   2.410
+  2.410   2.433   2.441   2.441   2.445   2.536   2.536   2.624
+  2.654   2.654   2.668   2.668   2.673   2.738   2.787   2.787
+  2.856   2.862   2.862   3.006   3.006   3.023   3.146   3.178
+  3.178   8.289
+ --------------------------------------------------------------
+
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Ir                    0.829704
+      2 N                    -0.621969
+      3 N                    -0.622658
+      4 C                    -0.370896
+      5 C                    -0.370878
+      6 C                     0.108784
+      7 C                    -0.167342
+      8 N                    -0.622712
+      9 C                    -0.370775
+     10 C                     0.108879
+     11 C                    -0.167581
+     12 C                     0.109108
+     13 C                    -0.167558
+     14 H                     0.140391
+     15 H                     0.145040
+     16 H                     0.163520
+     17 H                     0.163503
+     18 H                     0.145164
+     19 H                     0.140465
+     20 H                     0.145110
+     21 H                     0.140359
+     22 H                     0.163573
+     23 H                     0.326170
+     24 H                     0.326366
+     25 H                     0.326233
+  ----------------------------------------
+  Sum of atomic charges =    -0.000000
+
+         TDA Excited State  1:  Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Ir                    1.381154
+      2 N                    -0.653904
+      3 N                    -0.654674
+      4 C                    -0.475180
+      5 C                    -0.471951
+      6 C                     0.008296
+      7 C                    -0.121667
+      8 N                    -0.655949
+      9 C                    -0.471600
+     10 C                     0.005352
+     11 C                    -0.121237
+     12 C                     0.008827
+     13 C                    -0.122283
+     14 H                     0.145391
+     15 H                     0.145211
+     16 H                     0.163352
+     17 H                     0.163343
+     18 H                     0.145337
+     19 H                     0.145410
+     20 H                     0.145278
+     21 H                     0.145353
+     22 H                     0.163402
+     23 H                     0.327513
+     24 H                     0.327681
+     25 H                     0.327544
+  ----------------------------------------
+  Sum of atomic charges =    -0.000000
+
+         TDA Excited State  2:  Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Ir                    1.299033
+      2 N                    -0.645564
+      3 N                    -0.629997
+      4 C                    -0.535954
+      5 C                    -0.461637
+      6 C                     0.014473
+      7 C                    -0.114039
+      8 N                    -0.688367
+      9 C                    -0.382332
+     10 C                    -0.044770
+     11 C                    -0.100205
+     12 C                     0.102717
+     13 C                    -0.146626
+     14 H                     0.144435
+     15 H                     0.145265
+     16 H                     0.163627
+     17 H                     0.163024
+     18 H                     0.145387
+     19 H                     0.144063
+     20 H                     0.145084
+     21 H                     0.143482
+     22 H                     0.163494
+     23 H                     0.326634
+     24 H                     0.325526
+     25 H                     0.323250
+  ----------------------------------------
+  Sum of atomic charges =    -0.000000
+
+         TDA Excited State  3:  Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Ir                    1.299054
+      2 N                    -0.663066
+      3 N                    -0.680231
+      4 C                    -0.381981
+      5 C                    -0.459250
+      6 C                     0.032538
+      7 C                    -0.125856
+      8 N                    -0.620652
+      9 C                    -0.538624
+     10 C                     0.095078
+     11 C                    -0.141204
+     12 C                    -0.055249
+     13 C                    -0.093818
+     14 H                     0.143505
+     15 H                     0.145095
+     16 H                     0.163114
+     17 H                     0.163676
+     18 H                     0.145218
+     19 H                     0.144051
+     20 H                     0.145420
+     21 H                     0.144424
+     22 H                     0.163356
+     23 H                     0.323443
+     24 H                     0.324969
+     25 H                     0.326991
+  ----------------------------------------
+  Sum of atomic charges =    -0.000000
+
+         TDA Excited State  4:  Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Ir                    1.360761
+      2 N                    -0.625068
+      3 N                    -0.669524
+      4 C                    -0.542667
+      5 C                    -0.393229
+      6 C                     0.109918
+      7 C                    -0.147110
+      8 N                    -0.693776
+      9 C                    -0.493682
+     10 C                    -0.033900
+     11 C                    -0.149542
+     12 C                     0.026502
+     13 C                    -0.100872
+     14 H                     0.141512
+     15 H                     0.144983
+     16 H                     0.163546
+     17 H                     0.164138
+     18 H                     0.145331
+     19 H                     0.154229
+     20 H                     0.145015
+     21 H                     0.147772
+     22 H                     0.163254
+     23 H                     0.326650
+     24 H                     0.329515
+     25 H                     0.326245
+  ----------------------------------------
+  Sum of atomic charges =    -0.000000
+
+         TDA Excited State  5:  Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Ir                    1.360897
+      2 N                    -0.697377
+      3 N                    -0.656320
+      4 C                    -0.414897
+      5 C                    -0.555430
+      6 C                    -0.037971
+      7 C                    -0.117664
+      8 N                    -0.634652
+      9 C                    -0.459353
+     10 C                     0.098436
+     11 C                    -0.116775
+     12 C                     0.041987
+     13 C                    -0.163047
+     14 H                     0.153828
+     15 H                     0.145101
+     16 H                     0.163707
+     17 H                     0.163115
+     18 H                     0.145014
+     19 H                     0.141913
+     20 H                     0.145210
+     21 H                     0.147745
+     22 H                     0.164113
+     23 H                     0.328060
+     24 H                     0.325755
+     25 H                     0.328605
+  ----------------------------------------
+  Sum of atomic charges =    -0.000000
+
+         TDA Excited State  6:  Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Ir                    1.301525
+      2 N                    -0.665138
+      3 N                    -0.663831
+      4 C                    -0.457553
+      5 C                    -0.466158
+      6 C                     0.040499
+      7 C                    -0.135436
+      8 N                    -0.661568
+      9 C                    -0.461438
+     10 C                     0.048089
+     11 C                    -0.134793
+     12 C                     0.044721
+     13 C                    -0.136798
+     14 H                     0.147979
+     15 H                     0.145011
+     16 H                     0.163734
+     17 H                     0.163684
+     18 H                     0.145126
+     19 H                     0.147432
+     20 H                     0.145082
+     21 H                     0.147669
+     22 H                     0.163776
+     23 H                     0.326101
+     24 H                     0.326133
+     25 H                     0.326154
+  ----------------------------------------
+  Sum of atomic charges =    -0.000000
+
+         RPA Excited State  1:  Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Ir                    1.313909
+      2 N                    -0.648042
+      3 N                    -0.648637
+      4 C                    -0.468491
+      5 C                    -0.465882
+      6 C                     0.006599
+      7 C                    -0.109336
+      8 N                    -0.649682
+      9 C                    -0.464881
+     10 C                     0.004015
+     11 C                    -0.108538
+     12 C                     0.007845
+     13 C                    -0.110318
+     14 H                     0.144546
+     15 H                     0.145215
+     16 H                     0.163379
+     17 H                     0.163367
+     18 H                     0.145340
+     19 H                     0.144554
+     20 H                     0.145282
+     21 H                     0.144508
+     22 H                     0.163427
+     23 H                     0.327210
+     24 H                     0.327372
+     25 H                     0.327241
+  ----------------------------------------
+  Sum of atomic charges =    -0.000000
+
+         RPA Excited State  2:  Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Ir                    1.247312
+      2 N                    -0.641087
+      3 N                    -0.631279
+      4 C                    -0.529484
+      5 C                    -0.458657
+      6 C                     0.009649
+      7 C                    -0.101871
+      8 N                    -0.676383
+      9 C                    -0.382256
+     10 C                    -0.052257
+     11 C                    -0.069104
+     12 C                     0.103407
+     13 C                    -0.150114
+     14 H                     0.144274
+     15 H                     0.145259
+     16 H                     0.163622
+     17 H                     0.163092
+     18 H                     0.145403
+     19 H                     0.142971
+     20 H                     0.145125
+     21 H                     0.142991
+     22 H                     0.163462
+     23 H                     0.326779
+     24 H                     0.325437
+     25 H                     0.323707
+  ----------------------------------------
+  Sum of atomic charges =    -0.000000
+
+         RPA Excited State  3:  Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Ir                    1.247479
+      2 N                    -0.657265
+      3 N                    -0.668810
+      4 C                    -0.382293
+      5 C                    -0.455454
+      6 C                     0.029971
+      7 C                    -0.111551
+      8 N                    -0.622732
+      9 C                    -0.532593
+     10 C                     0.094838
+     11 C                    -0.146192
+     12 C                    -0.064029
+     13 C                    -0.063484
+     14 H                     0.142502
+     15 H                     0.145136
+     16 H                     0.163138
+     17 H                     0.163630
+     18 H                     0.145237
+     19 H                     0.143994
+     20 H                     0.145412
+     21 H                     0.143746
+     22 H                     0.163408
+     23 H                     0.323635
+     24 H                     0.325402
+     25 H                     0.326874
+  ----------------------------------------
+  Sum of atomic charges =    -0.000000
+
+         RPA Excited State  4:  Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Ir                    1.368770
+      2 N                    -0.687757
+      3 N                    -0.680604
+      4 C                    -0.388302
+      5 C                    -0.529923
+      6 C                    -0.004127
+      7 C                    -0.108905
+      8 N                    -0.622003
+      9 C                    -0.514611
+     10 C                     0.113915
+     11 C                    -0.135040
+     12 C                    -0.007489
+     13 C                    -0.155499
+     14 H                     0.150445
+     15 H                     0.144951
+     16 H                     0.163268
+     17 H                     0.163378
+     18 H                     0.145002
+     19 H                     0.141150
+     20 H                     0.145225
+     21 H                     0.152365
+     22 H                     0.164071
+     23 H                     0.326667
+     24 H                     0.325911
+     25 H                     0.329140
+  ----------------------------------------
+  Sum of atomic charges =    -0.000000
+
+         RPA Excited State  5:  Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Ir                    1.368661
+      2 N                    -0.635812
+      3 N                    -0.647236
+      4 C                    -0.570194
+      5 C                    -0.420752
+      6 C                     0.075933
+      7 C                    -0.156656
+      8 N                    -0.707303
+      9 C                    -0.441840
+     10 C                    -0.048336
+     11 C                    -0.132838
+     12 C                     0.074785
+     13 C                    -0.109998
+     14 H                     0.145168
+     15 H                     0.145036
+     16 H                     0.163838
+     17 H                     0.163725
+     18 H                     0.145239
+     19 H                     0.155217
+     20 H                     0.144903
+     21 H                     0.143603
+     22 H                     0.163158
+     23 H                     0.327550
+     24 H                     0.328865
+     25 H                     0.325287
+  ----------------------------------------
+  Sum of atomic charges =    -0.000000
+
+         RPA Excited State  6:  Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 Ir                    1.313873
+      2 N                    -0.665098
+      3 N                    -0.662895
+      4 C                    -0.462207
+      5 C                    -0.469646
+      6 C                     0.039053
+      7 C                    -0.135911
+      8 N                    -0.661837
+      9 C                    -0.463499
+     10 C                     0.045355
+     11 C                    -0.134511
+     12 C                     0.044283
+     13 C                    -0.136426
+     14 H                     0.148514
+     15 H                     0.144993
+     16 H                     0.163659
+     17 H                     0.163616
+     18 H                     0.145109
+     19 H                     0.148013
+     20 H                     0.145064
+     21 H                     0.148040
+     22 H                     0.163699
+     23 H                     0.326240
+     24 H                     0.326277
+     25 H                     0.326240
+  ----------------------------------------
+  Sum of atomic charges =    -0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X       0.0013      Y       0.0017      Z       3.9639
+       Tot       3.9639
+    Quadrupole Moments (Debye-Ang)
+        XX     -86.7939     XY       0.0016     YY     -86.7911
+        XZ      -0.0016     YZ      -0.0012     ZZ     -84.2915
+    Octopole Moments (Debye-Ang^2)
+       XXX      17.2611    XXY     -14.8241    XYY     -17.2460
+       YYY      14.8423    XXZ      19.9940    XYZ      -0.0002
+       YYZ      19.9866    XZZ       0.0002    YZZ       0.0039
+       ZZZ      26.0448
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -1262.0263   XXXY      -0.0068   XXYY    -420.6786
+      XYYY       0.0058   YYYY   -1261.9650   XXXZ      35.6661
+      XXYZ       1.3935   XYYZ     -35.6733   YYYZ      -1.4124
+      XXZZ    -280.3578   XYZZ       0.0008   YYZZ    -280.3551
+      XZZZ      -0.0035   YZZZ      -0.0017   ZZZZ    -471.8398
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               TDA Excited-State Multipoles, State  1
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X       0.0053      Y      -0.0648      Z       3.4680
+       Tot       3.4686
+    Quadrupole Moments (Debye-Ang)
+        XX     -93.7640     XY       0.0258     YY     -93.8881
+        XZ       0.0143     YZ      -0.0149     ZZ     -86.8310
+    Octopole Moments (Debye-Ang^2)
+       XXX      11.7467    XXY     -10.6207    XYY     -11.6707
+       YYY      10.1580    XXZ      16.0169    XYZ       0.0182
+       YYZ      15.9462    XZZ      -0.0022    YZZ      -0.0705
+       ZZZ      25.6852
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -1310.5045   XXXY       0.0442   XXYY    -436.9638
+      XYYY       0.2470   YYYY   -1311.5971   XXXZ      33.9907
+      XXYZ       7.6731   XYYZ     -33.8993   YYYZ      -7.9207
+      XXZZ    -286.2526   XYZZ       0.0002   YYZZ    -286.3489
+      XZZZ       0.0014   YZZZ       0.0008   ZZZZ    -484.8240
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               TDA Excited-State Multipoles, State  2
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X       1.4744      Y      -2.1423      Z       3.4636
+       Tot       4.3313
+    Quadrupole Moments (Debye-Ang)
+        XX     -90.2258     XY      -0.3539     YY     -95.2231
+        XZ       0.8088     YZ      -0.3191     ZZ     -86.2436
+    Octopole Moments (Debye-Ang^2)
+       XXX      21.8506    XXY     -15.4667    XYY      -9.4748
+       YYY       0.8907    XXZ      17.4982    XYZ       0.0080
+       YYZ      14.4353    XZZ       1.1258    YZZ      -2.6898
+       ZZZ      25.6909
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -1278.4648   XXXY      -4.8809   XXYY    -435.1584
+      XYYY       3.2789   YYYY   -1327.1934   XXXZ      39.8043
+      XXYZ       5.3421   XYYZ     -31.9439   YYYZ     -12.6433
+      XXZZ    -284.8569   XYZZ      -0.6673   YYZZ    -287.2466
+      XZZZ       0.4719   YZZZ       0.1247   ZZZZ    -479.5532
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               TDA Excited-State Multipoles, State  3
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X      -1.4844      Y       2.2090      Z       3.4630
+       Tot       4.3676
+    Quadrupole Moments (Debye-Ang)
+        XX     -95.2882     XY       0.3402     YY     -90.1623
+        XZ      -0.8244     YZ       0.3343     ZZ     -86.2434
+    Octopole Moments (Debye-Ang^2)
+       XXX       3.2112    XXY      -8.0519    XYY     -15.6858
+       YYY      23.1296    XXZ      14.4062    XYZ      -0.0306
+       YYZ      17.5244    XZZ      -1.1299    YZZ       2.7654
+       ZZZ      25.6890
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -1329.0789   XXXY       4.8644   XXYY    -433.9063
+      XYYY      -3.4897   YYYY   -1279.1059   XXXZ      27.9562
+      XXYZ       9.0475   XYYZ     -35.8929   YYYZ      -1.5298
+      XXZZ    -287.3005   XYZZ       0.6743   YYZZ    -284.8033
+      XZZZ      -0.4803   YZZZ      -0.1176   ZZZZ    -479.5528
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               TDA Excited-State Multipoles, State  4
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X      -1.1387      Y      -3.1593      Z       3.6491
+       Tot       4.9592
+    Quadrupole Moments (Debye-Ang)
+        XX     -90.3943     XY       1.7374     YY     -95.0390
+        XZ      -0.7841     YZ      -0.5396     ZZ     -87.1828
+    Octopole Moments (Debye-Ang^2)
+       XXX       8.3797    XXY     -17.8035    XYY     -14.8874
+       YYY      -7.1050    XXZ      16.7763    XYZ       1.3372
+       YYZ      17.0806    XZZ      -1.2407    YZZ      -2.4289
+       ZZZ      25.8084
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -1288.2189   XXXY       5.9431   XXYY    -428.2801
+      XYYY      11.0457   YYYY   -1329.2431   XXXZ      27.7156
+      XXYZ       4.4559   XYYZ     -35.7835   YYYZ     -10.2747
+      XXZZ    -284.0533   XYZZ       1.5959   YYZZ    -287.4271
+      XZZZ      -2.2088   YZZZ      -0.1548   ZZZZ    -483.9311
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               TDA Excited-State Multipoles, State  5
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X       1.0772      Y       2.9799      Z       3.6496
+       Tot       4.8332
+    Quadrupole Moments (Debye-Ang)
+        XX     -94.8977     XY      -1.6292     YY     -90.5377
+        XZ       0.7630     YZ       0.5185     ZZ     -87.1844
+    Octopole Moments (Debye-Ang^2)
+       XXX      17.8589    XXY      -5.6947    XYY     -11.7267
+       YYY      29.2152    XXZ      17.0841    XYZ      -1.2683
+       YYZ      16.7734    XZZ       1.1810    YZZ       2.2784
+       ZZZ      25.8109
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -1316.3768   XXXY      -5.5552   XXYY    -439.9471
+      XYYY     -10.4218   YYYY   -1277.7703   XXXZ      39.6084
+      XXYZ       7.2936   XYYZ     -31.8172   YYYZ      -1.7682
+      XXZZ    -287.3122   XYZZ      -1.5025   YYZZ    -284.1732
+      XZZZ       2.1281   YZZZ       0.1622   ZZZZ    -483.9412
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               TDA Excited-State Multipoles, State  6
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X       0.0647      Y       0.1775      Z       3.4831
+       Tot       3.4882
+    Quadrupole Moments (Debye-Ang)
+        XX     -92.2904     XY      -0.1018     YY     -92.0057
+        XZ       0.0142     YZ       0.0194     ZZ     -86.7823
+    Octopole Moments (Debye-Ang^2)
+       XXX      14.1761    XXY     -11.8332    XYY     -13.7661
+       YYY      13.2256    XXZ      16.8479    XYZ      -0.0663
+       YYZ      16.8413    XZZ       0.0617    YZZ       0.1572
+       ZZZ      25.4228
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -1300.6811   XXXY      -0.4048   XXYY    -433.5310
+      XYYY      -0.6033   YYYY   -1298.1386   XXXZ      34.0614
+      XXYZ       5.4529   XYYZ     -33.8259   YYYZ      -5.2004
+      XXZZ    -285.7434   XYZZ      -0.0872   YYZZ    -285.5152
+      XZZZ       0.0641   YZZZ      -0.0120   ZZZZ    -480.1146
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               RPA Excited-State Multipoles, State  1
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X       0.0148      Y      -0.0516      Z       3.3727
+       Tot       3.3731
+    Quadrupole Moments (Debye-Ang)
+        XX     -92.8590     XY       0.0177     YY     -92.9669
+        XZ       0.0178     YZ      -0.0175     ZZ     -86.6113
+    Octopole Moments (Debye-Ang^2)
+       XXX      11.6633    XXY     -11.3975    XYY     -11.5150
+       YYY      11.0385    XXZ      15.5027    XYZ       0.0085
+       YYZ      15.4103    XZZ       0.0062    YZZ      -0.0583
+       ZZZ      25.6556
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -1304.9392   XXXY      -0.0009   XXYY    -435.1389
+      XYYY       0.2219   YYYY   -1305.9316   XXXZ      33.9717
+      XXYZ       8.3468   XYYZ     -33.8254   YYYZ      -8.6264
+      XXZZ    -285.4152   XYZZ      -0.0095   YYZZ    -285.4844
+      XZZZ       0.0063   YZZZ      -0.0049   ZZZZ    -483.7037
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               RPA Excited-State Multipoles, State  2
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X       1.3121      Y      -1.7213      Z       3.3676
+       Tot       4.0031
+    Quadrupole Moments (Debye-Ang)
+        XX     -89.8079     XY      -0.1292     YY     -94.0398
+        XZ       0.9645     YZ      -0.5925     ZZ     -86.1839
+    Octopole Moments (Debye-Ang^2)
+       XXX      20.8495    XXY     -15.3205    XYY      -9.4255
+       YYY       4.0463    XXZ      17.2716    XYZ      -0.2118
+       YYZ      13.5345    XZZ       0.8671    YZZ      -2.3030
+       ZZZ      25.6747
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -1275.6712   XXXY      -3.9844   XXYY    -434.2965
+      XYYY       4.5622   YYYY   -1318.2781   XXXZ      40.8227
+      XXYZ       5.5412   XYYZ     -31.4483   YYYZ     -15.2986
+      XXZZ    -284.4184   XYZZ      -0.6148   YYZZ    -286.0386
+      XZZZ       0.7398   YZZZ      -0.2413   ZZZZ    -479.6861
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               RPA Excited-State Multipoles, State  3
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X      -1.3311      Y       1.7757      Z       3.3671
+       Tot       4.0326
+    Quadrupole Moments (Debye-Ang)
+        XX     -94.0996     XY       0.1233     YY     -89.7552
+        XZ      -0.9831     YZ       0.6102     ZZ     -86.1832
+    Octopole Moments (Debye-Ang^2)
+       XXX       3.5863    XXY      -9.5787    XYY     -15.1786
+       YYY      21.2565    XXZ      13.4962    XYZ       0.1984
+       YYZ      17.3104    XZZ      -0.8793    YZZ       2.3675
+       ZZZ      25.6724
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -1321.7993   XXXY       4.0114   XXYY    -431.3827
+      XYYY      -4.7499   YYYY   -1278.0472   XXXZ      26.6654
+      XXYZ      10.4803   XYYZ     -36.1679   YYYZ      -0.4736
+      XXZZ    -286.0806   XYZZ       0.6315   YYZZ    -284.3823
+      XZZZ      -0.7521   YZZZ       0.2529   ZZZZ    -479.6835
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               RPA Excited-State Multipoles, State  4
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X      -0.8114      Y       3.1616      Z       3.6491
+       Tot       4.8959
+    Quadrupole Moments (Debye-Ang)
+        XX     -95.7064     XY      -0.1235     YY     -90.0428
+        XZ       0.1632     YZ       0.8582     ZZ     -87.0644
+    Octopole Moments (Debye-Ang^2)
+       XXX       6.9467    XXY      -5.6502    XYY     -15.3345
+       YYY      28.9566    XXZ      16.3310    XYZ      -1.1298
+       YYZ      17.5117    XZZ      -0.2742    YZZ       2.7719
+       ZZZ      25.7843
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -1326.6041   XXXY       4.0036   XXYY    -437.6116
+      XYYY      -6.3748   YYYY   -1274.7287   XXXZ      35.3759
+      XXYZ       8.1396   XYYZ     -33.2616   YYYZ       0.8909
+      XXZZ    -288.1654   XYZZ      -0.4010   YYZZ    -283.5752
+      XZZZ       1.3196   YZZZ       1.3133   ZZZZ    -483.1436
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               RPA Excited-State Multipoles, State  5
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 0.0000
+    Dipole Moment (Debye)
+         X       0.7101      Y      -3.3067      Z       3.6492
+       Tot       4.9754
+    Quadrupole Moments (Debye-Ang)
+        XX     -89.9386     XY       0.2552     YY     -95.8086
+        XZ      -0.1856     YZ      -0.8687     ZZ     -87.0626
+    Octopole Moments (Debye-Ang^2)
+       XXX      19.0056    XXY     -17.5895    XYY     -11.3174
+       YYY      -6.8572    XXZ      17.4942    XYZ       1.1885
+       YYZ      16.3497    XZZ       0.1834    YZZ      -2.8950
+       ZZZ      25.7830
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -1280.2364   XXXY      -3.4185   XXYY    -431.2490
+      XYYY       7.0037   YYYY   -1333.8010   XXXZ      31.9847
+      XXYZ       3.5816   XYYZ     -34.3943   YYYZ     -12.7729
+      XXZZ    -283.4917   XYZZ       0.5197   YYZZ    -288.2470
+      XZZZ      -1.3890   YZZZ      -1.2799   ZZZZ    -483.1374
+ -----------------------------------------------------------------
+ -----------------------------------------------------------------
+               RPA Excited-State Multipoles, State  6
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X       0.1051      Y       0.1398      Z       3.5092
+       Tot       3.5135
+    Quadrupole Moments (Debye-Ang)
+        XX     -92.4096     XY      -0.1253     YY     -92.2096
+        XZ       0.0155     YZ       0.0099     ZZ     -86.7415
+    Octopole Moments (Debye-Ang^2)
+       XXX      14.3238    XXY     -11.7319    XYY     -13.5848
+       YYY      12.8513    XXZ      16.8789    XYZ      -0.0542
+       YYZ      16.8283    XZZ       0.0949    YZZ       0.1259
+       ZZZ      25.4334
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX   -1301.2368   XXXY      -0.6011   XXYY    -433.8338
+      XYYY      -0.6044   YYYY   -1299.4808   XXXZ      34.1141
+      XXYZ       5.4764   XYYZ     -33.8623   YYYZ      -5.3523
+      XXZZ    -285.6978   XYZZ      -0.1124   YYZZ    -285.5437
+      XZZZ       0.0528   YZZZ      -0.0340   ZZZZ    -480.1698
+ -----------------------------------------------------------------
+Archival summary:
+1\1\Knecht15\SP\ProcedureUnspecified\BasisUnspecified\r13912(\fplasser\FriOct2409:04:152014FriOct2409:04:152014\0\\#,ProcedureUnspecified,BasisUnspecified,\\60,1\Ir\C,1,1.98743\H,2,1.09086,1,124.991\C,2,1.36561,1,117.324,3,-178.312,0\H,4,1.08459,2,124.742,1,178.729,0\C,4,1.42114,2,114.302,1,-0.863826,0\H,6,1.09026,4,122.347,2,-179.598,0\N,6,1.29583,4,116.916,2,0.640845,0\H,8,1.01103,6,116.33,4,179.525,0\C,1,1.98743,2,93.2567,3,-9.99324,0\H,10,1.09086,1,124.991,2,83.4598,0\C,10,1.36562,1,117.324,2,-94.8521,0\H,12,1.08458,10,124.742,1,178.729,0\C,12,1.42113,10,114.302,1,-0.864422,0\H,14,1.09026,12,122.347,10,-179.598,0\N,14,1.29583,12,116.917,10,0.641471,0\H,16,1.01103,14,116.33,12,179.525,0\C,1,1.98743,2,93.2567,3,83.46,0\H,18,1.09086,1,124.991,2,-9.99339,0\C,18,1.36562,1,117.324,2,171.695,0\H,20,1.08459,18,124.742,1,178.729,0\C,20,1.42113,18,114.302,1,-0.864462,0\H,22,1.09026,20,122.347,18,-179.598,0\N,22,1.29583,20,116.917,18,0.641459,0\H,24,1.01103,22,116.33,20,179.525,0\\\@
+
+ Total job time:  1434.91s(wall), 1664.99s(cpu) 
+ Fri Oct 24 09:04:15 2014
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+

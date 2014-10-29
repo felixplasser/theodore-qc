@@ -1,0 +1,8 @@
+TDDFT/wB97 computation on a small iridium complex
+
+correctly it should hold that:
+   MC + LMCT = e-(Ir)
+   MC + MLCT = h+(Ir)
+
+The numbers are similar but there are errors on the order of 0.01, which corresponds to the CI-print threshold.
+   An additional small error source may derive from ignoring the Y-vectors. Are they added or subtracted?

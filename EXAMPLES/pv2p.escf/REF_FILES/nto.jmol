@@ -1,0 +1,55 @@
+mo titleformat ""
+
+background white
+mo fill
+mo cutoff 0.04
+
+mo [ 0.999 75]
+write image png "NTO1a_1o_0.81.png"
+mo [ -0.998 76]
+write image png "NTO1a_1v_0.81.png"
+
+mo [ 1.000 74]
+write image png "NTO2a_1o_0.56.png"
+mo [ 0.995 76]
+write image png "NTO2a_1v_0.56.png"
+mo [ -0.994 75]
+write image png "NTO2a_2o_0.46.png"
+mo [ -0.999 77]
+write image png "NTO2a_2v_0.46.png"
+
+mo [ -0.853 71 -0.515 75]
+write image png "NTO3a_1o_0.54.png"
+mo [ -0.852 76 0.473 78]
+write image png "NTO3a_1v_0.54.png"
+mo [ -0.847 75 0.512 71]
+write image png "NTO3a_2o_0.48.png"
+mo [ 0.789 78 0.510 76 0.342 79]
+write image png "NTO3a_2v_0.48.png"
+
+mo [ 0.996 75]
+write image png "NTO4a_1o_0.47.png"
+mo [ 0.719 77 0.694 80]
+write image png "NTO4a_1v_0.47.png"
+mo [ -0.734 74 -0.676 72]
+write image png "NTO4a_2o_0.38.png"
+mo [ 0.986 76]
+write image png "NTO4a_2v_0.38.png"
+
+mo [ 0.992 73]
+write image png "NTO5a_1o_0.56.png"
+mo [ 0.995 76]
+write image png "NTO5a_1v_0.56.png"
+mo [ -0.991 75]
+write image png "NTO5a_2o_0.36.png"
+mo [ 0.917 79 -0.394 78]
+write image png "NTO5a_2v_0.36.png"
+
+mo [ -0.873 72 0.485 74]
+write image png "NTO6a_1o_0.57.png"
+mo [ -0.999 76]
+write image png "NTO6a_1v_0.57.png"
+mo [ -0.980 75]
+write image png "NTO6a_2o_0.30.png"
+mo [ -0.823 77 0.567 80]
+write image png "NTO6a_2v_0.30.png"

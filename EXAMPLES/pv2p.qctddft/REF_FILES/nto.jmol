@@ -1,0 +1,37 @@
+mo titleformat ""
+
+background white
+mo fill
+mo cutoff 0.04
+
+mo [ 1.000 75]
+write image png "NTOX1_1o_1.00.png"
+mo [ 0.999 76]
+write image png "NTOX1_1v_1.00.png"
+
+mo [ -1.000 74]
+write image png "NTOX2_1o_0.55.png"
+mo [ -0.996 76]
+write image png "NTOX2_1v_0.55.png"
+mo [ -0.995 75]
+write image png "NTOX2_2o_0.45.png"
+mo [ -1.000 77]
+write image png "NTOX2_2v_0.45.png"
+
+mo [ 0.898 71 0.432 75]
+write image png "NTOX3_1o_0.53.png"
+mo [ -0.903 76 -0.379 78]
+write image png "NTOX3_1v_0.53.png"
+mo [ -0.893 75 0.429 71]
+write image png "NTOX3_2o_0.47.png"
+mo [ 0.837 78 -0.416 76 -0.355 79]
+write image png "NTOX3_2v_0.47.png"
+
+mo [ -0.994 73]
+write image png "NTOX4_1o_0.56.png"
+mo [ -0.998 76]
+write image png "NTOX4_1v_0.56.png"
+mo [ 0.994 75]
+write image png "NTOX4_2o_0.35.png"
+mo [ -0.913 79 -0.405 78]
+write image png "NTOX4_2v_0.35.png"
