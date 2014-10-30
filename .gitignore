@@ -1,0 +1,12 @@
+lib/Om_descriptors.pyc
+lib/dens_ana_base.pyc
+lib/error_handler.pyc
+lib/file_parser.pyc
+lib/input_options.pyc
+lib/lib_exciton.pyc
+lib/lib_file.pyc
+lib/lib_mo.pyc
+lib/lib_struc.pyc
+lib/lib_tden.pyc
+lib/theo_header.pyc
+lib/units.pyc

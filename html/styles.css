@@ -13,9 +13,9 @@ div {margin-bottom:8pt;}
 
 p {text-indent:1em;}
 
-h2 {font-size:25pt;font-family:Lucida Fax,Times New Roman,serif; color:#000D69}
-h3 {font-size:20pt;color:#3333DD;}
-h4 {font-size:15pt}
+h2 {font-size:25pt;font-family:Lucida Fax,Times New Roman,serif; color:#3333DD;}
+h3 {font-size:20pt; color:#3333DD;}
+h4 {font-size:15pt;}
 
 a:link {text-decoration:none;color:#CE6516;}
 a:visited {text-decoration:none;color:#8A311B;}
