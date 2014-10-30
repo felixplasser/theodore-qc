@@ -34,3 +34,5 @@ span.title {}
 span.titlef {}
 span.year {font-weight:bold;}
 span.journal {font-style:italic;}
+
+p.narrow {width:600px;}
