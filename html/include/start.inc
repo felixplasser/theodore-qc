@@ -18,7 +18,7 @@
 
   <table width="100%" class="tmenu">
    <tr>
-    <td class="menu"><h3>Menu</h3>
+    <td class="menu"><h3 class="hmenu">Menu</h3>
     <ul>
     <li><a class="menu" href="index.html">Home</a></li>
     <li><a class="menu" href="cap.html">Capabilitites</a></li>
