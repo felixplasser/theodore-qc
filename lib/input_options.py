@@ -1,3 +1,7 @@
+"""
+Utilities for reading and writing options from/to an input file.
+"""
+
 import error_handler
 
 class options:

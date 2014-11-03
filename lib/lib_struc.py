@@ -1,3 +1,7 @@
+"""
+Tools for molecular structure analysis and manipulation.
+"""
+
 import os, shutil, locale
 import numpy
 try:

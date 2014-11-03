@@ -1,3 +1,7 @@
+"""
+Parsing of files produced by different quantum chemical programs.
+"""
+
 import units, lib_mo
 import numpy
 import os

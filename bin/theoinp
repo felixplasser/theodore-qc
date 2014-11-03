@@ -1,4 +1,7 @@
 #!/usr/bin/python
+"""
+Input generation for TheoDORE runs.
+"""
 
 import theo_header, input_options, lib_struc
 import os

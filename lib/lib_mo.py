@@ -1,3 +1,7 @@
+"""
+Handling and manipulation of MO-coefficients.
+"""
+
 import error_handler, lib_file
 import numpy
 

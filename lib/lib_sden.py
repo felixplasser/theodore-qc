@@ -1,3 +1,7 @@
+"""
+Analysis routines for state density matrices.
+"""
+
 import dens_ana_base, lib_mo, error_handler, pop_ana
 import numpy
 

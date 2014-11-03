@@ -1,5 +1,5 @@
 """
-Computation and storage of Omega descriptors, which are computed using the charge
+Computation and storage of Omega descriptors, which are derived from the charge
 transfer numbers.
 """
 

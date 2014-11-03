@@ -1,4 +1,7 @@
 #!/usr/bin/python
+"""
+Script for plotting the Omega matrix.
+"""
 
 import theo_header, input_options, lib_file, error_handler
 import numpy
@@ -13,12 +16,16 @@ except:
     raise
 
 class OmFrag_options(input_options.write_options):
+    """
+    Set and store the options for plotting.
+    """
     def __init__(self, *args, **kwargs):
         self.state_list = []
         self.maxOm = 0.
         
         input_options.write_options.__init__(self, *args, **kwargs)
-        
+
+    ## \param fname file with the data produced in a previous analyze_tden.py run
     def read_OmFrag(self, fname='OmFrag.txt'):
         """
         Read the OmFrag.txt file written by analyze_tden.py

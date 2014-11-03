@@ -1,3 +1,8 @@
+"""
+Analysis routines for transition density matrices.
+"""
+
+
 import dens_ana_base, Om_descriptors, lib_mo, error_handler
 import numpy
 

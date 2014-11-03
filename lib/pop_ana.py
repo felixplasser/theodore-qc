@@ -1,9 +1,14 @@
+"""
+Module for population analysis.
+Currently only Mulliken style analysis is supported.
+"""
+
 import numpy
 
-"""
-Module for population analysis
-"""
 class pop_ana:
+    """
+    Base class for population analysis.
+    """
     def ret_pop(self, dens, mos):
         """
         -> Overload this function.
@@ -11,6 +16,9 @@ class pop_ana:
         return None
 
 class mullpop_ana(pop_ana):
+    """
+    Mulliken population analysis.
+    """
     def ret_pop(self, dens, mos):
         """
         Compute and return the Mulliken population.
@@ -27,11 +35,20 @@ class mullpop_ana(pop_ana):
         return mp    
 
 class pop_printer:
+    """
+    Printer for population analysis data.
+    """
     def __init__(self):
         self.pop_types = []
         self.pops = []
         
+    ## \brief Add population data    
+    # \param pop_type name to be printed
+    # \param pop numpy.array with data
     def add_pop(self, pop_type, pop):
+        """
+        Add population data to be stored in the printer class.
+        """
         if pop==None: return
         
         self.pop_types.append(pop_type)
