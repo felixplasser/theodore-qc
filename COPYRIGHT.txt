@@ -1,0 +1,12 @@
+TheoDORE
+
+Copyright 2014 Felix Plasser
+
+This package is free software governed by the terms of the GNU
+General Public License 3.0 as published by the Free Software
+Foundation.
+
+This package is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
