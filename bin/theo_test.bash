@@ -45,7 +45,7 @@ do
     done
     
     echo
-    echo "Checking output files:"
+    echo "Checking major output files:"
     for rfile in `ls "$sdir/REF_FILES"`
     do
         echo "  -> $rfile"
@@ -53,6 +53,17 @@ do
         chk=$((chk+$?))
     done
     
+    echo
+    echo "Checking secondary output files:"
+    echo "  (These may show some numerical inaccuracies)"
+    for rfile in `ls "$sdir/REF_FILES_SEC"`
+    do
+        echo "  -> $rfile"
+        diff -q "$sdir/REF_FILES_SEC/$rfile" $rfile
+        diff "$sdir/REF_FILES_SEC/$rfile" $rfile >> $PDIR/diff_sec.out
+    done
+
+    echo    
     echo " *** Test $dir finished (error code: $chk)."
     tchk=$((tchk+chk))
 done
