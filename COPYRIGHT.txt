@@ -1,4 +1,4 @@
-TheoDORE
+TheoDORE 1.0
 
 Copyright 2014 Felix Plasser
 

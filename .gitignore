@@ -8,6 +8,8 @@ lib/lib_file.pyc
 lib/lib_mo.pyc
 lib/lib_struc.pyc
 lib/lib_tden.pyc
+lib/lib_sden.pyc
+lib/pop_ana.pyc
 lib/theo_header.pyc
 lib/units.pyc
 DOXYGEN

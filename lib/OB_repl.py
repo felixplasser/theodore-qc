@@ -7,10 +7,16 @@ usage: OB_repl is intended as a replacement that supplies some of the functional
 """
 
 import sys
-import struc_linalg, units
+import units
 
 Z_mass_dict = {1:1.008,6:12.011,7:14.007,8:16.,15:30.97,16:32.066,17:35.453,77:192.22}
 Z_exact_mass_dict = {1:1.00782504,6:12.,7:14.00307401,8:15.99491464,17:34.96885273,77:192.962917}
+Z_symbol_dict = {1:'H',6:'C',7:'N',8:'O',15:'P',16:'S',17:'Cl',77:'Ir'}
+
+symbol_Z_dict = {}
+for key,val in Z_symbol_dict.iteritems():
+    symbol_Z_dict[val] = key
+Z_symbol_dict[99] = 'X'
 
 class OBConversion:
     """
@@ -55,7 +61,7 @@ class OBConversion:
         while(line!=''):
               words = line.split()
               obatom = OBAtom()
-              obatom.SetAtomicNum(struc_linalg.symbol_Z_dict[words[0]])
+              obatom.SetAtomicNum(symbol_Z_dict[words[0]])
               coords = [float(word) for word in words[1:4]] 
               obatom.SetVector(*coords)
 
@@ -86,14 +92,14 @@ class OBConversion:
         
         for ind in xrange(1, num_at+1):
             obatom  = mol.GetAtom(ind)
-            outstr  = '%2s'%struc_linalg.Z_symbol_dict[obatom.GetAtomicNum()]
+            outstr  = '%2s'%Z_symbol_dict[obatom.GetAtomicNum()]
             outstr += '% 14.8f'%(obatom.x())
             outstr += '% 14.8f'%(obatom.y())
             outstr += '% 14.8f'%(obatom.z())
             outfile.write(outstr+'\n')
 
         outfile.close()
-		
+	
     def write_tmol(self,mol,file):
         outfile = open(file,'w')
         num_at = mol.NumAtoms()
@@ -104,14 +110,14 @@ class OBConversion:
             obatom  = mol.GetAtom(ind)
             
             outstr  = '% 14.8f'%(obatom.x() / units.length['A'])
-            outstr += '% 14.8f'%(obatom.y() / units.length['A'])
-            outstr += '% 14.8f'%(obatom.z() / units.length['A'])
-            outstr += '%2s'%struc_linalg.Z_symbol_dict[obatom.GetAtomicNum()]
-            outfile.write(outstr+'\n')
-
+	    outstr += '% 14.8f'%(obatom.y() / units.length['A'])
+	    outstr += '% 14.8f'%(obatom.z() / units.length['A'])
+	    outstr += '%2s'%Z_symbol_dict[obatom.GetAtomicNum()]
+	    outfile.write(outstr+'\n')
+	    
         outfile.write('$end\n')
-        outfile.close()
-        
+	outfile.close()
+	
 class OBMol:
     def __init__(self):
         self.atoms = []
