@@ -7,5 +7,5 @@ jmol_orbitals=True
 coor_file='coord'
 coor_format='tmol'
 prop_list=['Om', 'POS', 'PR', 'PRh', 'CT', 'COH', 'COHh', 'PRNTO', 'RMSeh']
-output_prec=(10,6)
+output_prec=(9,5)
 
