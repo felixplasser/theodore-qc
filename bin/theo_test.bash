@@ -45,7 +45,7 @@ do
     done
     
     echo
-    echo "Checking major output files:"
+    echo "Checking primary output files:"
     for rfile in `ls "$sdir/REF_FILES"`
     do
         echo "  -> $rfile"
