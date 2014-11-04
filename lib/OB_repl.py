@@ -37,7 +37,9 @@ class OBConversion:
         Read information from a file into mol.
         """
         if self.in_format == 'xyz':
-            self.read_xyz(mol,file)
+            self.read_xyz(mol, file)
+        elif self.in_format == 'tmol':
+            self.read_tmol(mol, file)
         elif self.in_format == None:
             print "Input format for %s not set!"%file
             sys.exit(14)
@@ -67,7 +69,26 @@ class OBConversion:
 
               mol.AddAtom(obatom)
               line = infile.readline()
-              
+
+    def read_tmol(self, mol, file):
+        """
+        Read Turbomole format (Bohr)
+        """
+        infile = open(file,'r')
+
+        line = infile.readline()
+        line = infile.readline()
+
+        while(not '$' in line):
+              words = line.split()
+              obatom = OBAtom()
+              obatom.SetAtomicNum(symbol_Z_dict[words[3].upper()])
+              coords = [float(word) * units.length['A'] for word in words[0:3]] 
+              obatom.SetVector(*coords)
+
+              mol.AddAtom(obatom)
+              line = infile.readline()
+
     def WriteFile(self,mol,file):
         """
         Print structure to a file.
@@ -99,10 +120,10 @@ class OBConversion:
             outfile.write(outstr+'\n')
 
         outfile.close()
-	
+
     def write_tmol(self,mol,file):
-        outfile = open(file,'w')
-        num_at = mol.NumAtoms()
+	outfile = open(file,'w')
+	num_at = mol.NumAtoms()
         
         outfile.write('$coord\n')
         

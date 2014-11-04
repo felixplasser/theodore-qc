@@ -1,6 +1,6 @@
 rtype='qcadc'
 rfile='qchem.out'
 prop_list = ['RMSeh', 'tRMSeh', 'tCorr', 'tHsize', 'tEsize', 'dHsize', 'dEsize', 'nu', 'nunl', 'p']
-coor_file='qchem.out'
-coor_format='qcout'
+coor_file='qchem.xyz'
+coor_format='xyz'
 output_file='tden_summ.txt.parse'

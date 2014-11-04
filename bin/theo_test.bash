@@ -35,7 +35,13 @@ do
         comm="analyze_$dtype.py -ifile $ifile"
         echo $comm
         $comm > analyze_$atype.out
-        chk=$((chk+$?))
+        lchk=$?
+        if [ "$lchk" -ne 0 ]
+        then
+            echo "  ... failed!"
+        fi
+        
+        chk=$((chk+lchk))
     done
     
     echo
