@@ -95,6 +95,12 @@ class write_options_theo(input_options.write_options):
                       \n -> This file should ideally contain a square invertible coefficient matrix'
         self.read_str(mo_str, 'mo_file', self['mo_file'])
         
+        if self['rtype'] == 'ricc2':
+            print
+            print " *** Warning: in the case of ricc2 you have to delete the line"
+            print "       implicit core=   x virt=    x"
+            print "     from the control file before running tm2molden."
+        
         if self['rtype'] == 'nos':
             nodir = self.ret_str('Directory with the NO files:', '.')
             print "%s contains the following files:"%nodir
