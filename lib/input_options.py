@@ -165,8 +165,6 @@ class write_options(options):
         
         val = self.ret_str(titlek, default)
                 
-        #self[key] = val
-        #self.ostr+="%s='%s'\n"%(key, val)
         self.write_option(key, "'%s'"%val)
         
     def ret_str(self, title, default=''):
@@ -181,6 +179,31 @@ class write_options(options):
 
         return val
     
+    def read_float(self, title, key, default=1.):
+        """
+        Read a float from input.
+        """
+        titlek = "%s (%s):"%(title, key)
+        
+        val = self.ret_float(titlek, default)
+                
+        self.write_option(key, "%f"%val)
+        
+    def ret_float(self, title, default=1.):
+        print
+        print title
+        
+        inpstr = 'Choice: '
+        if not default==1.: inpstr += '[%f] '%default
+            
+        sval = raw_input(inpstr)
+        if sval=='':
+            val = default
+        else:
+            val = float(sval)
+
+        return val
+
     def read_int(self, title, key, idef=-1):
         """
         Read a string from input.
