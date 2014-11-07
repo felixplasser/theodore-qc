@@ -329,7 +329,7 @@ class file_parser_libwfa(file_parser_base):
           vals = [float(word) for word in line.split()]
           
           for val in vals:
-            outarr[ia,ib] = val
+            outarr[ib, ia] = val
             ib += 1
             if ib == dimb:
               ia += 1

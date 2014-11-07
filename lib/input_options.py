@@ -120,7 +120,7 @@ class read_options(options):
             # take out possible comments
             if '#' in line: continue
             
-            words = line.split('=')
+            words = line.strip().split('=')
             if len(line.strip()) == 0: continue
             
             if len(words) != 2:
@@ -128,9 +128,13 @@ class read_options(options):
                 print len(line)
                 print line
                 exit(6)
-            
+                
             key = words[0].strip()
-            val = eval(words[1].strip())
+            
+            if words[1] == '':
+                raise error_handler.MsgError('Please specify a value for "%s=" in %s!'%(key, self.ifile))
+            
+            val = eval(words[1])
             
             # every possible option has to be initiliazed in set_defaults to avoid confusion
             if not key in self.opt_dict:
@@ -165,8 +169,6 @@ class write_options(options):
         
         val = self.ret_str(titlek, default)
                 
-        #self[key] = val
-        #self.ostr+="%s='%s'\n"%(key, val)
         self.write_option(key, "'%s'"%val)
         
     def ret_str(self, title, default=''):
@@ -181,6 +183,31 @@ class write_options(options):
 
         return val
     
+    def read_float(self, title, key, default=1.):
+        """
+        Read a float from input.
+        """
+        titlek = "%s (%s):"%(title, key)
+        
+        val = self.ret_float(titlek, default)
+                
+        self.write_option(key, "%f"%val)
+        
+    def ret_float(self, title, default=1.):
+        print
+        print title
+        
+        inpstr = 'Choice: '
+        if not default==1.: inpstr += '[%f] '%default
+            
+        sval = raw_input(inpstr)
+        if sval=='':
+            val = default
+        else:
+            val = float(sval)
+
+        return val
+
     def read_int(self, title, key, idef=-1):
         """
         Read a string from input.

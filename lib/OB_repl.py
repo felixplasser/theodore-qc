@@ -188,7 +188,7 @@ class OBAtom:
         return Z_exact_mass_dict[self.AtomicNum]
     
 class OBAtomAtomIter:
-    def __init__(self):
+    def __init__(self, atom):
         print "\n Functionality not supported!"
         print "Install python-openbabel for complete support."
         sys.exit(16)

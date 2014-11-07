@@ -9,3 +9,4 @@ coor_file='qchem.xyz'
 coor_format='xyz'
 prop_list=['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt', 'PRNTO', 'RMSeh', 'fname']
 output_file='tden_summ.txt.OmAt'
+output_prec = (9,5)

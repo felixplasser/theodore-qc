@@ -61,7 +61,7 @@ class OmFrag_options(input_options.write_options):
         ichoice = self.ret_choose_list('Do you want to scale the values before plotting?', plot_opts, 1)
         self.write_option('plot_type', '%i'%ichoice)
         
-        self.read_int('Resolution (dpi) for plotting', 'plot_dpi', 50)
+        self.read_int('Resolution (dpi) for plotting', 'plot_dpi', 200)
         
         self.choose_list(
             'Coloring scheme for pseudocolor plots',
@@ -78,8 +78,10 @@ class OmFrag_options(input_options.write_options):
         ], 'Greys'
         )
         
-        self.read_int('Font size', 'fsize', 25)
+        self.read_int('Font size', 'fsize', 10)
         self.read_yn('Use the same scale for all plots', 'sscale', True)
+        if self['sscale']:
+            self.read_float('Maximal value to plot', 'vmax', self.maxOm)
         self.read_yn('Plot axes?', 'axis', False)
         self.read_yn('Plot colorbar for each individual plot?', 'cbar', False)
     
@@ -102,10 +104,12 @@ class OmFrag_options(input_options.write_options):
             else:
                 raise error_handler.ElseError('%i'%self['plot_type'], 'plot_type')
             
-            if self['sscale']: vmax = self.maxOm
-            else: vmax = state['OmFrag'].max()
+            if self['sscale']:
+                vmax = self['vmax']
+            else:
+                vmax = state['OmFrag'].max()
             
-            pylab.figure()
+            pylab.figure(figsize=(2,2))
             pylab.pcolor(plot_arr, cmap=pylab.get_cmap(name=self['cmap']), vmin=0., vmax=vmax)
             
             if self['axis']: pylab.axis('on')                
@@ -115,14 +119,14 @@ class OmFrag_options(input_options.write_options):
             
             pname = 'pcolor_%s.png'%state['name']
             print "Writing %s ..."%pname
-            pylab.savefig(pname, orientation='landscape',dpi=self['plot_dpi'])
+            pylab.savefig(pname, dpi=self['plot_dpi'])
             
             tel  = '<img src="%s", border="1" width="200">\n'%pname
             tel += '<br>%s'%state['name']
             htable.add_el(tel)
         
         if self['sscale']:
-            pylab.figure()
+            pylab.figure(figsize=(2,2))
             pylab.pcolor(numpy.zeros([1, 1]), cmap=pylab.get_cmap(name=self['cmap']), vmin=0., vmax=self.maxOm)
             pylab.axis('off')
             pylab.colorbar()
