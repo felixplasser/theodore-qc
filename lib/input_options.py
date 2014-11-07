@@ -120,7 +120,7 @@ class read_options(options):
             # take out possible comments
             if '#' in line: continue
             
-            words = line.split('=')
+            words = line.strip().split('=')
             if len(line.strip()) == 0: continue
             
             if len(words) != 2:
@@ -128,9 +128,13 @@ class read_options(options):
                 print len(line)
                 print line
                 exit(6)
-            
+                
             key = words[0].strip()
-            val = eval(words[1].strip())
+            
+            if words[1] == '':
+                raise error_handler.MsgError('Please specify a value for "%s=" in %s!'%(key, self.ifile))
+            
+            val = eval(words[1])
             
             # every possible option has to be initiliazed in set_defaults to avoid confusion
             if not key in self.opt_dict:
