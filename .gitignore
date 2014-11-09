@@ -1,4 +1,5 @@
 lib/Om_descriptors.pyc
+lib/cclib_interface.pyc
 lib/dens_ana_base.pyc
 lib/error_handler.pyc
 lib/file_parser.pyc

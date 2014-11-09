@@ -1,4 +1,4 @@
-import file_parser, lib_mo, error_handler
+import file_parser, lib_mo, error_handler, cclib_interface
 import lib_mo
 import numpy
 
@@ -42,6 +42,10 @@ class dens_ana_base:
             self.state_list = file_parser.file_parser_col_mrci(self.ioptions).read(self.mos)
         elif rtype.lower() == 'nos':
             self.state_list = file_parser.file_parser_nos(self.ioptions).read(self.mos)
+        elif rtype.lower() in ['gamess']:
+            # these are parsed with the external cclib library
+            self.state_list = cclib_interface.file_parser_cclib(self.ioptions).read()
+            # self.mos =
         else:
             raise error_handler.ElseError(rtype, 'rtype')
           
