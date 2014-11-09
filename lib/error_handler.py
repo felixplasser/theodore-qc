@@ -13,3 +13,11 @@ class ElseError(MsgError):
 class NIError(MsgError):
     def __init__(self):
         self.errmsg = "Functionality no implemented yet!"
+        
+class PureVirtualError(MsgError):
+    """
+    Use this to mark pure virtual functions in an abstract base class
+    These have to be redefined by the inherited class.
+    """
+    def __init__(self):
+        self.errmsg = "Virtual function is pure!"

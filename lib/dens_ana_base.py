@@ -19,13 +19,22 @@ class dens_ana_base:
 #--------------------------------------------------------------------------#          
 
     def read_mos(self, lvprt=1):
-        self.mos = lib_mo.MO_set(file=self.ioptions.get('mo_file'))
-        self.mos.read_molden_file(lvprt=lvprt)
+        """
+        Read MOs from a separate file, which is given in Molden format.
+        """
+        self.mos = lib_mo.MO_set_molden(file=self.ioptions.get('mo_file'))
+        self.mos.read(lvprt=lvprt)
+        self.read2_mos(lvprt)
+
+    def read2_mos(self, lvprt=1):
         self.mos.compute_inverse()                    
         self.num_mo  = self.mos.ret_num_mo()
         self.num_bas = self.mos.ret_num_bas()
         
     def read_dens(self):
+        """
+        Read the (transition) density matrices and some supplementary information.
+        """
         rtype = self.ioptions.get('rtype')
         
         if rtype=='ricc2':
@@ -44,8 +53,10 @@ class dens_ana_base:
             self.state_list = file_parser.file_parser_nos(self.ioptions).read(self.mos)
         elif rtype.lower() in ['gamess']:
             # these are parsed with the external cclib library
-            self.state_list = cclib_interface.file_parser_cclib(self.ioptions).read()
-            # self.mos =
+            ccli = cclib_interface.file_parser_cclib(self.ioptions)
+            self.mos = ccli.read_mos()
+            self.read2_mos()
+            self.state_list = ccli.read(self.mos)
         else:
             raise error_handler.ElseError(rtype, 'rtype')
           

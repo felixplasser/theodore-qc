@@ -634,8 +634,8 @@ class file_parser_nos(file_parser_base):
         """
         Read information from a secondary NO file.
         """
-        nos = lib_mo.MO_set(file=no_file)
-        nos.read_molden_file()
+        nos = lib_mo.MO_set_molden(file=no_file)
+        nos.read()
         nos.compute_inverse()
         if self.ioptions['rd_ene']:
             nos.set_ens_occs()

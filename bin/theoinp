@@ -34,7 +34,8 @@ class write_options_theo(input_options.write_options):
             ('colmrci', 'Columbus MR-CI'),
             ('nos', 'Read natural orbitals (Molden format)'),
             ('ricc2', 'Turbomole ricc2'),
-            ('escf', 'Turbomole escf')
+            ('escf', 'Turbomole escf'),
+            ('gamess', 'GAMESS (parsed with the external cclib library)')
         ], rdef)
         
         # set defaults

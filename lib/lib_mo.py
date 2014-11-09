@@ -18,113 +18,12 @@ class MO_set:
         
         self.mo_mat = None
         self.inv_mo_mat = None
-        
-    def read_molden_file(self, lvprt=1):
+    
+    def read(self, *args, **kwargs):
         """
-        Read in MO coefficients from a molden File.
+        Read MOs from external file.
         """
-        
-        MO = False
-        GTO = False
-        mo_vecs = []
-        mo_ind = 0
-        self.syms = [] # list with the orbital descriptions. they are entered after Sym in the molden file.
-        self.occs = [] # occupations
-        self.ens  = [] # orbital energies (or whatever is written in that field)
-            
-        num_bas={'s':1,'p':3,'sp':4,'d':6,'f':10,'g':15}
-        
-        orient={'s':['1'],
-                'p':['x','y','z'],
-               'sp':['1','x','y','z'],
-                'd':['x2','y2','z2','xy','xz','yz'],
-                'f':10*['?'],'g':15*['?']}
-                
-        num_orb=0
-        curr_at=-1
-
-        self.header = ''
-        
-        fileh = open(self.file, 'r')
-        
-        fstr = fileh.read()
-        if ('[D5]' in fstr) or ('[5D]' in fstr):
-            num_bas['d']=5
-            orient['d']=5*['?']
-        elif ('[F7]' in fstr) or ('[7F]' in fstr):
-            num_bas['f']=7
-            orient['7']=7*['?']
-
-        fileh.seek(0) # rewind the file
-        
-        for line in fileh:
-            words = line.replace('=',' ').split()
-        
-            # what section are we in
-            if '[' in line:
-                MO = False
-                GTO = False
-            
-            if '[MO]' in line:
-                MO = True
-                GTO = False
-            # extract the information in that section
-            elif MO:
-                if not '=' in line:
-                    try:
-                        mo_vecs[-1].append(float(words[1]))
-                    except:
-                        print " ERROR, parsing the following line:"
-                        print line
-                        raise
-                elif 'ene' in line.lower():
-                    mo_ind += 1
-                    mo_vecs.append([])
-                    self.ens.append(float(words[-1]))
-                elif 'sym' in line.lower():
-                    self.syms.append(words[-1])
-                elif 'occ' in line.lower():
-                    self.occs.append(float(words[-1]))
-                        
-            elif ('[GTO]' in line):
-                GTO = True
-                # extract the information in that section
-            elif GTO:
-                if len(words)==0: # empty line: atom is finished
-                    curr_at = -1
-                elif curr_at==-1:
-                    curr_at = int(words[0])
-                    self.num_at = max(curr_at, self.num_at)
-                elif (len(words) >= 2) and (words[0].lower() in num_bas):
-                  orbsymb = words[0].lower()
-                  
-                  for i in xrange(num_bas[orbsymb]):
-                    self.basis_fcts.append(basis_fct(curr_at, orbsymb, orient[orbsymb][i]))
-                    num_orb+=1
-
-            if not MO:
-                self.header += line
-                
-        fileh.close()
-
-### file parsing finished ###
-
-        if lvprt >= 1:
-            print '\nMO file %s parsed.'%self.file
-            print 'Number of atoms: %i'%self.num_at
-            print 'Number of MOs read in: %i'%len(mo_vecs)
-            print 'Dimension: %i,%i,...,%i'%(len(mo_vecs[0]),len(mo_vecs[1]),len(mo_vecs[-1]))
-            print 'Number of basis functions parsed: ', num_orb
-        
-        if len(mo_vecs[0])!=num_orb:
-            raise error_handler.MsgError('Inconsistent number of basis functions!')
-
-        try:
-           self.mo_mat = numpy.array(mo_vecs).transpose()
-        except ValueError:
-           print "\n *** Unable to construct MO matrix! ***"
-           print "Is there a mismatch between spherical/cartesian functions?\n ---"
-           raise
+        raise error_handler.PureVirtualError()
            
     def compute_inverse(self):
         """
@@ -230,6 +129,11 @@ class MO_set:
         
         self.export_AO(lam2, lam2, UV_t, *args, **kwargs)
         
+    def export_AO(self, *args, **kwargs):
+        raise error_handler.PureVirtualError()
+        
+
+class MO_set_molden(MO_set):
     def export_AO(self, ens, occs, Ct, fname='out.mld', cfmt='% 10E', occmin=-1):
         """
         Export coefficients given already in the AO basis to molden file.
@@ -252,15 +156,124 @@ class MO_set:
                 mld.write(fmtstr%(ibf+1, coeff))
         
         mld.close()
+        
+    def read(self, lvprt=1):
+        """
+        Read in MO coefficients from a molden File.
+        """
+        
+        MO = False
+        GTO = False
+        mo_vecs = []
+        mo_ind = 0
+        self.syms = [] # list with the orbital descriptions. they are entered after Sym in the molden file.
+        self.occs = [] # occupations
+        self.ens  = [] # orbital energies (or whatever is written in that field)
+            
+        num_bas={'s':1,'p':3,'sp':4,'d':6,'f':10,'g':15}
+        
+        orient={'s':['1'],
+                'p':['x','y','z'],
+               'sp':['1','x','y','z'],
+                'd':['x2','y2','z2','xy','xz','yz'],
+                'f':10*['?'],'g':15*['?']}
+                
+        num_orb=0
+        curr_at=-1
+
+        self.header = ''
+        
+        fileh = open(self.file, 'r')
+        
+        fstr = fileh.read()
+        if ('[D5]' in fstr) or ('[5D]' in fstr):
+            num_bas['d']=5
+            orient['d']=5*['?']
+        elif ('[F7]' in fstr) or ('[7F]' in fstr):
+            num_bas['f']=7
+            orient['7']=7*['?']
+
+        fileh.seek(0) # rewind the file
+        
+        for line in fileh:
+            words = line.replace('=',' ').split()
+        
+            # what section are we in
+            if '[' in line:
+                MO = False
+                GTO = False
+            
+            if '[MO]' in line:
+                MO = True
+                GTO = False
+            # extract the information in that section
+            elif MO:
+                if not '=' in line:
+                    try:
+                        mo_vecs[-1].append(float(words[1]))
+                    except:
+                        print " ERROR, parsing the following line:"
+                        print line
+                        raise
+                elif 'ene' in line.lower():
+                    mo_ind += 1
+                    mo_vecs.append([])
+                    self.ens.append(float(words[-1]))
+                elif 'sym' in line.lower():
+                    self.syms.append(words[-1])
+                elif 'occ' in line.lower():
+                    self.occs.append(float(words[-1]))
+                        
+            elif ('[GTO]' in line):
+                GTO = True
+                # extract the information in that section
+            elif GTO:
+                if len(words)==0: # empty line: atom is finished
+                    curr_at = -1
+                elif curr_at==-1:
+                    curr_at = int(words[0])
+                    self.num_at = max(curr_at, self.num_at)
+                elif (len(words) >= 2) and (words[0].lower() in num_bas):
+                  orbsymb = words[0].lower()
+                  
+                  for i in xrange(num_bas[orbsymb]):
+                    self.basis_fcts.append(basis_fct(curr_at, orbsymb, orient[orbsymb][i]))
+                    num_orb+=1
+
+            if not MO:
+                self.header += line
+                
+        fileh.close()
+
+### file parsing finished ###
+
+        if lvprt >= 1:
+            print '\nMO file %s parsed.'%self.file
+            print 'Number of atoms: %i'%self.num_at
+            print 'Number of MOs read in: %i'%len(mo_vecs)
+            print 'Dimension: %i,%i,...,%i'%(len(mo_vecs[0]),len(mo_vecs[1]),len(mo_vecs[-1]))
+            print 'Number of basis functions parsed: ', num_orb
+        
+        if len(mo_vecs[0])!=num_orb:
+            raise error_handler.MsgError('Inconsistent number of basis functions!')
+
+        try:
+           self.mo_mat = numpy.array(mo_vecs).transpose()
+        except ValueError:
+           print "\n *** Unable to construct MO matrix! ***"
+           print "Is there a mismatch between spherical/cartesian functions?\n ---"
+           raise
+        
+
       
 class basis_fct:
     """
     Container for basisfunction information.
     """
     def __init__(self, at_ind, l, ml):
-        self.at_ind = at_ind
-        self.l = l
-        self.ml = ml
+        self.at_ind = at_ind # atom where the function is located
+        self.l = l   # s, p, d, f
+        self.ml = ml # x, y, z
         
 class jmol_MOs:
     """
