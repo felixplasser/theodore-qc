@@ -16,6 +16,7 @@ class MO_set:
         self.num_at = 0
         self.basis_fcts = [] # info about basis functions
         
+        self.S = None
         self.mo_mat = None
         self.inv_mo_mat = None
     
@@ -25,16 +26,21 @@ class MO_set:
         """
         raise error_handler.PureVirtualError()
            
-    def compute_inverse(self):
+    def compute_inverse(self, lvprt=1):
         """
         Compute the inverse of the MO matrix.
         If the matrix is not square, the pseudoinverse is computed.
         """
-        if len(self.mo_mat) == len(self.mo_mat[0]):
+        if not self.S == None:
+            if lvprt >= 1:
+                print " ... inverse computed as: C^T.S"
+            self.inv_mo_mat = numpy.dot(self.mo_mat.transpose(), self.S)
+        elif len(self.mo_mat) == len(self.mo_mat[0]):
             self.inv_mo_mat = numpy.linalg.inv(self.mo_mat)
         else:
-            print 'MO-matrix not square: %i x %i'%(len(self.mo_mat),len(self.mo_mat[0]))
-            print '  Using the Moore-Penrose pseudo inverse instead.'
+            if lvprt >= 1:
+                print 'MO-matrix not square: %i x %i'%(len(self.mo_mat),len(self.mo_mat[0]))
+                print '  Using the Moore-Penrose pseudo inverse instead.'
             self.inv_mo_mat = numpy.linalg.pinv(self.mo_mat)
     
     def ret_mo_mat(self, trnsp=False, inv=False):
