@@ -62,7 +62,6 @@ class file_parser_cclib(file_parser.file_parser_base):
         for attr in ['mocoeffs', 'natom', 'homos', 'moenergies', 'etenergies', 'etoscs', 'etsyms', 'etsecs']:
             chk = hasattr(self.data, attr)
             if not chk: errcode += 1
-
             
             if lvprt >= 1:
                 print '%15s ...'%attr, chk
