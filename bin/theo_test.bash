@@ -2,11 +2,29 @@
 
 PDIR=`pwd`
 
+echo "theo_test.bash [<module>]"
+echo "  available modules: standard, all, cclib"
+
 echo "Starting theo_test.bash"
 echo "THEODIR=$THEODIR"
 
+stddirs="pyrrole.qcadc hexatriene.colmrci fa2.ricc2 pv2p.escf pv2p.qctddft ir_c3n3.qctddft"
+cclibdirs="fa2.cclib"
+
+if [ $# == 0 ]
+then
+    rundirs=$stddirs
+else
+    case "$1" in
+    "all") rundirs="$stddirs $cclibdirs";;
+    "standard") rundirs="$stddirs";;
+    "cclib") rundirs="$cclibdirs";;    
+    esac
+fi
+
 tchk=0
-for dir in "pyrrole.qcadc" "hexatriene.colmrci" "fa2.ricc2" "pv2p.escf" "pv2p.qctddft" "ir_c3n3.qctddft" "fa2.cclib"
+#for dir in "pyrrole.qcadc" "hexatriene.colmrci" "fa2.ricc2" "pv2p.escf" "pv2p.qctddft" "ir_c3n3.qctddft" "fa2.cclib"
+for dir in $rundirs
 do
     echo
     echo "================================================"
