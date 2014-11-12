@@ -51,7 +51,7 @@ class dens_ana_base:
             self.state_list = file_parser.file_parser_col_mrci(self.ioptions).read(self.mos)
         elif rtype.lower() == 'nos':
             self.state_list = file_parser.file_parser_nos(self.ioptions).read(self.mos)
-        elif rtype.lower() in ['gamess']:
+        elif rtype.lower() in ['cclib', 'gamess', 'orca']:
             # these are parsed with the external cclib library
             ccli = cclib_interface.file_parser_cclib(self.ioptions)
             self.mos = ccli.read_mos()

@@ -35,7 +35,7 @@ class write_options_theo(input_options.write_options):
             ('nos', 'Read natural orbitals (Molden format)'),
             ('ricc2', 'Turbomole ricc2'),
             ('escf', 'Turbomole escf'),
-            ('gamess', 'GAMESS (parsed with the external cclib library)')
+            ('cclib', 'Use external cclib library: GAMESS, ORCA, ...')
         ], rdef)
         
         # set defaults
@@ -77,13 +77,17 @@ class write_options_theo(input_options.write_options):
             self['mo_file'] = 'molden.input'
             self['coor_file'] = 'coord'
             self['coor_format'] = 'tmol'
+        elif self['rtype'] == 'cclib':
+            self['rfile'] = ''
+            self['mo_file'] = None
+            self['coor_file'] = ''
+            self['coor_format'] = ''
         else:
             self['rfile'] = ''
             self['mo_file'] = ''
             self['coor_file'] = ''
             self['coor_format'] = ''
-        
-    
+            
     def choose_rfile(self):
         if not self.has_key('rfile'): return
         
