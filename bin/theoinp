@@ -35,7 +35,7 @@ class write_options_theo(input_options.write_options):
             ('nos', 'Read natural orbitals (Molden format)'),
             ('ricc2', 'Turbomole ricc2'),
             ('escf', 'Turbomole escf'),
-            ('cclib', 'Use external cclib library: GAMESS, ORCA, ...')
+            ('cclib', 'Use external cclib library: Gaussian, ORCA, GAMESS, ...')
         ], rdef)
         
         # set defaults
@@ -197,7 +197,7 @@ class write_options_theo(input_options.write_options):
             self.ostr += 'comp_ntos=True\n'
             self['prop_list'] += ['PRNTO']
             self.read_yn('NTOs as Jmol script?', 'jmol_orbitals', True)
-            self.read_yn('NTcdaOs in Molden format`', 'molden_orbitals', False)
+            self.read_yn('NTOs in Molden format`', 'molden_orbitals', False)
         else:
             self.ostr += 'comp_ntos=False\n'
             

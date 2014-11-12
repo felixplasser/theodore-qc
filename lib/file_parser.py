@@ -188,6 +188,12 @@ class file_parser_escf(file_parser_base):
             elif os.path.exists('trip_%s'%state['irrep']):
               readf = 'trip_%s'%state['irrep']
               print '  Reading information of triplet calculation from file %s'%readf
+            elif os.path.exists('ciss_%s'%state['irrep']):
+              readf = 'ciss_%s'%state['irrep']
+              print '  Reading information of TDA singlet calculation from file %s'%readf
+            elif os.path.exists('cist_%s'%state['irrep']):
+              readf = 'cist_%s'%state['irrep']
+              print '  Reading information of TDA triplet calculation from file %s'%readf
             else:
               print 'No file with information about the excited state (sing_a, trip_a, ...) found!'
               exit(7)

@@ -6,7 +6,7 @@ echo "Starting theo_test.bash"
 echo "THEODIR=$THEODIR"
 
 tchk=0
-for dir in "pyrrole.qcadc" "hexatriene.colmrci" "fa2.ricc2" "pv2p.escf" "pv2p.qctddft" "ir_c3n3.qctddft"
+for dir in "pyrrole.qcadc" "hexatriene.colmrci" "fa2.ricc2" "pv2p.escf" "pv2p.qctddft" "ir_c3n3.qctddft" "fa2.cclib"
 do
     echo
     echo "================================================"
