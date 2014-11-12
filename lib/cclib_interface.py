@@ -119,6 +119,3 @@ class MO_set_cclib(lib_mo.MO_set):
         
     def ret_ihomo(self):
         return self.ihomo
-        
-        
-        
