@@ -348,6 +348,7 @@ class dens_ana_options(read_options):
         self['mo_file'] = None
         self['rtype']   = None # type of input
         self['rfile']   = None # file to read
+        self['read_binary'] = False # read binary files rather than standard output (if applicable)
         
         # Output options
         self['output_file']   = "ana_summ.txt"

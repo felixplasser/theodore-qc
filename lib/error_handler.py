@@ -8,7 +8,6 @@ class MsgError(Exception):
 class ElseError(MsgError):
     def __init__(self, option, desc):
         self.errmsg = "Option %s not implemented for %s!"%(option, desc)
-
     
 class NIError(MsgError):
     def __init__(self):

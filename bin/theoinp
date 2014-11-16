@@ -54,7 +54,7 @@ class write_options_theo(input_options.write_options):
             self['coor_format'] = 'qcout'
         elif self['rtype'] == 'qctddft':
             self['rfile'] = 'qchem.out'
-            self['mo_file'] = 'qchem.mld'
+            self['mo_file'] = 'qchem.out'
             self['coor_file'] = 'qchem.out'
             self['coor_format'] = 'qcout'
         elif self['rtype'] == 'colmrci':

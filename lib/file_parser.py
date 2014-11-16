@@ -2,9 +2,9 @@
 Parsing of files produced by different quantum chemical programs.
 """
 
-import units, lib_mo
+import units, lib_mo, error_handler
 import numpy
-import os
+import os, struct
 
 class file_parser_base:
     def __init__(self, ioptions):
@@ -87,19 +87,83 @@ class file_parser_ricc2(file_parser_base):
         ihomo  = mos.ret_ihomo()
         
         for state in state_list:
-            state['name'] = '%i%s'%(state['state_ind'],state['irrep'])
+            state['name'] = '%i(%s)%s'%(state['state_ind'], state['mult'], state['irrep'])
             state['tden'] = self.init_den(mos, rect=True)
-            
-            for conf in state['char']:
-                # look for the orbital in the MO file. This makes sure that the procedure works even when the MOs are reordered because of symmetry.
-                iocc  = mos.syms.index(conf.occ)
-                
-                #print conf.virt, mos.syms.index(conf.virt), mos.syms.index(conf.virt) - ihomo, conf.coeff
-                ivirt = mos.syms.index(conf.virt)
 
-                state['tden'][iocc,ivirt] = conf.coeff
+            if self.ioptions.get('read_binary'):
+                self.set_tden_bin(state, mos)
+            else:
+                self.set_tden_conf(state, mos)
                 
+        if self.ioptions.get('read_binary'):
+               mos.symsort(self.ioptions['irrep_labels'])        
+ 
         return state_list
+   
+    def set_tden_conf(self, state, mos):
+        """
+        Set the transition density matrix elements acoording to the parsed configurations.
+        """
+        for conf in state['char']:
+            # look for the orbital in the MO file. This makes sure that the procedure works even when the MOs are reordered because of symmetry.
+            iocc  = mos.syms.index(conf.occ)
+           
+            #print conf.virt, mos.syms.index(conf.virt), mos.syms.index(conf.virt) - ihomo, conf.coeff
+            ivirt = mos.syms.index(conf.virt)
+
+            state['tden'][iocc,ivirt] = conf.coeff
+                
+    def set_tden_bin(self, state, mos, lvprt=1):
+        """
+        Set the transition density matrix elements acoording to the binary files with state information.
+        """
+        iirrep=self.ioptions['irrep_labels'].index(state['irrep']) + 1
+        smult=state['mult']
+        istate=state['state_ind']
+        CCfilen = 'CCRE0-%i--%s---%i'%(iirrep, smult, istate)
+
+        if lvprt >= 1: print 'Reading binary file %s ...'%CCfilen
+
+        CCfile = open(CCfilen, 'rb')
+        CCfile.read(8)
+        method = struct.unpack('8s', CCfile.read(8))[0]
+        CCfile.read(8)
+        nentry = struct.unpack('i', CCfile.read(4))[0]
+        CCfile.read(20)
+
+        num_mo = mos.ret_num_mo()
+        nocc  = mos.ret_ihomo() + 1
+        nvirt = num_mo - nocc
+        
+        assert(nentry % nvirt == 0)        
+        nact = nentry / nvirt
+        nfrzc = nocc - nact
+        
+        if lvprt >= 1:
+            print '  Method: %s, number of entries: %i'%(method, nentry)
+            print '  num_mo: %i, nocc: %i, nvirt: %i, nact: %i, nfrzc: %i'%(num_mo, nocc, nvirt, nact, nfrzc)
+        if lvprt >= 2:
+            print '  Syms:', mos.syms
+
+        if nfrzc > 0:
+            print '\n\n  WARNING: Frozen core orbitals should be kept out of the molden file when Reading CCRE0* files!\n'
+            
+        # write the collected data into the correct block of the 1TDM
+        for iocc in xrange(nfrzc, nocc):
+            for ivirt in xrange(nocc, num_mo):
+                state['tden'][iocc, ivirt] = struct.unpack('d', CCfile.read(8))[0]
+
+        lbytes = struct.unpack('4s', CCfile.read(4))
+        if lvprt >= 2:
+            print '   Last four bytes:', lbytes
+        if not CCfile.read(1) == '':
+            raise error_hanlder.MSGError('parsing file %s'%CCfilen)
+
+        if lvprt >= 3:
+            print 'parsed tden:'
+            print state['tden']
+        
+        #raise error_handler.NIError()
 
     def ret_conf_ricc2(self, rfile='ricc2.out'):
         """
@@ -115,7 +179,22 @@ class file_parser_ricc2(file_parser_base):
             print "Finished parsing file %s"%rfile  
             break
           else:
-            if 'Energy:   ' in line:
+            if ' sym | multi | state' in line:
+                # parse the multiplicity from here
+                multis = []
+                line = lines.next()
+                line = lines.next()
+                line = lines.next()
+                while True:
+                    line = lines.next()
+                    if '---' in line: continue
+                    if '===' in line: break
+                    
+                    words = self.delete_chars(line, ['|']).split()
+                    
+                    multis.append(words[1])                   
+                    
+            elif 'Energy:   ' in line:
                 ret_list.append({})
                 words = line.split()
                 ret_list[-1]['exc_en'] = float(words[3])
@@ -125,6 +204,7 @@ class file_parser_ricc2(file_parser_base):
                 words = line.split() # type: RE0
                 ret_list[-1]['irrep'] = words[4]
                 ret_list[-1]['state_ind'] = int(words[6])
+                ret_list[-1]['mult'] = multis.pop(0)
                 
                 for i in xrange(3): line = lines.next()
                     
@@ -142,7 +222,8 @@ class file_parser_ricc2(file_parser_base):
                 words = line.split()
                 ret_list[curr_osc]['osc_str'] = float(words[5])
                 curr_osc+=1
-                
+            elif 'irred. repres.:' in line:
+                self.ioptions['irrep_labels'] = line.split()[2:]
         return ret_list
 
 #---

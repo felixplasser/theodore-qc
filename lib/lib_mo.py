@@ -31,11 +31,15 @@ class MO_set:
         Compute the inverse of the MO matrix.
         If the matrix is not square, the pseudoinverse is computed.
         """
+        
+        # Preferably, the overlap matrix should be used to avoid explicit inversion
         if not self.S == None:
             if lvprt >= 1:
                 print " ... inverse computed as: C^T.S"
             self.inv_mo_mat = numpy.dot(self.mo_mat.transpose(), self.S)
         elif len(self.mo_mat) == len(self.mo_mat[0]):
+            if lvprt >= 1:
+                print " ... inverting C"
             self.inv_mo_mat = numpy.linalg.inv(self.mo_mat)
         else:
             if lvprt >= 1:
@@ -58,10 +62,10 @@ class MO_set:
             
     def ret_ihomo(self):
         """
-        Return the HOMO index.
+        Return the HOMO index (starting with 0).
         This only works if no fractional occupation numbers are present!
         """
-        return self.occs.index(0.)
+        return self.occs.index(0.) - 1
     
     def ret_num_mo(self):
         return len(self.mo_mat[0])
@@ -137,7 +141,50 @@ class MO_set:
         
     def export_AO(self, *args, **kwargs):
         raise error_handler.PureVirtualError()
+    
+    def symsort(self, irrep_labels, sepov=True):
+        """
+        Sort MOs by symmetry (in case they are sorted by energy).
+        This is more of a hack than a clean and stable routine...
+        """
+        print "Sorting MOs by symmetry"
         
+        occorbs = {}
+        virtorbs = {}
+        for il in irrep_labels:
+            occorbs[il]  = []
+            virtorbs[il] = []
+            
+        for imo, sym in enumerate(self.syms):
+            for il in irrep_labels:
+                if il in sym:
+                    if self.occs[imo] == 0.:
+                        virtorbs[il].append((sym, imo))
+                    else:
+                        occorbs[il].append((sym, imo))
+                        
+        T = numpy.zeros([self.ret_num_mo(), self.ret_num_mo()], int)
+        
+        orblist = []
+        if sepov:
+            for il in irrep_labels:
+                orblist += occorbs[il]
+            for il in irrep_labels:
+                orblist += virtorbs[il]
+        else:
+            raise error_handler.ElseError('sepov', 'False')
+        
+        #print orblist
+        self.syms = []
+        for jmo, orb in enumerate(orblist):
+            #print jmo, orb
+            T[jmo, orb[1]] = 1
+            self.syms.append(orb[0])
+        
+        assert(jmo==self.ret_num_mo()-1)
+        
+        self.mo_mat = numpy.dot(self.mo_mat, T.transpose())
+        self.compute_inverse()
 
 class MO_set_molden(MO_set):
     def export_AO(self, ens, occs, Ct, fname='out.mld', cfmt='% 10E', occmin=-1):
@@ -182,7 +229,8 @@ class MO_set_molden(MO_set):
                 'p':['x','y','z'],
                'sp':['1','x','y','z'],
                 'd':['x2','y2','z2','xy','xz','yz'],
-                'f':10*['?'],'g':15*['?']}
+                'f':['xxx', 'yyy', 'zzz', 'xyy', 'xxy', 'xxz', 'xzz', 'yzz', 'yyz', 'xyz'],
+                'g':15*['?']}
                 
         num_orb=0
         curr_at=-1
@@ -194,10 +242,10 @@ class MO_set_molden(MO_set):
         fstr = fileh.read()
         if ('[D5]' in fstr) or ('[5D]' in fstr):
             num_bas['d']=5
-            orient['d']=5*['?']
+            orient['d']=5*['D0', 'D+1', 'D-1', 'D+2', 'D-2']
         elif ('[F7]' in fstr) or ('[7F]' in fstr):
             num_bas['f']=7
-            orient['7']=7*['?']
+            orient['7']=7*['F0', 'F+1', 'F-1', 'F+2', 'F-2', 'F+3', 'F-3']
 
         fileh.seek(0) # rewind the file
         
@@ -210,6 +258,7 @@ class MO_set_molden(MO_set):
                 GTO = False
             
             if '[MO]' in line:
+                if lvprt >= 2: print "Found [MO] tag"
                 MO = True
                 GTO = False
             # extract the information in that section
@@ -218,7 +267,9 @@ class MO_set_molden(MO_set):
                     try:
                         mo_vecs[-1].append(float(words[1]))
                     except:
-                        print " ERROR, parsing the following line:"
+                        if words==[]: break # stop parsing the file if an empty line is found
+
+                        print " ERROR in lib_mo, parsing the following line:"
                         print line
                         raise
                 elif 'ene' in line.lower():
