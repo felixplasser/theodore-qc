@@ -26,6 +26,7 @@ Number of atoms: 10
 Number of MOs read in: 95
 Dimension: 95,95,...,95
 Number of basis functions parsed:  95
+ ... inverting C
 
 MO file NOs/mp2_gs_no.mo parsed.
 Number of atoms: 10

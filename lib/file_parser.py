@@ -557,7 +557,7 @@ class file_parser_qctddft(file_parser_base):
                     awords = self.delete_chars(line, ['X:', 'Y:', 'D', 'V', '(', ')', '-->']).split()
                     
                     iocc = int(awords[0]) - 1
-                    ivirt = int(awords[1]) - 1 + mos.ret_ihomo()
+                    ivirt = int(awords[1]) + mos.ret_ihomo()
                     
                     coeff =  float(awords[4])
                     
