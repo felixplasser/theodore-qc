@@ -1,0 +1,135 @@
+$title
+$operating system unix
+$symmetry c2v
+$coord    file=coord
+$user-defined bonds    file=coord
+$atoms
+n  1                                                                           \
+   basis =n cc-pVDZ                                                            \
+   cbas  =n cc-pVDZ
+c  2-6                                                                         \
+   basis =c cc-pVDZ                                                            \
+   cbas  =c cc-pVDZ
+h  7-11                                                                        \
+   basis =h cc-pVDZ                                                            \
+   cbas  =h cc-pVDZ
+$basis    file=basis
+$rundimensions
+   dim(fock,dens)=6811
+   natoms=11
+   nshell=51
+   nbf(CAO)=115
+   nbf(AO)=109
+   dim(trafo[SAO<-->AO/CAO])=215
+   rhfshells=1
+   nt1amt=1320
+$scfmo   file=mos
+$closed shells
+ a1      1-11                                   ( 2 )
+ a2      1                                      ( 2 )
+ b1      1-7                                    ( 2 )
+ b2      1-2                                    ( 2 )
+$scfiterlimit       30
+$scfconv        7
+$thize     0.10000000E-04
+$thime        5
+$scfdamp   start=0.300  step=0.050  min=0.100
+$scfdump
+$scfintunit
+ unit=30       size=0        file=twoint
+$scfdiis
+$scforbitalshift  automatic=.1
+$drvopt
+   cartesian  on
+   basis      off
+   global     off
+   hessian    on
+   dipole     on
+   nuclear polarizability
+$interconversion  off
+   qconv=1.d-7
+   maxiter=25
+$optimize
+   internal   off
+   cartesian  on
+   global     off
+   basis      off   logarithm
+$coordinateupdate
+   dqmax=0.3
+   interpolate  on
+   statistics    5
+$forceupdate
+   ahlrichs numgeo=0  mingeo=3 maxgeo=4 modus=<g|dq> dynamic fail=0.3
+   threig=0.005  reseig=0.005  thrbig=3.0  scale=1.00  damping=0.0
+$forceinit on
+   diag=default
+$energy    file=energy
+$grad    file=gradient
+$forceapprox    file=forceapprox
+$lock off
+$maxcor    15000
+$denconv     0.10000000E-06
+$freeze
+$cbas    file=auxbasis
+$ricc2
+  adc(2)
+$excitations
+  irrep=a2 multiplicity=  1  nexc=  1  npre= 2  nstart=  2
+  irrep=b2 multiplicity=  1  nexc=  1  npre= 2  nstart=  2
+  irrep=a1 multiplicity=  3  nexc=  1  npre= 2  nstart=  2
+  irrep=a2 multiplicity=  3  nexc=  1  npre= 2  nstart=  2
+  irrep=b1 multiplicity=  3  nexc=  1  npre= 2  nstart=  2
+  irrep=b2 multiplicity=  3  nexc=  1  npre= 2  nstart=  2
+  spectrum  states=all  operators=xdiplen,ydiplen,zdiplen
+  exprop  states=all unrelaxed  operators=xdiplen,ydiplen,zdiplen
+$last step     tm2molden
+$orbital_max_rnorm 0.34509870209100E-06
+$last SCF energy change = -246.71491
+$dipole from dscf
+  x     0.00000000000000    y     0.00000000000000    z    -0.87318796886049    a.u.
+   | dipole | =    2.2194392114  debye
+$excitation_energies_CCS_____3^a1__ file=exstates
+$excitation_energies_CCS_____1^a2__ file=exstates
+$excitation_energies_CCS_____3^a2__ file=exstates
+$excitation_energies_CCS_____3^b1__ file=exstates
+$excitation_energies_CCS_____1^b2__ file=exstates
+$excitation_energies_CCS_____3^b2__ file=exstates
+$excitation_energies_ADC(2)__3^a1__ file=exstates
+$excitation_energies_ADC(2)__1^a2__ file=exstates
+$excitation_energies_ADC(2)__3^a2__ file=exstates
+$excitation_energies_ADC(2)__3^b1__ file=exstates
+$excitation_energies_ADC(2)__1^b2__ file=exstates
+$excitation_energies_ADC(2)__3^b2__ file=exstates
+$t2_norm_of_re0_ADC(2)__3^a1__ file=exstates
+$t2_norm_of_re0_ADC(2)__1^a2__ file=exstates
+$t2_norm_of_re0_ADC(2)__3^a2__ file=exstates
+$t2_norm_of_re0_ADC(2)__3^b1__ file=exstates
+$t2_norm_of_re0_ADC(2)__1^b2__ file=exstates
+$t2_norm_of_re0_ADC(2)__3^b2__ file=exstates
+$<le0|re0>-overlap_ADC(2)__3^a1__ file=exstates
+$<le01|re01>-overlap_ADC(2)__3^a1__ file=exstates
+$<le02|re02>-overlap_ADC(2)__3^a1__ file=exstates
+$<le0|re0>-overlap_ADC(2)__1^a2__ file=exstates
+$<le01|re01>-overlap_ADC(2)__1^a2__ file=exstates
+$<le02|re02>-overlap_ADC(2)__1^a2__ file=exstates
+$<le0|re0>-overlap_ADC(2)__3^a2__ file=exstates
+$<le01|re01>-overlap_ADC(2)__3^a2__ file=exstates
+$<le02|re02>-overlap_ADC(2)__3^a2__ file=exstates
+$<le0|re0>-overlap_ADC(2)__3^b1__ file=exstates
+$<le01|re01>-overlap_ADC(2)__3^b1__ file=exstates
+$<le02|re02>-overlap_ADC(2)__3^b1__ file=exstates
+$<le0|re0>-overlap_ADC(2)__1^b2__ file=exstates
+$<le01|re01>-overlap_ADC(2)__1^b2__ file=exstates
+$<le02|re02>-overlap_ADC(2)__1^b2__ file=exstates
+$<le0|re0>-overlap_ADC(2)__3^b2__ file=exstates
+$<le01|re01>-overlap_ADC(2)__3^b2__ file=exstates
+$<le02|re02>-overlap_ADC(2)__3^b2__ file=exstates
+$tranprop_ADC(2)____1^a1____0_to_1^a2____1 file=exstates
+$tranprop_ADC(2)____1^a1____0_to_1^b2____1 file=exstates
+$tranprop_ADC(2)____1^a1____0_to_3^a1____1 file=exstates
+$tranprop_ADC(2)____1^a1____0_to_3^a2____1 file=exstates
+$tranprop_ADC(2)____1^a1____0_to_3^b1____1 file=exstates
+$tranprop_ADC(2)____1^a1____0_to_3^b2____1 file=exstates
+$exstprop_ADC(2)___1^a1____1 file=exstates
+$exstprop_ADC(2)___3^a1____1 file=exstates
+$end
