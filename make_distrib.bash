@@ -24,7 +24,6 @@ mkdir $TDIR
 
 cp COPYRIGHT.txt LICENSE.txt $TDIR
 
-# TODO: setpaths
 sed "s/GIT/$LTDIR/" setpaths.bash > $TDIR/setpaths.bash
 sed "s/GIT/$LTDIR/" setpaths.csh > $TDIR/setpaths.csh
 
