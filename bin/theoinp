@@ -155,7 +155,7 @@ class write_options_theo(input_options.write_options):
             rstr = self.ret_str('Input indices for fragment %i:\n(separated by spaces)'%ifrag)
             if rstr == '': break
             
-            atl_tmp.append([int(iat) for iat in rstr.replace(',',' ').split()])            
+            atl_tmp.append([int(iat) for iat in rstr.replace(',', ' ').split()])            
             
         return atl_tmp
             

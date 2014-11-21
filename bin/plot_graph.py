@@ -35,13 +35,63 @@ class plot_options(input_options.write_options):
         
         self.write_list('ana_dirs', dlist, "'%s'")
         
+        self.read_str("Name of the file to analyze in each directory", "ana_file", "tden_summ.txt")
+        
+        rstr = self.ret_str("Labels of the states of interest as they appear in %s (separated by spaces)"%self['ana_file'])
+        self.write_list('state_labels', rstr.split(), lformat="'%s'")
+        
+    def read_data(self):
+        self.data = []
+        self.main_header = ''
+            
+        for ana_dir in self['ana_dirs']:
+            self.data.append({})
+            f = open(os.path.join(ana_dir, self['ana_file']), 'r')
+            
+            header = f.next().split()
+            if self.main_header == '': self.main_header = header
+            f.next()
+            
+            while True:
+                try:
+                    line = f.next()
+                except StopIteration:
+                    break
+                
+                words = line.split()
+                self.data[-1][words[0]] = {}
+                pdict = self.data[-1][words[0]]
+                
+                for i, prop in enumerate(header[1:]):
+                    try:
+                        pdict[prop] = float(words[i+1])
+                    except ValueError:
+                        pass
+            
+        #print self.data
+        
     def plot(self):
-        pass
+        set1 = self.data[0][self['state_labels'][0]]
+        
+        for key in self.main_header[1:]:
+            print 'Plotting %s ...'%key
+            pylab.figure(figsize=(6,4))
+            
+            for state in self['state_labels']:
+                ylist = []
+                for iana_dir in xrange(len(self['ana_dirs'])):
+                    print self.data[iana_dir][state]
+                    #ylist.append(self.data[iana_dir][state])
+                    
+                raise error_handler.NIError()
+                
         
 def run_plot():
     popt = plot_options('graph.in')
     
     popt.plot_input()
+    
+    popt.read_data()
     
     popt.plot()
     
