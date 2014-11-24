@@ -336,7 +336,7 @@ class write_options(options):
         fileh = open(self.ifile, 'w')
         fileh.write(self.ostr)
         fileh.close()
-        print 'Fished: File %s written.'%self.ifile
+        print 'Finished: File %s written.'%self.ifile
     
         
 class dens_ana_options(read_options):

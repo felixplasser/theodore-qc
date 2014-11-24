@@ -6,7 +6,7 @@ Driver script for analyzing a set of NO files.
 import theo_header, lib_sden, input_options
 import os, sys
 
-theo_header.print_header('NO file analysis')
+theo_header.print_header('State density matrix analysis')
 
 def ihelp():
     print " analyze_sden.py\n"

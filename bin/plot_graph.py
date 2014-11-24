@@ -25,7 +25,7 @@ class plot_options(input_options.write_options):
         print "This script allows to combine information from several TheoDORE runs into one graph."
         print "   These jobs are assumed to be located in subdirectories of the current directory."
         
-        sdirs = os.listdir('.')
+        sdirs = [dirn for dirn in os.listdir('.') if os.path.isdir(dirn)]
         
         print "The following subdirectories were found:"
         self.print_list(sdirs)
@@ -39,6 +39,9 @@ class plot_options(input_options.write_options):
         
         rstr = self.ret_str("Labels of the states of interest as they appear in %s (separated by spaces)"%self['ana_file'])
         self.write_list('state_labels', rstr.split(), lformat="'%s'")
+        
+        self.read_int('Font size', 'fsize', 10)
+        self.read_str("Format of output graphics files", "output_format", "png")
         
     def read_data(self):
         self.data = []
@@ -73,6 +76,8 @@ class plot_options(input_options.write_options):
     def plot(self):
         set1 = self.data[0][self['state_labels'][0]]
         
+        matplotlib.rc('font', size=self['fsize'])
+        
         for key in self.main_header[1:]:
             print 'Plotting %s ...'%key
             pylab.figure(figsize=(6,4))
@@ -80,10 +85,24 @@ class plot_options(input_options.write_options):
             for state in self['state_labels']:
                 ylist = []
                 for iana_dir in xrange(len(self['ana_dirs'])):
-                    print self.data[iana_dir][state]
-                    #ylist.append(self.data[iana_dir][state])
+                    try:
+                        ylist.append(self.data[iana_dir][state][key])
+                    except KeyError:
+                        print " ... error when plotting %s for %s."%(key, state)
+                        break
+                else:
+                    xlist = range(len(ylist))
+                    pylab.plot(xlist, ylist, 'x-', label=state)
+                    #pylab.title(key)
                     
-                raise error_handler.NIError()
+                    pylab.xticks(xlist, self['ana_dirs'], rotation='vertical')
+                    pylab.margins(0.3)
+                    pylab.subplots_adjust(bottom=0.25)
+                    pylab.xlim((-0.5, len(ylist)+1.5))
+                    
+                    pylab.ylabel(key)
+                    pylab.legend()
+                    pylab.savefig('%s.%s'%(key, self['output_format']))
                 
         
 def run_plot():

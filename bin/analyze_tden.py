@@ -7,7 +7,6 @@ import theo_header, lib_tden, lib_exciton, input_options, error_handler
 import os, sys, time
 
 theo_header.print_header('Transition density matrix analysis')
-#print 'Starting at ' + time.asctime()
 (tc, tt) = (time.clock(), time.time())
 
 def ihelp():

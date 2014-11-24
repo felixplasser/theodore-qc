@@ -2,6 +2,7 @@
 """
 Script for plotting the Omega matrix.
 """
+# TODO: variable output format
 
 import theo_header, input_options, lib_file, error_handler
 import numpy
@@ -79,6 +80,7 @@ class OmFrag_options(input_options.write_options):
         )
         
         self.read_int('Font size', 'fsize', 10)
+        self.read_str("Format of output graphics files", "output_format", "png")
         self.read_yn('Use the same scale for all plots', 'sscale', True)
         if self['sscale']:
             self.read_float('Maximal value to plot', 'vmax', self.maxOm)
@@ -117,7 +119,7 @@ class OmFrag_options(input_options.write_options):
             
             if self['cbar']: pylab.colorbar()
             
-            pname = 'pcolor_%s.png'%state['name']
+            pname = 'pcolor_%s.%s'%(state['name'], self['output_format'])
             print "Writing %s ..."%pname
             pylab.savefig(pname, dpi=self['plot_dpi'])
             
