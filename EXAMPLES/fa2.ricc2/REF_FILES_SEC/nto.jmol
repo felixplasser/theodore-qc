@@ -5,55 +5,55 @@ mo fill
 mo cutoff 0.04
 
 mo [ 1.000 16]
-write image png "NTO1a_1o_0.56.png"
+write image png "NTO1-1-a_1o_0.56.png"
 mo [ 1.000 17]
-write image png "NTO1a_1v_0.56.png"
+write image png "NTO1-1-a_1v_0.56.png"
 mo [ 1.000 15]
-write image png "NTO1a_2o_0.39.png"
+write image png "NTO1-1-a_2o_0.39.png"
 mo [ 0.984 18]
-write image png "NTO1a_2v_0.39.png"
+write image png "NTO1-1-a_2v_0.39.png"
 
 mo [ -0.989 15]
-write image png "NTO2a_1o_0.56.png"
+write image png "NTO2-1-a_1o_0.56.png"
 mo [ -1.000 17]
-write image png "NTO2a_1v_0.56.png"
+write image png "NTO2-1-a_1v_0.56.png"
 mo [ 1.000 16]
-write image png "NTO2a_2o_0.41.png"
+write image png "NTO2-1-a_2o_0.41.png"
 mo [ 0.985 18]
-write image png "NTO2a_2v_0.41.png"
+write image png "NTO2-1-a_2v_0.41.png"
 
 mo [ 1.000 16]
-write image png "NTO3a_1o_0.62.png"
+write image png "NTO3-1-a_1o_0.62.png"
 mo [ 0.893 19 -0.449 17]
-write image png "NTO3a_1v_0.62.png"
+write image png "NTO3-1-a_1v_0.62.png"
 mo [ 1.000 15]
-write image png "NTO3a_2o_0.35.png"
+write image png "NTO3-1-a_2o_0.35.png"
 mo [ -0.746 20 0.666 18]
-write image png "NTO3a_2v_0.35.png"
+write image png "NTO3-1-a_2v_0.35.png"
 
 mo [ 1.000 15]
-write image png "NTO4a_1o_0.61.png"
+write image png "NTO4-1-a_1o_0.61.png"
 mo [ 0.868 19 -0.497 17]
-write image png "NTO4a_1v_0.61.png"
+write image png "NTO4-1-a_1v_0.61.png"
 mo [ 1.000 16]
-write image png "NTO4a_2o_0.36.png"
+write image png "NTO4-1-a_2o_0.36.png"
 mo [ -0.717 20 0.697 18]
-write image png "NTO4a_2v_0.36.png"
+write image png "NTO4-1-a_2v_0.36.png"
 
 mo [ 1.000 15]
-write image png "NTO5a_1o_0.52.png"
+write image png "NTO5-1-a_1o_0.52.png"
 mo [ -0.884 18 -0.468 20]
-write image png "NTO5a_1v_0.52.png"
+write image png "NTO5-1-a_1v_0.52.png"
 mo [ 1.000 16]
-write image png "NTO5a_2o_0.45.png"
+write image png "NTO5-1-a_2o_0.45.png"
 mo [ 0.781 17 0.625 19]
-write image png "NTO5a_2v_0.45.png"
+write image png "NTO5-1-a_2v_0.45.png"
 
 mo [ 1.000 16]
-write image png "NTO6a_1o_0.50.png"
+write image png "NTO6-1-a_1o_0.50.png"
 mo [ -0.858 18 -0.514 20]
-write image png "NTO6a_1v_0.50.png"
+write image png "NTO6-1-a_1v_0.50.png"
 mo [ 1.000 15]
-write image png "NTO6a_2o_0.47.png"
+write image png "NTO6-1-a_2o_0.47.png"
 mo [ 0.752 17 0.660 19]
-write image png "NTO6a_2v_0.47.png"
+write image png "NTO6-1-a_2v_0.47.png"
