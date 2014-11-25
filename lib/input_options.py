@@ -360,6 +360,7 @@ class dens_ana_options(read_options):
         # Additional information
         # irrep labels for output
         self['irrep_labels'] = ['I1', 'I2', 'I3', 'I4', 'I5', 'I6', 'I7', 'I8']
+        self['ncore'] = 0 # number of frozen core orbitals
         
         # atomic coordinates
         self['coor_file'] = None 
