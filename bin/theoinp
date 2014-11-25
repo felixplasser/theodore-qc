@@ -202,7 +202,7 @@ class write_options_theo(input_options.write_options):
             self.ostr += 'comp_ntos=False\n'
             
     def exciton_ana(self):
-        if self.ret_yn('Compute approximate exciton radius?', True):
+        if self.ret_yn('Compute approximate exciton size?', True):
             self['prop_list'] += ['RMSeh']
             print "\nMolecular coordinates for exciton analysis:"
             self.coor_file()

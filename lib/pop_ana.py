@@ -58,6 +58,9 @@ class pop_printer:
         """
         Return a table containing all the populations of interest.
         """
+        if len(self.pop_types) == 0:
+            return "  ... no population analysis data available."
+        
         retstr = ''
         
         hstr = '%5s'%'Atom'

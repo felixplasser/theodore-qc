@@ -289,7 +289,8 @@ class tden_ana(dens_ana_base.dens_ana_base):
         """
         Export the NTOs to a molden file.
         """
-        self.mos.export_NTO(lam, U, Vt, 'nto_%s.mld'%state['name'],
+        nto_name = 'nto_%s.mld'%state['name'].replace('(', '-').replace(')', '-')
+        self.mos.export_NTO(lam, U, Vt, nto_name,
                            cfmt=self.ioptions['mcfmt'], occmin=minlam)
     
 #---
