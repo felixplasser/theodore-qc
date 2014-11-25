@@ -96,7 +96,8 @@ class file_parser_ricc2(file_parser_base):
                 self.set_tden_conf(state, mos)
                 
         if self.ioptions.get('read_binary'):
-               mos.symsort(self.ioptions['irrep_labels'])        
+               mos.symsort(self.ioptions['irrep_labels'])
+               self.ioptions['jmol_orbitals'] = False
  
         return state_list
    
@@ -162,8 +163,6 @@ class file_parser_ricc2(file_parser_base):
         if lvprt >= 3:
             print 'parsed tden:'
             print state['tden']
-        
-        #raise error_handler.NIError()
 
     def ret_conf_ricc2(self, rfile='ricc2.out'):
         """
@@ -462,9 +461,8 @@ class file_parser_qcadc(file_parser_libwfa):
             elif ' Excitation energy:' in line:
                 exc_chk = float(words[2])
                 if abs(exc_chk - state_list[-1]['exc_en']) > 1.e-4:
-                    print " ERROR: excitation energies do not match!"
                     print exc_chk, state_list[-1]['exc_en']
-                    exit(10)
+                    raise error_handler.MsgError("Excitation energies do not match")
                     
             elif 'Exciton analysis of the difference density matrix' in line:
                 if len(state_list) > 0: exc_diff = True
@@ -475,6 +473,8 @@ class file_parser_qcadc(file_parser_libwfa):
                 if len(state_list) > 0: exc_1TDM = True
 
             if len(state_list) > 0:
+                self.parse_key(state_list[-1], 'dip', line, 'Total dipole')
+                self.parse_key(state_list[-1], 'r2', line, 'Total <r^2>')
                 self.parse_key(state_list[-1], 'nu', line, 'Number of unpaired electrons:', 2)
                 self.parse_key(state_list[-1], 'nunl', line, 'Number of unpaired electrons')                
                 self.parse_key(state_list[-1], 'p', line, 'Number of detached / attached electrons')

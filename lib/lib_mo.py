@@ -172,12 +172,10 @@ class MO_set:
             for il in irrep_labels:
                 orblist += virtorbs[il]
         else:
-            raise error_handler.ElseError('sepov', 'False')
+            raise error_handler.ElseError('False', 'sepov')
         
-        #print orblist
         self.syms = []
         for jmo, orb in enumerate(orblist):
-            #print jmo, orb
             T[jmo, orb[1]] = 1
             self.syms.append(orb[0])
         
