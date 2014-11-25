@@ -3,7 +3,7 @@
 Script for creating graphs from multiple directories, e.g. potential curves.
 """
 
-import theo_header, input_options, error_handler
+import theo_header, input_options, error_handler, lib_file
 import os
 
 try:
@@ -74,11 +74,20 @@ class plot_options(input_options.write_options):
         #print self.data
         
     def plot(self):
+        hfname = 'graphs.html'
+        hfile = lib_file.htmlfile(hfname)
+        hfile.pre('Property graphs')
+        
+        htable = lib_file.htmltable(ncol=4)
+        
+        # TODO: read state labels
         set1 = self.data[0][self['state_labels'][0]]
         
         matplotlib.rc('font', size=self['fsize'])
         
         for key in self.main_header[1:]:
+            if key == 'fname': continue
+            
             print 'Plotting %s ...'%key
             pylab.figure(figsize=(6,4))
             
@@ -88,21 +97,32 @@ class plot_options(input_options.write_options):
                     try:
                         ylist.append(self.data[iana_dir][state][key])
                     except KeyError:
-                        print " ... error when plotting %s for %s."%(key, state)
+                        print " ... not able to plot %s for %s."%(key, state)
                         break
                 else:
-                    xlist = range(len(ylist))
-                    pylab.plot(xlist, ylist, 'x-', label=state)
-                    #pylab.title(key)
-                    
-                    pylab.xticks(xlist, self['ana_dirs'], rotation='vertical')
-                    pylab.margins(0.3)
-                    pylab.subplots_adjust(bottom=0.25)
-                    pylab.xlim((-0.5, len(ylist)+1.5))
-                    
-                    pylab.ylabel(key)
-                    pylab.legend()
-                    pylab.savefig('%s.%s'%(key, self['output_format']))
+                    pylab.plot(range(len(ylist)), ylist, 'x-', label=state)
+            
+            pylab.title(key)
+            
+            numx = len(self['ana_dirs'])
+            pylab.xticks(xrange(numx), self['ana_dirs'], rotation=30)
+            pylab.margins(0.20)
+            pylab.subplots_adjust(bottom=0.15)
+            pylab.xlim((-0.5, numx+1.5))
+            
+            pylab.ylabel(key)
+            pylab.legend()
+            
+            pname = '%s.%s'%(key, self['output_format'])
+            pylab.savefig(pname)
+            
+            tel  = '<img src="%s", border="1" width="400">'%pname
+            htable.add_el(tel)
+                
+        hfile.write(htable.ret_table()) 
+        hfile.post()
+        
+        print " HTML file %s containing the property graphs written."%hfname
                 
         
 def run_plot():
