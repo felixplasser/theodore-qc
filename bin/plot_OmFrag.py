@@ -114,8 +114,12 @@ class OmFrag_options(input_options.write_options):
             pylab.figure(figsize=(2,2))
             pylab.pcolor(plot_arr, cmap=pylab.get_cmap(name=self['cmap']), vmin=0., vmax=vmax)
             
-            if self['axis']: pylab.axis('on')                
-            else: pylab.axis('off')
+            if self['axis']:
+                pylab.axis('on')
+                pylab.xticks([x + 0.5 for x in xrange(len(plot_arr))], [x + 1 for x in xrange(len(plot_arr))])
+                pylab.yticks([y + 0.5 for y in xrange(len(plot_arr))], [y + 1 for y in xrange(len(plot_arr))])
+            else:
+                pylab.axis('off')
             
             if self['cbar']: pylab.colorbar()
             
@@ -129,8 +133,14 @@ class OmFrag_options(input_options.write_options):
         
         if self['sscale']:
             pylab.figure(figsize=(2,2))
+            
             pylab.pcolor(numpy.zeros([1, 1]), cmap=pylab.get_cmap(name=self['cmap']), vmin=0., vmax=self.maxOm)
             pylab.axis('off')
+            
+            # this does not seem to work:
+            #pylab.xlabel('hole?')
+            #pylab.ylabel('elec?')
+            
             pylab.colorbar()
             pylab.savefig('cbar.png', dpi=self['plot_dpi'])
             
