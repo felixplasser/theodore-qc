@@ -571,13 +571,13 @@ class file_parser_col(file_parser_base):
     def read_iwfmt(self,  fname):
         pass
     
-    def read_trncils(self, state, mos, filen, ncore=0):
+    def read_trncils(self, state, mos, filen):
         """
         Read output from transci.x for a 1-particle density file.
         Frozen core orbitals should not matter here?
         """
         # change the format of the MO labels
-        mos.syms2 = ncore*['xxx']+[''.join(sym.lower().split('_')) for sym in mos.syms]
+        mos.syms2 = self.ioptions['ncore']*['xxx']+[''.join(sym.lower().split('_')) for sym in mos.syms]
         # Specification of ncore only works without symmetry!
         #print self.mos.syms2
         
@@ -612,13 +612,13 @@ class file_parser_col(file_parser_base):
                 words = line.split()
                 state['osc_str']=float(words[-1])
                 
-        #exit(1)
-                
     def read_block_mat(self, state, mos, rfile, sym):
         """
         Parse the block matrix output in the listing file.
         This is not the cleanest routine but it seems to work ...
         """
+        isqr2 = 1. / numpy.sqrt(2.)
+        
         while(1):
             words=rfile.next().replace('MO','').split()
             
@@ -647,9 +647,9 @@ class file_parser_col(file_parser_base):
                     if abs(val) > 0.1: print "(%2i->%2i)-(%s->%s), val=% 8.4f"%\
                        (head_inds[i],left_ind,mos.syms2[head_inds[i]],mos.syms2[left_ind],val)
                     
-                    state['tden'][head_inds[i],left_ind] += val
+                    state['tden'][head_inds[i],left_ind] += isqr2 * val
                     if left_ind != head_inds[i]:
-                        state['tden'][left_ind,head_inds[i]] += sym*val
+                        state['tden'][left_ind,head_inds[i]] += isqr2 * sym*val
                         
                 words=rfile.next().replace('MO','').split()
                 
@@ -666,8 +666,6 @@ class file_parser_col_mrci(file_parser_col):
             print "Reading %s ..."%lfile
             state_list.append({})
             self.read_trncils(state_list[-1], mos, 'LISTINGS/%s'%lfile)
-            
-            # TODO: hier weiter
 
         return state_list
     
