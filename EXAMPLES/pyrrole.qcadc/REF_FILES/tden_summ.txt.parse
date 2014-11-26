@@ -1,4 +1,4 @@
-state       dE(eV)  osc.  RMSeh tRMSeh  tCorr tHsize tEsize dHsize dEsize     nu   nunl      p
+state       dE(eV)     f  RMSeh   dexc   Corr   sigH   sigE   sigD   sigA     nu   nunl      p
 ----------------------------------------------------------------------------------------------
 1(3)A1       5.802 0.000  1.504  2.177  0.119  1.561  1.712  1.612  1.700  2.852  2.461  1.032
 2(1)A1       6.794 0.007  1.853  2.458 -0.107  1.561  1.733  1.607  1.711  2.963  2.552  1.079
