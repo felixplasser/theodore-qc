@@ -90,10 +90,9 @@ def run_table():
     ropt = read_table_options(infilen, False)
     
     if ropt.init == 0:
-        copy = topt.ret_yn('Found %s. Use this file directly rather than performing an interactive input?'%infilen, False)
+        copy = topt.ret_yn('Found %s. Use this file directly rather than performing an interactive input?'%infilen, True)
     else:
-        copy = False
-    
+        copy = False    
     
     if copy:
         topt.copy(ropt)

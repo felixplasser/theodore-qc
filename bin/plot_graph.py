@@ -123,7 +123,7 @@ def run_plot():
     ropt = read_plot_options(infilen, False)
 
     if ropt.init == 0:
-        copy = popt.ret_yn('Found %s. Use this file directly rather than performing an interactive input?'%infilen, False)
+        copy = popt.ret_yn('Found %s. Use this file directly rather than performing an interactive input?'%infilen, True)
     else:
         copy = False    
     
