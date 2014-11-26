@@ -209,7 +209,7 @@ class write_options_theo(input_options.write_options):
             
         if self['rtype'] == 'qcadc':
             if self.ret_yn('Parse exciton information from ADCMAN job?', True):
-                self['prop_list'] += ['tRMSeh', 'tHsize', 'tEsize', 'tCOV', 'tCorr']
+                self['prop_list'] += ['dexc', 'sigH', 'sigE', 'COV', 'Corr']
 
     def AD_ana(self):
         self.read_yn('Attachment/detachment analysis', 'AD_ana', True)
@@ -228,7 +228,7 @@ def run_theoinp():
     
     wopt['prop_list'] = []
     
-    if wopt['rtype'] in 'nos':
+    if wopt['rtype'] in ['nos']:
         dotden = False
     else:
         dotden = wopt.ret_yn('Analysis of transition density matrices?', True)
@@ -242,10 +242,11 @@ def run_theoinp():
             if wopt.ret_yn('Perform exciton analysis?', True):
                 wopt.exciton_ana()
     
-    if wopt.ret_yn('Analysis of state density matrices?', not dotden):
-        wopt.read_yn('Print out Mulliken populations?', 'pop_ana', True)
-        wopt.read_yn('Compute number of unpaired electrons?', 'unpaired_ana', True)
-        wopt.AD_ana()
+    if not wopt['rtype'] in ['qctddft', 'ricc2', 'escf', 'cclib']:
+        if wopt.ret_yn('Analysis of state density matrices?', not dotden):
+            wopt.read_yn('Print out Mulliken populations?', 'pop_ana', True)
+            wopt.read_yn('Compute number of unpaired electrons?', 'unpaired_ana', True)
+            wopt.AD_ana()
             
 
     wopt.write_prop_list()

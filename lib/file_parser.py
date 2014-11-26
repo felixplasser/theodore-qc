@@ -481,15 +481,17 @@ class file_parser_qcadc(file_parser_libwfa):
                 self.parse_key(state_list[-1], 'PRNTO', line, 'PR_NTO')                
                 
             if exc_diff:
-                self.parse_key(state_list[-1], 'dHsize', line, 'Hole size')
-                self.parse_key(state_list[-1], 'dEsize', line, 'Electron size')
+                self.parse_key(state_list[-1], 'sigD', line, 'Hole size')
+                self.parse_key(state_list[-1], 'sigA', line, 'Electron size')
+                self.parse_key(state_list[-1], 'dD-A', line, '|<r_e - r_h>|')
 
             if exc_1TDM:
-                self.parse_key(state_list[-1], 'tRMSeh', line, 'RMS electron-hole separation')
-                self.parse_key(state_list[-1], 'tHsize', line, 'Hole size')
-                self.parse_key(state_list[-1], 'tEsize', line, 'Electron size')
-                self.parse_key(state_list[-1], 'tCOV', line, 'Covariance(r_h, r_e) [Ang^2]')
-                self.parse_key(state_list[-1], 'tCorr', line, 'Correlation coefficient')
+                self.parse_key(state_list[-1], 'dexc', line, 'RMS electron-hole separation')
+                self.parse_key(state_list[-1], 'sigH', line, 'Hole size')
+                self.parse_key(state_list[-1], 'sigE', line, 'Electron size')
+                self.parse_key(state_list[-1], 'dH-E', line, '|<r_e - r_h>|')
+                self.parse_key(state_list[-1], 'COV', line, 'Covariance(r_h, r_e) [Ang^2]')
+                self.parse_key(state_list[-1], 'Corr', line, 'Correlation coefficient')
                 
         return state_list
 

@@ -14,7 +14,7 @@ except:
     print "pylab/matplotlib not installed - plotting not possible"
     raise
 
-class plot_options(input_options.write_options):
+class write_plot_options(input_options.write_options):
     """
     Set and store the options for plotting.
     """
@@ -48,28 +48,12 @@ class plot_options(input_options.write_options):
         self.main_header = ''
             
         for ana_dir in self['ana_dirs']:
-            self.data.append({})
-            f = open(os.path.join(ana_dir, self['ana_file']), 'r')
+            sfile = lib_file.summ_file(os.path.join(ana_dir, self['ana_file']))
+            header = sfile.ret_header()
+            ddict  = sfile.ret_ddict()
             
-            header = f.next().split()
             if self.main_header == '': self.main_header = header
-            f.next()
-            
-            while True:
-                try:
-                    line = f.next()
-                except StopIteration:
-                    break
-                
-                words = line.split()
-                self.data[-1][words[0]] = {}
-                pdict = self.data[-1][words[0]]
-                
-                for i, prop in enumerate(header[1:]):
-                    try:
-                        pdict[prop] = float(words[i+1])
-                    except ValueError:
-                        pass
+            self.data.append(ddict)            
             
         #print self.data
         
@@ -123,18 +107,37 @@ class plot_options(input_options.write_options):
         hfile.post()
         
         print " HTML file %s containing the property graphs written."%hfname
-                
+
+class read_plot_options(input_options.read_options):
+    def set_defaults(self):
+        self['ana_dirs']=None
+        self['ana_file']='tden_summ.txt'
+        self['state_labels']=None
+        self['fsize']=10
+        self['output_format']='png'
         
 def run_plot():
-    popt = plot_options('graph.in')
+    infilen = 'graph.in'
     
-    popt.plot_input()
+    popt = write_plot_options(infilen)
+    ropt = read_plot_options(infilen, False)
+
+    if ropt.init == 0:
+        copy = popt.ret_yn('Found %s. Use this file directly rather than performing an interactive input?'%infilen, False)
+    else:
+        copy = False    
+    
+    if copy:
+        popt.copy(ropt)
+    else:        
+        popt.plot_input()
     
     popt.read_data()
     
     popt.plot()
     
-    popt.flush()
+    if not copy:
+        popt.flush()
     
 if __name__ == '__main__':
     theo_header.print_header('Graph plotting')

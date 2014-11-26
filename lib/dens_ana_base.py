@@ -87,7 +87,7 @@ class dens_ana_base:
         ndec  = self.ioptions.get('output_prec')[1]
         oformat = '%% %i.%if'%(width, ndec)
         
-        hstr  = '%-10s'%'state' + '%8s'%'dE(eV)' + '%6s'%'osc.'
+        hstr  = '%-10s'%'state' + '%8s'%'dE(eV)' + '%6s'%'f'
         hstr +=self.ret_header_string(prop_list, width)
         
         prt_list = []

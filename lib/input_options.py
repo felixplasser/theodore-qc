@@ -74,7 +74,14 @@ class options:
         for i in xrange(1,maxen+1):
             ci = sum_list.count(i)
             if ci!=1:
-                print ' WARNING: value %i present %i times in at_lists!'%(i,ci)    
+                print ' WARNING: value %i present %i times in at_lists!'%(i,ci)
+                
+    def copy(self, coptions):
+        """
+        Copy information from a different options instance.
+        """
+        for key, val in coptions.opt_dict.iteritems():
+            self[key] = val            
         
 class read_options(options):
     """
