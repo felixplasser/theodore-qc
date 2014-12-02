@@ -471,6 +471,9 @@ class file_parser_qcadc(file_parser_libwfa):
             elif 'Exciton analysis of the transition density matrix' in line:
                 exc_diff = False
                 if len(state_list) > 0: exc_1TDM = True
+                
+            elif 'Transition Summary' in line:
+                break
 
             if len(state_list) > 0:
                 self.parse_key(state_list[-1], 'dip', line, 'Total dipole')
