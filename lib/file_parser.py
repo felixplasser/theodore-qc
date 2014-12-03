@@ -356,7 +356,9 @@ class file_parser_libwfa(file_parser_base):
             suff = omfile.split('.')[-1]
             if suff!='om': continue
            
-            (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile(os.path.join(basedir,omfile))                    
+            (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile(os.path.join(basedir,omfile))
+            if typ == None:
+                continue
 
             state_list.append({})
           
@@ -389,7 +391,13 @@ class file_parser_libwfa(file_parser_base):
 
     def rmatfile(self,fname):
         print "Reading: %s ..."%fname
-        rfile=open(fname,'r')
+        
+        try:
+            rfile=open(fname,'r')
+        except IOError:
+            print "\n WARNING: could not open %s."%fname
+            print "Did the calculation converge?\n"
+            return None, None, None, None, None, None
 
         line=rfile.readline()
         words=line.split()
@@ -451,6 +459,8 @@ class file_parser_qcadc(file_parser_libwfa):
                 
                 om_filen = self.om_file_name(state_list[-1])
                 (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile(os.path.join(basedir,om_filen))
+                if typ == None:
+                    continue
                 
                 state_list[-1]['exc_en'] = exctmp * units.energy['eV']
                 state_list[-1]['osc_str'] = osc
@@ -460,6 +470,10 @@ class file_parser_qcadc(file_parser_libwfa):
                 
             elif ' Excitation energy:' in line:
                 exc_chk = float(words[2])
+                
+                if not 'exc_en' in state_list[-1]:
+                    state_list[-1]['exc_en'] = exc_chk
+                
                 if abs(exc_chk - state_list[-1]['exc_en']) > 1.e-4:
                     print exc_chk, state_list[-1]['exc_en']
                     raise error_handler.MsgError("Excitation energies do not match")

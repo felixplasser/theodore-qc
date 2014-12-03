@@ -45,6 +45,7 @@ class file_parser_cclib(file_parser.file_parser_base):
             state['tden'] = self.init_den(mos, rect=rect_dens)
             for conf in self.data.etsecs[ist]:
                 [(iocc, spocc), (ivirt, spvirt), coeff] = conf
+                assert(iocc < ivirt) # de-excitations cannot be handled at this point
                 state['tden'][iocc, ivirt] = coeff
     
         return state_list

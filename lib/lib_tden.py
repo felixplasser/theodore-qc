@@ -75,12 +75,16 @@ class tden_ana(dens_ana_base.dens_ana_base):
         omf.write("%i\n"%len(self.ioptions['at_lists']))
         for state in self.state_list:
             Om, OmFrag = self.ret_Om_OmFrag(state)
+            if Om == None:
+                continue
             omf.write("%10s %8.5f"%(state['name'], Om))
             for el in OmFrag.flatten():
                 omf.write(" %8.5f"%el)
             omf.write("\n")
             
-        omf.close()#---
+        omf.close()
+        
+#---
 
     def print_all_Om_descriptors(self, lvprt=2, desc_list=[]):
         """
@@ -155,7 +159,11 @@ class tden_ana(dens_ana_base.dens_ana_base):
             return state['Om'], state['OmAt']
         
         formula = self.ioptions.get('Om_formula')
-        D  = state['tden']
+        
+        try:
+            D  = state['tden']
+        except KeyError:
+            return None, None
         
         print "Computation of Omega matrix ..."
       # construction of intermediate matrices
@@ -216,6 +224,8 @@ class tden_ana(dens_ana_base.dens_ana_base):
                 #raise error_handler.MsgError("at_lists not specified")
 
         Om, OmAt = self.ret_Om_OmAt(state)
+        if Om == None:
+            return None, None
         
         state['OmFrag'] = numpy.zeros([len(at_lists), len(at_lists)])
         
