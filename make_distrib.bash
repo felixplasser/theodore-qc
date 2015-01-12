@@ -1,6 +1,9 @@
 #!/bin/bash
 # Create a new distribution version
 
+# TODO before:
+#   - Check version number in theo_header.py
+
 echo "Syntax: make_distrib.bash [Version]"
 echo
 

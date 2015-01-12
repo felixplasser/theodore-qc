@@ -395,6 +395,9 @@ class tden_ana_options(dens_ana_options):
         # program flow
         self['comp_ntos'] = True
         
+        # exciton analysis options
+        self['Eb_diag'] = 1.0
+        
 class sden_ana_options(dens_ana_options):
     """
     Input options for state density analysis.

@@ -6,7 +6,7 @@ def print_header(*args):
 def ret_header(title=None):
     hstr  = width*'=' + '\n'
     
-    hstr += addlinec("TheoDORE 1.0 beta")
+    hstr += addlinec("TheoDORE 1.2 beta")
     hstr += addlinec("Theoretical Density, Orbital Relaxation and Exciton analysis")
     hstr += addlinec("Felix Plasser")
     
@@ -24,7 +24,7 @@ def ret_header(title=None):
     hstr += addlinec()
     hstr += addlinel("Exciton analysis:", 3)
     hstr += addlinel("S. A. Baeppler, F. Plasser, M. Wormit, A. Dreuw")
-    hstr += addlinel("(submitted for publication)")
+    hstr += addlinel("Phys. Rev. A (2014), 90, 052521.")
 
     if not title==None:
         hstr += width*'-' + '\n'
