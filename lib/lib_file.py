@@ -9,7 +9,7 @@ class wfile:
     """
     def __init__(self, fname):
         self.f = open(fname, 'w')
-        self.fname = fname
+        self.name = fname
         
     def pre(self, title):
         """
@@ -32,7 +32,7 @@ class wfile:
         self.f.close()
         
         if lvprt >= 1:
-            print "  File %s written."%self.fname
+            print "  File %s written."%self.name            
         
     def post_extra(self):
         """
@@ -120,7 +120,7 @@ class htmltable(wtable):
         return '<td>%s</td>\n'%el
         
     def close_table(self):
-        return '</tr></table>'
+        return '</tr></table>\n'
     
 class latexfile(wfile):
     """

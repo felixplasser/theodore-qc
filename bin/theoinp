@@ -215,7 +215,7 @@ class write_options_theo(input_options.write_options):
         self.read_yn('Attachment/detachment analysis', 'AD_ana', True)
         if self['AD_ana']:
             self.read_yn('NDOs as Jmol script?', 'jmol_orbitals', True)
-            self.read_yn('NDOs in Molden format`', 'molden_orbitals', False)
+            self.read_yn('NDOs in Molden format?', 'molden_orbitals', False)
         else:
             self.write_option('jmol_orbitals', 'False')
 

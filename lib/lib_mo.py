@@ -73,6 +73,16 @@ class MO_set:
     def ret_num_bas(self):
         return len(self.mo_mat)
     
+    def ret_eo(self, imo):
+        return self.ens[imo], self.occs[imo]
+    
+    def ret_sym(self, imo):
+        try:
+            return self.syms[imo]
+        except:
+            print "\nNo entry for imo=%i"%imo
+            raise
+    
     def set_ens_occs(self):
         """
         In the case of Q-Chem the occupations are actually written into the energy field.

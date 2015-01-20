@@ -1,73 +1,78 @@
 #!/usr/bin/python
-import lib_mo
+"""
+Automatic plotting of MOs with jmol.
+"""
+# TODO: input options
+
+import lib_mo, error_handler, lib_file
 
 class mo_output:
     """
-    MO output in standard jmol format.
+    Abstract base class for MO output.
     """
     def __init__(self, moc):
         self.moc = moc
+        self.outstr = ''
         
-    def output(self):
+    def output(self, ofileh):
         self.pre()
         self.print_mos()
-        self.post()
+        self.post(ofileh)
         
+    def mopath(self, mo):
+        return "MO_%s.png"%mo
+    
+    def pre(self):
+        raise error_handler.PureVirtualError()
+
+    def print_mos(self):
+        raise error_handler.PureVirtualError()
+
+    def post(self, ofileh):
+        ofileh.write(self.outstr)
+        
+class mo_output_jmol(mo_output):
+    """
+    MO output in standard jmol format.
+    """
     def pre(self, cutoff=0.05):
         if self.moc.mldfile != "":
-            print '\nload "' + self.moc.mldfile + '" FILTER "nosort"'
-        print "mo titleformat ''"
-        print "background white\nmo fill\nmo cutoff %.3f\n"%cutoff
+            self.outstr += '\nload "' + self.moc.mldfile + '" FILTER "nosort"\n'
+        self.outstr += "mo titleformat ''\n"
+        self.outstr += "rotate best\n"
+        self.outstr += "background white\n" + "mo fill\n" + "mo cutoff %.3f\n\n"%cutoff
         
     def print_mos(self):
         for imo in self.moc.molist:
-            print "mo %s"%self.moc.moname(imo)
-            print "write image png \"%s\""%(self.moc.mopath(imo))
-            
-    def mopath(self, mo):
-        return "MO_%s.png"%mo
-            
-    def post(self):
-        pass
+            self.outstr += "mo %s\n"%self.moc.moname(imo)
+            self.outstr += "write image png \"%s\"\n"%(self.moc.mopath(imo))            
         
 class mo_output_html(mo_output):
     """
     HTML file for visualizing the MOs created with jmol.
     """
     def __init__(self, moc, width=400):
-        mo_output.__init__(self, moc)
-        self.outfile = open("%sorbitals.html"%self.moc.ret_label(), "w")
+        mo_output.__init__(self, moc)        
         self.width = width
         
-    def pre(self):
-        print "\nWriting html file %sorbitals.html ..."%self.moc.ret_label(),
-        
-        self.outfile.write("<html>\n<head>\n<title>")
-        self.outfile.write("Orbitals - %s"%self.moc.mldfile)
-        self.outfile.write("</title>\n</head>\n<body>\n")
-        self.outfile.write("<table>\n")
+    def pre(self):        
+        self.htable = lib_file.htmltable(ncol=2)
         
     def print_mos(self):
-        for imo in self.moc.molist:
-            if imo%2==0: self.outfile.write("<tr>\n")
-            self.outfile.write("<td>")
-            self.outfile.write("<img src=\"%s\""%(self.moc.mopath(imo)))
-            self.outfile.write("border=\"1\" width=\"%i\">"%self.width)
-            self.outfile.write(self.moc.mo_extra(imo,pref="<br> MO %i:"%imo))
-            self.outfile.write("</td>\n")
-            if imo%2==1: self.outfile.write("</tr>\n")
-        if imo%2==0: self.outfile.write("</tr>\n")
+        for imo in self.moc.molist:            
+            el = '<img src="%s" "border="1" width="%i">'%(self.moc.mopath(imo), self.width)
+            el += self.moc.mo_extra(imo,pref="<br> MO %i:"%imo)
+            self.htable.add_el(el)
         
-    def post(self):
-        self.outfile.write("</table>\n")
-        self.outfile.write("</body>\n</html>\n")
-        self.outfile.close()
-    
-        print "finished."
+    def post(self, ofileh):
+        ofileh.write("<h2>Orbitals - %s</h2>\n"%self.moc.mldfile)
+        self.htable.close_table()
+        ofileh.write(self.htable.ret_table())        
         
 class mo_output_tex(mo_output):
     """
     tex file for visualizing the MOs created with jmol.
+    -> This has to be adjusted for working here!
     """
     def __init__(self, moc, width=6., trim=[0.,0.,0.,0.]):
         mo_output.__init__(self, moc)
@@ -80,7 +85,7 @@ class mo_output_tex(mo_output):
         self.igraphstr += "width=%.2f cm]"%width
 
     def pre(self):
-        print "\nWriting tex file %sorbitals.tex ..."%self.moc.ret_label(),
+        print "Writing tex file %sorbitals.tex ..."%self.moc.ret_label(),
         
         self.outfile.write("\\documentclass[a4paper]{article}\n")
         self.outfile.write("\\usepackage[cm]{fullpage}\n\\usepackage{graphicx}\n\n")
@@ -112,15 +117,16 @@ class mo_output_tex(mo_output):
         
 class mocoll:
     def __init__(self, st_ind, en_ind, mldfile=""):
-        self.molist = range(st_ind, en_ind+1)
         self.mldfile = mldfile
         
         if not mldfile=="":
             self.moset = lib_mo.MO_set_molden(mldfile)
-            self.moset.read()
+            self.moset.read(lvprt=0)
+              
+        self.molist = range(st_ind-1, min(en_ind, self.moset.ret_num_mo()))
         
     def moname(self, imo):
-        return str(imo)
+        return str(imo+1)
         
     def mopath(self, imo):
         return "%sMO_%s.png"%(self.ret_label(),self.moname(imo))
@@ -150,7 +156,7 @@ class mocollf(mocoll):
     For frontier MOs.
     """
     def __init__(self, en_ind, mldfile=""):
-        mocoll.__init__(self, 0, 2*en_ind-1, mldfile)
+        mocoll.__init__(self, 1, 2*en_ind, mldfile)
         
     def moname(self, imo):
         if imo==0:
@@ -176,21 +182,14 @@ class mocollf(mocoll):
             except:
                 print "\n ERROR: imo2 = %i"%imo2
                 raise
-            return "%s %.3f / %.3f %s"%(pref,ene,occ,postf)
-
-            
-
+            return "%s %.3f / %.3f %s"%(pref,ene,occ,postf)            
 
 if __name__=='__main__':
-    import sys
+    import sys    
 
-    ojmol = True
-    ohtml = True
-    otex  = True
-
-    print "%s <st_ind> <en_ind> [<mldfile>]"%sys.argv[0]
+    print "%s <st_ind> <en_ind> [<mldfile> [<mldfile2> ...]]"%sys.argv[0]
     print "or:"
-    print "%s -f <num_mo> [<mldfile>]\n"%sys.argv[0]
+    print "%s -f <num_mo> [<mldfile> [<mldfile2> ...]]\n"%sys.argv[0]
 
     if len(sys.argv)<3: sys.exit()
 
@@ -204,27 +203,26 @@ if __name__=='__main__':
     if len(sys.argv)>=4: mldfiles = sys.argv[3:]
     else: mldfiles = [""]
 
-    if ojmol:
-        print " *** Copy into the jmol console:\n"
-        for mldfile in mldfiles:
-            if not fr_mos:
-              moc = mocoll(st_ind, en_ind, mldfile)
-            else:
-              moc = mocollf(en_ind, mldfile)           
-            moout = mo_output(moc)
-            moout.output()
-        print " \n *** jmol input finished"
+    jo = lib_file.wfile('jmol_orbitals.spt')
+    ho = lib_file.htmlfile('orbitals.html')
+    
+    ho.pre('Orbitals')
 
     for mldfile in mldfiles:
+        print 'Analyzing %s ...\n'%mldfile
         if not fr_mos:
           moc = mocoll(st_ind, en_ind, mldfile)
         else:
-          moc = mocollf(en_ind, mldfile)                    
-        if ohtml:
-            moh = mo_output_html(moc)
-            moh.output()
-        if otex:
-            mot = mo_output_tex(moc,width=3., trim=[5.0,1.0,5.0,3.0])
-            mot.output()
+          moc = mocollf(en_ind, mldfile)
+
+        moout = mo_output_jmol(moc)
+        moout.output(jo)
+        
+        moh = mo_output_html(moc)
+        moh.output(ho)
             
+    jo.post(lvprt=1)
+    print "  -> Now simply run \"jmol %s\" to plot all the orbitals.\n"%jo.name
+    ho.post(lvprt=1)
+    print "  -> View in browser."
 
