@@ -4,14 +4,15 @@ Automatic plotting of MOs with jmol.
 """
 # TODO: input options
 
-import lib_mo, error_handler, lib_file
+import lib_mo, error_handler, lib_file, theo_header, input_options
 
 class mo_output:
     """
     Abstract base class for MO output.
     """
-    def __init__(self, moc):
+    def __init__(self, moc, jopt):
         self.moc = moc
+        self.jopt = jopt
         self.outstr = ''
         
     def output(self, ofileh):
@@ -35,12 +36,14 @@ class mo_output_jmol(mo_output):
     """
     MO output in standard jmol format.
     """
-    def pre(self, cutoff=0.05):
+    def pre(self):
         if self.moc.mldfile != "":
             self.outstr += '\nload "' + self.moc.mldfile + '" FILTER "nosort"\n'
         self.outstr += "mo titleformat ''\n"
-        self.outstr += "rotate best\n"
-        self.outstr += "background white\n" + "mo fill\n" + "mo cutoff %.3f\n\n"%cutoff
+        if self.jopt['rot_best']:
+            self.outstr += "rotate best\n"
+        self.outstr += "background white\n" + "mo fill\n"
+        self.outstr += "mo cutoff %.3f\n\n"%self.jopt['cutoff']
         
     def print_mos(self):
         for imo in self.moc.molist:
@@ -51,16 +54,12 @@ class mo_output_html(mo_output):
     """
     HTML file for visualizing the MOs created with jmol.
     """
-    def __init__(self, moc, width=400):
-        mo_output.__init__(self, moc)        
-        self.width = width
-        
     def pre(self):        
         self.htable = lib_file.htmltable(ncol=2)
         
     def print_mos(self):
         for imo in self.moc.molist:            
-            el = '<img src="%s" "border="1" width="%i">'%(self.moc.mopath(imo), self.width)
+            el = '<img src="%s" "border="1" width="%i">'%(self.moc.mopath(imo), self.jopt['width'])
             el += self.moc.mo_extra(imo,pref="<br> MO %i:"%imo)
             self.htable.add_el(el)
         
@@ -72,7 +71,7 @@ class mo_output_html(mo_output):
 class mo_output_tex(mo_output):
     """
     tex file for visualizing the MOs created with jmol.
-    -> This has to be adjusted for working here!
+    -> This has to be adjusted if it should be used here!
     """
     def __init__(self, moc, width=6., trim=[0.,0.,0.,0.]):
         mo_output.__init__(self, moc)
@@ -122,8 +121,11 @@ class mocoll:
         if not mldfile=="":
             self.moset = lib_mo.MO_set_molden(mldfile)
             self.moset.read(lvprt=0)
+            maxmo = self.moset.ret_num_mo()
+        else:
+            maxmo = 10000
               
-        self.molist = range(st_ind-1, min(en_ind, self.moset.ret_num_mo()))
+        self.molist = range(st_ind-1, min(en_ind, maxmo))
         
     def moname(self, imo):
         return str(imo+1)
@@ -184,9 +186,66 @@ class mocollf(mocoll):
                 raise
             return "%s %.3f / %.3f %s"%(pref,ene,occ,postf)            
 
-if __name__=='__main__':
-    import sys    
+class jmol_options(input_options.write_options):
+    def jmol_input(self):
+        self.read_float('Cutoff value', 'cutoff', 0.05)
+        
+        print "Specification of the orbital indices to be plotted:"
+        self.read_yn('Specification in terms of frontier orbitals', 'fr_mos')
+        
+        if not self['fr_mos']:
+            self.read_int('First orbital index to be plotted', 'st_ind', 1)
+            self.read_int('Last orbital index to be plotted',  'en_ind', 10)
+        else:
+            self.read_int('Number of frontier orbitals',  'en_ind', 3)
+        
+        self.read_yn('Use "rotate best" command (only available in Jmol 14)', 'rot_best')
+        
+        self.read_int('Width of images in output html file', 'width', 400)
+        
+def run():    
+    print 'jmol_MOs.py [<mldfile> [<mldfile2> ...]]\n'
+    
+    mldfiles = sys.argv[1:]
+    
+    if len(mldfiles) == 0:
+        print "No file specified, generating generic script"
+        mldfiles = ['']
+        pref = ''
+    elif len(mldfiles) == 1:
+        print "Analyzing the file:", mldfiles[0]
+        pref = mldfiles[0] + '.'
+    else:
+        print "Analyzing the files:", mldfiles
+        pref = 'multi.'
+        
+    jopt = jmol_options('jmol.in')
+    jopt.jmol_input()
+    
+    jo = lib_file.wfile('%sjmol_orbitals.spt'%pref)
+    ho = lib_file.htmlfile('%sorbitals.html'%pref)
+    
+    ho.pre('Orbitals')
+    
+    for mldfile in mldfiles:
+        print 'Analyzing %s ...\n'%mldfile
+        if not jopt['fr_mos']:
+          moc = mocoll(jopt['st_ind'], jopt['en_ind'], mldfile)
+        else:
+          moc = mocollf(jopt['en_ind'], mldfile)
 
+        moout = mo_output_jmol(moc, jopt)
+        moout.output(jo)
+        
+        moh = mo_output_html(moc, jopt)
+        moh.output(ho)
+            
+    jo.post(lvprt=1)
+    print "  -> Now simply run \"jmol %s\" to plot all the orbitals.\n"%jo.name
+    ho.post(lvprt=1)
+    print "  -> View in browser."    
+    
+def run_old():
     print "%s <st_ind> <en_ind> [<mldfile> [<mldfile2> ...]]"%sys.argv[0]
     print "or:"
     print "%s -f <num_mo> [<mldfile> [<mldfile2> ...]]\n"%sys.argv[0]
@@ -194,7 +253,7 @@ if __name__=='__main__':
     if len(sys.argv)<3: sys.exit()
 
     if sys.argv[1] == '-f':
-      fr_mos = True
+      fr_mos = True    
     else:
       fr_mos = False
       st_ind = int(sys.argv[1])
@@ -226,3 +285,9 @@ if __name__=='__main__':
     ho.post(lvprt=1)
     print "  -> View in browser."
 
+if __name__=='__main__':
+    import sys
+
+    theo_header.print_header('Orbital plotting in Jmol')
+    #run_old()
+    run()
