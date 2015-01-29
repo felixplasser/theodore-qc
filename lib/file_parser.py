@@ -122,7 +122,7 @@ class file_parser_ricc2(file_parser_base):
         smult=state['mult']
         istate=state['state_ind']
         #CCfilen = 'CCRE0-%i--%s---%i'%(iirrep, smult, istate)
-        CCfilen = 'CCRE0{:->2d}{:->3s}{:->4d}'.format(iirrep, smult, istate)
+        CCfilen = 'CCRE0{0:->2d}{1:->3s}{2:->4d}'.format(iirrep, smult, istate)
 
         if lvprt >= 1: print 'Reading binary file %s ...'%CCfilen
 
