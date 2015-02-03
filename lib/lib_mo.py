@@ -251,7 +251,7 @@ class MO_set_molden(MO_set):
         if ('[D5]' in fstr) or ('[5D]' in fstr):
             num_bas['d']=5
             orient['d']=5*['D0', 'D+1', 'D-1', 'D+2', 'D-2']
-        elif ('[F7]' in fstr) or ('[7F]' in fstr):
+        if ('[F7]' in fstr) or ('[7F]' in fstr):
             num_bas['f']=7
             orient['7']=7*['F0', 'F+1', 'F-1', 'F+2', 'F-2', 'F+3', 'F-3']
 
@@ -312,7 +312,7 @@ class MO_set_molden(MO_set):
 
 ### file parsing finished ###
 
-        if lvprt >= 1:
+        if lvprt >= 1 or len(mo_vecs[0])!=num_orb:
             print '\nMO file %s parsed.'%self.file
             print 'Number of atoms: %i'%self.num_at
             print 'Number of MOs read in: %i'%len(mo_vecs)

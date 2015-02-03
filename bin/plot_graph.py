@@ -6,14 +6,6 @@ Script for creating graphs from multiple directories, e.g. potential curves.
 import theo_header, input_options, error_handler, lib_file
 import os
 
-try:
-    import matplotlib
-    matplotlib.use('Agg')
-    import pylab
-except:
-    print "pylab/matplotlib not installed - plotting not possible"
-    raise
-
 class write_plot_options(input_options.write_options):
     """
     Set and store the options for plotting.
@@ -22,6 +14,9 @@ class write_plot_options(input_options.write_options):
         input_options.write_options.__init__(self, *args, **kwargs)
         
     def plot_input(self):
+        """
+        Read input from command line.
+        """
         print "This script allows to combine information from several TheoDORE runs into one graph."
         print "   These jobs are assumed to be located in subdirectories of the current directory."
         
@@ -40,10 +35,19 @@ class write_plot_options(input_options.write_options):
         rstr = self.ret_str("Labels of the states of interest as they appear in %s (separated by spaces)"%self['ana_file'])
         self.write_list('state_labels', rstr.split(), lformat="'%s'")
         
-        self.read_int('Font size', 'fsize', 10)
-        self.read_str("Format of output graphics files", "output_format", "png")
+        self.read_yn('Create plots using pylab?', 'doplots', True)
+        if self['doplots']:
+            self.read_int('Font size', 'fsize', 10)
+            self.read_str("Format of output graphics files", "output_format", "png")
+            
+        self.read_yn('Print txt files with the information', 'dotxt', True)
         
     def read_data(self):
+        """
+        Read the data from the individual directories into individual dictionaries.
+        Arranged as:
+        [ana_dir] - {state_label} - {key}
+        """
         self.data = []
         self.main_header = ''
             
@@ -58,13 +62,24 @@ class write_plot_options(input_options.write_options):
         #print self.data
         
     def plot(self):
+        """
+        Create the plots.
+        For this purpose, self.data has to be rearranged.
+        """
+        try:
+            import matplotlib
+            matplotlib.use('Agg')
+            import pylab
+        except:
+            print "pylab/matplotlib not installed - plotting not possible"
+            raise
+        
         hfname = 'graphs.html'
         hfile = lib_file.htmlfile(hfname)
         hfile.pre('Property graphs')
         
         htable = lib_file.htmltable(ncol=4)
         
-        # TODO: read state labels
         set1 = self.data[0][self['state_labels'][0]]
         
         matplotlib.rc('font', size=self['fsize'])
@@ -90,7 +105,7 @@ class write_plot_options(input_options.write_options):
             
             numx = len(self['ana_dirs'])
             pylab.xticks(xrange(numx), self['ana_dirs'], rotation=30)
-            pylab.margins(0.20)
+            #pylab.margins(0.20)
             pylab.subplots_adjust(bottom=0.15)
             pylab.xlim((-0.5, numx+1.5))
             
@@ -107,6 +122,33 @@ class write_plot_options(input_options.write_options):
         hfile.post()
         
         print " HTML file %s containing the property graphs written."%hfname
+        
+    def txt_files(self):
+        """
+        Create compact text files that contain all the required info.
+        """
+        for key in self.main_header[1:]:
+            if key == 'fname': continue
+            
+            fname = '%s.txt'%key
+            print 'Writing %s ...'%fname
+            
+            wf = open(fname, 'w')
+            
+            wf.write('%10s'%'dir')
+            for state in self['state_labels']:
+                wf.write('%10s'%state)
+
+            wf.write('\n')                
+            for idir, ana_dir in enumerate(self['ana_dirs']):
+                wf.write('%10s'%ana_dir)
+                
+                for state in self['state_labels']:
+                    wf.write('%10.5f'%self.data[idir][state][key])
+                
+                wf.write('\n')
+                
+            wf.close()
 
 class read_plot_options(input_options.read_options):
     def set_defaults(self):
@@ -115,6 +157,8 @@ class read_plot_options(input_options.read_options):
         self['state_labels']=None
         self['fsize']=10
         self['output_format']='png'
+        self['doplots']=True
+        self['dotxt']=True
         
 def run_plot():
     infilen = 'graph.in'
@@ -134,7 +178,8 @@ def run_plot():
     
     popt.read_data()
     
-    popt.plot()
+    if popt['doplots']: popt.plot()
+    if popt['dotxt']:   popt.txt_files()
     
     if not copy:
         popt.flush()
