@@ -496,7 +496,7 @@ class file_parser_qcadc(file_parser_libwfa):
                 self.parse_key(state_list[-1], 'nu', line, 'Number of unpaired electrons:', 2)
                 self.parse_key(state_list[-1], 'nunl', line, 'Number of unpaired electrons')                
                 self.parse_key(state_list[-1], 'p', line, 'Number of detached / attached electrons')
-                self.parse_key(state_list[-1], 'PRNTO', line, 'PR_NTO')                
+                self.parse_key(state_list[-1], 'PRNTO', line, 'PR_NTO')
                 
             if exc_diff:
                 self.parse_key(state_list[-1], 'sigD', line, 'Hole size')

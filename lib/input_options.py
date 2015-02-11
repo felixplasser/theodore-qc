@@ -339,11 +339,12 @@ class write_options(options):
         self[key] = eval(valstr)
         self.ostr += "%s=%s\n"%(key, valstr)
         
-    def flush(self):
+    def flush(self, lvprt=0):
         fileh = open(self.ifile, 'w')
         fileh.write(self.ostr)
         fileh.close()
-        print 'Finished: File %s written.'%self.ifile
+        if lvprt==1:
+            print 'Finished: File %s written.'%self.ifile
     
         
 class dens_ana_options(read_options):

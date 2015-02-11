@@ -209,16 +209,25 @@ class write_options_theo(input_options.write_options):
             
         if self['rtype'] == 'qcadc':
             if self.ret_yn('Parse exciton information from ADCMAN job?', True):
-                self['prop_list'] += ['dexc', 'sigH', 'sigE', 'COV', 'Corr']
+                self['prop_list'] += ['dH-E', 'dexc', 'sigH', 'sigE', 'COV', 'Corr']
+            if self.ret_yn('Parse 1DDM exciton information from ADCMAN job?', True):
+                self['prop_list'] += ['sigD', 'sigA']
 
     def AD_ana(self):
         self.read_yn('Attachment/detachment analysis', 'AD_ana', True)
         if self['AD_ana']:
+            self['prop_list'] += ['p']
             self.read_yn('NDOs as Jmol script?', 'jmol_orbitals', True)
             self.read_yn('NDOs in Molden format?', 'molden_orbitals', False)
         else:
             self.write_option('jmol_orbitals', 'False')
-
+            
+    def ddm_parse(self):
+        if self['rtype'] == 'qcadc':
+            if self.ret_yn('Parse 1DDM exciton information from ADCMAN job?', True):
+                self['prop_list'] += ['dD-A', 'sigD', 'sigA']
+        
+            
 def run_theoinp():
     wopt = write_options_theo('dens_ana.in')
 
@@ -246,11 +255,14 @@ def run_theoinp():
         if wopt.ret_yn('Analysis of state density matrices?', not dotden):
             wopt.read_yn('Print out Mulliken populations?', 'pop_ana', True)
             wopt.read_yn('Compute number of unpaired electrons?', 'unpaired_ana', True)
+            if wopt['unpaired_ana']:
+                wopt['prop_list'] += ['nu', 'nunl']
             wopt.AD_ana()
+            wopt.ddm_parse()
             
 
     wopt.write_prop_list()
-    wopt.flush()
+    wopt.flush(lvprt=1)
     
 if __name__ == '__main__':
     theo_header.print_header('Input generation')
