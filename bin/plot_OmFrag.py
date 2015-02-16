@@ -84,7 +84,9 @@ class OmFrag_options(input_options.write_options):
         self.read_yn('Use the same scale for all plots', 'sscale', True)
         if self['sscale']:
             self.read_float('Maximal value to plot', 'vmax', self.maxOm)
-        self.read_yn('Plot axes?', 'axis', False)
+        self.read_yn('Plot frame?', 'axis', True)
+        if self['axis']:
+            self.read_yn('Axis with ticks?', 'ticks', False)
         self.read_yn('Plot colorbar for each individual plot?', 'cbar', False)
     
             
@@ -116,8 +118,12 @@ class OmFrag_options(input_options.write_options):
             
             if self['axis']:
                 pylab.axis('on')
-                pylab.xticks([x + 0.5 for x in xrange(len(plot_arr))], [x + 1 for x in xrange(len(plot_arr))])
-                pylab.yticks([y + 0.5 for y in xrange(len(plot_arr))], [y + 1 for y in xrange(len(plot_arr))])
+                if self['ticks']:
+                    pylab.xticks([x + 0.5 for x in xrange(len(plot_arr))], [x + 1 for x in xrange(len(plot_arr))])
+                    pylab.yticks([y + 0.5 for y in xrange(len(plot_arr))], [y + 1 for y in xrange(len(plot_arr))])
+                else:
+                    pylab.xticks([])
+                    pylab.yticks([])                    
             else:
                 pylab.axis('off')
             
@@ -142,9 +148,9 @@ class OmFrag_options(input_options.write_options):
             #pylab.ylabel('elec?')
             
             pylab.colorbar()
-            pylab.savefig('cbar.png', dpi=self['plot_dpi'])
+            pylab.savefig('cbar.%s'%self['output_format'], dpi=self['plot_dpi'])
             
-            tel  = '<img src="cbar.png", border="1" width="200">\n'
+            tel  = '<img src="cbar.%s", border="1" width="200">\n'%self['output_format']
             tel += '<br>Scale'
             htable.add_el(tel)
             
