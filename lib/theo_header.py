@@ -29,7 +29,7 @@ def ret_header(title=None):
     hstr += addlinel("Program citation:", 3)
     hstr += addlinel("F. Plasser \"TheoDORE: a package for theoretical density, orbital")
     hstr += addlinel("relaxation, and exciton analysis\"; available from")
-    hstr += addlinel("http://theodore-qc.sourceforge.net/")
+    hstr += addlinel("http://theodore-qc.sourceforge.net")
 
     if not title==None:
         hstr += width*'-' + '\n'
