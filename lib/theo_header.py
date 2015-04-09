@@ -25,6 +25,11 @@ def ret_header(title=None):
     hstr += addlinel("Exciton analysis:", 3)
     hstr += addlinel("S. A. Baeppler, F. Plasser, M. Wormit, A. Dreuw")
     hstr += addlinel("Phys. Rev. A (2014), 90, 052521.")
+    hstr += addlinec()
+    hstr += addlinel("Program citation:", 3)
+    hstr += addlinel("F. Plasser \"TheoDORE: a package for theoretical density, orbital")
+    hstr += addlinel("relaxation, and exciton analysis\"; available from")
+    hstr += addlinel("http://theodore-qc.sourceforge.net")
 
     if not title==None:
         hstr += width*'-' + '\n'
