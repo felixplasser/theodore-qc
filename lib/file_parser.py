@@ -445,12 +445,20 @@ class file_parser_qcadc(file_parser_libwfa):
         
         exc_diff = False
         exc_1TDM = False
+        self.irrep_labels = None
         for line in open(self.ioptions.get('rfile')):
             words = line.split()
             if 'Irreducible representations in point group:' in line:
                 self.irrep_labels = line.lstrip('Irreducible representations in point group:').split()
                 
             elif ' Term symbol' in line:
+                if self.irrep_labels == None:
+                    print "\n   WARNING irrep labels not found in %s"%self.ioptions.get('rfile')
+                    print   "   Use 'adc_print 2' or enter them into %s"%self.ioptions.ifile
+                    print   "   Using info from %s: irrep_labels="%self.ioptions.ifile, self.ioptions.get('irrep_labels')
+                    print
+                    self.irrep_labels = self.ioptions.get('irrep_labels')
+                    
                 state_list.append({})
                 
                 state_list[-1]['state_ind'] = int(words[2])
@@ -509,8 +517,8 @@ class file_parser_qcadc(file_parser_libwfa):
                 self.parse_key(state_list[-1], 'sigE', line, 'Electron size')
                 self.parse_key(state_list[-1], 'dH-E', line, '|<r_e - r_h>|')
                 self.parse_key(state_list[-1], 'COV', line, 'Covariance(r_h, r_e) [Ang^2]')
-                self.parse_key(state_list[-1], 'Corr', line, 'Correlation coefficient')
-                
+                self.parse_key(state_list[-1], 'Corr', line, 'Correlation coefficient')                
+        
         return state_list
 
     def om_file_name(self, state):
