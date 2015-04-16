@@ -59,6 +59,11 @@ class Om_desc_coll:
             for A in xrange(self.numFrag):
                 for B in xrange(A+1, self.numFrag):
                     self.descriptors[desc] += self.OmNorm[A, B] + self.OmNorm[B, A]
+
+        elif desc == 'CT2':
+            for A in xrange(self.numFrag):
+                for B in xrange(A+2, self.numFrag):
+                    self.descriptors[desc] += self.OmNorm[A, B] + self.OmNorm[B, A]
                     
         elif desc == 'CTnt':
             self.descriptors[desc] = \
