@@ -15,7 +15,12 @@
 |                                                                              |
 |   Exciton analysis:                                                          |
 |     S. A. Baeppler, F. Plasser, M. Wormit, A. Dreuw                          |
-|     (submitted for publication)                                              |
+|     Phys. Rev. A (2014), 90, 052521.                                         |
+|                                                                              |
+|   Program citation:                                                          |
+|     F. Plasser "TheoDORE: a package for theoretical density, orbital         |
+|     relaxation, and exciton analysis"; available from                        |
+|     http://theodore-qc.sourceforge.net                                       |
 --------------------------------------------------------------------------------
 |                        State density matrix analysis                         |
 ================================================================================

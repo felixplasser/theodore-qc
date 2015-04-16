@@ -22,8 +22,10 @@ else
     esac
 fi
 
+rm -r RUN_THEO_TEST
+mkdir RUN_THEO_TEST || exit 1
+
 tchk=0
-#for dir in "pyrrole.qcadc" "hexatriene.colmrci" "fa2.ricc2" "pv2p.escf" "pv2p.qctddft" "ir_c3n3.qctddft" "fa2.cclib"
 for dir in $rundirs
 do
     echo
@@ -32,7 +34,7 @@ do
     echo "Starting test $dir ..."
     sdir="$THEODIR/EXAMPLES/$dir"
     
-    rdir="$PDIR/$dir"
+    rdir="$PDIR/RUN_THEO_TEST/$dir"
     if [ -d $rdir ]
     then
         echo " ERROR:"
@@ -67,7 +69,7 @@ do
     for rfile in `ls "$sdir/REF_FILES"`
     do
         echo "  -> $rfile"
-        diff "$sdir/REF_FILES/$rfile" $rfile
+        diff -I TheoDORE "$sdir/REF_FILES/$rfile" $rfile
         chk=$((chk+$?))
     done
     
@@ -78,7 +80,7 @@ do
     do
         echo "  -> $rfile"
         diff -q "$sdir/REF_FILES_SEC/$rfile" $rfile
-        diff "$sdir/REF_FILES_SEC/$rfile" $rfile >> $PDIR/diff_sec.out
+        diff "$sdir/REF_FILES_SEC/$rfile" $rfile >> $PDIR/RUN_THEO_TEST/diff_sec.out
     done
 
     echo    
