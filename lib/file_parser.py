@@ -453,7 +453,7 @@ class file_parser_qcadc(file_parser_libwfa):
                 
             elif ' Term symbol' in line:
                 if self.irrep_labels == None:
-                    print "\n   WARNING irrep labels not found in %s"%self.ioptions.get('rfile')
+                    print "\n   WARNING: irrep labels not found in %s"%self.ioptions.get('rfile')
                     print   "   Use 'adc_print 2' or enter them into %s"%self.ioptions.ifile
                     print   "   Using info from %s: irrep_labels="%self.ioptions.ifile, self.ioptions.get('irrep_labels')
                     print
