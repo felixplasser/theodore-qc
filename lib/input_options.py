@@ -326,6 +326,9 @@ class write_options(options):
         self.write_option(key, valstr)
     
     def ret_list_str(self, slist, lformat="%i"):
+        """
+        Write a string that corresponds to the list specification of python.
+        """
         if len(slist) == 0: return []
         
         lstr = "[" + lformat%slist[0]
@@ -368,7 +371,7 @@ class dens_ana_options(read_options):
         # Additional information
         # irrep labels for output
         self['irrep_labels'] = ['I1', 'I2', 'I3', 'I4', 'I5', 'I6', 'I7', 'I8']
-        self['ncore'] = 0 # number of frozen core orbitals
+        self['ncore'] = {} # dictionary: number of frozen core orbitals per irrep
         
         # atomic coordinates
         self['coor_file'] = None 

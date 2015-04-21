@@ -40,13 +40,28 @@ class file_parser_base:
             
     def delete_chars(self, line, delete):
         """
-        Delete the characters in delete from line.
+        Delete the characters in <delete> from line.
         """
         retline = line
         for char in delete:
             retline = retline.replace(char, '')
             
         return retline
+    
+    def sym_split(self, sym):
+        """
+        Split an MO "sym" label into the index and irrep.
+        "51b1u" -> [51, "b1u"]
+        """
+        st = 1000
+        if sym.find('a') != -1: st = min(st, sym.find('a'))
+        if sym.find('b') != -1: st = min(st, sym.find('b'))
+        if sym.find('e') != -1: st = min(st, sym.find('e'))
+        if sym.find('t') != -1: st = min(st, sym.find('t'))
+        
+        if (st==1000): raise error_handler.MsgError("sym_split: %s"%sym)
+        
+        return (int(sym[:st]), sym[st:])
 
 class configuration:
     def __init__(self):
@@ -612,13 +627,13 @@ class file_parser_col(file_parser_base):
         """
         Read output from transci.x for a 1-particle density file.
         """
-        if not self.ioptions['ncore'] == 0:
-            print """
-  WARNING: adjusting MO file for frozen core orbitals!
-  This only works without symmetry.
-            """
         # change the format of the MO labels
-        mos.syms2 = self.ioptions['ncore']*['xxx']+[''.join(sym.lower().split('_')) for sym in mos.syms]
+        mos.syms2 = [sym.lower().replace('_','') for sym in mos.syms]
+        if not self.ioptions['ncore'] == {}:
+            for isym, sym2 in enumerate(mos.syms2):
+                imo, irr = self.sym_split(sym2)                
+                new = "%i%s"%(imo-self.ioptions['ncore'][irr], irr)
+                mos.syms2[isym] = new
         
         state['tden'] = self.init_den(mos)
         
@@ -668,7 +683,9 @@ class file_parser_col(file_parser_base):
             try:
                 head_inds = [mos.syms2.index(sym2) for sym2 in words]
             except:
-                print words
+                print " ERROR reading:", words
+                print "syms2: ", mos.syms2
+                print
                 raise
             
             words=rfile.next().replace('MO','').split()
@@ -730,7 +747,7 @@ class file_parser_nos(file_parser_base):
             
             # perform some simplifications to the filename
             # for Columbus:
-            tmp_name = state['fname'].replace('MOLDEN/','').replace('molden_no','').rstrip('.sp')
+            tmp_name = state['fname'].replace('MOLDEN/','').replace('./','').replace('molden_no_','').rstrip('.sp')
             tmp_name = tmp_name.replace('state', 'S').replace('drt', 'D')
             # for Q-Chem
             tmp_name = tmp_name.replace('NOs/','').replace('.mo', '')

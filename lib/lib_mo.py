@@ -342,7 +342,7 @@ class basis_fct:
         
 class jmol_MOs:
     """
-    Class for produing input for the Jmol program that can be used to plot MOs.
+    Class for producing input for the Jmol program that can be used to plot MOs.
     """
     def __init__(self, name, width=400):
         self.name = name
@@ -350,9 +350,9 @@ class jmol_MOs:
         self.width = width
         
     def pre(self, ofile=None):
-        self.jmfile = open("%s.jmol"%self.name,'w')
+        self.jmfile = open("%s_jmol.spt"%self.name,'w')
         if not ofile==None:
-            self.jmfile.write('load %s\n'%ofile)
+            self.jmfile.write('load %s FILTER "nosort"\n'%ofile)
         self.jmfile.write ('mo titleformat ""\n\n')
         self.jmfile.write('background white\nmo fill\nmo cutoff 0.04\n')
         

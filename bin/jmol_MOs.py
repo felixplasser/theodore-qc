@@ -42,6 +42,10 @@ class mo_output_jmol(mo_output):
         self.outstr += "mo titleformat ''\n"
         if self.jopt['rot_best']:
             self.outstr += "rotate best\n"
+        if self.jopt['rot_custom']:
+            self.outstr += "rotate x %.3f\n"%self.jopt['rot_x']
+            self.outstr += "rotate y %.3f\n"%self.jopt['rot_y']
+            self.outstr += "rotate z %.3f\n"%self.jopt['rot_z']
         self.outstr += "background white\n" + "mo fill\n"
         self.outstr += "mo cutoff %.3f\n\n"%self.jopt['cutoff']
         
@@ -186,20 +190,56 @@ class mocollf(mocoll):
                 raise
             return "%s %.3f / %.3f %s"%(pref,ene,occ,postf)            
 
+class mocoll_occ(mocoll):
+    """
+    Specify occupation threshold.
+    """
+    def __init__(self, occmin=0.01, occmax=2.0, mldfile=""):
+        if mldfile == "":
+            raise error_handler.MsgError("mldfile has to be specified for occupation screening!")
+        
+        self.mldfile = mldfile
+        self.moset = lib_mo.MO_set_molden(mldfile)
+        self.moset.read(lvprt=0)
+        
+        self.molist = []
+        for imo, occ in enumerate(self.moset.occs):
+            if occmin <= occ <= occmax:
+                self.molist.append(imo)        
+
 class jmol_options(input_options.write_options):
     def jmol_input(self):
         self.read_float('Cutoff value', 'cutoff', 0.05)
         
-        print "Specification of the orbital indices to be plotted:"
-        self.read_yn('Specification in terms of frontier orbitals', 'fr_mos')
+        #print ""
+        self.choose_list(
+            'Specification of the orbital indices to be plotted',
+            'spec',
+        [
+            ('sten', 'Start and end indices'),
+            ('frontier', 'Number of frontier orbitals'),
+            ('occ', 'Occupation threshold')
+        ]
+        )
+        #self.read_yn('Specification in terms of frontier orbitals', 'fr_mos')
         
-        if not self['fr_mos']:
+        if self['spec'] == 'sten':
             self.read_int('First orbital index to be plotted', 'st_ind', 1)
             self.read_int('Last orbital index to be plotted',  'en_ind', 10)
-        else:
+        elif self['spec'] == 'frontier':
             self.read_int('Number of frontier orbitals',  'en_ind', 3)
+        elif self['spec'] == 'occ':
+            self.read_float('Minimal occupancy', 'occmin', 0.01)
+            self.read_float('Maximal occupancy', 'occmax', 2.00)
+        else:
+            raise error_handler.ElseError(self['spec'], 'spec')
         
         self.read_yn('Use "rotate best" command (only available in Jmol 14)', 'rot_best')
+        self.read_yn('Additional custom rotation of the molecule?', 'rot_custom')
+        if self['rot_custom']:
+            self.read_float('Rotation around the x-axis', 'rot_x', 0.)
+            self.read_float('Rotation around the y-axis', 'rot_y', 0.)
+            self.read_float('Rotation around the z-axis', 'rot_z', 0.)
         
         self.read_int('Width of images in output html file', 'width', 400)
         
@@ -229,11 +269,15 @@ def run():
     
     for mldfile in mldfiles:
         print 'Analyzing %s ...\n'%mldfile
-        if not jopt['fr_mos']:
-          moc = mocoll(jopt['st_ind'], jopt['en_ind'], mldfile)
+        if jopt['spec'] == 'sten':
+            moc = mocoll(jopt['st_ind'], jopt['en_ind'], mldfile)
+        elif jopt['spec'] == 'frontier':
+            moc = mocollf(jopt['en_ind'], mldfile)
+        elif jopt['spec'] == 'occ':
+            moc = mocoll_occ(jopt['occmin'], jopt['occmax'], mldfile)
         else:
-          moc = mocollf(jopt['en_ind'], mldfile)
-
+            raise error_handler.ElseError(self['spec'], 'spec')
+        
         moout = mo_output_jmol(moc, jopt)
         moout.output(jo)
         

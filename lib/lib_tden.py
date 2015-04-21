@@ -245,7 +245,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         jmol_orbs = self.ioptions.get('jmol_orbitals')
         if jmol_orbs:
             jmolNTO = lib_mo.jmol_MOs("nto")
-            jmolNTO.pre()
+            jmolNTO.pre(ofile=self.ioptions['mo_file'])
         
         for state in self.state_list:
             (U, lam, Vt) = self.ret_NTO(state)
@@ -269,7 +269,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         
         return U, lam, Vt
         
-    def export_NTOs_jmol(self, state, jmolNTO, U, lam, Vt, mincoeff=0.2, minlam=0.1):
+    def export_NTOs_jmol(self, state, jmolNTO, U, lam, Vt, mincoeff=0.2, minlam=0.05):
         Ut = numpy.transpose(U)
         sname = state['name'].replace('(', '-').replace(')', '-')
         jmolNTO.next_set(sname)
@@ -296,7 +296,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
             jmolF += ']\n'
             jmolNTO.add_mo(jmolF, "NTO%s_%iv"%(sname,i+1), l)
         
-    def export_NTOs_molden(self, state, U, lam, Vt, mincoeff=0.2, minlam=0.1):
+    def export_NTOs_molden(self, state, U, lam, Vt, mincoeff=0.2, minlam=0.01):
         """
         Export the NTOs to a molden file.
         """
