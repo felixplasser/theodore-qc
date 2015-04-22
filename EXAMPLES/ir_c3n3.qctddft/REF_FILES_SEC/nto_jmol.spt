@@ -1,13 +1,22 @@
+load qchem.mld FILTER "nosort"
 mo titleformat ""
 
 background white
 mo fill
 mo cutoff 0.04
 
-mo [ -0.990 52]
+mo [ 0.990 52]
 write image png "NTOX1_1o_0.84.png"
-mo [ -0.995 53]
+mo [ 0.995 53]
 write image png "NTOX1_1v_0.84.png"
+mo [ -0.826 50 -0.425 51 0.336 49]
+write image png "NTOX1_2o_0.08.png"
+mo [ -0.985 54]
+write image png "NTOX1_2v_0.08.png"
+mo [ -0.826 51 0.424 50 -0.336 48]
+write image png "NTOX1_3o_0.07.png"
+mo [ -0.985 55]
+write image png "NTOX1_3v_0.07.png"
 
 mo [ 0.959 52 -0.220 50]
 write image png "NTOX2_1o_0.78.png"
@@ -44,6 +53,10 @@ mo [ -0.859 52 -0.424 46 0.255 50]
 write image png "NTOX5_2o_0.21.png"
 mo [ 0.813 54 0.451 53 -0.264 55]
 write image png "NTOX5_2v_0.21.png"
+mo [ -0.942 51 0.254 50]
+write image png "NTOX5_3o_0.07.png"
+mo [ -0.947 55 -0.267 54]
+write image png "NTOX5_3v_0.07.png"
 
 mo [ 0.936 51 0.246 50]
 write image png "NTOX6_1o_0.44.png"
@@ -53,7 +66,7 @@ mo [ 0.936 50 -0.246 51]
 write image png "NTOX6_2o_0.43.png"
 mo [ 0.920 54 -0.349 55]
 write image png "NTOX6_2v_0.43.png"
-mo [ -0.854 52 -0.514 46]
+mo [ 0.854 52 0.514 46]
 write image png "NTOX6_3o_0.13.png"
-mo [ 0.985 53]
+mo [ -0.985 53]
 write image png "NTOX6_3v_0.13.png"

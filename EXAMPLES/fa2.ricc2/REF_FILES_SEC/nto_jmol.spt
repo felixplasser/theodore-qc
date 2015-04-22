@@ -1,3 +1,4 @@
+load molden.input FILTER "nosort"
 mo titleformat ""
 
 background white

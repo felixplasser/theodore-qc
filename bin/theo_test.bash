@@ -74,14 +74,17 @@ do
     done
     
     echo
-    echo "Checking secondary output files:"
-    echo "  (These may show some numerical inaccuracies)"
-    for rfile in `ls "$sdir/REF_FILES_SEC"`
-    do
-        echo "  -> $rfile"
-        diff -q "$sdir/REF_FILES_SEC/$rfile" $rfile
-        diff "$sdir/REF_FILES_SEC/$rfile" $rfile >> $PDIR/RUN_THEO_TEST/diff_sec.out
-    done
+    if [ -d $sdir/REF_FILES_SEC ]
+    then
+        echo "Checking secondary output files:"
+        echo "  (These may show some numerical inaccuracies)"
+        for rfile in `ls "$sdir/REF_FILES_SEC"`
+        do
+            echo "  -> $rfile"
+            diff -q "$sdir/REF_FILES_SEC/$rfile" $rfile
+            diff "$sdir/REF_FILES_SEC/$rfile" $rfile >> $PDIR/RUN_THEO_TEST/diff_sec.out
+        done
+    fi
 
     echo    
     echo " *** Test $dir finished (error code: $chk)."

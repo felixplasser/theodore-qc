@@ -74,7 +74,7 @@ class sden_ana(dens_ana_base.dens_ana_base):
         if ana_type == 'mullpop':
             pana = pop_ana.mullpop_ana()            
         else:
-            raise error_handler.MsgError('Population analyis type no implmented: %s'%ana_type)
+            raise error_handler.MsgError('Population analyis type not implmented: %s'%ana_type)
         
         state[mp_name] = pana.ret_pop(state[dens_name], self.mos)
             

@@ -1,3 +1,4 @@
+load qchem.mld FILTER "nosort"
 mo titleformat ""
 
 background white
@@ -13,9 +14,9 @@ mo [ -1.000 74]
 write image png "NTOX2_1o_0.55.png"
 mo [ -0.996 76]
 write image png "NTOX2_1v_0.55.png"
-mo [ -0.995 75]
+mo [ 0.995 75]
 write image png "NTOX2_2o_0.45.png"
-mo [ -1.000 77]
+mo [ 1.000 77]
 write image png "NTOX2_2v_0.45.png"
 
 mo [ 0.898 71 0.432 75]

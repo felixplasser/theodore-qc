@@ -49,7 +49,7 @@ sdena.read_dens()
 
 #sdena.print_all_mullpop()
 
-if ioptions['pop_ana']: sdena.print_all_pop_table()
 if ioptions['AD_ana']:  sdena.compute_all_AD()
+if ioptions['pop_ana']: sdena.print_all_pop_table()
 
 sdena.print_summary()

@@ -1,4 +1,4 @@
-load qchem.mld
+load qchem.mld FILTER "nosort"
 mo titleformat ""
 
 background white
@@ -23,7 +23,7 @@ write image png "attach_singlet_0_1_no_1_0.59.png"
 mo [ -0.994 23]
 write image png "attach_singlet_0_1_no_2_0.38.png"
 
-mo [ -1.000 18]
+mo [ 1.000 18]
 write image png "detach_triplet_1_1_no_1_0.94.png"
 mo [ 0.712 17 -0.629 20 -0.215 38]
 write image png "detach_triplet_1_1_no_2_0.09.png"
@@ -33,7 +33,7 @@ mo [ -0.512 12 -0.456 33 -0.442 9 0.274 16 -0.238 36 0.232 24 0.206 26]
 write image png "detach_triplet_1_1_no_4_0.06.png"
 mo [ -0.461 15 0.443 10 -0.393 22 -0.329 29 0.293 31 -0.257 8 -0.243 13 -0.220 34]
 write image png "detach_triplet_1_1_no_5_0.05.png"
-mo [ 0.990 19]
+mo [ -0.990 19]
 write image png "attach_triplet_1_1_no_1_0.97.png"
 mo [ 0.652 13 -0.395 22 0.390 37 -0.375 27]
 write image png "attach_triplet_1_1_no_2_0.07.png"
@@ -44,7 +44,7 @@ write image png "attach_triplet_1_1_no_4_0.07.png"
 mo [ -0.454 10 0.437 15 -0.402 29 -0.387 22 0.325 31 0.260 8]
 write image png "attach_triplet_1_1_no_5_0.06.png"
 
-mo [ 1.000 18]
+mo [ -1.000 18]
 write image png "detach_singlet_1_1_no_1_0.94.png"
 mo [ -0.706 17 0.631 20 0.208 38]
 write image png "detach_singlet_1_1_no_2_0.09.png"
@@ -54,7 +54,7 @@ mo [ 0.515 12 0.455 33 0.445 9 -0.261 16 0.248 36 -0.216 24 -0.201 26]
 write image png "detach_singlet_1_1_no_4_0.07.png"
 mo [ 0.461 15 -0.420 10 0.419 22 0.314 29 0.286 13 -0.270 31 0.252 8 0.219 34]
 write image png "detach_singlet_1_1_no_5_0.06.png"
-mo [ -0.992 19]
+mo [ 0.992 19]
 write image png "attach_singlet_1_1_no_1_0.97.png"
 mo [ -0.647 17 -0.641 20 0.231 57 -0.230 14]
 write image png "attach_singlet_1_1_no_2_0.07.png"
