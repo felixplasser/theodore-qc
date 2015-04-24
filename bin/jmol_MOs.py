@@ -155,7 +155,8 @@ class mocoll:
         if self.mldfile=="":
             return ""
         else:
-            return self.mldfile.split('.')[0] + '_'
+            #return self.mldfile.split('.')[0] + '_'
+            return self.mldfile.replace('.','-') + '_'
         
 class mocollf(mocoll):
     """
@@ -230,7 +231,7 @@ class jmol_options(input_options.write_options):
             self.read_int('Number of frontier orbitals',  'en_ind', 3)
         elif self['spec'] == 'occ':
             self.read_float('Minimal occupancy', 'occmin', 0.01)
-            self.read_float('Maximal occupancy', 'occmax', 2.00)
+            self.read_float('Maximal occupancy', 'occmax', 1.99)
         else:
             raise error_handler.ElseError(self['spec'], 'spec')
         
@@ -287,51 +288,10 @@ def run():
     jo.post(lvprt=1)
     print "  -> Now simply run \"jmol %s\" to plot all the orbitals.\n"%jo.name
     ho.post(lvprt=1)
-    print "  -> View in browser."    
-    
-def run_old():
-    print "%s <st_ind> <en_ind> [<mldfile> [<mldfile2> ...]]"%sys.argv[0]
-    print "or:"
-    print "%s -f <num_mo> [<mldfile> [<mldfile2> ...]]\n"%sys.argv[0]
-
-    if len(sys.argv)<3: sys.exit()
-
-    if sys.argv[1] == '-f':
-      fr_mos = True    
-    else:
-      fr_mos = False
-      st_ind = int(sys.argv[1])
-    en_ind = int(sys.argv[2])
-
-    if len(sys.argv)>=4: mldfiles = sys.argv[3:]
-    else: mldfiles = [""]
-
-    jo = lib_file.wfile('jmol_orbitals.spt')
-    ho = lib_file.htmlfile('orbitals.html')
-    
-    ho.pre('Orbitals')
-
-    for mldfile in mldfiles:
-        print 'Analyzing %s ...\n'%mldfile
-        if not fr_mos:
-          moc = mocoll(st_ind, en_ind, mldfile)
-        else:
-          moc = mocollf(en_ind, mldfile)
-
-        moout = mo_output_jmol(moc)
-        moout.output(jo)
-        
-        moh = mo_output_html(moc)
-        moh.output(ho)
-            
-    jo.post(lvprt=1)
-    print "  -> Now simply run \"jmol %s\" to plot all the orbitals.\n"%jo.name
-    ho.post(lvprt=1)
-    print "  -> View in browser."
+    print "  -> View in browser."        
 
 if __name__=='__main__':
     import sys
 
     theo_header.print_header('Orbital plotting in Jmol')
-    #run_old()
     run()
