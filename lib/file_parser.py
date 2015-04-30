@@ -377,18 +377,24 @@ class file_parser_libwfa(file_parser_base):
                 continue
 
             state_list.append({})
-          
+
+            # Here several try statements are used to check for different versions of the output
+            #    Not very elegant but it should work ...
             try:
                 multl, iirrep, ist = typ.split('_')
             except:
                 state_list[-1]['name'] = 'st'
             else:
-              
+                try:
+                    state_list[-1]['irrep'] = self.ioptions.get('irrep_labels')[int(iirrep)]
+                except:
+                    state_list[-1]['irrep'] = iirrep
+                    
                 state_list[-1]['mult'] = {'singlet':'(1)',
-                                            'triplet':'(3)',
-                                            'any':'(-)'}[multl]                                  
+                                          'triplet':'(3)',
+                                          'any':'(-)'}[multl]                                  
+
                 state_list[-1]['state_ind'] = int(ist)                
-                state_list[-1]['irrep'] = self.ioptions.get('irrep_labels')[int(iirrep)]
                 
                 state_list[-1]['name'] = '%i%s%s'%(state_list[-1]['state_ind'],                                                    
                                                     state_list[-1]['mult'],
