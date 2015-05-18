@@ -545,22 +545,31 @@ class file_parser_qcadc(file_parser_libwfa):
     def om_file_name(self, state):
         """
         Construct the name of the .om file
+        This routine parses different versions of Q-Chem and libwfa.
         """
         multo = {'(1)':'singlet',
                  '(3)':'triplet',
                  '(-)':'any'}[state['mult']]
-                 
-        irrepo = self.irrep_labels.index(state['irrep'])
+
+        state['fname'] = '%s_%s_%i'%(multo, state['irrep'], state['state_ind'])
+        omname = '%s_ctnum_atomic.om'%state['fname']
         
-        if irrepo == 0 and state['mult'] == '(1)':
-            # add 1 for ground state irrep
-            state_indo = state['state_ind'] - 1
-        else:
-            state_indo = state['state_ind']
+        if not os.path.exists(omname):
+            print ' WARNING: did not find %s,'%omname,
+            irrepo = self.irrep_labels.index(state['irrep'])
+            
+            if irrepo == 0 and state['mult'] == '(1)':
+                # add 1 for ground state irrep
+                state_indo = state['state_ind'] - 1
+            else:
+                state_indo = state['state_ind']
+            
+            state['fname'] = '%s_%i_%i'%(multo, irrepo, state_indo)
+            omname = '%s_ctnum_atomic.om'%state['fname']
+            
+            print 'using %s instead.'%omname
         
-        state['fname'] = '%s_%i_%i'%(multo, irrepo, state_indo)
-        
-        return '%s_%i_%i_ctnum_atomic.om'%(multo, irrepo, state_indo)
+        return omname
     
 class file_parser_qctddft(file_parser_base):
     def read(self, mos):
