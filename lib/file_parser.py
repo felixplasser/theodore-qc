@@ -550,19 +550,22 @@ class file_parser_qcadc(file_parser_libwfa):
         multo = {'(1)':'singlet',
                  '(3)':'triplet',
                  '(-)':'any'}[state['mult']]
+        
+        # subtract 1 for ground state irrep
+        state_indo = state['state_ind']
+        if state['mult'] == '(1)':
+            if state['irrep'].lower() in ['a', 'ag', 'a1', "a'"]:
+                state_indo -= 1
 
-        state['fname'] = '%s_%s_%i'%(multo, state['irrep'], state['state_ind'])
+        state['fname'] = '%s_%s_%i'%(multo, state['irrep'], state_indo)
         omname = '%s_ctnum_atomic.om'%state['fname']
         
         if not os.path.exists(omname):
             print ' WARNING: did not find %s,'%omname,
             irrepo = self.irrep_labels.index(state['irrep'])
             
-            if irrepo == 0 and state['mult'] == '(1)':
-                # add 1 for ground state irrep
-                state_indo = state['state_ind'] - 1
-            else:
-                state_indo = state['state_ind']
+            # subtract 1 for ground state irrep
+            state_indo = state['state_ind'] - 1*(irrepo==0)*(state['mult'] == '(1)')        
             
             state['fname'] = '%s_%i_%i'%(multo, irrepo, state_indo)
             omname = '%s_ctnum_atomic.om'%state['fname']

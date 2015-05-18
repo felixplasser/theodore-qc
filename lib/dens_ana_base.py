@@ -95,7 +95,7 @@ class dens_ana_base:
             vstr  = '%-10s'%state['name'][-10:]
             vstr += ' %7.3f'%state['exc_en']
             try:
-                vstr += ' %5.3f'%state['osc_str']
+                vstr += ('% 5.3f'%state['osc_str']).replace('-1.000','     -')
             except KeyError:
                 vstr += '%6s'%'-'
             
