@@ -47,6 +47,8 @@ class dens_ana_base:
             self.state_list = file_parser.file_parser_qcadc(self.ioptions).read()
         elif rtype=='qctddft':
             self.state_list = file_parser.file_parser_qctddft(self.ioptions).read(self.mos)            
+        elif rtype in ['mcscf', 'colmcscf']:
+            self.state_list = file_parser.file_parser_col_mcscf(self.ioptions).read(self.mos)
         elif rtype in ['mrci', 'colmrci']:
             self.state_list = file_parser.file_parser_col_mrci(self.ioptions).read(self.mos)
         elif rtype.lower() == 'nos':

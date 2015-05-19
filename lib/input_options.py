@@ -360,6 +360,7 @@ class dens_ana_options(read_options):
         self['rtype']   = None # type of input
         self['rfile']   = None # file to read
         self['read_binary'] = False # read binary files rather than standard output (if applicable)
+        self['s_or_t'] = None # state or transition density matrix analysis
         
         # Output options
         self['output_file']   = "ana_summ.txt"
@@ -386,6 +387,8 @@ class tden_ana_options(dens_ana_options):
     """
     def set_defaults(self):
         dens_ana_options.set_defaults(self)
+        # Read options
+        self['s_or_t'] = 't'
         
         # Output options
         self['output_file']   = "tden_summ.txt"        
@@ -408,7 +411,9 @@ class sden_ana_options(dens_ana_options):
     """
     def set_defaults(self):
         dens_ana_options.set_defaults(self)
-        
+        # Read options
+        self['s_or_t'] = 's'
+                
         # Output options
         self['output_file']   = "sden_summ.txt"
         self['prop_list'] = ['nu', 'nunl', 'p']

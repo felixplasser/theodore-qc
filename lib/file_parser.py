@@ -629,8 +629,57 @@ class file_parser_qctddft(file_parser_base):
 #---
 
 class file_parser_col(file_parser_base):
-    def read_iwfmt(self,  fname):
-        raise error_handler.NIError()
+    def read_iwfmt(self, dens, filen, fac = 1.):
+        """
+        Read output from iwfmt.x for a 1-particle density file.
+        """
+        eref = eexc = 0.
+
+        in_data=False
+        #for line in open(filen,'r').readlines():
+        rfile = open(filen, 'r')
+        while True:
+            try:
+                line=rfile.next()
+            except StopIteration:
+                break
+            if ' 0.000000000000E+00' in line:
+                if len(line.split()) == 1:
+                    words = last_line.split()
+                    (num,lab1,ibvtyp,itypea,itypeb,ifmt,last,nipv) = [int(word) for word in words]
+                    if itypea==0 and itypeb==7:
+                        print ' Reading symmetric density ...'
+                        in_data=True
+                        sym = 1
+                    elif itypea==2 and itypeb==9:
+                        print ' Reading antisymmetric density ...'
+                        in_data=True
+                        sym = -1
+                    else:
+                        print 'Warning: this section does not contain a density'
+                        print 'itypea: %i, itypeb: %i'%(itypea,itypeb)
+                        print last_line
+                        in_data=False
+            elif '-1025   -1025      -1' in line:
+                line=rfile.next()
+                (eexc, eref, ecore) = [float(word) for word in line.split()]
+            elif '    ' in line:
+                pass
+            elif in_data:
+                words = line.split()
+                
+                val = float(words[0])
+                i = int(words[1])-1
+                j = int(words[2])-1
+                
+                if 0.2 < abs(val) < 1.9999: print "(i,j)=(%2i,%2i), val=%6.3f"%(i,j,val)
+                dens[j,i] += fac * val
+                
+                if i != j: dens[i,j] += fac * sym * val
+                
+            last_line = line
+            
+        return eref, eexc
     
     def read_sifs(self):
         """
@@ -655,11 +704,12 @@ class file_parser_col(file_parser_base):
         
         state['tden'] = self.init_den(mos)
         
-        tmp = filen.replace('state','').replace('drt','').split('TO')[-1]
-        ir_st = tmp.split('.')
-        state['irrep'] = self.ioptions.get('irrep_labels')[int(ir_st[0]) - 1]
-        state['state_ind'] = int(ir_st[1])
-        state['name'] = '%s.%i'%(state['irrep'], state['state_ind'])
+        tmp = filen.replace('state','').replace('drt','').replace('trncils.FROM','').split('TO')
+        ir_st_ref = tmp[0].split('.')
+        ir_st_exc = tmp[1].split('.')
+        state['irrep'] = self.ioptions.get('irrep_labels')[int(ir_st_exc[0]) - 1]
+        state['state_ind'] = int(ir_st_exc[1])
+        state['name'] = '%s.%i-%i'%(state['irrep'], int(ir_st_ref[1]), state['state_ind'])
         
         rfile = open(filen,'r')
         while True:
@@ -689,8 +739,8 @@ class file_parser_col(file_parser_base):
         Parse the block matrix output in the listing file.
         This is not the cleanest routine but it seems to work ...
         """
-        isqr2 = 1. / numpy.sqrt(2.)
-        
+        isqr2 = 1. / numpy.sqrt(2.)       
+
         while(1):
             words=rfile.next().replace('MO','').split()
             
@@ -731,7 +781,9 @@ class file_parser_col(file_parser_base):
     
 class file_parser_col_mrci(file_parser_col):
     def read(self, mos):
-        # TODO: separate between sden and tden
+        if self.ioptions['s_or_t'] == 's':
+            raise error_handler.MsgError('analyze_sden.py not implemented for col_mrci! Use "nos" instead.')
+            
         state_list = []
         
         for lfile in os.listdir('LISTINGS'):
@@ -742,6 +794,55 @@ class file_parser_col_mrci(file_parser_col):
             self.read_trncils(state_list[-1], mos, 'LISTINGS/%s'%lfile)
 
         return state_list
+    
+class file_parser_col_mcscf(file_parser_col):
+    def read(self, mos):
+        state_list = []
+        
+        for lfile in os.listdir('WORK'):
+            # Find the suitable files. This could also be done with regexps ...
+            if not '.iwfmt' in lfile: continue
+            #if (not 'mcsd1fl' in lfile) and (not 'mcad1fl' in lfile): continue
+            if not 'mcsd1fl' in lfile: continue
+            
+            if self.ioptions['s_or_t'] == 't':
+                if not '-' in lfile: continue
+                
+                print "Reading %s ..."%lfile
+                state_list.append({})
+                self.read_mc_tden(state_list[-1], mos, lfile)
+                
+            elif self.ioptions['s_or_t'] == 's':
+                if '-' in lfile: continue
+                
+                print "Reading %s ..."%lfile
+                state_list.append({})
+                self.read_mc_sden(state_list[-1], mos, lfile)
+        
+        return state_list
+    
+    def read_mc_tden(self, state, mos, filen):
+        tmp = filen.replace('mcsd1fl.drt','').replace('st','').replace('.iwfmt','').split('.')
+        state['irrep'] = self.ioptions.get('irrep_labels')[int(tmp[0]) - 1]
+        state['name'] = '%s.%s'%(state['irrep'], tmp[1])
+        state['tden'] = self.init_den(mos)
+        
+        # read symmetric part
+        (eref, eexc) = self.read_iwfmt(state['tden'], 'WORK/'+filen, fac=1/numpy.sqrt(2.))
+        state['exc_en'] = (eexc - eref) * units.energy['eV']
+        
+        # read antisymmetric part
+        self.read_iwfmt(state['tden'], 'WORK/'+filen.replace('mcsd1fl', 'mcad1fl'), fac=1/numpy.sqrt(2.))
+        
+    def read_mc_sden(self, state, mos, filen):
+        tmp = filen.replace('mcsd1fl.drt','').replace('st','').replace('.iwfmt','').split('.')
+        state['irrep'] = self.ioptions.get('irrep_labels')[int(tmp[0]) - 1]
+        state['state_ind'] = int(tmp[1])
+        state['name'] = '%s.%i'%(state['irrep'], state['state_ind'])
+        state['sden'] = self.init_den(mos)
+        
+        (eref, eexc) = self.read_iwfmt(state['sden'], 'WORK/'+filen)
+        state['exc_en'] = eexc
     
 class file_parser_nos(file_parser_base):
     """
