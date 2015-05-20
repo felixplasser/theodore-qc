@@ -33,6 +33,7 @@ class write_options_theo(input_options.write_options):
             ('qctddft', 'Q-Chem TDDFT'),
             ('colmcscf', 'Columbus MCSCF'),
             ('colmrci', 'Columbus MR-CI (tden analysis)'),
+            ('rassi', 'Molcas RASSI'),
             ('nos', 'Read natural orbitals (Molden format) for sden analysis: Columbus, Molcas, ...'),
             ('ricc2', 'Turbomole ricc2'),
             ('escf', 'Turbomole escf'),
@@ -63,6 +64,11 @@ class write_options_theo(input_options.write_options):
             self['mo_file'] = 'MOLDEN/molden_mo_mc.sp'
             self['coor_file'] = 'geom'
             self['coor_format'] = 'col'
+        elif self['rtype'] == 'rassi':
+            self['rfile'] = None
+            self['mo_file'] = 'molcas.rasscf.molden'
+            self['coor_file'] = 'geom.xyz'
+            self['coor_format'] = 'xyz'
         elif self['rtype'] == 'nos':
             self['rfile'] = None
             self['mo_file'] = ''
@@ -269,7 +275,7 @@ def run_theoinp():
                 
     if wopt['rtype'] in ['colmrci']: wopt.get_ncore()
     
-    if (not dotden) and (wopt['rtype'] in ['nos', 'colmcscf']):
+    if (not dotden) and (wopt['rtype'] in ['nos', 'colmcscf', 'rassi']):
         if wopt.ret_yn('Analysis of state density matrices?', True):
             wopt.read_yn('Print out Mulliken populations?', 'pop_ana', True)
             if wopt['rtype'] in ['nos']:

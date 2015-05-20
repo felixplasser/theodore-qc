@@ -1,0 +1,41 @@
+load molcas.rasscf.molden FILTER "nosort"
+mo titleformat ""
+
+background white
+mo fill
+mo cutoff 0.04
+
+mo [ 0.989 17]
+write image png "NTOR2.1_1o_0.47.png"
+mo [ 1.000 16]
+write image png "NTOR2.1_1v_0.47.png"
+mo [ -0.987 18]
+write image png "NTOR2.1_2o_0.38.png"
+mo [ -1.000 15]
+write image png "NTOR2.1_2v_0.38.png"
+
+mo [ -0.989 17]
+write image png "NTOR3.1_1o_0.46.png"
+mo [ -1.000 15]
+write image png "NTOR3.1_1v_0.46.png"
+mo [ 0.987 18]
+write image png "NTOR3.1_2o_0.39.png"
+mo [ 1.000 16]
+write image png "NTOR3.1_2v_0.39.png"
+
+mo [ 0.937 18 -0.350 14]
+write image png "NTOR3.2_1o_0.15.png"
+mo [ 0.945 17 -0.327 13]
+write image png "NTOR3.2_1v_0.15.png"
+mo [ -0.944 17 0.329 13]
+write image png "NTOR3.2_2o_0.15.png"
+mo [ -0.936 18 0.353 14]
+write image png "NTOR3.2_2v_0.15.png"
+mo [ 1.000 16]
+write image png "NTOR3.2_3o_0.15.png"
+mo [ -1.000 15]
+write image png "NTOR3.2_3v_0.15.png"
+mo [ 1.000 15]
+write image png "NTOR3.2_4o_0.11.png"
+mo [ -1.000 16]
+write image png "NTOR3.2_4v_0.11.png"

@@ -1,0 +1,124 @@
+================================================================================
+|                                TheoDORE 1.1.1                                |
+|         Theoretical Density, Orbital Relaxation and Exciton analysis         |
+|                                Felix Plasser                                 |
+--------------------------------------------------------------------------------
+|                                  References                                  |
+|   Transition density matrix analysis:                                        |
+|     F. Plasser and H. Lischka                                                |
+|     J. Chem. Theo. Comp. (2012), 8, 2777.                                    |
+|                                                                              |
+|   Transition and difference density matrix analysis:                         |
+|     F. Plasser, S. A. Baeppler, M. Wormit, A. Dreuw                          |
+|     J. Chem. Phys. (2014), 141, 024106;                                      |
+|     J. Chem. Phys. (2014), 141, 024107.                                      |
+|                                                                              |
+|   Exciton analysis:                                                          |
+|     S. A. Baeppler, F. Plasser, M. Wormit, A. Dreuw                          |
+|     Phys. Rev. A (2014), 90, 052521.                                         |
+|                                                                              |
+|   Program citation:                                                          |
+|     F. Plasser "TheoDORE: a package for theoretical density, orbital         |
+|     relaxation, and exciton analysis"; available from                        |
+|     http://theodore-qc.sourceforge.net                                       |
+--------------------------------------------------------------------------------
+|                        State density matrix analysis                         |
+================================================================================
+
+
+MO file molcas.rasscf.molden parsed.
+Number of atoms: 8
+Number of MOs read in: 44
+Dimension: 44,44,...,44
+Number of basis functions parsed:  44
+ ... inverting C
+
+MO file ./MOLDEN.1 parsed.
+Number of atoms: 8
+Number of MOs read in: 88
+Dimension: 44,44,...,44
+Number of basis functions parsed:  44
+MO-matrix not square: 44 x 88
+  Using the Moore-Penrose pseudo inverse instead.
+
+MO file ./MOLDEN.2 parsed.
+Number of atoms: 8
+Number of MOs read in: 88
+Dimension: 44,44,...,44
+Number of basis functions parsed:  44
+MO-matrix not square: 44 x 88
+  Using the Moore-Penrose pseudo inverse instead.
+
+MO file ./MOLDEN.3 parsed.
+Number of atoms: 8
+Number of MOs read in: 88
+Dimension: 44,44,...,44
+Number of basis functions parsed:  44
+MO-matrix not square: 44 x 88
+  Using the Moore-Penrose pseudo inverse instead.
+A/D analysis for MOLDEN.2
+ WARNING: pA + pD = -0.00001998 != 0.
+Computing A/D densities ...
+A/D analysis for MOLDEN.3
+ WARNING: pA + pD = -0.00004002 != 0.
+Computing A/D densities ...
+
+Jmol input file ndo.jmol and ndo.html written
+
+Mulliken populations
+MOLDEN.1
+---------------
+ Atom     state
+---------------
+    1   5.92413
+    2   5.92413
+    3   8.35389
+    4   8.35389
+    5   0.86099
+    6   0.86099
+    7   0.86099
+    8   0.86099
+---------------
+       32.00002
+---------------
+
+MOLDEN.2
+-----------------------------------
+ Atom     state       det       att
+-----------------------------------
+    1   6.04465   0.03847  -0.15898
+    2   6.04465   0.03847  -0.15898
+    3   8.28628   0.45914  -0.39152
+    4   8.28628   0.45914  -0.39152
+    5   0.83454   0.02650  -0.00004
+    6   0.83454   0.02650  -0.00004
+    7   0.83454   0.02650  -0.00004
+    8   0.83454   0.02650  -0.00004
+-----------------------------------
+       32.00000   1.10119  -1.10117
+-----------------------------------
+
+MOLDEN.3
+-----------------------------------
+ Atom     state       det       att
+-----------------------------------
+    1   6.04463   0.03848  -0.15897
+    2   6.04463   0.03848  -0.15898
+    3   8.28636   0.45915  -0.39161
+    4   8.28636   0.45915  -0.39161
+    5   0.83450   0.02653  -0.00004
+    6   0.83450   0.02653  -0.00004
+    7   0.83450   0.02653  -0.00004
+    8   0.83450   0.02653  -0.00004
+-----------------------------------
+       31.99998   1.10138  -1.10134
+-----------------------------------
+
+
+state       dE(eV)     f         p
+----------------------------------
+MOLDEN.1     1.000     -         -
+MOLDEN.2     2.000     -  1.101174
+MOLDEN.3     3.000     -  1.101336
+
+Final output copied to sden_summ.txt.nos

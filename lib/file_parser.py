@@ -733,6 +733,7 @@ class file_parser_col(file_parser_base):
             elif 'Oscillator strength : ' in line:
                 words = line.split()
                 state['osc_str']=float(words[-1])
+        rfile.close()
                 
     def read_block_mat(self, state, mos, rfile, sym):
         """
@@ -918,3 +919,93 @@ class file_parser_nos(file_parser_base):
             state['nunl'] = sum(nunl_list)
             state['nunl_den'] = numpy.dot(T,
                                   numpy.dot(numpy.diag(nunl_list), T.transpose()))
+            
+class file_parser_rassi(file_parser_base):
+    def read(self, mos):
+        state_list = []
+        
+        if not os.path.exists('TRD'):
+            errmsg= """Did not find the TRD directory!
+    To run the job you have to:
+    1. Run RASSI specifying the TRD1 keyword
+    2. call 'mkdir TRD && cp $WorkDir/TRD2* TRD'"""
+    
+            raise error_handler.MsgError(errmsg)
+        
+        for lfile in sorted(os.listdir('TRD')):
+            words = lfile.split('_')
+            (st1, st2) = (int(words[1]), int(words[2]))
+            
+            if self.ioptions['s_or_t'] == 't':
+                if st1 == st2: continue
+                
+                print "Reading %s ..."%lfile
+                state_list.append({})
+                
+                state_list[-1]['name'] = 'R%i.%i'%(st1, st2)
+                state_list[-1]['exc_en'] = float(st1 + st2)
+                state_list[-1]['tden'] = self.init_den(mos)
+
+                self.read_rassi_den(state_list[-1]['tden'], mos, 'TRD/'+lfile)
+        
+            elif self.ioptions['s_or_t'] == 's':
+                if st1 != st2: continue
+                
+                print "Reading %s ..."%lfile
+                state_list.append({})
+                
+                state_list[-1]['name'] = 'RASSI_%i'%st1
+                state_list[-1]['exc_en'] = float(st1)
+                state_list[-1]['sden'] = self.init_den(mos)
+
+                self.read_rassi_den(state_list[-1]['sden'], mos, 'TRD/'+lfile, sden=True)
+        return state_list
+    
+    def read_rassi_den(self, dens, mos, filen, sden=False):
+        """
+        Read the output of RASSI generated with TRD1.
+        No support for symmetry (yet).
+        """
+        trd1 = False
+        imo = -1
+        jmo = -1
+        rfile = open(filen,'r')
+        while True:
+            try:
+                line = rfile.next()
+            except StopIteration:
+                break
+            
+            if 'Basis functions' in line:
+                nbas = int(rfile.next().split()[0])
+                assert(nbas == mos.ret_num_mo())
+            elif 'Inactive orbitals' in line:
+                ninact = int(rfile.next().split()[0])
+                
+                if sden:
+                    for imo in xrange(ninact): dens[imo, imo] = 2.0                        
+                imo = ninact
+                jmo = ninact
+            elif 'Active orbitals' in line:
+                nact = int(rfile.next().split()[0])
+            elif 'Active TRD1' in line:
+                line = rfile.next()
+                trd1 = True
+            elif trd1:
+                #print imo, line[:-1]
+                for i in xrange(5):
+                    val = float(line[i*18:(i+1)*18].replace('D','E'))
+                    dens[imo, jmo] = val
+                    if 0.2 < abs(val) < 1.9999: print "(i,j)=(%2i,%2i), val=%6.3f"%(imo,jmo,val)
+                    
+                    jmo += 1
+                    if jmo == ninact + nact:
+                        jmo = ninact
+                        imo += 1
+                        
+                        if imo == ninact + nact:
+                            print "Finished parsing"
+                            break                                        
+        rfile.close()
+        if not sden:
+            dens *= 2**(-.5)

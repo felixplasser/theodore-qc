@@ -1,0 +1,118 @@
+================================================================================
+|                                TheoDORE 1.1.1                                |
+|         Theoretical Density, Orbital Relaxation and Exciton analysis         |
+|                                Felix Plasser                                 |
+--------------------------------------------------------------------------------
+|                                  References                                  |
+|   Transition density matrix analysis:                                        |
+|     F. Plasser and H. Lischka                                                |
+|     J. Chem. Theo. Comp. (2012), 8, 2777.                                    |
+|                                                                              |
+|   Transition and difference density matrix analysis:                         |
+|     F. Plasser, S. A. Baeppler, M. Wormit, A. Dreuw                          |
+|     J. Chem. Phys. (2014), 141, 024106;                                      |
+|     J. Chem. Phys. (2014), 141, 024107.                                      |
+|                                                                              |
+|   Exciton analysis:                                                          |
+|     S. A. Baeppler, F. Plasser, M. Wormit, A. Dreuw                          |
+|     Phys. Rev. A (2014), 90, 052521.                                         |
+|                                                                              |
+|   Program citation:                                                          |
+|     F. Plasser "TheoDORE: a package for theoretical density, orbital         |
+|     relaxation, and exciton analysis"; available from                        |
+|     http://theodore-qc.sourceforge.net                                       |
+--------------------------------------------------------------------------------
+|                        State density matrix analysis                         |
+================================================================================
+
+
+MO file molcas.rasscf.molden parsed.
+Number of atoms: 8
+Number of MOs read in: 44
+Dimension: 44,44,...,44
+Number of basis functions parsed:  44
+ ... inverting C
+Reading TRD2_001_001 ...
+(i,j)=(12,12), val= 1.894
+(i,j)=(13,13), val= 1.888
+(i,j)=(14,14), val= 1.999
+(i,j)=(15,15), val= 1.999
+Finished parsing
+Reading TRD2_002_002 ...
+(i,j)=(12,12), val= 1.915
+(i,j)=(13,13), val= 1.907
+(i,j)=(14,14), val= 1.543
+(i,j)=(15,15), val= 1.456
+(i,j)=(16,16), val= 0.642
+(i,j)=(17,17), val= 0.537
+Finished parsing
+Reading TRD2_003_003 ...
+(i,j)=(12,12), val= 1.914
+(i,j)=(13,13), val= 1.907
+(i,j)=(14,14), val= 1.463
+(i,j)=(15,15), val= 1.537
+(i,j)=(16,16), val= 0.636
+(i,j)=(17,17), val= 0.543
+Finished parsing
+A/D analysis for RASSI_2
+Computing A/D densities ...
+A/D analysis for RASSI_3
+Computing A/D densities ...
+
+Mulliken populations
+RASSI_1
+---------------
+ Atom     state
+---------------
+    1   5.92413
+    2   5.92413
+    3   8.35389
+    4   8.35389
+    5   0.86099
+    6   0.86099
+    7   0.86099
+    8   0.86099
+---------------
+       32.00000
+---------------
+
+RASSI_2
+-----------------------------------
+ Atom     state       det       att
+-----------------------------------
+    1   6.04465   0.03847  -0.15899
+    2   6.04465   0.03847  -0.15899
+    3   8.28628   0.45913  -0.39152
+    4   8.28628   0.45913  -0.39152
+    5   0.83454   0.02650  -0.00004
+    6   0.83454   0.02650  -0.00004
+    7   0.83454   0.02650  -0.00004
+    8   0.83454   0.02650  -0.00004
+-----------------------------------
+       32.00000   1.10118  -1.10118
+-----------------------------------
+
+RASSI_3
+-----------------------------------
+ Atom     state       det       att
+-----------------------------------
+    1   6.04464   0.03847  -0.15898
+    2   6.04464   0.03847  -0.15898
+    3   8.28636   0.45914  -0.39162
+    4   8.28636   0.45914  -0.39162
+    5   0.83450   0.02653  -0.00004
+    6   0.83450   0.02653  -0.00004
+    7   0.83450   0.02653  -0.00004
+    8   0.83450   0.02653  -0.00004
+-----------------------------------
+       32.00000   1.10135  -1.10135
+-----------------------------------
+
+
+state       dE(eV)     f         p
+----------------------------------
+RASSI_1      1.000     -         -
+RASSI_2      2.000     -  1.101184
+RASSI_3      3.000     -  1.101353
+
+Final output copied to sden_summ.txt.rassi
