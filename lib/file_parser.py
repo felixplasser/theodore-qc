@@ -368,7 +368,7 @@ class file_parser_libwfa(file_parser_base):
         
         basedir='.'
         #ist = 1
-        for omfile in os.listdir(basedir):
+        for omfile in sorted(os.listdir(basedir)):
             suff = omfile.split('.')[-1]
             if suff!='om': continue
            
@@ -786,7 +786,7 @@ class file_parser_col_mrci(file_parser_col):
             
         state_list = []
         
-        for lfile in os.listdir('LISTINGS'):
+        for lfile in sorted(os.listdir('LISTINGS')):
             if not 'trncils' in lfile: continue
             
             print "Reading %s ..."%lfile
@@ -799,7 +799,7 @@ class file_parser_col_mcscf(file_parser_col):
     def read(self, mos):
         state_list = []
         
-        for lfile in os.listdir('WORK'):
+        for lfile in sorted(os.listdir('WORK')):
             # Find the suitable files. This could also be done with regexps ...
             if not '.iwfmt' in lfile: continue
             #if (not 'mcsd1fl' in lfile) and (not 'mcad1fl' in lfile): continue
@@ -818,6 +818,9 @@ class file_parser_col_mcscf(file_parser_col):
                 print "Reading %s ..."%lfile
                 state_list.append({})
                 self.read_mc_sden(state_list[-1], mos, lfile)
+        
+        if len(state_list) == 0:
+            raise error_handler.MsgError('No density file found! Did you run write_den.bash?')
         
         return state_list
     

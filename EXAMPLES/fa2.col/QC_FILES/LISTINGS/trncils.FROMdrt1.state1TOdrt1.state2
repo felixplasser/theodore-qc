@@ -1,0 +1,360 @@
+
+
+     ******************************************
+     **    PROGRAM:              transci     **
+     **    PROGRAM VERSION:      5.5         **
+     **    DISTRIBUTION VERSION: 5.9.a       **
+     ******************************************
+
+
+ This Version of Program transci is Maintained by:
+     Thomas Mueller
+     Juelich Supercomputing Centre (JSC)
+     Institute of Advanced Simulation (IAS)
+     D-52425 Juelich, Germany 
+     Email: th.mueller@fz-juelich.de
+
+ echo of the input for program transci:
+ ------------------------------------------------------------------------
+  &input
+   lvlprt=3,
+    nroot1=1,
+   nroot2=2
+    drt1=1,
+  drt2=1
+ /&end
+  
+ ------------------------------------------------------------------------
+ calculating the MR-SDCI transition density
+ units and filenames:
+    1: ( 6)    trncils                                                     
+    2: ( 5)    trnciin                                                     
+    3: ( 7)    trncism                                                     
+    7: ( 5)    civfl.drt1                                                  
+    8: ( 5)    civfl.drt1                                                  
+    9: (17)    cidrtfl.1                                                   
+   10: (18)    cidrtfl.1                                                   
+   14: ( 8)    index1                                                      
+   15: ( 9)    index2                                                      
+   16: (20)    civout.drt1                                                 
+   17: (21)    civout.drt1                                                 
+   20: (24)    ciftotd                                                     
+   21: (25)    flacpfd                                                     
+   22: (26)    cirefv.drt1                                                 
+   23: (27)    cirefv.drt1                                                 
+   25: (29)    trndens                                                     
+   26: (30)    geom                                                        
+   27: (13)    cirfl1                                                      
+   28: (14)    cirfl2                                                      
+   29: (33)    moints                                                      
+   34: (34)    cid1trfl                                                    
+ ------------------------------------------------------------------------
+============================================================
+ extracting information from civout1:
+ ci vector:                     1  itype=                     0  reference vecto
+ r                     1
+ a4den=  0.000000000000000E+000  eci=  -227.678358187948     
+ titles:
+  cidrt_title                                                                   
+  
+ energy computed by program ciudg.       vanadium.itc.univ 11:15:17.162 20-May-1
+ 5
+============================================================
+============================================================
+ extracting information from civout2:
+ ci vector:                     2  itype=                     0  reference vecto
+ r                     2
+ a4den=  0.000000000000000E+000  eci=  -227.532406319758     
+ titles:
+  cidrt_title                                                                   
+  
+ energy computed by program ciudg.       vanadium.itc.univ 11:15:17.162 20-May-1
+ 5
+============================================================
+
+################################################################################
+ one electron density matrix calculation 
+################################################################################
+
+
+ workspace allocation information: mxcore=********
+ nmot  =    44 niot  =    14 nfct  =     4 nfvt  =     0
+ nrow  =   103 nsym  =     2 ssym  =     1 lenbuf=  1600
+ nwalk,xbar:         57       57        0        0        0
+ nvalwt,nvalw:       57       57        0        0        0
+ ncsft:              57
+ map(*)=      -1   -1   27   28   29   30   35   36   37    1    2    3    4    5    6    7    8    9   10   11
+              12   13   -1   -1   31   32   33   34   38   39   40   14   15   16   17   18   19   20   21   22
+              23   24   25   26
+ nmot  =    44 niot  =    14 nfct  =     4 nfvt  =     0
+ nrow  =   103 nsym  =     2 ssym  =     1 lenbuf=  1600
+ nwalk,xbar:         57       57        0        0        0
+ nvalwt,nvalw:       57       57        0        0        0
+ ncsft:              57
+ map(*)=      -1   -1   27   28   29   30   35   36   37    1    2    3    4    5    6    7    8    9   10   11
+              12   13   -1   -1   31   32   33   34   38   39   40   14   15   16   17   18   19   20   21   22
+              23   24   25   26
+     13    13
+      1     2
+      1     2
+ lamda1   1
+ lmda,lmdb
+    1   1     2   2
+    2   1     0   0
+      2     1
+ strtbx
+      0     0
+     78     0
+ strtbw
+      0     0
+     91     0
+
+ number of external paths / symmetry
+ vertex x     156     169
+ vertex w     182     169
+ opening indexfiles
+
+
+
+                   segmentation summary bra
+ ----------------------------------------------------------------------
+ seg.    no. of|  no. of|starting|starting|starting|internal|starting|
+  no.  internal|      ci|     csf|   index|      ci|   walks|    walk|
+          paths|elements|  number|  record|  record|   /seg.|  number|
+ ----------------------------------------------------------------------
+ yz 1        57|      57|       0|       1|       1|      57|       0|
+ ----------------------------------------------------------------------
+
+
+
+                   segmentation summary ket
+ ----------------------------------------------------------------------
+ seg.    no. of|  no. of|starting|starting|starting|internal|starting|
+  no.  internal|      ci|     csf|   index|      ci|   walks|    walk|
+          paths|elements|  number|  record|  record|   /seg.|  number|
+ ----------------------------------------------------------------------
+ yz 1        57|      57|       0|       1|       1|      57|       0|
+ ----------------------------------------------------------------------
+ space available for w and x part of the ci vector 917303978
+ number of z and y configurations      57
+
+
+ length of the ci-vector # 1  ->>>        57
+
+
+ length of the ci-vector # 2  ->>>        57
+
+ 
+ SPACE REQUIRED:
+ 
+    space required for calls in multd2:
+    onex           2295
+    allin          2048
+    diagon         2958
+    max.      ---------
+    maxnex         2958
+ 
+    total core space usage:
+    maxnex         2958
+    totvec    917303978
+    indsym          114
+    conft           114
+    indxyz          114
+    ciyz            114
+    buffer       196608
+              ---------
+    totspc    917504000
+
+ total core array space available917504000
+ space available for vectors     917303978
+ space for indexing arrays and scr   200022
+ civfl1 and civfl2 refer to the same file
+################################################################################
+              calculation for roots no    1+   2
+################################################################################
+
+ three-internal ft construction complete.      42 loops constructed.
+
+ diagonal ft construction complete.     151 loops constructed.
+
+ four-internal ft construction complete.      90 loops constructed.
+
+
+ <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+                      Results derived from the  CI density
+
+ <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+
+          symm-trans density matrix: diagonal part
+
+              MO  1a'        MO  2a'        MO  3a'        MO  4a'        MO  5a'        MO  6a'        MO  7a'        MO  8a' 
+ MO  1a'      0.00000000
+ MO  2a'      0.00000000     0.00000000
+ MO  3a'      0.00000000     0.00000000     0.00000000
+ MO  4a'      0.00000000     0.00000000     0.00000000     0.00000000
+ MO  5a'      0.00000000     0.00000000     0.00000000     0.00000000    -0.00000001
+ MO  6a'      0.00000000     0.00000000     0.00000000     0.00000000    -0.10728227     0.00000003
+ MO  7a'      0.00000000     0.00000000     0.00000000     0.00000000    -0.00000002    -0.45740218    -0.00000002
+
+              MO  9a'        MO 10a'        MO 11a'        MO 12a'        MO 13a'        MO 14a'        MO 15a'        MO 16a' 
+
+              MO 17a'        MO 18a'        MO 19a'        MO 20a' 
+
+          symm-trans density matrix: diagonal part
+
+              MO  1a"        MO  2a"        MO  3a"        MO  4a"        MO  5a"        MO  6a"        MO  7a"        MO  8a" 
+ MO  1a"      0.00000000
+ MO  2a"      0.00000000     0.00000000
+ MO  3a"      0.00000000     0.00000000     0.00000000
+ MO  4a"      0.00000000     0.00000000     0.00000000     0.00000000
+ MO  5a"      0.00000000     0.00000000     0.00000000     0.00000000    -0.00000001
+ MO  6a"      0.00000000     0.00000000     0.00000000     0.00000000    -0.10747298     0.00000003
+ MO  7a"      0.00000000     0.00000000     0.00000000     0.00000000    -0.00000002    -0.41581000    -0.00000002
+
+              MO  9a"        MO 10a"        MO 11a"        MO 12a"        MO 13a"        MO 14a"        MO 15a"        MO 16a" 
+
+              MO 17a"        MO 18a"        MO 19a"        MO 20a" 
+ -------------- MO integral information --------------
+
+input file 
+
+input energ
+ energy( 1)=  1.005855522736E+02, ietype=   -1,    core energy of type: Nuc.Rep.
+
+total ao core energy =    100.5855523
+
+
+ nsym = 2 nmot=  40
+
+
+symmetry  =      1   2
+
+slabel(*) =    A'  A" 
+
+nmpsy(*)  =     20  20
+
+infomo(*) =        1  8192  6552  8192  5460     0
+MO density     =     1
+IO buffer      =   421
+VAL buffer     =  8613
+LAB buffer     = 15165
+DIP integrals  = 28269
+top            = 30729
+
+
+
+********************************************************************************
+
+
+            ***   FINAL RESULTS   ***
+
+
+
+                          State No. 1            State No. 2
+
+   Space symmetry:            A'                     A' 
+   No. of CSFs:                57                     57
+   State energies:      -227.67835819          -227.53240632  a.u.
+
+   Transition energy:     0.14595187  a.u.
+   Transition energy:     3.97        eV
+   Transition frequency:  0.96032E+15 1/sec
+   Transition frequency:  0.32033E+05 cm-1
+
+
+       Transition moment components:
+
+                 x            y            z
+
+electron          0.001477     0.000000     0.000000  e*bohr
+frozen core       0.000000     0.000000     0.000000  e*bohr
+total (elec)      0.001477     0.000000     0.000000  e*bohr
+
+
+   Tr.dipole length:     0.001477    e*bohr
+   Oscillator strength :  0.000000
+   Einstein A coef.:     0.1452E+03  1/sec
+   Einstein B coef.:     0.8848E+03  sec/g
+
+
+
+
+          asymm-trans density matrix: diagonal part
+
+              MO  1a'        MO  2a'        MO  3a'        MO  4a'        MO  5a'        MO  6a'        MO  7a'        MO  8a' 
+ MO  6a'      0.00000000     0.00000000     0.00000000     0.00000000     0.10325172     0.00000000
+ MO  7a'      0.00000000     0.00000000     0.00000000     0.00000000    -0.00000002    -0.47989969     0.00000000
+
+              MO  9a'        MO 10a'        MO 11a'        MO 12a'        MO 13a'        MO 14a'        MO 15a'        MO 16a' 
+
+              MO 17a'        MO 18a'        MO 19a'        MO 20a' 
+
+          asymm-trans density matrix: diagonal part
+
+              MO  1a"        MO  2a"        MO  3a"        MO  4a"        MO  5a"        MO  6a"        MO  7a"        MO  8a" 
+ MO  6a"      0.00000000     0.00000000     0.00000000     0.00000000     0.10323274     0.00000000
+ MO  7a"      0.00000000     0.00000000     0.00000000     0.00000000    -0.00000001    -0.43736292     0.00000000
+
+              MO  9a"        MO 10a"        MO 11a"        MO 12a"        MO 13a"        MO 14a"        MO 15a"        MO 16a" 
+
+              MO 17a"        MO 18a"        MO 19a"        MO 20a" 
+ -------------- MO integral information --------------
+
+input file 
+
+input energ
+ energy( 1)=  1.005855522736E+02, ietype=   -1,    core energy of type: Nuc.Rep.
+
+total ao core energy =    100.5855523
+
+
+ nsym = 2 nmot=  40
+
+
+symmetry  =      1   2
+
+slabel(*) =    A'  A" 
+
+nmpsy(*)  =     20  20
+
+infomo(*) =        1  8192  6552  8192  5460     0
+MO density     =     1
+IO buffer      =   421
+VAL buffer     =  8613
+LAB buffer     = 15165
+DIP integrals  = 28269
+top            = 30729
+
+
+
+********************************************************************************
+
+
+            ***   FINAL RESULTS   ***
+
+
+
+                          State No. 1            State No. 2
+
+   Space symmetry:            A'                     A' 
+   No. of CSFs:                57                     57
+   State energies:      -227.67835819          -227.53240632  a.u.
+
+   Transition energy:     0.14595187  a.u.
+   Transition energy:     3.97        eV
+   Transition frequency:  0.96032E+15 1/sec
+   Transition frequency:  0.32033E+05 cm-1
+
+
+       <L> value components:
+
+                 x            y            z
+
+<L> electron     0.000000     0.000000    -0.004546  e*bohr
+
+
+   <L> value length:     0.004546    e*bohr
+

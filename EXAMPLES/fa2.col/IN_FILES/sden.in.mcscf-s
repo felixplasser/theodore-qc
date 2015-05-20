@@ -1,0 +1,10 @@
+rtype='colmcscf'
+mo_file='MOLDEN/molden_mo_mc.sp'
+pop_ana=True
+AD_ana=True
+jmol_orbitals=False
+molden_orbitals=False
+prop_list=['p']
+output_file='sden_summ.txt.mcscf'
+output_prec=(10, 6)
+mcfmt='% 10E'

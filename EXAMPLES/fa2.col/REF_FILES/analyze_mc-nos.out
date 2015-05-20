@@ -1,0 +1,117 @@
+================================================================================
+|                                TheoDORE 1.1.1                                |
+|         Theoretical Density, Orbital Relaxation and Exciton analysis         |
+|                                Felix Plasser                                 |
+--------------------------------------------------------------------------------
+|                                  References                                  |
+|   Transition density matrix analysis:                                        |
+|     F. Plasser and H. Lischka                                                |
+|     J. Chem. Theo. Comp. (2012), 8, 2777.                                    |
+|                                                                              |
+|   Transition and difference density matrix analysis:                         |
+|     F. Plasser, S. A. Baeppler, M. Wormit, A. Dreuw                          |
+|     J. Chem. Phys. (2014), 141, 024106;                                      |
+|     J. Chem. Phys. (2014), 141, 024107.                                      |
+|                                                                              |
+|   Exciton analysis:                                                          |
+|     S. A. Baeppler, F. Plasser, M. Wormit, A. Dreuw                          |
+|     Phys. Rev. A (2014), 90, 052521.                                         |
+|                                                                              |
+|   Program citation:                                                          |
+|     F. Plasser "TheoDORE: a package for theoretical density, orbital         |
+|     relaxation, and exciton analysis"; available from                        |
+|     http://theodore-qc.sourceforge.net                                       |
+--------------------------------------------------------------------------------
+|                        State density matrix analysis                         |
+================================================================================
+
+
+MO file MOLDEN/molden_mo_mc.sp parsed.
+Number of atoms: 8
+Number of MOs read in: 44
+Dimension: 44,44,...,44
+Number of basis functions parsed:  44
+ ... inverting C
+
+MO file MOLDEN/molden_no_mc.drt1.st01.sp parsed.
+Number of atoms: 8
+Number of MOs read in: 44
+Dimension: 44,44,...,44
+Number of basis functions parsed:  44
+ ... inverting C
+
+MO file MOLDEN/molden_no_mc.drt1.st02.sp parsed.
+Number of atoms: 8
+Number of MOs read in: 44
+Dimension: 44,44,...,44
+Number of basis functions parsed:  44
+ ... inverting C
+
+MO file MOLDEN/molden_no_mc.drt1.st03.sp parsed.
+Number of atoms: 8
+Number of MOs read in: 44
+Dimension: 44,44,...,44
+Number of basis functions parsed:  44
+ ... inverting C
+A/D analysis for mc.D1.st02
+Computing A/D densities ...
+A/D analysis for mc.D1.st03
+Computing A/D densities ...
+
+Mulliken populations
+mc.D1.st01
+-----------------------------------
+ Atom     state        nu      nunl
+-----------------------------------
+    1   5.93589   0.10339   0.03813
+    2   5.93589   0.10339   0.03813
+    3   8.35402   0.10210   0.03734
+    4   8.35402   0.10210   0.03734
+    5   0.85504   0.00007   0.00001
+    6   0.85504   0.00007   0.00001
+    7   0.85504   0.00007   0.00001
+    8   0.85504   0.00007   0.00001
+-----------------------------------
+       32.00000   0.41127   0.15097
+-----------------------------------
+
+mc.D1.st02
+-------------------------------------------------------
+ Atom     state        nu      nunl       det       att
+-------------------------------------------------------
+    1   6.04929   0.44161   0.49302   0.03971  -0.15311
+    2   6.04929   0.44161   0.49302   0.03971  -0.15311
+    3   8.29322   0.68094   0.72464   0.45788  -0.39708
+    4   8.29322   0.68094   0.72464   0.45788  -0.39708
+    5   0.82874   0.02649   0.02978   0.02635  -0.00005
+    6   0.82874   0.02649   0.02978   0.02635  -0.00005
+    7   0.82874   0.02649   0.02978   0.02635  -0.00005
+    8   0.82874   0.02649   0.02978   0.02635  -0.00005
+-------------------------------------------------------
+       32.00000   2.35107   2.55446   1.10059  -1.10059
+-------------------------------------------------------
+
+mc.D1.st03
+-------------------------------------------------------
+ Atom     state        nu      nunl       det       att
+-------------------------------------------------------
+    1   6.20907   0.71734   0.81361   0.04526  -0.31844
+    2   6.20907   0.71734   0.81361   0.04526  -0.31844
+    3   8.18596   1.00327   1.02486   0.90243  -0.73437
+    4   8.18596   1.00327   1.02486   0.90243  -0.73437
+    5   0.80248   0.05251   0.05286   0.05266  -0.00010
+    6   0.80248   0.05251   0.05286   0.05266  -0.00010
+    7   0.80248   0.05251   0.05286   0.05266  -0.00010
+    8   0.80248   0.05251   0.05286   0.05266  -0.00010
+-------------------------------------------------------
+       32.00000   3.65127   3.88839   2.10603  -2.10603
+-------------------------------------------------------
+
+
+state       dE(eV)     f        nu      nunl         p
+------------------------------------------------------
+mc.D1.st01   1.000     -  0.411269  0.150966         -
+mc.D1.st02   2.000     -  2.351073  2.554457  1.100589
+mc.D1.st03   3.000     -  3.651268  3.888389  2.106032
+
+Final output copied to sden_summ.txt.mc-nos

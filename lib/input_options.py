@@ -176,7 +176,7 @@ class write_options(options):
         
         val = self.ret_str(titlek, default)
                 
-        self.write_option(key, "'%s'"%val)
+        self.write_option(key, val)
         
     def ret_str(self, title, default=''):
         print
@@ -198,7 +198,7 @@ class write_options(options):
         
         val = self.ret_float(titlek, default)
                 
-        self.write_option(key, "%f"%val)
+        self.write_option(key, val)
         
     def ret_float(self, title, default=1.):
         print
@@ -223,7 +223,7 @@ class write_options(options):
         
         val = self.ret_int(titlek, idef)
                 
-        self.write_option(key, "%i"%val)
+        self.write_option(key, val)
         
     def ret_int(self, title, idef=-1):
         print
@@ -255,12 +255,9 @@ class write_options(options):
         
         val = self.ret_yn(titlek, default)
                 
-        self[key] = val
+        self.write_option(key, val)
         
-        if val:
-            self.ostr += "%s=True\n"%key
-        else:
-            self.ostr += "%s=False\n"%key
+        return val
     
     def ret_yn(self, question, default=False):
         """
@@ -271,7 +268,7 @@ class write_options(options):
         
         inpstr = 'Choice (y/n): '
         if default:
-           inpstr += '[y] '
+            inpstr += '[y] '
         else:
             inpstr += '[n] '
             
@@ -298,7 +295,7 @@ class write_options(options):
         
         val = opt_expl[ichoice-1][0]
 
-        self.write_option(key, "'%s'"%val)
+        self.write_option(key, val)
         
     def ret_choose_list(self, title, expl, idef=-1):
         """
@@ -318,37 +315,31 @@ class write_options(options):
         iopt = 0
         for p in plist:
             iopt += 1
-            print "  [%2i] %s"%(iopt, p)
-    
+            print "  [%2i] %s"%(iopt, p)    
 
     def write_list(self, key, wlist, lformat="%i"):
-        valstr = self.ret_list_str(wlist, lformat)
-        self.write_option(key, valstr)
+        # write_option can be called directly
+        self.write_option(key, wlist)
     
-    def ret_list_str(self, slist, lformat="%i"):
-        """
-        Write a string that corresponds to the list specification of python.
-        """
-        if len(slist) == 0: return []
+    def write_option(self, key, val):
+        self[key] = val
         
-        lstr = "[" + lformat%slist[0]
-        for el in slist[1:]:
-            lstr += ", " + lformat%el
-        lstr += "]"
+        if type(val) is str:
+            self.ostr += "%s='%s'\n"%(key, str(val))
+        else:
+            self.ostr += "%s=%s\n"%(key, str(val))
         
-        return lstr
+    def flush(self, lvprt=0, choose_file=False):
+        if choose_file:
+            act_ifile = self.ret_str('Name of input file', self.ifile)
+        else:
+            act_ifile = self.ifile
         
-    def write_option(self, key, valstr):
-        self[key] = eval(valstr)
-        self.ostr += "%s=%s\n"%(key, valstr)
-        
-    def flush(self, lvprt=0):
-        fileh = open(self.ifile, 'w')
+        fileh = open(act_ifile, 'w')
         fileh.write(self.ostr)
         fileh.close()
         if lvprt==1:
-            print 'Finished: File %s written.'%self.ifile
-    
+            print 'Finished: File %s written.'%act_ifile    
         
 class dens_ana_options(read_options):
     """

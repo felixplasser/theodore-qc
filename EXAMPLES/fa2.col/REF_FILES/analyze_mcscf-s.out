@@ -1,0 +1,120 @@
+================================================================================
+|                                TheoDORE 1.1.1                                |
+|         Theoretical Density, Orbital Relaxation and Exciton analysis         |
+|                                Felix Plasser                                 |
+--------------------------------------------------------------------------------
+|                                  References                                  |
+|   Transition density matrix analysis:                                        |
+|     F. Plasser and H. Lischka                                                |
+|     J. Chem. Theo. Comp. (2012), 8, 2777.                                    |
+|                                                                              |
+|   Transition and difference density matrix analysis:                         |
+|     F. Plasser, S. A. Baeppler, M. Wormit, A. Dreuw                          |
+|     J. Chem. Phys. (2014), 141, 024106;                                      |
+|     J. Chem. Phys. (2014), 141, 024107.                                      |
+|                                                                              |
+|   Exciton analysis:                                                          |
+|     S. A. Baeppler, F. Plasser, M. Wormit, A. Dreuw                          |
+|     Phys. Rev. A (2014), 90, 052521.                                         |
+|                                                                              |
+|   Program citation:                                                          |
+|     F. Plasser "TheoDORE: a package for theoretical density, orbital         |
+|     relaxation, and exciton analysis"; available from                        |
+|     http://theodore-qc.sourceforge.net                                       |
+--------------------------------------------------------------------------------
+|                        State density matrix analysis                         |
+================================================================================
+
+
+MO file MOLDEN/molden_mo_mc.sp parsed.
+Number of atoms: 8
+Number of MOs read in: 44
+Dimension: 44,44,...,44
+Number of basis functions parsed:  44
+ ... inverting C
+Reading mcsd1fl.drt1.st01.iwfmt ...
+ Reading symmetric density ...
+(i,j)=( 6, 6), val= 1.864
+(i,j)=( 7, 7), val= 1.999
+(i,j)=( 8, 6), val=-0.258
+(i,j)=(28,28), val= 1.853
+(i,j)=(29,29), val= 1.999
+(i,j)=(30,28), val=-0.269
+Reading mcsd1fl.drt1.st02.iwfmt ...
+ Reading symmetric density ...
+(i,j)=( 6, 6), val= 1.916
+(i,j)=( 7, 7), val= 1.462
+(i,j)=( 8, 8), val= 0.636
+(i,j)=(28,28), val= 1.907
+(i,j)=(29,29), val= 1.537
+(i,j)=(30,30), val= 0.542
+Reading mcsd1fl.drt1.st03.iwfmt ...
+ Reading symmetric density ...
+(i,j)=( 6, 6), val= 1.981
+(i,j)=( 7, 7), val= 1.006
+(i,j)=( 8, 8), val= 1.187
+(i,j)=(28,28), val= 1.981
+(i,j)=(29,29), val= 0.994
+(i,j)=(30,30), val= 0.850
+A/D analysis for I1.2
+Computing A/D densities ...
+A/D analysis for I1.3
+Computing A/D densities ...
+
+Mulliken populations
+I1.1
+---------------
+ Atom     state
+---------------
+    1   5.93589
+    2   5.93589
+    3   8.35402
+    4   8.35402
+    5   0.85504
+    6   0.85504
+    7   0.85504
+    8   0.85504
+---------------
+       32.00000
+---------------
+
+I1.2
+-----------------------------------
+ Atom     state       det       att
+-----------------------------------
+    1   6.04929   0.03971  -0.15311
+    2   6.04929   0.03971  -0.15311
+    3   8.29322   0.45788  -0.39708
+    4   8.29322   0.45788  -0.39708
+    5   0.82874   0.02635  -0.00005
+    6   0.82874   0.02635  -0.00005
+    7   0.82874   0.02635  -0.00005
+    8   0.82874   0.02635  -0.00005
+-----------------------------------
+       32.00000   1.10059  -1.10059
+-----------------------------------
+
+I1.3
+-----------------------------------
+ Atom     state       det       att
+-----------------------------------
+    1   6.20907   0.04526  -0.31844
+    2   6.20907   0.04526  -0.31844
+    3   8.18596   0.90243  -0.73437
+    4   8.18596   0.90243  -0.73437
+    5   0.80248   0.05266  -0.00010
+    6   0.80248   0.05266  -0.00010
+    7   0.80248   0.05266  -0.00010
+    8   0.80248   0.05266  -0.00010
+-----------------------------------
+       32.00000   2.10603  -2.10603
+-----------------------------------
+
+
+state       dE(eV)     f         p
+----------------------------------
+I1.1       -227.678     -         -
+I1.2       -227.532     -  1.100589
+I1.3       -227.416     -  2.106032
+
+Final output copied to sden_summ.txt.mcscf
