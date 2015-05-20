@@ -18,6 +18,8 @@ class write_options_theo(input_options.write_options):
             rdef = 'qcadc'
         elif os.path.exists('geom'):
             rdef = 'colmrci'
+        elif os.path.exists('molcas.rasscf.molden'):
+            rdef = 'rassi'
         elif os.path.exists('coord'):
             if os.path.exists('auxbasis'):
                 rdef = 'ricc2'
@@ -123,7 +125,7 @@ class write_options_theo(input_options.write_options):
             noinds = [int(ino)-1 for ino in rstr.replace(',',' ').split()]
 
             nolist = [os.path.join(nodir,lfiles[noind]) for noind in noinds]
-            self.write_option('no_files', nolist)
+            self.write_option('ana_files', nolist)
             
     
     def make_at_lists(self):
@@ -250,6 +252,24 @@ class write_options_theo(input_options.write_options):
             self.write_option('output_prec', eval(op))
             self.read_str('Format for molden coefficients', 'mcfmt', '% 10E')
             
+    def get_rassi_list(self):
+        print """
+It is assumed that you ran a RASSI job using the TRD1 option
+    and copied the TRD2* files to a directory.
+Please choose, which files will be analyzed, e.g. only transitions
+    to the ground state.
+        """
+        ddir = self.ret_str('Directory with the TRD2 files:', 'TRD')
+        print "%s contains the following files:"%ddir
+        
+        lfiles = sorted(os.listdir(ddir))
+        self.print_list(lfiles)
+        rstr = self.ret_str('Input indices of required files (separated by spaces)\n')
+        dinds = [int(ino)-1 for ino in rstr.replace(',',' ').split()]
+
+        dlist = [os.path.join(ddir,lfiles[dind]) for dind in dinds]
+        self.write_option('ana_files', dlist)
+            
 def run_theoinp():
     wopt = write_options_theo('dens_ana.in')
 
@@ -273,8 +293,6 @@ def run_theoinp():
             if wopt.ret_yn('Perform exciton analysis?', True):
                 wopt.exciton_ana()
                 
-    if wopt['rtype'] in ['colmrci']: wopt.get_ncore()
-    
     if (not dotden) and (wopt['rtype'] in ['nos', 'colmcscf', 'rassi']):
         if wopt.ret_yn('Analysis of state density matrices?', True):
             wopt.read_yn('Print out Mulliken populations?', 'pop_ana', True)
@@ -285,6 +303,12 @@ def run_theoinp():
             wopt.ddm_parse()
             
     wopt.write_prop_list()
+    
+    # Program specific input
+    if wopt['rtype'] in ['colmrci']:
+        wopt.get_ncore()
+    elif wopt['rtype'] in ['rassi']:
+        wopt.get_rassi_list()
     
     wopt.output_options()
     

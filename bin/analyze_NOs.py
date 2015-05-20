@@ -37,7 +37,7 @@ if len(no_files) == 0: ihelp()
 ioptions = input_options.sden_ana_options(ifile)
 ioptions['rtype'] = 'nos'
 ioptions['mo_file'] = no_files[0]
-ioptions['no_files'] = no_files
+ioptions['ana_files'] = no_files
 
 #--------------------------------------------------------------------------#        
 # Parsing and computations

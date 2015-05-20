@@ -1,6 +1,6 @@
 rtype='nos'
 mo_file='qchem.mld'
-no_files=['NOs/mp2_gs_no.mo', 'NOs/triplet_0_1_no.mo', 'NOs/singlet_0_1_no.mo', 'NOs/triplet_1_1_no.mo', 'NOs/singlet_1_1_no.mo', 'NOs/singlet_2_1_no.mo', 'NOs/triplet_3_1_no.mo', 'NOs/triplet_1_2_no.mo', 'NOs/singlet_1_2_no.mo']
+ana_files=['NOs/mp2_gs_no.mo', 'NOs/triplet_0_1_no.mo', 'NOs/singlet_0_1_no.mo', 'NOs/triplet_1_1_no.mo', 'NOs/singlet_1_1_no.mo', 'NOs/singlet_2_1_no.mo', 'NOs/triplet_3_1_no.mo', 'NOs/triplet_1_2_no.mo', 'NOs/singlet_1_2_no.mo']
 pop_ana=True
 unpaired_ana=True
 AD_ana=True

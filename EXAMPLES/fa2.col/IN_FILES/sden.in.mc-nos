@@ -1,6 +1,6 @@
 rtype='nos'
 mo_file='MOLDEN/molden_mo_mc.sp'
-no_files=['MOLDEN/molden_no_mc.drt1.st01.sp', 'MOLDEN/molden_no_mc.drt1.st02.sp', 'MOLDEN/molden_no_mc.drt1.st03.sp']
+ana_files=['MOLDEN/molden_no_mc.drt1.st01.sp', 'MOLDEN/molden_no_mc.drt1.st02.sp', 'MOLDEN/molden_no_mc.drt1.st03.sp']
 pop_ana=True
 unpaired_ana=True
 AD_ana=True

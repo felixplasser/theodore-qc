@@ -858,7 +858,7 @@ class file_parser_nos(file_parser_base):
         #state_list.append({})
         #self.read_ref_nos(state_list[-1], mos)
         
-        for no_file in self.ioptions['no_files']:
+        for no_file in self.ioptions['ana_files']:
             state_list.append({})
             self.read_no_file(state_list[-1], mos, no_file)
             
@@ -866,7 +866,7 @@ class file_parser_nos(file_parser_base):
             state['exc_en'] = float(istate + 1) # set fake excitation energy
             state['state_num'] = istate + 1
             
-            state['fname'] = self.ioptions['no_files'][istate]
+            state['fname'] = self.ioptions['ana_files'][istate]
             
             # perform some simplifications to the filename
             # for Columbus:
@@ -932,7 +932,7 @@ class file_parser_rassi(file_parser_base):
     
             raise error_handler.MsgError(errmsg)
         
-        for lfile in sorted(os.listdir('TRD')):
+        for lfile in self.ioptions['ana_files']:
             words = lfile.split('_')
             (st1, st2) = (int(words[1]), int(words[2]))
             
@@ -946,7 +946,7 @@ class file_parser_rassi(file_parser_base):
                 state_list[-1]['exc_en'] = float(st1 + st2)
                 state_list[-1]['tden'] = self.init_den(mos)
 
-                self.read_rassi_den(state_list[-1]['tden'], mos, 'TRD/'+lfile)
+                self.read_rassi_den(state_list[-1]['tden'], mos, lfile)
         
             elif self.ioptions['s_or_t'] == 's':
                 if st1 != st2: continue
@@ -958,7 +958,7 @@ class file_parser_rassi(file_parser_base):
                 state_list[-1]['exc_en'] = float(st1)
                 state_list[-1]['sden'] = self.init_den(mos)
 
-                self.read_rassi_den(state_list[-1]['sden'], mos, 'TRD/'+lfile, sden=True)
+                self.read_rassi_den(state_list[-1]['sden'], mos, lfile, sden=True)
         return state_list
     
     def read_rassi_den(self, dens, mos, filen, sden=False):

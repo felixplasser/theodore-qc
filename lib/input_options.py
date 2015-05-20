@@ -350,6 +350,7 @@ class dens_ana_options(read_options):
         self['mo_file'] = None
         self['rtype']   = None # type of input
         self['rfile']   = None # file to read
+        self['ana_files'] = [] # list of files to analyze
         self['read_binary'] = False # read binary files rather than standard output (if applicable)
         self['s_or_t'] = None # state or transition density matrix analysis
         
@@ -414,6 +415,5 @@ class sden_ana_options(dens_ana_options):
         self['unpaired_ana'] = True
         self['AD_ana'] = True
         
-        self['no_files'] = []
         self['rd_ene'] = False # interpret energies as occupations in the NO files
         

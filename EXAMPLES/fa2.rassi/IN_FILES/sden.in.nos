@@ -1,6 +1,6 @@
 rtype='nos'
 mo_file='molcas.rasscf.molden'
-no_files=['./MOLDEN.1', './MOLDEN.2', './MOLDEN.3']
+ana_files=['./MOLDEN.1', './MOLDEN.2', './MOLDEN.3']
 pop_ana=True
 unpaired_ana=False
 AD_ana=True

@@ -32,13 +32,13 @@ Number of MOs read in: 44
 Dimension: 44,44,...,44
 Number of basis functions parsed:  44
  ... inverting C
-Reading TRD2_001_001 ...
+Reading TRD/TRD2_001_001 ...
 (i,j)=(12,12), val= 1.894
 (i,j)=(13,13), val= 1.888
 (i,j)=(14,14), val= 1.999
 (i,j)=(15,15), val= 1.999
 Finished parsing
-Reading TRD2_002_002 ...
+Reading TRD/TRD2_002_002 ...
 (i,j)=(12,12), val= 1.915
 (i,j)=(13,13), val= 1.907
 (i,j)=(14,14), val= 1.543
@@ -46,7 +46,7 @@ Reading TRD2_002_002 ...
 (i,j)=(16,16), val= 0.642
 (i,j)=(17,17), val= 0.537
 Finished parsing
-Reading TRD2_003_003 ...
+Reading TRD/TRD2_003_003 ...
 (i,j)=(12,12), val= 1.914
 (i,j)=(13,13), val= 1.907
 (i,j)=(14,14), val= 1.463

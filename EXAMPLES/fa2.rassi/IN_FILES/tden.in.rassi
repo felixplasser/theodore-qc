@@ -12,3 +12,5 @@ prop_list=['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt', 'PRNTO']
 output_file='tden_summ.txt.rassi'
 output_prec=(10, 6)
 mcfmt='% 10E'
+ana_files=['TRD/TRD2_002_001', 'TRD/TRD2_003_001', 'TRD/TRD2_003_002']
+
