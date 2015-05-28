@@ -1,7 +1,7 @@
 #!/bin/bash
 # source this file to set the paths
 
-export THEODIR=$HOME/programs/TheoDORE/GIT
+export THEODIR=/user/plasserf/programs/TheoDORE/GIT
 export PATH=$THEODIR/bin:$PATH
 export PYTHONPATH=$THEODIR/lib
 

@@ -60,7 +60,7 @@ class OmFrag_options(input_options.write_options):
     def OmFrag_input(self):
         plot_opts = ['Plot original values', 'Plot sqareroot scaled values']
         ichoice = self.ret_choose_list('Do you want to scale the values before plotting?', plot_opts, 1)
-        self.write_option('plot_type', '%i'%ichoice)
+        self.write_option('plot_type', ichoice)
         
         self.read_int('Resolution (dpi) for plotting', 'plot_dpi', 200)
         
@@ -106,7 +106,7 @@ class OmFrag_options(input_options.write_options):
             elif self['plot_type'] == 2:
                 plot_arr = numpy.sqrt(state['OmFrag'])
             else:
-                raise error_handler.ElseError('%i'%self['plot_type'], 'plot_type')
+                raise error_handler.ElseError(str(self['plot_type']), 'plot_type')
             
             if self['sscale']:
                 vmax = self['vmax']

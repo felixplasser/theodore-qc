@@ -25,15 +25,15 @@ class write_table_options(input_options.write_options):
                          ], 'latex')
         
         if self['output_format'] == 'latex':
-            self.write_option('fname', "'table.tex'")
+            self.write_option('fname', "table.tex")
             self.read_yn('Write state labels as LaTeX formulas', 'lformula', False)
         elif self['output_format'] == 'html':
-            self.write_option('fname', "'table.html'")
+            self.write_option('fname', "table.html")
             self['lformula'] = False
         
         digs = self.ret_int('Number of decimal digits', 2)
         fformat = '%.' + str(digs) + 'f'
-        self.write_option('fformat', "'%s'"%fformat)
+        self.write_option('fformat', fformat)
     
     def write_table(self):
         sfile = lib_file.summ_file(self['ana_file'])
