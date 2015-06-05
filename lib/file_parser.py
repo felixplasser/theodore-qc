@@ -970,13 +970,26 @@ class file_parser_rassi(file_parser_base):
         imo = -1
         jmo = -1
         rfile = open(filen,'r')
+        TRD_string = 'Active TRD1'
         while True:
             try:
                 line = rfile.next()
             except StopIteration:
                 break
             
-            if 'Basis functions' in line:
+            if 'Multiplicities' in line:
+                words = rfile.next().split()
+                mult1 = int(words[0])
+                mult2 = int(words[1])
+                print 'Multiplicities: %i, %i'%(mult1, mult2)
+                
+                # Read the spin-traced TDM if the multiplicities are the same
+                #   and the spin-difference TDM otherwise
+                if mult1 == mult2:
+                    TRD_string = 'Active TRD1'
+                else:
+                    TRD_string = 'Active Spin TRD1'
+            elif 'Basis functions' in line:
                 nbas = int(rfile.next().split()[0])
                 assert(nbas == mos.ret_num_mo())
             elif 'Inactive orbitals' in line:
@@ -988,7 +1001,7 @@ class file_parser_rassi(file_parser_base):
                 jmo = ninact
             elif 'Active orbitals' in line:
                 nact = int(rfile.next().split()[0])
-            elif 'Active TRD1' in line:
+            elif TRD_string in line:
                 line = rfile.next()
                 trd1 = True
             elif trd1:
@@ -1004,8 +1017,11 @@ class file_parser_rassi(file_parser_base):
                         imo += 1
                         
                         if imo == ninact + nact:
-                            print "Finished parsing"
-                            break                                        
+                            #print "Finished parsing"
+                            trd1 = False
+                            break        
         rfile.close()
+        if trd1:
+            raise error_handler.MsgError('Parsing of RASSI output')
         if not sden:
             dens *= 2**(-.5)

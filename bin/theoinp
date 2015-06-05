@@ -256,8 +256,8 @@ class write_options_theo(input_options.write_options):
         print """
 It is assumed that you ran a RASSI job using the TRD1 option
     and copied the TRD2* files to a directory.
-Please choose, which files will be analyzed, e.g. only transitions
-    to the ground state.
+Please specify this directory and choose, which files will be analyzed,
+    e.g. only transitions to the ground state.
         """
         ddir = self.ret_str('Directory with the TRD2 files:', 'TRD')
         print "%s contains the following files:"%ddir
