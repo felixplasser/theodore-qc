@@ -37,7 +37,10 @@ class file_parser_cclib(file_parser.file_parser_base):
             
             state['state_ind'] = ist + 1
             state['exc_en'] = exc_en / units.energy['rcm'] * units.energy['eV']
-            state['osc_str'] = self.data.etoscs[ist]
+            try:
+                state['osc_str'] = self.data.etoscs[ist]
+            except AttributeError:
+                state['osc_str'] = -1.
             state['irrep'] = self.data.etsyms[ist]
             
             state['name'] = '%i%s'%(state['state_ind'],state['irrep'])
@@ -60,7 +63,7 @@ class file_parser_cclib(file_parser.file_parser_base):
             print "\nChecking if the logfile %s can be parsed by cclib ..."%self.ioptions['rfile']
             print "\nEssential attributes:"
             
-        for attr in ['mocoeffs', 'natom', 'homos', 'moenergies', 'etenergies', 'etoscs', 'etsyms', 'etsecs']:
+        for attr in ['mocoeffs', 'natom', 'homos', 'moenergies', 'etenergies', 'etsyms', 'etsecs']:
             chk = hasattr(self.data, attr)
             if not chk: errcode += 1
             
@@ -70,7 +73,7 @@ class file_parser_cclib(file_parser.file_parser_base):
         if lvprt >= 1:
             print "\nOptional attributes:"
             
-        for attr in ['aooverlaps', 'mosyms']:
+        for attr in ['etoscs', 'aooverlaps', 'mosyms']:
             chk = hasattr(self.data, attr)
             
             if lvprt >= 1:
