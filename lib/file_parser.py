@@ -1008,7 +1008,7 @@ class file_parser_rassi(file_parser_base):
                 #print imo, line[:-1]
                 for i in xrange(5):
                     val = float(line[i*18:(i+1)*18].replace('D','E'))
-                    dens[imo, jmo] = val
+                    dens[jmo, imo] = val
                     if 0.2 < abs(val) < 1.9999: print "(i,j)=(%2i,%2i), val=%6.3f"%(imo,jmo,val)
                     
                     jmo += 1
