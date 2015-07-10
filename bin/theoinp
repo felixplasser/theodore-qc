@@ -67,7 +67,7 @@ class write_options_theo(input_options.write_options):
             self['coor_file'] = 'geom'
             self['coor_format'] = 'col'
         elif self['rtype'] == 'rassi':
-            self['rfile'] = None
+            self['rfile'] = 'molcas.log'
             self['mo_file'] = 'molcas.rasscf.molden'
             self['coor_file'] = 'geom.xyz'
             self['coor_format'] = 'xyz'

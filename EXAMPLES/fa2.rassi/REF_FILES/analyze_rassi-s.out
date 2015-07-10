@@ -37,7 +37,6 @@ Reading TRD/TRD2_001_001 ...
 (i,j)=(13,13), val= 1.888
 (i,j)=(14,14), val= 1.999
 (i,j)=(15,15), val= 1.999
-Finished parsing
 Reading TRD/TRD2_002_002 ...
 (i,j)=(12,12), val= 1.915
 (i,j)=(13,13), val= 1.907
@@ -45,7 +44,6 @@ Reading TRD/TRD2_002_002 ...
 (i,j)=(15,15), val= 1.456
 (i,j)=(16,16), val= 0.642
 (i,j)=(17,17), val= 0.537
-Finished parsing
 Reading TRD/TRD2_003_003 ...
 (i,j)=(12,12), val= 1.914
 (i,j)=(13,13), val= 1.907
@@ -53,7 +51,6 @@ Reading TRD/TRD2_003_003 ...
 (i,j)=(15,15), val= 1.537
 (i,j)=(16,16), val= 0.636
 (i,j)=(17,17), val= 0.543
-Finished parsing
 A/D analysis for RASSI_2
 Computing A/D densities ...
 A/D analysis for RASSI_3
@@ -111,8 +108,8 @@ RASSI_3
 
 state       dE(eV)     f         p
 ----------------------------------
-RASSI_1      1.000     -         -
-RASSI_2      2.000     -  1.101184
-RASSI_3      3.000     -  1.101353
+RASSI_1      0.000     -         -
+RASSI_2      4.100     -  1.101184
+RASSI_3      4.112     -  1.101353
 
 Final output copied to sden_summ.txt.rassi

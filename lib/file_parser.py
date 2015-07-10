@@ -924,6 +924,8 @@ class file_parser_rassi(file_parser_base):
     def read(self, mos):
         state_list = []
         
+        (energies, oscs) = self.read_rassi_output(self.ioptions['rfile'])
+        
         if not os.path.exists('TRD'):
             errmsg= """Did not find the TRD directory!
     To run the job you have to:
@@ -943,7 +945,11 @@ class file_parser_rassi(file_parser_base):
                 state_list.append({})
                 
                 state_list[-1]['name'] = 'R%i.%i'%(st1, st2)
-                state_list[-1]['exc_en'] = float(st1 + st2)
+                state_list[-1]['exc_en'] = (energies[st1-1] - energies[st2-1]) * units.energy['eV']
+                try:
+                    state_list[-1]['osc_str'] = oscs[(st2, st1)]
+                except:
+                    print "No osc. strength found for transition %i -> %i"%(st2, st1)
                 state_list[-1]['tden'] = self.init_den(mos)
 
                 self.read_rassi_den(state_list[-1]['tden'], mos, lfile)
@@ -955,12 +961,48 @@ class file_parser_rassi(file_parser_base):
                 state_list.append({})
                 
                 state_list[-1]['name'] = 'RASSI_%i'%st1
-                state_list[-1]['exc_en'] = float(st1)
+                state_list[-1]['exc_en'] = (energies[st1-1] - energies[0]) * units.energy['eV']
                 state_list[-1]['sden'] = self.init_den(mos)
 
                 self.read_rassi_den(state_list[-1]['sden'], mos, lfile, sden=True)
         return state_list
     
+    def read_rassi_output(self, filen):
+        """
+        Read the standard output of RASSI.
+        """
+        energies = []
+        oscs = {}
+        
+        rfile = open(filen,'r')
+        
+        while(True):
+            line = rfile.next()
+            
+            if 'Total energies (spin-free)' in line:
+                words = rfile.next().split()
+                while(len(words) > 0):
+                    energies.append(float(words[-1]))
+                    words = rfile.next().split()
+            
+            if 'To  From     Osc. strength   Einstein coefficients' in line:
+                rfile.next()
+                rfile.next()
+                rfile.next()
+                words = rfile.next().split()
+                while(len(words) > 1):
+                    ist = int(words[0])
+                    jst = int(words[1])
+                    osc = float(words[2])
+                    oscs[(ist, jst)] = osc
+                    words = rfile.next().split()
+                break
+
+        
+        rfile.close()
+        
+        return energies, oscs
+        
     def read_rassi_den(self, dens, mos, filen, sden=False):
         """
         Read the output of RASSI generated with TRD1.
@@ -1025,3 +1067,5 @@ class file_parser_rassi(file_parser_base):
             raise error_handler.MsgError('Parsing of RASSI output')
         if not sden:
             dens *= 2**(-.5)
+            
+            

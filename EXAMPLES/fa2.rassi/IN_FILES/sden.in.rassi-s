@@ -1,4 +1,5 @@
 rtype='rassi'
+rfile='molcas.log'
 mo_file='molcas.rasscf.molden'
 pop_ana=True
 AD_ana=True
