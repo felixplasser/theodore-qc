@@ -612,7 +612,8 @@ class file_parser_qctddft(file_parser_base):
                     state_list[-1]['osc_str'] = float(words[-1])
                     
                 elif 'amplitude' in line:
-                    # ignore the Y vector. Which one would be the correct sign?
+                    # ignore the Y vector.
+                    #    Otherwise the Y would go into the virt-occ block!
                     if 'Y:' in line: continue
                     
                     awords = self.delete_chars(line, ['X:', 'Y:', 'D', 'V', '(', ')', '-->']).split()
