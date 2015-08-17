@@ -373,8 +373,7 @@ class file_parser_libwfa(file_parser_base):
             if suff!='om': continue
            
             (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile(os.path.join(basedir,omfile))
-            if typ == None:
-                continue
+            if typ == None: continue
 
             state_list.append({})
 
@@ -383,7 +382,7 @@ class file_parser_libwfa(file_parser_base):
             try:
                 multl, iirrep, ist = typ.split('_')
             except:
-                state_list[-1]['name'] = 'st'
+                state_list[-1]['name'] = typ
             else:
                 try:
                     state_list[-1]['irrep'] = self.ioptions.get('irrep_labels')[int(iirrep)]
@@ -424,8 +423,8 @@ class file_parser_libwfa(file_parser_base):
         line=rfile.readline()
         words=line.split()
         typ = words[0]
-        excen = float(words[1])
-        osc = float(words[2])
+        excen = float(words[1]) if len(words) >= 2 else  0.
+        osc   = float(words[2]) if len(words) >= 3 else -1.
 
         line=rfile.readline()
         words=line.split()
@@ -454,6 +453,27 @@ class file_parser_libwfa(file_parser_base):
                 print " All values read in"
             
         return typ, excen, osc, dima, dimb, outarr
+    
+    def parse_keys(self, state, exc_diff, exc_1TDM, line):
+        self.parse_key(state, 'dip', line, 'Total dipole')
+        self.parse_key(state, 'r2', line, 'Total <r^2>')
+        self.parse_key(state, 'nu', line, 'Number of unpaired electrons:', 2)
+        self.parse_key(state, 'nunl', line, 'Number of unpaired electrons')                
+        self.parse_key(state, 'p', line, 'Number of detached / attached electrons')
+        self.parse_key(state, 'PRNTO', line, 'PR_NTO')
+            
+        if exc_diff:
+            self.parse_key(state, 'sigD', line, 'Hole size')
+            self.parse_key(state, 'sigA', line, 'Electron size')
+            self.parse_key(state, 'dD-A', line, '|<r_e - r_h>|')
+
+        if exc_1TDM:
+            self.parse_key(state, 'dexc', line, 'RMS electron-hole separation')
+            self.parse_key(state, 'sigH', line, 'Hole size')
+            self.parse_key(state, 'sigE', line, 'Electron size')
+            self.parse_key(state, 'dH-E', line, '|<r_e - r_h>|')
+            self.parse_key(state, 'COV', line, 'Covariance(r_h, r_e) [Ang^2]')
+            self.parse_key(state, 'Corr', line, 'Correlation coefficient')    
     
 class file_parser_qcadc(file_parser_libwfa):
     """
@@ -509,8 +529,8 @@ class file_parser_qcadc(file_parser_libwfa):
                     raise error_handler.MsgError("Excitation energies do not match")
                     
             elif 'Exciton analysis of the difference density matrix' in line:
-                if len(state_list) > 0: exc_diff = True
                 exc_1TDM = False
+                if len(state_list) > 0: exc_diff = True
                 
             elif 'Exciton analysis of the transition density matrix' in line:
                 exc_diff = False
@@ -520,25 +540,7 @@ class file_parser_qcadc(file_parser_libwfa):
                 break
 
             if len(state_list) > 0:
-                self.parse_key(state_list[-1], 'dip', line, 'Total dipole')
-                self.parse_key(state_list[-1], 'r2', line, 'Total <r^2>')
-                self.parse_key(state_list[-1], 'nu', line, 'Number of unpaired electrons:', 2)
-                self.parse_key(state_list[-1], 'nunl', line, 'Number of unpaired electrons')                
-                self.parse_key(state_list[-1], 'p', line, 'Number of detached / attached electrons')
-                self.parse_key(state_list[-1], 'PRNTO', line, 'PR_NTO')
-                
-            if exc_diff:
-                self.parse_key(state_list[-1], 'sigD', line, 'Hole size')
-                self.parse_key(state_list[-1], 'sigA', line, 'Electron size')
-                self.parse_key(state_list[-1], 'dD-A', line, '|<r_e - r_h>|')
-
-            if exc_1TDM:
-                self.parse_key(state_list[-1], 'dexc', line, 'RMS electron-hole separation')
-                self.parse_key(state_list[-1], 'sigH', line, 'Hole size')
-                self.parse_key(state_list[-1], 'sigE', line, 'Electron size')
-                self.parse_key(state_list[-1], 'dH-E', line, '|<r_e - r_h>|')
-                self.parse_key(state_list[-1], 'COV', line, 'Covariance(r_h, r_e) [Ang^2]')
-                self.parse_key(state_list[-1], 'Corr', line, 'Correlation coefficient')                
+                self.parse_keys(state_list[-1], exc_diff, exc_1TDM, line)
         
         return state_list
 
@@ -574,12 +576,17 @@ class file_parser_qcadc(file_parser_libwfa):
         
         return omname
     
-class file_parser_qctddft(file_parser_base):
+class file_parser_qctddft(file_parser_libwfa):
     def read(self, mos):
         """
         Read the X vector from standard output. Y is discarded.
         """
         state_list = []
+        exc_diff = False
+        exc_1TDM = False
+        tdread = False
+        libwfa = False
+        istate = 1
         
         if self.ioptions.get('TDA'):
             ststr = 'TDDFT/TDA Excitation Energies'
@@ -588,7 +595,6 @@ class file_parser_qctddft(file_parser_base):
             
         print "Parsing %s for %s ..."%(self.ioptions.get('rfile'), ststr)
         
-        tdread = False
         for line in open(self.ioptions.get('rfile'), 'r'):
             if ststr in line:
                 tdread = True
@@ -596,6 +602,10 @@ class file_parser_qctddft(file_parser_base):
                 tdread = False
             elif 'Timing summary' in line:
                 tdread = False
+            elif 'Excited State Analysis' in line:
+                libwfa = True
+            elif 'SA-NTO Decomposition' in line:
+                libwfa = False
                     
             if tdread:                
                 words = line.replace(':','').split()
@@ -624,6 +634,19 @@ class file_parser_qctddft(file_parser_base):
                     coeff =  float(awords[4])
                     
                     state_list[-1]['tden'][iocc, ivirt] += coeff
+        
+            if libwfa:
+                if 'Excited state' in line:
+                    istate = int(line.split()[-1].replace(':',''))
+                elif 'Exciton analysis of the difference density matrix' in line:
+                    exc_1TDM = False
+                    exc_diff = True
+                    
+                elif 'Exciton analysis of the transition density matrix' in line:
+                    exc_diff = False
+                    exc_1TDM = True
+                    
+                self.parse_keys(state_list[istate-1], exc_diff, exc_1TDM, line)             
         
         return state_list
 

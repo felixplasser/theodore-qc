@@ -30,7 +30,7 @@ class write_options_theo(input_options.write_options):
             'Type of job',
             'rtype',
         [
-            ('qcadc', 'Q-Chem ADC'),
+            ('qcadc', 'Q-Chem ADC (libwfa output)'),
             ('libwfa', 'General libwfa output'),
             ('qctddft', 'Q-Chem TDDFT'),
             ('colmcscf', 'Columbus MCSCF'),
@@ -211,10 +211,10 @@ class write_options_theo(input_options.write_options):
             print "\nMolecular coordinates for exciton analysis:"
             self.coor_file()
             
-        if self['rtype'] == 'qcadc':
-            if self.ret_yn('Parse exciton information from ADCMAN job?', True):
+        if self['rtype'] in ('qcadc','qctddft'):
+            if self.ret_yn('Parse exciton information from libwfa analysis?', True):
                 self['prop_list'] += ['dH-E', 'dexc', 'sigH', 'sigE', 'COV', 'Corr']
-            if self.ret_yn('Parse 1DDM exciton information from ADCMAN job?', True):
+            if self.ret_yn('Parse 1DDM exciton information from libwfa analysis?', True):
                 self['prop_list'] += ['sigD', 'sigA']
 
     def AD_ana(self):

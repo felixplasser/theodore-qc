@@ -75,48 +75,23 @@ class mo_output_html(mo_output):
 class mo_output_tex(mo_output):
     """
     tex file for visualizing the MOs created with jmol.
-    -> This has to be adjusted if it should be used here!
     """
-    def __init__(self, moc, width=6., trim=[0.,0.,0.,0.]):
-        mo_output.__init__(self, moc)
-        self.outfile = open("%sorbitals.tex"%self.moc.ret_label(), "w")
-        
-        # take this out?
-        self.igraphstr="["
-        if not trim == [0.,0.,0.,0.]:
-            self.igraphstr += "trim = %.2fcm %.2fcm %.2fcm %.2fcm, clip=true,"%(trim[0],trim[1], trim[2], trim[3])
-        self.igraphstr += "width=%.2f cm]"%width
-
     def pre(self):
-        print "Writing tex file %sorbitals.tex ..."%self.moc.ret_label(),
-        
-        self.outfile.write("\\documentclass[a4paper]{article}\n")
-        self.outfile.write("\\usepackage[cm]{fullpage}\n\\usepackage{graphicx}\n\n")
-        self.outfile.write("% trim: left, bottom, right, top\n")
-        self.outfile.write("\\newcommand{\\incMO}{\\includegraphics[trim = 1.00cm 1.00cm 1.00cm 1.00cm, clip=true,width=6.00 cm]}\n\n")
-        self.outfile.write("\\begin{document}\n\n")
-        self.outfile.write("\\begin{figure}\n")
-        self.outfile.write("\\caption{%s}\n"%self.moc.mldfile)
-        self.outfile.write("\\begin{tabular}{c | c}\n")
-        
+        self.ltable = lib_file.latextable(ncol=2)
 
     def print_mos(self):
+        moex = []
         for imo in self.moc.molist:
-            self.outfile.write("\\incMO{%s}"%(self.moc.mopath(imo)))
-            # self.outfile.write("\\includegraphics%s{%s}"%(self.igraphstr, self.moc.mopath(imo)))
-            if imo%2==0: self.outfile.write("&\n")
-            else:
-                self.outfile.write("\\\\\n")
-                self.outfile.write(self.moc.mo_extra(imo-1,postf="&\n"))
-                self.outfile.write(self.moc.mo_extra(imo,postf="\\\\\n"))
-
-    def post(self):
-        self.outfile.write("\\end{tabular}\n\\end{figure}\n\n")
-        self.outfile.write("\\end{document}\n")
-        self.outfile.close()
-        
-        print "finished."
-
+            el = "\\incMO{%s}"%(self.moc.mopath(imo))
+            moex += [self.moc.mo_extra(imo)]
+            lastcol = self.ltable.add_el(el)
+            if lastcol:
+                self.ltable.add_row(moex)
+                moex = []
+            
+    def post(self, ofileh):
+        self.ltable.close_table()
+        ofileh.write(self.ltable.ret_table()) 
         
 class mocoll:
     def __init__(self, st_ind, en_ind, mldfile=""):
@@ -265,8 +240,10 @@ def run():
     
     jo = lib_file.wfile('%sjmol_orbitals.spt'%pref)
     ho = lib_file.htmlfile('%sorbitals.html'%pref)
+    lo = lib_file.latexfile('%sorbitals.tex'%pref)
     
     ho.pre('Orbitals')
+    lo.pre(None, graphicx=True)
     
     for mldfile in mldfiles:
         print 'Analyzing %s ...\n'%mldfile
@@ -284,11 +261,16 @@ def run():
         
         moh = mo_output_html(moc, jopt)
         moh.output(ho)
+        
+        mol = mo_output_tex(moc, jopt)
+        mol.output(lo)
             
     jo.post(lvprt=1)
     print "  -> Now simply run \"jmol %s\" to plot all the orbitals.\n"%jo.name
     ho.post(lvprt=1)
-    print "  -> View in browser."        
+    print "  -> View in browser."
+    lo.post(lvprt=1)
+    print "  -> Compile with pdflatex (or adjust first)."
 
 if __name__=='__main__':
     import sys

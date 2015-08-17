@@ -65,6 +65,9 @@ class wtable:
         
         self.icol += 1
         
+        # Return info if the last column is reached
+        return self.icol==self.ncol
+        
     def add_row(self, row_list):
         """
         Add a row at once.
@@ -126,10 +129,13 @@ class latexfile(wfile):
     """
     Write a file that can be interpreted by LaTeX.
     """
-    def pre(self, title):
+    def pre(self, title=None, graphicx=False):
         self.f.write("\\documentclass[a4paper]{article}\n")
+        if graphicx:
+            self.f.write("\\usepackage{graphicx}\n")
+            self.f.write("\\newcommand{\\incMO}{\\includegraphics[trim = 1.00cm 1.00cm 1.00cm 1.00cm, clip=true,width=6.00 cm]}\n\n")
         self.f.write("\\begin{document}\n")
-        self.f.write("%s\n"%title)
+        if not title==None: self.f.write("%s\n"%title)
         
     def post_extra(self):
         self.f.write("\\end{document}\n")
