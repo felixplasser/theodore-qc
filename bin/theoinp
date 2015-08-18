@@ -132,7 +132,7 @@ class write_options_theo(input_options.write_options):
         print "Fragment definition for CT nubmer analysis"
         aexpl = ['Manual input', 'Automatic generation from coordinate file (using python-openbabel)', \
                  'Leave empty and fill out later']
-        ichoice = self.ret_choose_list('Mode for specifying at_lists:', aexpl)
+        ichoice = self.ret_choose_list('Mode for specifying molecular fragments (at_lists):', aexpl)
         
         if ichoice==1:
             self['at_lists'] = self.read_at_lists()
@@ -158,7 +158,7 @@ class write_options_theo(input_options.write_options):
         atl_tmp = []
         
         for ifrag in xrange(1, 1000):
-            rstr = self.ret_str('Input indices for fragment %i:\n(separated by spaces)'%ifrag)
+            rstr = self.ret_str('Input the indices of the atoms belonging to fragment %i:\n(separated by spaces)'%ifrag)
             if rstr == '': break
             
             atl_tmp.append([int(iat) for iat in rstr.replace(',', ' ').split()])            
