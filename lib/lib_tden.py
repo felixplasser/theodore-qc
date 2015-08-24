@@ -245,7 +245,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         jmol_orbs = self.ioptions.get('jmol_orbitals')
         if jmol_orbs:
             jmolNTO = lib_mo.jmol_MOs("nto")
-            jmolNTO.pre(ofile=self.ioptions['mo_file'])
+            jmolNTO.pre(ofile=self.ioptions.get('mo_file', strict=False))
         
         for state in self.state_list:
             (U, lam, Vt) = self.ret_NTO(state)

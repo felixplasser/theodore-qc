@@ -13,19 +13,20 @@ class options:
         self.ifile = ifile        
 
     def __getitem__(self, option):
-        self.chk_option(option)
-            
-        if self.opt_dict[option] == None:
-            raise error_handler.MsgError('Option "%s" not defined in file %s!'%(option, self.ifile))
-        else:
-            return self.opt_dict[option]
+        return self.get(option, strict=True)
 
-    def get(self, option):
+
+    def get(self, option, strict=True):
         """
         Return the value of an option.
         """
-        return self.__getitem__(option)
-        
+        self.chk_option(option)
+            
+        if strict and self.opt_dict[option] == None:
+            raise error_handler.MsgError('Option "%s" not defined in file %s!'%(option, self.ifile))
+        else:
+            return self.opt_dict[option]
+                
     def __setitem__(self, key, val):
         self.opt_dict[key] = val
         

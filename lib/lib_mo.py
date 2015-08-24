@@ -40,7 +40,13 @@ class MO_set:
         elif len(self.mo_mat) == len(self.mo_mat[0]):
             if lvprt >= 1:
                 print " ... inverting C"
-            self.inv_mo_mat = numpy.linalg.inv(self.mo_mat)
+            try:
+                self.inv_mo_mat = numpy.linalg.inv(self.mo_mat)
+            except:
+                if lvprt >= 1:
+                    print " WARNING: inversion failed."
+                    print '  Using the Moore-Penrose pseudo inverse instead.'
+                self.inv_mo_mat = numpy.linalg.pinv(self.mo_mat)
         else:
             if lvprt >= 1:
                 print 'MO-matrix not square: %i x %i'%(len(self.mo_mat),len(self.mo_mat[0]))

@@ -8,6 +8,11 @@ echo "  available modules: standard, all, cclib"
 echo "Starting theo_test.bash"
 echo "THEODIR=$THEODIR"
 
+if [ -z "$THEODIR" ]; then
+   echo "ERROR: Please set the THEODIR environment variable!"
+   exit 1
+fi
+
 stddirs="pyrrole.qcadc hexatriene.colmrci fa2.ricc2 pv2p.escf pv2p.qctddft ir_c3n3.qctddft pyridine.ricc2 fa2.col fa2.rassi"
 cclibdirs="fa2.cclib"
 
