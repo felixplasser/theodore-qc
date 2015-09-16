@@ -266,7 +266,10 @@ def run():
         mol.output(lo)
             
     jo.post(lvprt=1)
-    print "  -> Now simply run \"jmol %s\" to plot all the orbitals.\n"%jo.name
+    if mldfiles == [""]:
+        print "  -> Open the Molden-file in jmol and execute the commands contained in this file."
+    else:
+        print "  -> Now simply run \"jmol -n %s\" to plot all the orbitals.\n"%jo.name
     ho.post(lvprt=1)
     print "  -> View in browser."
     lo.post(lvprt=1)
