@@ -1,0 +1,17 @@
+Download the newest version of TheoDORE here.
+
+Release notes:
+
+TheoDORE 1.1.2
+- Inclusion of MOLCAS rassi calculations
+- Some adjustments for Q-Chem 4.3
+- Fix for FIREFLY ECP computations
+
+TheoDORE 1.1.1
+- Improved output and graphics
+
+TheoDORE 1.1
+- Inclusion of cclib for enhanced parsing capabilities
+
+TheoDORE 1.0
+- First release
