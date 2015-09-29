@@ -1,0 +1,4 @@
+This is an SnH4 test job with FIREFLY created by Dr. Siddheshwar Chopra
+
+The crucial point is that there is a mismatch in the dimensions of the
+   MO-coefficient and density matrices.

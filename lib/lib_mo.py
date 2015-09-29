@@ -111,28 +111,31 @@ class MO_set:
         """
         Left-multiplication of matrix D with the MO-coefficients.
         Optionally, D can be a rectangular matrix of dimension occ x (occ + virt).
-        """
+        """       
         if self.ret_num_mo() == len(D):
             return numpy.dot(self.ret_mo_mat(trnsp, inv), D)
         
-        if not trnsp and not inv:
-            if self.ret_num_mo() > len(D):
+        # Handling of special cases
+        elif self.ret_num_mo() > len(D):
+            if not trnsp and not inv:
                 # take only the occ. subblock
                 Csub = self.mo_mat.transpose()[:len(D)]
                 return numpy.dot(Csub.transpose(), D)
-            else:
-                raise error_handler.ElseError('C < D', 'MO matrix')
-            
-        elif trnsp and inv:
-            if self.ret_num_mo() > len(D):
+            elif trnsp and inv:
                 # take only the occ. subblock
                 Csub = self.inv_mo_mat[:len(D)]
-                return numpy.dot(Csub.transpose(), D)
+                return numpy.dot(Csub.transpose(), D)            
             else:
-                raise error_handler.ElseError('C < D', 'MO matrix')
+                raise error_handler.ElseError('"transpose xor inverse"', 'CdotD')
             
-        else:
-            raise error_handler.ElseError('"transpose xor inverse"', 'CdotD')
+        elif self.ret_num_mo() < len(D):
+                print "\n WARNING: C/D mismatch"
+                print " C: %i x %i"%(self.ret_num_mo(), self.ret_num_bas())
+                print " D: %i x %i"%(len(D), len(D[0]))
+#                raise error_handler.ElseError('C < D', 'MO matrix')
+
+                Dsub = D[:self.ret_num_mo()]
+                return numpy.dot(self.ret_mo_mat(trnsp, inv), Dsub)
     
     def export_MO(self, ens, occs, U, *args, **kwargs):
         """

@@ -1,0 +1,1253 @@
+                  Grand Master is running on host MATRIX
+                  rank #     1 is running on host MATRIX
+
+          ******************************************************
+          *      Firefly version 8.1.0, build number 9035      *
+          *   Compiled on    Wednesday, 20-08-2014, 22:54:52   *
+          *Code development and Intel/AMD specific optimization*
+          *  Copyright (c) 1994, 2014 by  Alex A. Granovsky,   *
+          *          Firefly Project, Moscow, Russia.          *
+          *   Some parts of this program include code due to   *
+          * work of Jim Kress, Peter Burger, and Robert Ponec. *
+          ******************************************************
+          *             Firefly Project homepage:              *
+          * http://classic.chem.msu.su/gran/firefly/index.html *
+          *                      e-mail:                       *
+          *               gran@classic.chem.msu.su             *
+          *This program is not a free software and is provided *
+          *exclusively to its registered users under the terms *
+          *       of Firefly package license agreement         *
+          * Unauthorized use of Firefly is strongly prohibited *
+          *   This program may not be redistributed without    *
+          * the specific, written permission of its developers.*
+          ******************************************************
+
+          ******************************************************
+          *  PARTIALLY BASED ON  US GAMESS VERSION 6 JUN 1999, *
+          *   US GAMESS VERSIONS  6 SEP 2001 AND 12 DEC 2003   *
+          *             FROM IOWA STATE UNIVERSITY             *
+          * M.W.SCHMIDT, K.K.BALDRIDGE, J.A.BOATZ, S.T.ELBERT, *
+          *   M.S.GORDON, J.H.JENSEN, S.KOSEKI, N.MATSUNAGA,   *
+          *          K.A.NGUYEN, S.J.SU, T.L.WINDUS,           *
+          *       TOGETHER WITH M.DUPUIS, J.A.MONTGOMERY       *
+          *         J.COMPUT.CHEM.  14, 1347-1363(1993)        *
+          ******************************************************
+
+
+ Core i7    / Win32  Firefly version running under Windows NT
+ Running on Intel CPU:  Brand ID  0, Family  6, Model  69, Stepping  1
+ CPU Brand String    :  Intel(R) Core(TM) i3-4030U CPU @ 1.90GHz        
+ CPU Features        :  CMOV, MMX, SSE, SSE2, SSE3, SSSE3, SSE4.1, SSE4.2, AVX, AVX2, FMA3, HTT, MWAIT, EM64T
+ Data cache size     :  L1 32 KB, L2  256 KB, L3  3072 KB
+ max    # of   cores/package :   8
+ max    # of threads/package :  16
+ max     cache sharing level :  16
+ actual # of   cores/package :   2
+ actual # of threads/package :   4
+ actual # of threads/core    :   2
+ Operating System successfully passed SSE support test.
+ Operating System supports AVX/FMA.
+
+
+ PARALLEL VERSION (UNIFIED) RUNNING USING    2 PROCESSES (NODES)
+
+ EXECUTION OF FIREFLY BEGUN 13:28:08 27-SEP-2015    
+
+            ECHO OF THE FIRST FEW INPUT CARDS -
+ INPUT CARD> $SYSTEM MEMORY=4459319 aoints=dist TIMLIM=5295600 KDIAG=-1 $END                
+ INPUT CARD> $CONTRL INTTYP=HONDO ICUT=11 ITOL=30 CITYP=TDDFT $END                          
+ INPUT CARD> $CONTRL DFTTYP=B3LYP COORD=UNIQUE NZVAR=3 GENCON=.t. ECP=SBKJC $END            
+ INPUT CARD> $CONTRL MAXIT=10000 MOLPLT=.t. PLTORB=.t. FSTINT=.T. DFTD=.t. $END             
+ INPUT CARD> !$CONTRL EXETYP=CHECK $END                                                     
+ INPUT CARD> $BASIS GBASIS=SBKJC $END                                                       
+ INPUT CARD> $STATPT opttol=10E-7 NSTEP=200 Method=GDIIS $END                               
+ INPUT CARD> $SMP HTTFIX=.f. $END                                                           
+ INPUT CARD> $p2p p2p=.t. mxbuf=2048 dlb=.t. $END                                           
+ INPUT CARD> $SCF dirscf=.t. fdiff= .f. diis=.t. $END                                       
+ INPUT CARD> $DFT TDPRP=.t. LMAX=41 NRAD=99 $end                                            
+ INPUT CARD> $ZMAT DLC=.t. AUTO=.t. $END                                                    
+ INPUT CARD> $DFTD VERSN=4 $END                                                             
+ INPUT CARD> $SCF NCONV=7 $END                                                              
+ INPUT CARD> $TDDFT NSTATE=5 ISTATE=-1 ISTSYM=0 TDA=.t. $END                                
+ INPUT CARD> $DATA                                                                          
+ INPUT CARD>SnH4                                                                            
+ INPUT CARD>C1                                                                              
+ INPUT CARD>Sn    50.0     0.23817    -0.32557    -0.92440                                  
+ INPUT CARD>H     1.0     1.56609    -1.01581    -1.83300                                   
+ INPUT CARD>H     1.0    -0.40051    -1.52591     0.17860                                   
+ INPUT CARD>H     1.0     0.80962     1.05718    -0.01511                                   
+ INPUT CARD>H     1.0    -1.02250     0.18226    -2.02810                                   
+ INPUT CARD> $END                                                                           
+    4459319 WORDS OF MEMORY AVAILABLE
+
+ This job is executing on     1 unique host(s)
+ Minimum number of processes per host is:    2
+ Maximum number of processes per host is:    2
+
+ On master's host, detected    4 CPU core(s) in aggregate
+
+ Using processor-specific dynamic link DGEMM library code.
+
+
+ Creating thread pool to serve up to            128 threads.
+
+
+ Loading P2P interface library... loaded successfully (version 2.0).
+ Initializing global P2P interface... topology done.
+
+
+     BASIS OPTIONS
+     -------------
+     GBASIS=SBKJC        IGAUSS=       0      POLAR=NONE    
+     NDFUNC=       0     NFFUNC=       0     DIFFSP=       F
+     NPFUNC=       0      DIFFS=       F
+
+
+     RUN TITLE
+     ---------
+ SnH4                                                                            
+
+ THE POINT GROUP OF THE MOLECULE IS C1      
+ THE ORDER OF THE PRINCIPAL AXIS IS     0
+
+ ATOM      ATOMIC                      COORDINATES (BOHR)
+           CHARGE         X                   Y                   Z
+ SN         50.0     0.4500760385       -0.6152380898       -1.7468627031
+ H           1.0     2.9594809721       -1.9196025556       -3.4638677355
+ H           1.0    -0.7568541553       -2.8835517819        0.3375050614
+ H           1.0     1.5299599542        1.9977805197       -0.0285537597
+ H           1.0    -1.9322448224        0.3444214585       -3.8325532757
+
+          INTERNUCLEAR DISTANCES (ANGS.)
+          ------------------------------
+
+                    SN             H              H              H         
+
+  1  SN              0.0000000      1.7508160 *    1.7508105 *    1.7508172 *  
+  2  H               1.7508160 *    0.0000000      2.8590649 *    2.8590660 *  
+  3  H               1.7508105 *    2.8590649 *    0.0000000      2.8590719 *  
+  4  H               1.7508172 *    2.8590660 *    2.8590719 *    0.0000000    
+  5  H               1.7508095 *    2.8590617 *    2.8590630 *    2.8590693 *  
+
+                    H         
+
+  1  SN              1.7508095 *  
+  2  H               2.8590617 *  
+  3  H               2.8590630 *  
+  4  H               2.8590693 *  
+  5  H               0.0000000    
+
+  * ... LESS THAN  3.000
+
+
+     ATOMIC BASIS SET
+     ----------------
+ THE CONTRACTED PRIMITIVE FUNCTIONS HAVE BEEN UNNORMALIZED
+ THE CONTRACTED BASIS FUNCTIONS ARE NOW NORMALIZED TO UNITY
+
+ SHELL TYPE PRIM    EXPONENT          CONTRACTION COEFFICIENTS
+
+ SN        
+
+   1   L    1       2.604000    0.045351 (  0.031042)    -0.023825 ( -0.005053) 
+   1   L    2       0.753200   -0.352569 ( -0.611859)    -0.180132 ( -0.180100) 
+   1   L    3       0.319100    0.165869 (  0.548163)     0.126512 (  0.370068) 
+   1   L    4       0.123900    0.126386 (  0.849150)     0.081868 (  0.781334) 
+
+   2   L    5       0.047980    0.073064 (  1.000000)     0.032009 (  1.000000) 
+
+ H         
+
+   3   S    6      13.007734    0.163507 (  0.033495) 
+   3   S    7       1.962079    0.277339 (  0.234727) 
+   3   S    8       0.444529    0.315740 (  0.813757) 
+
+   4   S    9       0.121949    0.147077 (  1.000000) 
+
+ H         
+
+   5   S   10      13.007734    0.163507 (  0.033495) 
+   5   S   11       1.962079    0.277339 (  0.234727) 
+   5   S   12       0.444529    0.315740 (  0.813757) 
+
+   6   S   13       0.121949    0.147077 (  1.000000) 
+
+ H         
+
+   7   S   14      13.007734    0.163507 (  0.033495) 
+   7   S   15       1.962079    0.277339 (  0.234727) 
+   7   S   16       0.444529    0.315740 (  0.813757) 
+
+   8   S   17       0.121949    0.147077 (  1.000000) 
+
+ H         
+
+   9   S   18      13.007734    0.163507 (  0.033495) 
+   9   S   19       1.962079    0.277339 (  0.234727) 
+   9   S   20       0.444529    0.315740 (  0.813757) 
+
+  10   S   21       0.121949    0.147077 (  1.000000) 
+
+ TOTAL NUMBER OF SHELLS              =   10
+ TOTAL NUMBER OF BASIS FUNCTIONS     =   16
+ NUMBER OF ELECTRONS                 =   54
+ CHARGE OF MOLECULE                  =    0
+ STATE MULTIPLICITY                  =    1
+ NUMBER OF OCCUPIED ORBITALS (ALPHA) =   27
+ NUMBER OF OCCUPIED ORBITALS (BETA ) =   27
+ TOTAL NUMBER OF ATOMS               =    5
+ THE NUCLEAR REPULSION ENERGY IS       61.5598312699
+
+     $CONTRL OPTIONS
+     ---------------
+     SCFTYP=RHF          RUNTYP=ENERGY       EXETYP=RUN     
+     MPLEVL=       0     LOCAL =NONE         UNITS =ANGS    
+     MULT  =       1     ICHARG=       0     MAXIT =   10000
+     NPRINT=       7     IREST =       0     COORD =UNIQUE  
+     ECP   =SBKJC        NORMF =       0     NORMP =       0
+     ITOL  =      30     ICUT  =      11     NZVAR =       3
+     NOSYM =       0     INTTYP=HONDO        GEOM  =INPUT   
+     PLTORB=       T     MOLPLT=       T     RPAC  =       F
+     AIMPAC=       0     FRIEND=             CITYP =TDDFT   
+     DFTTYP=B3LYP   
+
+     $SYSTEM OPTIONS
+     ---------------
+     KDIAG =      -1     MEMORY=  4459319     TIMLIM=317736000.0 SEC.
+     COREFL=       F     PTIME =        F     XDR   =       F
+     BALTYP=NXTVAL       CBASE = 00401000     FBASE = 63D01030
+
+          --------------
+          ECP POTENTIALS
+          --------------
+
+ PARAMETERS FOR "SBKJC-50" ON ATOM    1 WITH ZCORE  46 AND LMAX  3 ARE
+ FOR L= 3      COEFF    N           ZETA
+    1       -5.60682    1        0.82050
+ FOR L= 0      COEFF    N           ZETA
+    1        7.18487    0        2.60504
+    2      -73.06581    2        0.95780
+    3       91.84771    2        1.01356
+ FOR L= 1      COEFF    N           ZETA
+    1        5.07311    0        0.67947
+    2      -87.03674    2        0.74276
+    3       95.37048    2        0.76292
+ FOR L= 2      COEFF    N           ZETA
+    1        5.10243    0        1.65430
+    2        5.27466    2        0.60301
+
+ THE ECP RUN REMOVES   46 CORE ELECTRONS, AND THE SAME NUMBER OF PROTONS.
+ THE ADJUSTED NUCLEAR REPULSION ENERGY=        5.9464692012
+          ECP ANGULAR INTS.........     0.00 SECONDS
+
+          ----------------
+          PROPERTIES INPUT
+          ----------------
+
+     MOMENTS            FIELD           POTENTIAL          DENSITY
+ IEMOM =       1   IEFLD =       0   IEPOT =       0   IEDEN =       0
+ WHERE =COMASS     WHERE =NUCLEI     WHERE =NUCLEI     WHERE =NUCLEI  
+ OUTPUT=BOTH       OUTPUT=BOTH       OUTPUT=BOTH       OUTPUT=BOTH    
+ IEMINT=       0   IEFINT=       0                     IEDINT=       0
+                                                       MORB  =       0
+
+
+          ----------------   ------------------------------------
+          DFT CODE OPTIONS   PROGRAM WRITTEN BY ALEX A. GRANOVSKY
+          ----------------   ------------------------------------
+          NRAD   =   99      LMAX   =  41 ( 590 POINTS PER SHELL)
+          ANGPRN =    T      RADPRN =   T
+          KAP    =   5.000   LMIN   =   5 (  14 POINTS PER SHELL)
+          CUTOFF = 1.0E-10   CUTAO  = 1.0E-10
+          CUTWGT = 1.0E-20   CUTORB = 1.0E-15
+          CUTGG1 = 1.0E-13   CUTGG2 = 1.0E-13
+          CUTGG3 = 1.0E-13   CUTGG4 = 1.0E-30
+          B3LYP  =  NWCHEM   O3LYP  = DEFAULT 
+          HFX    =  2.0000000000000000000E-01
+          CPT2   =  0.0000000000000000000E+00
+          SCS(S) =  1.0000000000000000000E+00
+          SCS(T) =  1.0000000000000000000E+00
+
+
+
+          EXTRAPOLATION IN EFFECT
+          DAMPING IN EFFECT
+          LEVEL SHIFTING IN EFFECT
+          DIIS IN EFFECT
+
+          ----------------------
+          INTEGRAL INPUT OPTIONS
+          ----------------------
+ NOPK  =       1 NORDER=       0 SCHWRZ=       T
+
+ ATTENTION! AO INTEGRALS WILL BE PACKED.
+ THRESHOLD FOR PACKING PKTHR =  0.10000000D-03
+
+     -------------------------------
+     INTEGRAL TRANSFORMATION OPTIONS
+     -------------------------------
+     NWORD  =       0     CUTTRF = 1.0E-09
+     MPTRAN =       0     DIRTRF =       T
+     AOINTS =DIST         IREST  =       0
+
+     ---------------------------------
+     TDDFT PROGRAM CONTROL INFORMATION
+     ---------------------------------
+     NACORE =        0  NBCORE   =        0
+     NSTATE =        5  ISTATE   =        1
+     MULT   =        1  DIAGZN   =    DAVID
+     MXVEC  =       40  NDAVIT   =       50
+     DAVCVG = 1.00E-05  TDPRP    =        T
+     NGSVEC =       10  TDA      =        T
+     MNMEOP =        F  CHFSLV   =    DIIS 
+     RDTDVC =        F  ISTSYM   =        0
+
+     NUMBER OF CORE -A-  ORBITALS =     0
+     NUMBER OF CORE -B-  ORBITALS =     0
+     NUMBER OF OCC. -A-  ORBITALS =     4
+     NUMBER OF OCC. -B-  ORBITALS =     4
+     NUMBER OF MOLECULAR ORBITALS =    16
+     NUMBER OF   BASIS  FUNCTIONS =    16
+
+
+
+ Loading Firefly/DFT-D extension... loaded successfully (version  1.0001).
+
+ Firefly/DFT-D extension capabilities:
+ Minimum supported DFT-D version is   2
+ Maximum supported DFT-D version is   4
+ For DFT-D version   2, max supported atomic no. is  86
+ For DFT-D version   3, max supported atomic no. is  94
+ For DFT-D version   4, max supported atomic no. is  94
+
+ Using DFT-D version  4
+ Cite DFT-D3 as:
+ S. Grimme, J. Antony, S. Ehrlich and H. Krieg,
+ J. Chem. Phys. 132 (2010), 154104
+ Cite BJ-damping in DFT-D3 as:
+ S. Grimme, S. Ehrlich and L. Goerigk,
+ J. Comput. Chem. 32 (2011), 1456-1465
+
+ Initializing DFT-D extension... initialized successfully!
+
+     ---------------------------------------------
+         Parameters controlling DFT-D run are:
+     ---------------------------------------------
+     VERSN =             4   S6    = 1.0000000E+00
+     RS6   = 3.9810000E-01   S18   = 1.9889000E+00
+     RS18  = 4.4211000E+00   ALP   = 1.4000000E+01
+     K1    = 1.6000000E+01   K2    = 1.3333333E+00
+     K3    =-4.0000000E+00   RTHR  = 2.0000000E+04
+     RTHR2 = 1.6000000E+03   NUMGRD=             F
+     ABC   =             F   TZ    =             F
+
+ Dispersion correction to total energy =        -0.003610879125636223
+ Redefined  nuclear  repulsion  energy =        61.556220390801170000
+
+
+
+
+ -----------------------------------------------
+  STATISTICS ON AUTOMATIC COORDINATE GENERATION 
+ -----------------------------------------------
+  NUMBER OF USER SPECIFIED  BONDS                   0
+  NUMBER OF AUTOGENERATED H-BONDS                   0
+  NUMBER OF BONDS                                   4
+  NUMBER OF ANGLES KEPT                             6
+  NUMBER OF ANGLES DELETED                          0
+  NUMBER OF TORSIONS KEPT                           0
+  NUMBER OF TORSIONS DELETED                        0
+  NUMBER OF OUT OF PLANE BENDS KEPT                 0
+  NUMBER OF OUT OF PLANE BENDS DELETED              0
+  NUMBER OF GENERATED PSEUDOBONDS                   0
+  NUMBER OF EXTRA COORD.                            0
+  NUMBER OF EXTRA COORD. FOR CONSTRAINTS            0
+  NUMBER OF CONSTRAINED COORD.                      0
+
+  TOTAL NUMBER OF PRIMITIVES                       10
+ -----------------------------------------------
+
+   --- ENCODED Z MATRIX ---
+ COORD    TYPE     I    J    K    L    M    N
+     1       1     1    2
+     2       1     1    3
+     3       1     1    4
+     4       1     1    5
+     5       2     2    1    3
+     6       2     2    1    4
+     7       2     2    1    5
+     8       2     3    1    4
+     9       2     3    1    5
+    10       2     4    1    5
+
+          INDEP./SYM. INTERNAL COORDINATES
+          --------------------------------
+ CRD    1=   0.5148 (    5) -0.4837 (    7) -0.4837 (    8)  0.5148 (   10)
+ CRD    2=   0.2613 (    5) -0.5765 (    6)  0.3152 (    7)  0.3152 (    8) -0.5765 (    9)
+           0.2613 (   10)
+ CRD    3=   0.3088 (    1) -0.1038 (    2) -0.1856 (    4)  0.3578 (    5)  0.5053 (    6)
+           0.2150 (    7) -0.2150 (    8) -0.5053 (    9) -0.3578 (   10)
+ CRD    4=  -0.1961 (    2) -0.1554 (    3)  0.2668 (    4) -0.1944 (    5) -0.1234 (    6)
+           0.6136 (    7) -0.6136 (    8)  0.1234 (    9)  0.1944 (   10)
+ CRD    5=  -0.2377 (    2)  0.2849 (    3) -0.5136 (    5)  0.3987 (    6) -0.3987 (    9)
+           0.5136 (   10)
+ CRD    6=  -0.5000 (    1) -0.5000 (    2) -0.5000 (    3) -0.5000 (    4)
+ CRD    7=   0.7911 (    1) -0.1476 (    2) -0.3682 (    3) -0.2753 (    4) -0.1843 (    5)
+          -0.1211 (    6) -0.1477 (    7)  0.1477 (    8)  0.1211 (    9)  0.1843 (   10)
+ CRD    8=  -0.4430 (    2) -0.3268 (    3)  0.7452 (    4)  0.1199 (    5) -0.2205 (    7)
+           0.2205 (    8) -0.1199 (   10)
+ CRD    9=  -0.1334 (    1)  0.6529 (    2) -0.6340 (    3)  0.1145 (    4) -0.1488 (    5)
+           0.2198 (    6) -0.2198 (    9)  0.1488 (   10)
+
+ THE DETERMINANT OF THE G MATRIX IS 10**(    -4)
+
+
+                     --------------------
+                     INTERNAL COORDINATES
+                     --------------------
+
+                          - - ATOMS - -              COORDINATE      COORDINATE
+ NO.     TYPE      I    J    K    L    M    N        (BOHR,RAD)       (ANG,DEG)
+ ------------------------------------------------------------------------------
+     1 STRETCH     1    2                           3.3085625       1.7508160
+     2 STRETCH     1    3                           3.3085520       1.7508105
+     3 STRETCH     1    4                           3.3085648       1.7508172
+     4 STRETCH     1    5                           3.3085502       1.7508095
+     5 BEND        2    1    3                      1.9106321     109.4711558
+     6 BEND        2    1    4                      1.9106277     109.4709051
+     7 BEND        2    1    5                      1.9106297     109.4710204
+     8 BEND        3    1    4                      1.9106381     109.4714965
+     9 BEND        3    1    5                      1.9106355     109.4713501
+    10 BEND        4    1    5                      1.9106363     109.4713959
+
+     ------------------------------------------
+     THE POINT GROUP IS C1 , NAXIS= 0, ORDER= 1
+     ------------------------------------------
+
+     DIMENSIONS OF THE SYMMETRY SUBSPACES ARE
+ A   =  16
+
+ ..... DONE SETTING UP THE RUN .....
+
+                         TIMING STATISTICS ON NODE 0:
+ CPU        TIME:   STEP =      0.09 ,  TOTAL =        0.1 SECONDS (    0.0 MIN)
+ WALL CLOCK TIME:   STEP =      0.08 ,  TOTAL =        0.1 SECONDS (    0.0 MIN)
+ CPU UTILIZATION:   STEP =    111.66%,  TOTAL =     130.26%
+
+          ********************
+          1 ELECTRON INTEGRALS
+          ********************
+ TIME TO DO ORDINARY INTEGRALS=      0.00
+ TIME TO DO      ECP INTEGRALS=      0.00
+ ...... END OF ONE-ELECTRON INTEGRALS ......
+
+                         TIMING STATISTICS ON NODE 0:
+ CPU        TIME:   STEP =      0.00 ,  TOTAL =        0.1 SECONDS (    0.0 MIN)
+ WALL CLOCK TIME:   STEP =      0.00 ,  TOTAL =        0.1 SECONDS (    0.0 MIN)
+ CPU UTILIZATION:   STEP =      0.00%,  TOTAL =     125.67%
+
+          -------------
+          GUESS OPTIONS
+          -------------
+          GUESS =HUCKEL            NORB  =       0          NORDER=       0
+          MIX   =       F          PRTMO =       F          SYMDEN=       F
+          TOLZ  = 0.0E+00          TOLE  = 0.0E+00
+
+ INITIAL GUESS ORBITALS GENERATED BY HUCKEL   ROUTINE.
+ HUCKEL GUESS REQUIRES      5192 WORDS.
+
+ CONDITION NUMBER OF OVERLAP MATRIX IS:  2.02345134E+00
+
+ SYMMETRIES FOR INITIAL GUESS ORBITALS FOLLOW.   BOTH SET(S).
+     4 ORBITALS ARE OCCUPIED (    0 CORE ORBITALS).
+     1=A        2=A        3=A        4=A        5=A        6=A        7=A   
+     8=A        9=A       10=A       11=A       12=A       13=A       14=A   
+ ...... END OF INITIAL ORBITAL SELECTION ......
+
+                         TIMING STATISTICS ON NODE 0:
+ CPU        TIME:   STEP =      0.00 ,  TOTAL =        0.1 SECONDS (    0.0 MIN)
+ WALL CLOCK TIME:   STEP =      0.00 ,  TOTAL =        0.1 SECONDS (    0.0 MIN)
+ CPU UTILIZATION:   STEP =      0.00%,  TOTAL =     122.59%
+
+          --------------------
+          2 ELECTRON INTEGRALS
+          --------------------
+
+ DIRECT SCF METHOD SKIPS INTEGRAL STORAGE ON DISK.
+ DIRECT TRANSFORMATION SKIPS AO INTEGRAL STORAGE ON DISK.
+ SCHWARZ INEQUALITY OVERHEAD:       113 INTEGRALS, CPU TIME=        0.00
+ ...... END OF TWO-ELECTRON INTEGRALS .....
+
+                         TIMING STATISTICS ON NODE 0:
+ CPU        TIME:   STEP =      0.00 ,  TOTAL =        0.1 SECONDS (    0.0 MIN)
+ WALL CLOCK TIME:   STEP =      0.00 ,  TOTAL =        0.1 SECONDS (    0.0 MIN)
+ CPU UTILIZATION:   STEP =      0.00%,  TOTAL =     121.69%
+
+   -- DFT-D DISPERSION CORRECTION      -- =      -0.003610879126
+
+          --------------------------
+          R-B3LYP    SCF CALCULATION
+          --------------------------
+
+     NUCLEAR ENERGY =         5.9428583221
+     MAXIT =10000     NPUNCH=    2
+     EXTRAP=T  DAMP=T  SHIFT=T  RSTRCT=F  DIIS=T  DEM=F  SOSCF=F
+     DENSITY CONV=  2.00E-07
+     MEMORY REQUIRED FOR SCF STEP=    145997 WORDS.
+
+ XC FUNCTIONAL: SLATER + BECKE 88 + HF EXCHANGE, LYP 88 + VWN 1 RPA CORRELATION 
+
+
+ DIRECT SCF CALCULATION, SCHWRZ=T   FDIFF=F
+ SCHWARZ INEQUALITY OVERHEAD:       136 INTEGRALS, CPU TIME=        0.00
+
+                                                                              NONZERO    BLOCKS
+ ITER EX DEM  TOTAL ENERGY      E CHANGE  DENSITY CHANGE    DIIS ERROR      INTEGRALS   SKIPPED
+          * * *   INITIATING DIIS PROCEDURE   * * *
+   1  0  0    -5.685510795    -5.685510795   0.650580126   0.254212586           9961        24
+   2  1  0    -5.759501110    -0.073990315   0.085707735   0.050596963           9961        24
+   3  2  0    -5.770433594    -0.010932485   0.040310924   0.015342349           9961        24
+   4  3  0    -5.771709956    -0.001276362   0.000222882   0.000155980           9961        24
+   5  4  0    -5.771710012    -0.000000056   0.000012411   0.000005575           9961        24
+   6  5  0    -5.771710012     0.000000000   0.000000935   0.000000430           9961        24
+   7  6  0    -5.771710012     0.000000000   0.000000056   0.000000034           9961        24
+   8  7  0    -5.771710012     0.000000000   0.000000019   0.000000018           9961        24
+
+          -----------------
+          DENSITY CONVERGED
+          -----------------
+     TIME TO FORM FOCK OPERATORS =       1.40 SECONDS (       0.18 SEC/ITER)
+     OF THE ABOVE TIME, DFT PART =       1.31 SECONDS (       0.16 SEC/ITER)
+     FOCK TIME ON FIRST ITERATION=       0.23, LAST ITERATION=       0.16
+     TIME TO SOLVE SCF EQUATIONS =       0.00 SECONDS (       0.00 SEC/ITER)
+
+ FINAL ENERGY IS       -5.7717100120 AFTER   8 ITERATIONS
+ DFT EXCHANGE + CORRELATION ENERGY IS       -1.9267825131
+ INTEGRATED TOTAL ELECTRON NUMBER  IS        8.0000000653
+
+
+          ------------
+          EIGENVECTORS
+          ------------
+
+                      1          2          3          4          5
+                   -0.5215    -0.3316    -0.3316    -0.3316     0.0241
+                     A          A          A          A          A   
+    1  SN  1  S  -0.706118   0.000000   0.000002   0.000000   0.000012
+    2  SN  1  X   0.000001   0.047908   0.366207  -0.209599  -0.273864
+    3  SN  1  Y   0.000001  -0.272259   0.187986   0.266216   0.320965
+    4  SN  1  Z   0.000000   0.322358   0.104346   0.255992   0.297105
+    5  SN  1  S  -0.046097   0.000000   0.000001  -0.000001   0.000030
+    6  SN  1  X   0.000000   0.001293   0.009882  -0.005656  -0.613973
+    7  SN  1  Y   0.000000  -0.007347   0.005073   0.007184   0.719565
+    8  SN  1  Z   0.000000   0.008699   0.002816   0.006908   0.666075
+    9  H   2  S  -0.154606  -0.022137   0.140114  -0.371888   0.209794
+   10  H   2  S  -0.030292  -0.014108   0.089294  -0.237003   1.019017
+   11  H   3  S  -0.154608   0.348917  -0.184393   0.051756  -0.028796
+   12  H   3  S  -0.030293   0.222362  -0.117513   0.032984  -0.139855
+   13  H   4  S  -0.154605  -0.029964   0.301977   0.257555  -0.136771
+   14  H   4  S  -0.030292  -0.019096   0.192448   0.164140  -0.664307
+   15  H   5  S  -0.154608  -0.296816  -0.257696   0.062576  -0.044248
+   16  H   5  S  -0.030293  -0.189158  -0.164228   0.039880  -0.214906
+
+                      6          7          8          9         10
+                    0.0241     0.0241     0.0628     0.1238     0.1238
+                     A          A          A          A          A   
+    1  SN  1  S   0.000009   0.000002   0.660205   0.000005   0.000003
+    2  SN  1  X   0.421618  -0.116294   0.000007   0.296116  -1.296619
+    3  SN  1  Y   0.100534  -0.391360   0.000001  -1.024733  -0.384153
+    4  SN  1  Z   0.280032   0.315592  -0.000003  -0.831359   0.011669
+    5  SN  1  S   0.000007   0.000011   1.826396   0.000017   0.000019
+    6  SN  1  X   0.945238  -0.260723   0.000002  -0.235530   1.031300
+    7  SN  1  Y   0.225387  -0.877405  -0.000019   0.815057   0.305543
+    8  SN  1  Z   0.627812   0.707539  -0.000034   0.661251  -0.009283
+    9  H   2  S  -0.057913   0.041961  -0.267423  -0.020938   0.016551
+   10  H   2  S  -0.281287   0.203817  -0.825484  -0.300616   0.237655
+   11  H   3  S   0.019888  -0.218874  -0.267420  -0.001400  -0.014691
+   12  H   3  S   0.096609  -1.063115  -0.825458  -0.020079  -0.210923
+   13  H   4  S  -0.155685   0.078663  -0.267417   0.022601   0.014230
+   14  H   4  S  -0.756188   0.382087  -0.825447   0.324540   0.204334
+   15  H   5  S   0.193699   0.098245  -0.267422  -0.000272  -0.016096
+   16  H   5  S   0.940842   0.477197  -0.825472  -0.003875  -0.231096
+
+                     11         12         13         14         15
+                    0.1238     0.5534     0.6053     0.6053     0.6053
+                     A          A          A          A          A   
+    1  SN  1  S   0.000002   0.632841  -0.000005   0.000000   0.000006
+    2  SN  1  X  -0.244997  -0.000007  -0.075966   0.068431   0.145650
+    3  SN  1  Y   0.794529  -0.000001   0.121934  -0.080631   0.101480
+    4  SN  1  Z  -1.066601   0.000002   0.105015   0.143122  -0.012469
+    5  SN  1  S   0.000007  -3.562717   0.000029  -0.000012  -0.000074
+    6  SN  1  X   0.194863   0.000013   0.372402  -0.335459  -0.714006
+    7  SN  1  Y  -0.631945   0.000006  -0.597748   0.395265  -0.497477
+    8  SN  1  Z   0.848343   0.000003  -0.514808  -0.701611   0.061125
+    9  H   2  S  -0.001077  -0.625008   1.110222  -0.065257  -0.533213
+   10  H   2  S  -0.015449   1.527092  -1.592585   0.093612   0.764893
+   11  H   3  S   0.022265  -0.625046  -0.071203  -0.835028   0.904862
+   12  H   3  S   0.319700   1.527140   0.102134   1.197826  -1.297984
+   13  H   4  S   0.000126  -0.625015  -0.873592  -0.228619  -0.840078
+   14  H   4  S   0.001814   1.527098   1.253135   0.327950   1.205082
+   15  H   5  S  -0.021317  -0.625046  -0.165408   1.128890   0.468364
+   16  H   5  S  -0.306077   1.527141   0.237267  -1.619358  -0.671839
+
+                     16
+                    1.0738
+                     A   
+    1  SN  1  S   1.390413
+    2  SN  1  X  -0.000002
+    3  SN  1  Y  -0.000001
+    4  SN  1  Z  -0.000001
+    5  SN  1  S  -0.654295
+    6  SN  1  X  -0.000008
+    7  SN  1  Y  -0.000005
+    8  SN  1  Z  -0.000004
+    9  H   2  S   0.319139
+   10  H   2  S  -0.553082
+   11  H   3  S   0.319145
+   12  H   3  S  -0.553098
+   13  H   4  S   0.319136
+   14  H   4  S  -0.553074
+   15  H   5  S   0.319147
+   16  H   5  S  -0.553103
+
+                         TIMING STATISTICS ON NODE 0:
+ CPU        TIME:   STEP =      1.40 ,  TOTAL =        1.5 SECONDS (    0.0 MIN)
+ WALL CLOCK TIME:   STEP =      1.42 ,  TOTAL =        1.5 SECONDS (    0.0 MIN)
+ CPU UTILIZATION:   STEP =     98.69%,  TOTAL =     100.06%
+
+ COMPUTING XC FUNCTIONAL THIRD DERIVATIVES FOR SUBSEQUENT TDDFT CALCULATIONS...
+ ...... END OF DFT CALCULATION ......
+
+                         TIMING STATISTICS ON NODE 0:
+ CPU        TIME:   STEP =      0.28 ,  TOTAL =        1.8 SECONDS (    0.0 MIN)
+ WALL CLOCK TIME:   STEP =      0.27 ,  TOTAL =        1.8 SECONDS (    0.0 MIN)
+ CPU UTILIZATION:   STEP =    103.23%,  TOTAL =     100.54%
+
+
+                       ----------------------------------
+                       properties for the R-B3LYP density
+                       ----------------------------------
+
+          -----------------
+          ENERGY COMPONENTS
+          -----------------
+
+         WAVEFUNCTION NORMALIZATION =       1.0000000000
+
+                ONE ELECTRON ENERGY =     -19.0114189740
+                TWO ELECTRON ENERGY =       7.2968506399
+           NUCLEAR REPULSION ENERGY =       5.9428583221
+                                      ------------------
+                       TOTAL ENERGY =      -5.7717100120
+
+ ELECTRON-ELECTRON POTENTIAL ENERGY =       7.2968506399
+  NUCLEUS-ELECTRON POTENTIAL ENERGY =     -22.2010246012
+   NUCLEUS-NUCLEUS POTENTIAL ENERGY =       5.9428583221
+                                      ------------------
+             TOTAL POTENTIAL ENERGY =      -8.9613156392
+               TOTAL KINETIC ENERGY =       3.1896056272
+                 VIRIAL RATIO (V/T) =       2.8095371925
+
+          ---------------------------------------
+          MULLIKEN AND LOWDIN POPULATION ANALYSES
+          ---------------------------------------
+
+     MULLIKEN ATOMIC POPULATION IN EACH MOLECULAR ORBITAL
+
+                      1          2          3          4
+
+                  2.000000   2.000000   2.000000   2.000000
+
+    1             1.423144   0.731356   0.731356   0.731355
+    2             0.144212   0.002943   0.117910   0.830632
+    3             0.144216   0.731185   0.204208   0.016088
+    4             0.144212   0.005392   0.547687   0.398406
+    5             0.144216   0.529124   0.398839   0.023518
+
+               ----- POPULATIONS IN EACH AO -----
+                             MULLIKEN      LOWDIN
+              1  SN  1  S     1.34377     0.88925
+              2  SN  1  X     0.71540     0.60365
+              3  SN  1  Y     0.71540     0.60365
+              4  SN  1  Z     0.71540     0.60365
+              5  SN  1  S     0.07937     0.28097
+              6  SN  1  X     0.01596     0.19194
+              7  SN  1  Y     0.01596     0.19194
+              8  SN  1  Z     0.01596     0.19194
+              9  H   2  S     0.70154     0.63221
+             10  H   2  S     0.39416     0.47854
+             11  H   3  S     0.70154     0.63221
+             12  H   3  S     0.39416     0.47854
+             13  H   4  S     0.70154     0.63221
+             14  H   4  S     0.39416     0.47854
+             15  H   5  S     0.70154     0.63221
+             16  H   5  S     0.39416     0.47854
+
+          ----- MULLIKEN ATOMIC OVERLAP POPULATIONS -----
+          (OFF-DIAGONAL ELEMENTS NEED TO BE MULTIPLIED BY 2)
+
+             1           2           3           4           5
+
+    1    2.2334292
+    2    0.3459457   0.7845568
+    3    0.3459456  -0.0116016   0.7845554
+    4    0.3459453  -0.0116016  -0.0116014   0.7845569
+    5    0.3459457  -0.0116016  -0.0116016  -0.0116014   0.7845552
+
+          TOTAL MULLIKEN AND LOWDIN ATOMIC POPULATIONS
+       ATOM         MULL.POP.    CHARGE          LOW.POP.     CHARGE
+    1 SN            3.617212    0.382788         3.556988    0.443012
+    2 H             1.095698   -0.095698         1.110753   -0.110753
+    3 H             1.095697   -0.095697         1.110753   -0.110753
+    4 H             1.095698   -0.095698         1.110753   -0.110753
+    5 H             1.095696   -0.095696         1.110753   -0.110753
+
+          -------------------------------
+          BOND ORDER AND VALENCE ANALYSIS     BOND ORDER THRESHOLD=0.050
+          -------------------------------
+
+                   BOND                       BOND                       BOND
+  ATOM PAIR DIST  ORDER      ATOM PAIR DIST  ORDER      ATOM PAIR DIST  ORDER
+    1   2  1.751  0.901        1   3  1.751  0.901        1   4  1.751  0.901
+    1   5  1.751  0.901
+
+                       TOTAL       BONDED        FREE
+      ATOM            VALENCE     VALENCE     VALENCE
+    1 SN                3.604       3.604       0.000
+    2 H                 0.958       0.958       0.000
+    3 H                 0.958       0.958       0.000
+    4 H                 0.958       0.958       0.000
+    5 H                 0.958       0.958       0.000
+
+          ---------------------
+          ELECTROSTATIC MOMENTS
+          ---------------------
+
+ POINT   1           X           Y           Z (BOHR)    CHARGE
+                 0.450076   -0.615238   -1.746863        0.00 (A.U.)
+         DX          DY          DZ         /D/  (DEBYE)
+    -0.000032   -0.000003    0.000010    0.000034
+ ...... END OF PROPERTY EVALUATION ......
+
+                         TIMING STATISTICS ON NODE 0:
+ CPU        TIME:   STEP =      0.00 ,  TOTAL =        1.8 SECONDS (    0.0 MIN)
+ WALL CLOCK TIME:   STEP =      0.00 ,  TOTAL =        1.8 SECONDS (    0.0 MIN)
+ CPU UTILIZATION:   STEP =      0.00%,  TOTAL =     100.48%
+ ......END OF NBO ANALYSIS......
+
+                         TIMING STATISTICS ON NODE 0:
+ CPU        TIME:   STEP =      0.00 ,  TOTAL =        1.8 SECONDS (    0.0 MIN)
+ WALL CLOCK TIME:   STEP =      0.00 ,  TOTAL =        1.8 SECONDS (    0.0 MIN)
+ CPU UTILIZATION:   STEP =      0.00%,  TOTAL =     100.44%
+
+                    ------------------------------------------------
+                    ADIABATIC TIME DEPENDENT DFT ENERGY + PROPERTIES
+                         PROGRAM WRITTEN BY ALEX A. GRANOVSKY
+                    ------------------------------------------------
+
+ # CORE ORBITALS      =    0
+ # OCCUPIED ORBITALS  =    4
+ # MOLECULAR ORBITALS =   16
+ # BASIS FUNCTIONS    =   16
+
+ NUMBER OF TDDFT SPIN-ADAPTED ANTISYMMETRIZED PRODUCTS (SAPS) IS      48
+
+ MIN MEMORY REQ. FOR TDDFT ENERGY FOCK-LIKE BUILDS =       519 WORDS
+ MEMORY REQ. FOR SINGLE BATCH BUILDS               =      5127 WORDS
+ MEMORY AVAILABLE                                  =   4343070 WORDS
+
+ SINGLE BATCH ENERGY CALCULATION WILL BE PERFORMED
+
+ UNIT VECTOR GUESS AT TDDFT COEFICIENTS ...
+
+ -------------------------------------------------------------------
+ USING DAVIDSON ALGORITHM TO FIND TDDFT EIGENVALUES AND EIGENVECTORS
+ -------------------------------------------------------------------
+
+ NUMBER OF STATES REQUESTED =     5
+ NUMBER OF GUESS VECTORS    =    10
+ MAX. NUMB. OF EXPAN. VECS. =    40
+ MAX. NUMB. OF ITERATIONS   =    50
+ CONVERGENCE CRITERION      =    1.0E-05
+
+ STARTING DAVIDSON ITERATIONS
+
+ STATE      ITERATION      ENERGY         RESIDUE NORM
+   1            1       -5.4570696091     0.00646732
+   2            1       -5.4570693138     0.00646732
+   3            1       -5.4570682766     0.00646732
+   4            1       -5.4505555114     0.00081445
+   5            1       -5.4505551318     0.00081445
+
+   1            2       -5.4573978091     0.00073693
+   2            2       -5.4573975139     0.00073693
+   3            2       -5.4573964788     0.00073693
+   4            2       -5.4505603266     0.00013018
+   5            2       -5.4505599470     0.00013018
+
+   1            3       -5.4573988073     0.00000091
+   2            3       -5.4573985122     0.00000079
+   3            3       -5.4573974771     0.00000050
+   4            3       -5.4505603598     0.00000141
+   5            3       -5.4505599802     0.00000197
+
+ ALL STATES CONVERGED IN    3 ITERATIONS
+
+ CONVERGED STATE    1 ENERGY=       -5.4573988073
+ CONVERGED STATE    2 ENERGY=       -5.4573985122
+ CONVERGED STATE    3 ENERGY=       -5.4573974771
+ CONVERGED STATE    4 ENERGY=       -5.4505603598
+ CONVERGED STATE    5 ENERGY=       -5.4505599802
+
+
+        --------------------------------------------------------
+        RESULTS FROM SPIN-ADAPTED ANTISYMMETRIZED PRODUCT (SAPS)
+          BASED  TD APPROXIMATION TO TDDFT  ENERGY CALCULATION
+        --------------------------------------------------------
+
+ PRINTING TDDFT COEFFICIENTS LARGER THAN  0.050000
+
+ DFT REFERENCE ENERGY  =        -5.7717100120
+
+
+ EXCITED STATE   1  ENERGY=        -5.4573988073  S = 0.0  SPACE SYM = A   
+
+          ----------------------------------------------
+          SINGLE EXCITATION               SAP COEFFICENT
+          FROM MO     TO MO
+          ----------------------------------------------
+             2          5                  -0.08506672
+             3          5                  -0.70016746
+             4          6                   0.68003354
+             4          7                  -0.18720419
+          ----------------------------------------------
+
+
+ EXCITED STATE   2  ENERGY=        -5.4573985122  S = 0.0  SPACE SYM = A   
+
+          ----------------------------------------------
+          SINGLE EXCITATION               SAP COEFFICENT
+          FROM MO     TO MO
+          ----------------------------------------------
+             2          5                   0.70041905
+             3          5                  -0.08540626
+             4          6                  -0.18692548
+             4          7                  -0.68064431
+          ----------------------------------------------
+
+
+ EXCITED STATE   3  ENERGY=        -5.4573974771  S = 0.0  SPACE SYM = A   
+
+          ----------------------------------------------
+          SINGLE EXCITATION               SAP COEFFICENT
+          FROM MO     TO MO
+          ----------------------------------------------
+             2          6                  -0.65281793
+             2          7                   0.26806177
+             3          6                   0.26796309
+             3          7                   0.65304408
+          ----------------------------------------------
+
+
+ EXCITED STATE   4  ENERGY=        -5.4505603598  S = 0.0  SPACE SYM = A   
+
+          ----------------------------------------------
+          SINGLE EXCITATION               SAP COEFFICENT
+          FROM MO     TO MO
+          ----------------------------------------------
+             2          5                  -0.67446178
+             2          6                  -0.17348249
+             2          7                   0.09245677
+             3          5                  -0.05460497
+             3          6                  -0.13285256
+             3          7                  -0.12829123
+             4          5                   0.05469214
+             4          6                  -0.31320673
+             4          7                  -0.60681909
+          ----------------------------------------------
+
+
+ EXCITED STATE   5  ENERGY=        -5.4505599802  S = 0.0  SPACE SYM = A   
+
+          ----------------------------------------------
+          SINGLE EXCITATION               SAP COEFFICENT
+          FROM MO     TO MO
+          ----------------------------------------------
+             2          6                  -0.27862634
+             2          7                  -0.30840298
+             3          5                  -0.32222197
+             3          6                   0.60054331
+             3          7                  -0.40626548
+             4          5                  -0.31877923
+             4          6                  -0.28721410
+             4          7                   0.11498057
+          ----------------------------------------------
+
+ ------------------------------------------------------------------------------
+                             TDDFT EXCITATION ENERGIES
+ STATE       HARTREE        EV      KCAL/MOL       CM-1   NANOMETERS  OSC. STR.
+ ------------------------------------------------------------------------------
+  1A      0.3143112047    8.5528    197.2333     68983.34     144.96  0.0000000
+  1A      0.3143114998    8.5529    197.2335     68983.40     144.96  0.0000000
+  1A      0.3143125349    8.5529    197.2341     68983.63     144.96  0.0000000
+  1A      0.3211496522    8.7389    201.5245     70484.20     141.88  0.0000000
+  1A      0.3211500318    8.7389    201.5247     70484.28     141.88  0.0000000
+
+
+              Unrelaxed dipole moments and transition dipoles
+               States                  <i|mu|j>     (e*bohr)
+               i    j         x            y            z
+
+               0    0   -0.0000125   -0.0000011    0.0000041
+               0    1   -0.0000105   -0.0000032   -0.0000030
+               0    2    0.0000008   -0.0000061    0.0000049
+               0    3    0.0000018    0.0000093   -0.0000083
+               0    4   -0.0000037    0.0000140   -0.0000209
+               0    5   -0.0000507   -0.0000235   -0.0000113
+
+               1    0   -0.0000105   -0.0000032   -0.0000030
+               1    1    0.7747569    0.5652457   -0.3474230
+               1    2    0.3731443   -0.3559715    0.7042819
+               1    3   -0.0994368    0.2978667   -0.0539931
+               1    4   -0.1950396    0.1210110   -0.2380846
+               1    5   -0.1502420    0.3934173    0.3050324
+
+               2    0    0.0000008   -0.0000061    0.0000049
+               2    1    0.3731443   -0.3559715    0.7042819
+               2    2    0.2053335   -0.6019978    0.0253581
+               2    3   -0.0370322   -0.6284123   -0.5835409
+               2    4    0.5479887    0.1821268   -0.1138474
+               2    5    0.0217210    0.0150415    0.1806198
+
+               3    0    0.0000018    0.0000093   -0.0000083
+               3    1   -0.0994368    0.2978667   -0.0539931
+               3    2   -0.0370322   -0.6284123   -0.5835409
+               3    3   -0.9800820    0.0367308    0.3220322
+               3    4   -0.0754848   -0.2610942   -0.1999124
+               3    5    0.1125257   -0.3298068    0.3800813
+
+               4    0   -0.0000037    0.0000140   -0.0000209
+               4    1   -0.1950396    0.1210110   -0.2380846
+               4    2    0.5479887    0.1821268   -0.1138474
+               4    3   -0.0754848   -0.2610942   -0.1999124
+               4    4   -0.0000201   -0.0000374   -0.0000341
+               4    5   -0.0000067    0.0000074   -0.0000196
+
+               5    0   -0.0000507   -0.0000235   -0.0000113
+               5    1   -0.1502420    0.3934173    0.3050324
+               5    2    0.0217210    0.0150415    0.1806198
+               5    3    0.1125257   -0.3298068    0.3800813
+               5    4   -0.0000067    0.0000074   -0.0000196
+               5    5    0.0000677    0.0000206   -0.0000179
+
+
+ -TDDFT- ENERGY                TOOK      2.683 SECONDS
+
+     -------------------------------------------------------------
+     TDDFT PROPERTIES...FOR THE WAVEFUNCTION OF EXCITED STATE    1
+                      (USING UNRELAXED DENSITY)
+     -------------------------------------------------------------
+
+ TDDFT NATURAL ORBITAL OCCUPATION NUMBERS FOR EXCITED STATE    1 ARE
+  2.0000 2.0000 1.5000 1.5000 0.5000 0.5000 0.0000 0.0000 0.0000 0.0000
+  0.0000 0.0000 0.0000 0.0000 0.0000 0.0000
+ THERE ARE     7.0000 ELECTRONS IN PRINCIPAL TDDFT NATURAL ORBITALS.
+ THERE ARE     1.0000 ELECTRONS IN SECONDARY TDDFT NATURAL ORBITALS.
+ TDDFT NATURAL ORBITALS HAVE BEEN PUNCHED.
+
+
+                   ------------------------------------------
+                   properties for the Unrelaxed TDDFT density
+                   ------------------------------------------
+
+          -----------------
+          ENERGY COMPONENTS
+          -----------------
+
+         WAVEFUNCTION NORMALIZATION =       1.0000000000
+
+                ONE ELECTRON ENERGY =     -18.3864169963
+                TWO ELECTRON ENERGY =       6.9861598669
+           NUCLEAR REPULSION ENERGY =       5.9428583221
+                                      ------------------
+                       TOTAL ENERGY =      -5.4573988073
+
+ ELECTRON-ELECTRON POTENTIAL ENERGY =       6.9861598669
+  NUCLEUS-ELECTRON POTENTIAL ENERGY =     -21.4980082382
+   NUCLEUS-NUCLEUS POTENTIAL ENERGY =       5.9428583221
+                                      ------------------
+             TOTAL POTENTIAL ENERGY =      -8.5689900492
+               TOTAL KINETIC ENERGY =       3.1115912419
+                 VIRIAL RATIO (V/T) =       2.7538932280
+
+          ---------------------------------------
+          MULLIKEN AND LOWDIN POPULATION ANALYSES
+          ---------------------------------------
+
+     MULLIKEN ATOMIC POPULATION IN EACH MOLECULAR ORBITAL
+
+                      1          2          3          4
+
+                  2.000000   2.000000   2.000000   2.000000
+
+    1             1.423144   0.731356   0.731356   0.731355
+    2             0.144212   0.002943   0.117910   0.830632
+    3             0.144216   0.731185   0.204208   0.016088
+    4             0.144212   0.005392   0.547687   0.398406
+    5             0.144216   0.529124   0.398839   0.023518
+
+               ----- POPULATIONS IN EACH AO -----
+                             MULLIKEN      LOWDIN
+              1  SN  1  S     1.34377     0.88925
+              2  SN  1  X     0.66251     0.56225
+              3  SN  1  Y     0.68738     0.58172
+              4  SN  1  Z     0.69053     0.58418
+              5  SN  1  S     0.07937     0.28097
+              6  SN  1  X     0.29632     0.35770
+              7  SN  1  Y     0.16446     0.27974
+              8  SN  1  Z     0.14783     0.26990
+              9  H   2  S     0.59144     0.56546
+             10  H   2  S     0.33549     0.45303
+             11  H   3  S     0.68589     0.62272
+             12  H   3  S     0.38582     0.47492
+             13  H   4  S     0.59317     0.56651
+             14  H   4  S     0.33641     0.45343
+             15  H   5  S     0.63886     0.59421
+             16  H   5  S     0.36075     0.46402
+
+          ----- MULLIKEN ATOMIC OVERLAP POPULATIONS -----
+          (OFF-DIAGONAL ELEMENTS NEED TO BE MULTIPLIED BY 2)
+
+             1           2           3           4           5
+
+    1    4.4939897
+    2   -0.3238268   1.3843122
+    3    0.2507488  -0.0352603   0.8697980
+    4   -0.3133550  -0.0465597  -0.0298660   1.3749303
+    5   -0.0353801  -0.0517357   0.0162871  -0.0555766   1.1260183
+
+          TOTAL MULLIKEN AND LOWDIN ATOMIC POPULATIONS
+       ATOM         MULL.POP.    CHARGE          LOW.POP.     CHARGE
+    1 SN            4.072177   -0.072177         3.805710    0.194290
+    2 H             0.926930    0.073070         1.018491   -0.018491
+    3 H             1.071708   -0.071708         1.097638   -0.097638
+    4 H             0.929573    0.070427         1.019935   -0.019935
+    5 H             0.999613    0.000387         1.058227   -0.058227
+
+          -------------------------------
+          BOND ORDER AND VALENCE ANALYSIS     BOND ORDER THRESHOLD=0.050
+          -------------------------------
+
+                   BOND                       BOND                       BOND
+  ATOM PAIR DIST  ORDER      ATOM PAIR DIST  ORDER      ATOM PAIR DIST  ORDER
+    1   2  1.751  0.366        1   3  1.751  0.825        1   4  1.751  0.374
+    1   5  1.751  0.596
+
+                       TOTAL       BONDED        FREE
+      ATOM            VALENCE     VALENCE     VALENCE
+    1 SN                3.941       2.161       1.779
+    2 H                 0.819       0.366       0.453
+    3 H                 0.937       0.873       0.064
+    4 H                 0.821       0.376       0.446
+    5 H                 0.878       0.620       0.258
+
+          ---------------------
+          ELECTROSTATIC MOMENTS
+          ---------------------
+
+ POINT   1           X           Y           Z (BOHR)    CHARGE
+                 0.450076   -0.615238   -1.746863        0.00 (A.U.)
+         DX          DY          DZ         /D/  (DEBYE)
+     1.969251    1.436722   -0.883068    2.592668
+ ...... END OF PROPERTY EVALUATION ......
+
+                         TIMING STATISTICS ON NODE 0:
+ CPU        TIME:   STEP =      2.93 ,  TOTAL =        4.7 SECONDS (    0.1 MIN)
+ WALL CLOCK TIME:   STEP =      2.74 ,  TOTAL =        4.5 SECONDS (    0.1 MIN)
+ CPU UTILIZATION:   STEP =    107.16%,  TOTAL =     104.51%
+ ......END OF NBO ANALYSIS......
+
+                         TIMING STATISTICS ON NODE 0:
+ CPU        TIME:   STEP =      0.00 ,  TOTAL =        4.7 SECONDS (    0.1 MIN)
+ WALL CLOCK TIME:   STEP =      0.00 ,  TOTAL =        4.5 SECONDS (    0.1 MIN)
+ CPU UTILIZATION:   STEP =      0.00%,  TOTAL =     104.50%
+
+ -TDDFT- LAGRANGIAN              TOOK      0.390 SECONDS
+
+     ------------------------------------------------------------
+       SOLVING THE COUPLED-PERTURBED KOHN-SHAM EQUATIONS IN THE
+                          ATOMIC-ORBITAL BASIS
+     ------------------------------------------------------------
+
+ ..... INITIATING DIIS PROCEDURE .....
+ MAXIMUM RESPONSE VECTOR ERROR= 2.832822E-02
+ MAXIMUM RESPONSE VECTOR ERROR= 1.786656E-02
+ MAXIMUM RESPONSE VECTOR ERROR= 5.245220E-05
+ MAXIMUM RESPONSE VECTOR ERROR= 8.723379E-06
+ MAXIMUM RESPONSE VECTOR ERROR= 4.916397E-07
+ MAXIMUM RESPONSE VECTOR ERROR= 1.236742E-08
+ MAXIMUM RESPONSE VECTOR ERROR= 4.159165E-10
+ MAXIMUM RESPONSE VECTOR ERROR= 1.381359E-10
+ .....    9 ITERATIONS CARRIED OUT    .....
+
+
+ -TDDFT- CPKS EQUATIONS          TOOK      1.201 SECONDS
+ -TDDFT- ENERGY WEIGHTED DENSITY TOOK      0.140 SECONDS
+
+ RECOMPUTING TDDFT NATURAL ORBITALS USING RELAXED DENSITY
+
+ TDDFT NATURAL ORBITAL OCCUPATION NUMBERS FOR EXCITED STATE    1 ARE
+  2.0024 2.0002 1.5049 1.5024 0.4995 0.4964 0.0000 0.0000 0.0000 0.0000
+  0.0000 0.0000-0.0002-0.0012-0.0012-0.0031
+ THERE ARE     7.0099 ELECTRONS IN PRINCIPAL TDDFT NATURAL ORBITALS.
+ THERE ARE     0.9901 ELECTRONS IN SECONDARY TDDFT NATURAL ORBITALS.
+ TDDFT NATURAL ORBITALS HAVE BEEN PUNCHED.
+
+ .... DONE WITH TDDFT ENERGY + 1-PARTICLE DENSITY ....
+
+
+                         TIMING STATISTICS ON NODE 0:
+ CPU        TIME:   STEP =      1.48 ,  TOTAL =        6.2 SECONDS (    0.1 MIN)
+ WALL CLOCK TIME:   STEP =      1.35 ,  TOTAL =        5.9 SECONDS (    0.1 MIN)
+ CPU UTILIZATION:   STEP =    109.55%,  TOTAL =     105.66%
+
+     -------------------------------------------------------------
+     TDDFT PROPERTIES...FOR THE WAVEFUNCTION OF EXCITED STATE    1
+              (USING THE RESPONSE (RELAXED) DENSITY)
+     -------------------------------------------------------------
+
+
+                    ----------------------------------------
+                    properties for the Relaxed TDDFT density
+                    ----------------------------------------
+
+          -----------------
+          ENERGY COMPONENTS
+          -----------------
+
+         WAVEFUNCTION NORMALIZATION =       1.0000000000
+
+                ONE ELECTRON ENERGY =     -18.4395899310
+                TWO ELECTRON ENERGY =       7.0393328016
+           NUCLEAR REPULSION ENERGY =       5.9428583221
+                                      ------------------
+                       TOTAL ENERGY =      -5.4573988073
+
+ ELECTRON-ELECTRON POTENTIAL ENERGY =       7.0393328016
+  NUCLEUS-ELECTRON POTENTIAL ENERGY =     -21.6568503576
+   NUCLEUS-NUCLEUS POTENTIAL ENERGY =       5.9428583221
+                                      ------------------
+             TOTAL POTENTIAL ENERGY =      -8.6746592339
+               TOTAL KINETIC ENERGY =       3.2172604265
+                 VIRIAL RATIO (V/T) =       2.6962875502
+
+          ---------------------------------------
+          MULLIKEN AND LOWDIN POPULATION ANALYSES
+          ---------------------------------------
+
+     MULLIKEN ATOMIC POPULATION IN EACH MOLECULAR ORBITAL
+
+                      1          2          3          4
+
+                  2.000000   2.000000   2.000000   2.000000
+
+    1             1.423144   0.731356   0.731356   0.731355
+    2             0.144212   0.002943   0.117910   0.830632
+    3             0.144216   0.731185   0.204208   0.016088
+    4             0.144212   0.005392   0.547687   0.398406
+    5             0.144216   0.529124   0.398839   0.023518
+
+               ----- POPULATIONS IN EACH AO -----
+                             MULLIKEN      LOWDIN
+              1  SN  1  S     1.35621     0.89620
+              2  SN  1  X     0.67087     0.56304
+              3  SN  1  Y     0.71040     0.59278
+              4  SN  1  Z     0.72093     0.60059
+              5  SN  1  S     0.10301     0.28169
+              6  SN  1  X     0.27574     0.33980
+              7  SN  1  Y     0.14783     0.26466
+              8  SN  1  Z     0.13460     0.25710
+              9  H   2  S     0.65350     0.61498
+             10  H   2  S     0.31305     0.44178
+             11  H   3  S     0.66999     0.59791
+             12  H   3  S     0.30590     0.44380
+             13  H   4  S     0.65380     0.61466
+             14  H   4  S     0.31292     0.44181
+             15  H   5  S     0.66178     0.60641
+             16  H   5  S     0.30946     0.44279
+
+          ----- MULLIKEN ATOMIC OVERLAP POPULATIONS -----
+          (OFF-DIAGONAL ELEMENTS NEED TO BE MULTIPLIED BY 2)
+
+             1           2           3           4           5
+
+    1    4.5705960
+    2   -0.3466744   1.4455664
+    3    0.2688125  -0.0339019   0.7507245
+    4   -0.3354546  -0.0470816  -0.0284596   1.4328897
+    5   -0.0376884  -0.0513579   0.0187209  -0.0551735   1.0967405
+
+          TOTAL MULLIKEN AND LOWDIN ATOMIC POPULATIONS
+       ATOM         MULL.POP.    CHARGE          LOW.POP.     CHARGE
+    1 SN            4.119591   -0.119591         3.795853    0.204147
+    2 H             0.966551    0.033449         1.056753   -0.056753
+    3 H             0.975896    0.024104         1.041713   -0.041713
+    4 H             0.966720    0.033280         1.056477   -0.056477
+    5 H             0.971242    0.028758         1.049203   -0.049203
+
+          -------------------------------
+          BOND ORDER AND VALENCE ANALYSIS     BOND ORDER THRESHOLD=0.050
+          -------------------------------
+
+                   BOND                       BOND                       BOND
+  ATOM PAIR DIST  ORDER      ATOM PAIR DIST  ORDER      ATOM PAIR DIST  ORDER
+    1   2  1.751  0.343        1   3  1.751  0.854        1   4  1.751  0.353
+    1   5  1.751  0.609
+
+                       TOTAL       BONDED        FREE
+      ATOM            VALENCE     VALENCE     VALENCE
+    1 SN                3.949       2.160       1.789
+    2 H                 0.802       0.352       0.450
+    3 H                 0.950       0.897       0.053
+    4 H                 0.804       0.362       0.442
+    5 H                 0.872       0.634       0.238
+
+          ---------------------
+          ELECTROSTATIC MOMENTS
+          ---------------------
+
+ POINT   1           X           Y           Z (BOHR)    CHARGE
+                 0.450076   -0.615238   -1.746863        0.00 (A.U.)
+         DX          DY          DZ         /D/  (DEBYE)
+     1.316651    0.960602   -0.590431    1.733475
+ ...... END OF PROPERTY EVALUATION ......
+
+                         TIMING STATISTICS ON NODE 0:
+ CPU        TIME:   STEP =      0.00 ,  TOTAL =        6.2 SECONDS (    0.1 MIN)
+ WALL CLOCK TIME:   STEP =      0.00 ,  TOTAL =        5.9 SECONDS (    0.1 MIN)
+ CPU UTILIZATION:   STEP =      0.00%,  TOTAL =     105.64%
+ ......END OF NBO ANALYSIS......
+
+                         TIMING STATISTICS ON NODE 0:
+ CPU        TIME:   STEP =      0.00 ,  TOTAL =        6.2 SECONDS (    0.1 MIN)
+ WALL CLOCK TIME:   STEP =      0.00 ,  TOTAL =        5.9 SECONDS (    0.1 MIN)
+ CPU UTILIZATION:   STEP =      0.00%,  TOTAL =     105.62%
+
+ AN INPUT FILE FOR -PLTORB- HAS BEEN PUNCHED.
+ AN INPUT FILE FOR -MOLPLT- HAS BEEN PUNCHED.
+
+                         NODE  0 I/O STATISTICS:
+ DATA READ TOTAL =      332.721 MB,  DATA WRITTEN TOTAL =       11.079 MB
+
+                         OVERALL I/O STATISTICS:
+ DATA READ TOTAL =      660.477 MB,  DATA WRITTEN TOTAL =       20.798 MB
+
+
+                         OVERALL  TIMING  STATISTICS:
+ GLOBAL CPU TIME ELAPSED      =        12.4 SECONDS (     0.2 MIN)
+ NODE 0 WALL CLOCK TIME       =         5.9 SECONDS (     0.1 MIN)
+ JOB CPU UTILIZATION:   TOTAL =    210.69%, PER NODE AVERAGE =    105.35%
+
+      396858 WORDS OF    DYNAMIC MEMORY USED
+      146359 BYTES OF    HEAP MEMORY    USED,      113847 BYTES REMAIN IN USE
+ EXECUTION OF FIREFLY TERMINATED NORMALLY 13:28:14 27-SEP-2015    
