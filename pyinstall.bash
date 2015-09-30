@@ -4,5 +4,10 @@ cd pyinstall || exit 2
 
 for file in `ls ../bin/*.py` ../bin/theoinp
 do
-   pyinstaller -F $file
+#   pyinstaller -F $file
+   pyinstaller --strip -F $file
 done
+
+# strip could make smaller files. But does this work?
+#cd dist
+#strip *
