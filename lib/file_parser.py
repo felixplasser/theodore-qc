@@ -793,7 +793,7 @@ class file_parser_col(file_parser_base):
                     
                 for i, word in enumerate(words[1:]):
                     val = float(word)                                                            
-                    if abs(val) > 0.1: print "(%2i->%2i)-(%s->%s), val=% 8.4f"%\
+                    if val*val > 0.01: print "(%2i->%2i)-(%s->%s), val=% 8.4f"%\
                        (head_inds[i],left_ind,mos.syms2[head_inds[i]],mos.syms2[left_ind],val)
                     
                     state['tden'][head_inds[i],left_ind] += isqr2 * val

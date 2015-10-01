@@ -58,9 +58,21 @@ class dens_ana_base:
         elif rtype.lower() in ['cclib', 'gamess', 'orca']:
             # these are parsed with the external cclib library
             ccli = cclib_interface.file_parser_cclib(self.ioptions)
+            
+            errcode = ccli.check()
+            if errcode >= 2: raise error_handler.MsgError("The file cannot be parsed by cclib")
+            print
+            
             self.mos = ccli.read_mos()
             self.read2_mos()
             self.state_list = ccli.read(self.mos)
+            
+            # Write a Molden file if possible
+            if errcode == 0:
+                self.mos.write_molden_file(fname='MOs.mld')
+                self.ioptions['mo_file'] = 'MOs.mld'
+            else:
+                self.ioptions['molden_orbitals'] = False
         else:
             raise error_handler.ElseError(rtype, 'rtype')
           

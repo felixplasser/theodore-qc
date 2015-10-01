@@ -12,7 +12,7 @@ except ImportError:
     import OB_repl as openbabel
 import units
 
-Z_symbol_dict = {1:'H',6:'C',7:'N',8:'O',15:'P',16:'S',17:'Cl',77:'Ir'}
+Z_symbol_dict = {1:'H',5:'B',6:'C',7:'N',8:'O',9:'F',15:'P',16:'S',17:'Cl',26:'Fe',34:'Se',35:'Br',50:'Sn',53:'I',77:'Ir'}
 symbol_Z_dict = {}
 for key,val in Z_symbol_dict.iteritems():
     symbol_Z_dict[val] = key
