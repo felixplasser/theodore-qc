@@ -311,4 +311,5 @@ class tden_ana(dens_ana_base.dens_ana_base):
             Om, OmAt = self.ret_Om_OmAt(state)
             
             state['RMSeh'] = exciton_ana.ret_RMSeh(Om, OmAt)
+            state['MAeh']  = exciton_ana.ret_MAeh(Om, OmAt)
             state['Eb']    = exciton_ana.ret_Eb(Om, OmAt, self.ioptions['Eb_diag'])

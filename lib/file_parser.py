@@ -752,8 +752,10 @@ class file_parser_col(file_parser_base):
                 line=rfile.next()
                 self.read_block_mat(state, mos, rfile, sym=-1)
             elif 'Transition energy:  ' in line:
-                words=rfile.next().split() # use the next line with "eV"
-                state['exc_en']=float(words[2])
+                #words=rfile.next().split() # use the next line with "eV"
+                words=line.split() # use the line with "a.u." because it is given with more digits
+                state['exc_en']=float(words[2]) * units.energy['eV']
+                rfile.next()
             elif 'Oscillator strength : ' in line:
                 words = line.split()
                 state['osc_str']=float(words[-1])

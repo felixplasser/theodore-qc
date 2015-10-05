@@ -51,7 +51,7 @@ if'at_lists' in ioptions:
         
 if ioptions['comp_ntos']: tdena.compute_all_NTO()
 
-if 'RMSeh' in ioptions.get('prop_list') or 'Eb' in ioptions.get('prop_list'):
+if 'RMSeh' in ioptions.get('prop_list') or 'MAeh' in ioptions.get('prop_list') or 'Eb' in ioptions.get('prop_list'):
     exca = lib_exciton.exciton_analysis()
     exca.get_distance_matrix(ioptions.get('coor_file'), ioptions.get('coor_format'))
     tdena.analyze_excitons(exca)
