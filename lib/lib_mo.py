@@ -259,10 +259,13 @@ class MO_set_molden(MO_set):
         fstr = fileh.read()
         if ('[D5' in fstr) or ('[5D' in fstr):
             num_bas['d']=5
-            orient['d']=5*['D0', 'D+1', 'D-1', 'D+2', 'D-2']
+            orient['d']=['D0', 'D+1', 'D-1', 'D+2', 'D-2']
         if ('F7]' in fstr) or ('7F]' in fstr):
             num_bas['f']=7
-            orient['7']=7*['F0', 'F+1', 'F-1', 'F+2', 'F-2', 'F+3', 'F-3']
+            orient['f']=['F0', 'F+1', 'F-1', 'F+2', 'F-2', 'F+3', 'F-3']
+        if ('9G]' in fstr) or ('9G]' in fstr):
+            num_bas['f']=9
+            orient['g']=9*['?']        
 
         fileh.seek(0) # rewind the file
         
