@@ -264,7 +264,7 @@ class MO_set_molden(MO_set):
             num_bas['f']=7
             orient['f']=['F0', 'F+1', 'F-1', 'F+2', 'F-2', 'F+3', 'F-3']
         if ('9G]' in fstr) or ('9G]' in fstr):
-            num_bas['f']=9
+            num_bas['g']=9
             orient['g']=9*['?']        
 
         fileh.seek(0) # rewind the file
