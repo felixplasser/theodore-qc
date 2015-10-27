@@ -908,6 +908,7 @@ class file_parser_nos(file_parser_base):
     def read_ref_nos(self, state, ref_nos):
         """
         Read the reference MOs.
+        ### This is currently not used! ###
         """
         state['sden'] = numpy.diag(ref_nos.occs)
         
@@ -929,6 +930,14 @@ class file_parser_nos(file_parser_base):
         nos.compute_inverse()
         if self.ioptions['rd_ene']:
             nos.set_ens_occs()
+        
+        if not self.ioptions['ignore_irreps'] == []:
+            print "  Ignoring irreps: ", self.ioptions['ignore_irreps']
+            for ibas, sym in enumerate(nos.syms):
+                for iirr in self.ioptions['ignore_irreps']:
+                    if iirr in sym:
+                        #print "%s -> 0"%sym
+                        nos.occs[ibas] = 0.
         
         T = numpy.dot(ref_mos.ret_mo_mat(trnsp=False, inv=True), nos.mo_mat)
         

@@ -354,6 +354,7 @@ class dens_ana_options(read_options):
         self['ana_files'] = [] # list of files to analyze
         self['read_binary'] = False # read binary files rather than standard output (if applicable)
         self['s_or_t'] = None # state or transition density matrix analysis
+        self['ignore_irreps'] = [] # ignore irreps in the MO file
         
         # Output options
         self['output_file']   = "ana_summ.txt"

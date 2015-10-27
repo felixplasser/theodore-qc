@@ -66,7 +66,7 @@ class sden_ana(dens_ana_base.dens_ana_base):
         
         # TODO: individual bond orders
         
-    def print_BO_table(self, state, lvprt=2, BO_data=['V_A', 'F_A', 'D_A']):
+    def print_BO_table(self, state, lvprt=2, BO_data=['V_A', 'F_A', 'tBO']):
         pop_pr = pop_ana.pop_printer()
         for data in BO_data:
             pop = state[data]
@@ -231,13 +231,13 @@ class sden_ana(dens_ana_base.dens_ana_base):
         
         state['V_A'] = numpy.zeros([self.mos.num_at])
         state['F_A'] = numpy.zeros([self.mos.num_at])
-        state['D_A'] = numpy.zeros([self.mos.num_at]) # direct valence
+        state['tBO'] = numpy.zeros([self.mos.num_at]) # direct valence
         for iat in xrange(self.mos.num_at):
             state['V_A'][iat] = 2 * QA[iat] - state['BO'][iat, iat]
             state['F_A'][iat] = state['V_A'][iat]
             for jat in xrange(self.mos.num_at):
                 if jat!=iat:
                     state['F_A'][iat] -= state['BO'][iat, jat]                   
-                    state['D_A'][iat] += state['BO'][iat, jat]                   
+                    state['tBO'][iat] += state['BO'][iat, jat]                   
                 
         return state['BO']
