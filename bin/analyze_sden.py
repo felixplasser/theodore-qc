@@ -44,13 +44,13 @@ sdena = lib_sden.sden_ana(ioptions)
 if 'mo_file' in ioptions: sdena.read_mos()
 sdena.read_dens()
 
-#sdena.print_all_mullpop()
-
 if ioptions['AD_ana']:  sdena.compute_all_AD()
+if ioptions['BO_ana']:  sdena.compute_all_BO()
 
 #--------------------------------------------------------------------------#        
 # Print out
 #--------------------------------------------------------------------------#
 if ioptions['pop_ana']: sdena.print_all_pop_table()
+if ioptions['BO_ana']:  sdena.print_all_BO()
 
 sdena.print_summary()

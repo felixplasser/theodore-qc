@@ -53,6 +53,27 @@ class sden_ana(dens_ana_base.dens_ana_base):
             pop_pr.add_pop(dens_type, pop)
             
         print pop_pr.ret_table()
+        
+    def print_all_BO(self, lvprt=2):
+        """
+        Print out bond order/valence information for all states.
+        TODO: add individual bond orders
+        """
+        title = "Bond order/valence information"
+        function = self.print_BO_table
+        
+        self.printer_base(title, function, lvprt)
+        
+        # TODO: individual bond orders
+        
+    def print_BO_table(self, state, lvprt=2, BO_data=['V_A', 'F_A', 'D_A']):
+        pop_pr = pop_ana.pop_printer()
+        for data in BO_data:
+            pop = state[data]
+            
+            pop_pr.add_pop(data, pop)
+            
+        print pop_pr.ret_table()
 #--------------------------------------------------------------------------#        
 # Operations
 #--------------------------------------------------------------------------#
@@ -80,7 +101,7 @@ class sden_ana(dens_ana_base.dens_ana_base):
             
         return state[mp_name]
 
-#---
+#--- Attachment / Detachment analysis
     
     def compute_all_AD(self):
         """
@@ -171,3 +192,52 @@ class sden_ana(dens_ana_base.dens_ana_base):
         state['det_den'] = numpy.dot(W,
                           numpy.dot(numpy.diag(ad*neg),
                                     numpy.transpose(W)))
+
+#--- Bond orders
+    def compute_all_BO(self):
+        """
+        Compute and store the Mayer bond order matrix between the atoms.
+        """
+        for state in self.state_list:
+            BO = self.ret_BO(state)            
+            
+    def ret_BO(self, state):
+        """
+        Return the bond order and compute some descriptors related to the bond order.
+        """
+        if 'BO' in state:
+            return state['BO']
+        
+        try:
+            D = state['sden']
+        except KeyError:
+            return None
+        
+        print "Computation of the bond order matrix ..."
+        
+        temp = self.mos.CdotD(D, trnsp=False, inv=False)  # C.DAO
+        DS   = self.mos.MdotC(temp, trnsp=False, inv=True) # DAO.S = C.D.C^(-1)
+        
+        # add up the contributions for the different atoms        
+        state['BO'] = numpy.zeros([self.mos.num_at, self.mos.num_at])
+        
+        for i in xrange(self.num_bas):
+            iat = self.mos.basis_fcts[i].at_ind - 1 
+            for j in xrange(self.num_bas):
+                jat = self.mos.basis_fcts[j].at_ind - 1
+                state['BO'][iat, jat] += DS[i, j] * DS[j, i]
+        
+        QA = pop_ana.mullpop_ana().ret_pop(D, self.mos, DS)
+        
+        state['V_A'] = numpy.zeros([self.mos.num_at])
+        state['F_A'] = numpy.zeros([self.mos.num_at])
+        state['D_A'] = numpy.zeros([self.mos.num_at]) # direct valence
+        for iat in xrange(self.mos.num_at):
+            state['V_A'][iat] = 2 * QA[iat] - state['BO'][iat, iat]
+            state['F_A'][iat] = state['V_A'][iat]
+            for jat in xrange(self.mos.num_at):
+                if jat!=iat:
+                    state['F_A'][iat] -= state['BO'][iat, jat]                   
+                    state['D_A'][iat] += state['BO'][iat, jat]                   
+                
+        return state['BO']

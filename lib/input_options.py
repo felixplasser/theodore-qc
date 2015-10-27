@@ -415,6 +415,7 @@ class sden_ana_options(dens_ana_options):
         self['pop_ana'] = True
         self['unpaired_ana'] = True
         self['AD_ana'] = True
+        self['BO_ana'] = True
         
         self['rd_ene'] = False # interpret energies as occupations in the NO files
         

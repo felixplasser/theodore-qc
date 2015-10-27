@@ -3,36 +3,39 @@ Module for population analysis.
 Currently only Mulliken style analysis is supported.
 """
 
+import error_handler
 import numpy
 
 class pop_ana:
     """
     Base class for population analysis.
     """
-    def ret_pop(self, dens, mos):
-        """
-        -> Overload this function.
-        """
-        return None
+    def ret_Deff(self, dens, mos):
+        raise error_handler.PureVirtualError()
+    
+    def ret_pop(self, dens, mos, Deff=None):
+        if Deff==None: Deff = self.ret_Deff(dens, mos)
+        
+        mp = numpy.zeros(mos.num_at)
+        
+        for ibas in xrange(mos.ret_num_bas()):
+            iat = mos.basis_fcts[ibas].at_ind - 1
+            mp[iat] += Deff[ibas, ibas]
+            
+        return mp    
 
 class mullpop_ana(pop_ana):
     """
     Mulliken population analysis.
     """
-    def ret_pop(self, dens, mos):
+    def ret_Deff(self, dens, mos):
         """
         Compute and return the Mulliken population.
         """
         temp = mos.CdotD(dens, trnsp=False, inv=False)  # C.DAO
         DS   = mos.MdotC(temp, trnsp=False, inv=True) # DAO.S = C.D.C^(-1)
         
-        mp = numpy.zeros(mos.num_at)
-        
-        for ibas in xrange(mos.ret_num_bas()):
-            iat = mos.basis_fcts[ibas].at_ind - 1
-            mp[iat] += DS[ibas, ibas]
-            
-        return mp    
+        return DS
 
 class pop_printer:
     """

@@ -9,7 +9,7 @@ import sys
 theo_header.print_header('NO file analysis')
 
 def ihelp():
-    print " analyze_NOs.py <NO_file_ref> [<NO_file2> ...]\n"
+    print " analyze_NOs.py <MO_file> [<NO_file_ref> <NO_file2> ...]\n"
     print " Command line options:"
     print "  -h, -H, -help: print this help"
     print "  -ifile [dens_ana.in]: name of the input file"
@@ -32,12 +32,12 @@ while len(sys.argv)>0:
     else:
         no_files.append(arg)
 
-if len(no_files) == 0: ihelp()
+#if len(no_files) == 0: ihelp()
 
-ioptions = input_options.sden_ana_options(ifile)
+ioptions = input_options.sden_ana_options(ifile, check_init=False)
 ioptions['rtype'] = 'nos'
 ioptions['mo_file'] = no_files[0]
-ioptions['ana_files'] = no_files
+ioptions['ana_files'] = no_files[1:]
 
 #--------------------------------------------------------------------------#        
 # Parsing and computations
@@ -47,9 +47,10 @@ sdena = lib_sden.sden_ana(ioptions)
 sdena.read_mos()
 sdena.read_dens()
 
-#sdena.print_all_mullpop()
-
 if ioptions['AD_ana']:  sdena.compute_all_AD()
 if ioptions['pop_ana']: sdena.print_all_pop_table()
+if ioptions['BO_ana']:
+    sdena.compute_all_BO()
+    sdena.print_all_BO()
 
 sdena.print_summary()
