@@ -177,7 +177,7 @@ class sden_ana(dens_ana_base.dens_ana_base):
             
     def export_NDOs_molden(self, state, ad, W, minad=0.05):
         self.mos.export_MO(ad, ad, W, 'ndo_%s.mld'%state['name'],
-                           cfmt=self.ioptions['mcfmt'], occmin=minad)
+                           cfmt=self.ioptions['mcfmt'], occmin=minad, alphabeta=self.ioptions['alphabeta'])
             
     def set_AD(self, state, ad, W):
         print "Computing A/D densities ..."

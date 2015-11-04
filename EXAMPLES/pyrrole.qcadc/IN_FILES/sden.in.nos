@@ -4,6 +4,7 @@ ana_files=['NOs/mp2_gs_no.mo', 'NOs/triplet_0_1_no.mo', 'NOs/singlet_0_1_no.mo',
 pop_ana=True
 unpaired_ana=True
 AD_ana=True
+BO_ana=False
 jmol_orbitals=True
 output_file='sden_summ.txt.nos'
 rd_ene=True

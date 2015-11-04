@@ -302,7 +302,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         """
         mld_name = 'nto_%s.mld'%state['name'].replace('(', '-').replace(')', '-')
         self.mos.export_NTO(lam, U, Vt, mld_name,
-                           cfmt=self.ioptions['mcfmt'], occmin=minlam)
+                           cfmt=self.ioptions['mcfmt'], occmin=minlam, alphabeta=self.ioptions['alphabeta'])
     
 #---
 

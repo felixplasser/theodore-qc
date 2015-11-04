@@ -204,7 +204,7 @@ class MO_set:
         self.compute_inverse()
 
 class MO_set_molden(MO_set):
-    def export_AO(self, ens, occs, Ct, fname='out.mld', cfmt='% 10E', occmin=-1):
+    def export_AO(self, ens, occs, Ct, fname='out.mld', cfmt='% 10E', occmin=-1, alphabeta=False):
         """
         Export coefficients given already in the AO basis to molden file.
         
@@ -219,8 +219,16 @@ class MO_set_molden(MO_set):
     
             mld.write(' Sym= X\n')
             mld.write(' Ene= %f\n'%ens[imo])
-            mld.write(' Spin= Alpha\n')
-            mld.write(' Occup= %f\n'%occs[imo])
+            if alphabeta:
+                if occs[imo] < 0:
+                    mld.write(' Spin= Alpha\n')
+                    mld.write(' Occup= %f\n'%-occs[imo])
+                else:
+                    mld.write(' Spin= Beta\n')
+                    mld.write(' Occup= %f\n'%occs[imo])                    
+            else:
+                mld.write(' Spin= Alpha\n')
+                mld.write(' Occup= %f\n'%occs[imo])
             for ibf, coeff in enumerate(Ct[imo]):
                 fmtstr = '%10i   '+cfmt+'\n'
                 mld.write(fmtstr%(ibf+1, coeff))
