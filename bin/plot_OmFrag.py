@@ -137,22 +137,27 @@ class OmFrag_options(input_options.write_options):
             tel += '<br>%s'%state['name']
             htable.add_el(tel)
         
+        # create a plot with the e/h axes and optionally the scale
+        pylab.figure(figsize=(2,2))        
+        ax = pylab.axes()
+        ax.arrow(0.15, 0.15, 0.5, 0., head_width=0.05, head_length=0.1, fc='k', ec='k')
+        ax.text(0.20, 0.05, 'electron')
+        ax.arrow(0.15, 0.15, 0., 0.5, head_width=0.05, head_length=0.1, fc='k', ec='k')    
+        ax.text(0.02, 0.20, 'hole', rotation='vertical')
+
         if self['sscale']:
-            pylab.figure(figsize=(2,2))
+#            pylab.figure(figsize=(2,2))
             
             pylab.pcolor(numpy.zeros([1, 1]), cmap=pylab.get_cmap(name=self['cmap']), vmin=0., vmax=self.maxOm)
-            pylab.axis('off')
-            
-            # this does not seem to work:
-            #pylab.xlabel('hole?')
-            #pylab.ylabel('elec?')
             
             pylab.colorbar()
-            pylab.savefig('cbar.%s'%self['output_format'], dpi=self['plot_dpi'])
             
-            tel  = '<img src="cbar.%s", border="1" width="200">\n'%self['output_format']
-            tel += '<br>Scale'
-            htable.add_el(tel)
+        pylab.axis('off')            
+        pylab.savefig('axes.%s'%self['output_format'], dpi=self['plot_dpi'])
+            
+        tel  = '<img src="axes.%s", border="1" width="200">\n'%self['output_format']
+        tel += '<br>Axes / Scale'
+        htable.add_el(tel)
             
         hfile.write(htable.ret_table())    
         hfile.post()
