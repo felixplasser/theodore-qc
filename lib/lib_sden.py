@@ -59,14 +59,19 @@ class sden_ana(dens_ana_base.dens_ana_base):
         Print out bond order/valence information for all states.
         TODO: add individual bond orders
         """
-        title = "Bond order/valence information"
-        function = self.print_BO_table
-        
+        title  = "Valence information"
+        title += "\n Total valence (V_A)"
+        title += "\n Free valence (F_A)"
+        #title += "\n total bond order (tBO = V_A - F_A)"
+        function = self.print_valence_table
         self.printer_base(title, function, lvprt)
         
-        # TODO: individual bond orders
+        title  = "Bond order information"
+        title += "\n <at1>-<at2> : <bond order>"
+        function = self.print_BO
+        self.printer_base(title, function, lvprt)
         
-    def print_BO_table(self, state, lvprt=2, BO_data=['V_A', 'F_A', 'tBO']):
+    def print_valence_table(self, state, lvprt=2, BO_data=['V_A', 'F_A']):
         pop_pr = pop_ana.pop_printer()
         for data in BO_data:
             pop = state[data]
@@ -74,6 +79,19 @@ class sden_ana(dens_ana_base.dens_ana_base):
             pop_pr.add_pop(data, pop)
             
         print pop_pr.ret_table()
+        
+    def print_BO(self, state, lvprt=2):
+        for iat, BOlist in enumerate(state['BO']):
+            for jat in xrange(iat+1, len(BOlist)):
+                BOval = BOlist[jat]
+                if BOval > 1.5:
+                    print "{0:>3}={1:<3}:{2:>7.4f}".format(iat+1, jat+1, BOval)
+                    # print "%i=%i: %.4f"%(iat+1, jat+1, BOval)
+                elif BOval > 0.5:
+                    print "{0:>3}-{1:<3}:{2:>7.4f}".format(iat+1, jat+1, BOval)
+                    #print "%i-%i: %.4f"%(iat+1, jat+1, BOval)
+            
+        
 #--------------------------------------------------------------------------#        
 # Operations
 #--------------------------------------------------------------------------#

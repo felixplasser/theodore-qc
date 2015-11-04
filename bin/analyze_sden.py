@@ -12,7 +12,7 @@ def ihelp():
     print " analyze_sden.py\n"
     print " Command line options:"
     print "  -h, -H, -help: print this help"
-    print "  -ifile [dens_ana.in]: name of the input file"
+    print "  -ifile, -f  [dens_ana.in]: name of the input file"
     exit(0)
 
 #--------------------------------------------------------------------------#        
@@ -26,7 +26,7 @@ while len(sys.argv)>0:
     arg = sys.argv.pop(0)
     if arg in ["-h", "-H", "-help"]:
         ihelp()
-    elif arg == '-ifile':
+    elif arg == '-ifile' or arg == '-f':
         ifile = sys.argv.pop(0)
 
 if not os.path.exists(ifile):

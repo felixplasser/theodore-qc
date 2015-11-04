@@ -230,6 +230,9 @@ class write_options_theo(input_options.write_options):
         else:
             self.write_option('jmol_orbitals', 'False')
             
+    def BO_ana(self):
+        self.read_yn('Mayer bond order and valence analysis?', 'BO_ana', True)
+            
     def ddm_parse(self):
         if self['rtype'] == 'qcadc':
             if self.ret_yn('Parse 1DDM exciton information from ADCMAN job?', True):
@@ -304,6 +307,7 @@ def run_theoinp():
                 if wopt.read_yn('Compute number of unpaired electrons?', 'unpaired_ana', True):
                     wopt['prop_list'] += ['nu', 'nunl']
             wopt.AD_ana()
+            wopt.BO_ana()
             wopt.ddm_parse()
             
     wopt.write_prop_list()
