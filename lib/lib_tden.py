@@ -309,6 +309,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
     def analyze_excitons(self, exciton_ana):
         for state in self.state_list:
             Om, OmAt = self.ret_Om_OmAt(state)
+            if Om == None: continue
             
             state['RMSeh'] = exciton_ana.ret_RMSeh(Om, OmAt)
             state['MAeh']  = exciton_ana.ret_MAeh(Om, OmAt)

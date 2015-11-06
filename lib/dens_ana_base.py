@@ -1,5 +1,4 @@
-import file_parser, lib_mo, error_handler, cclib_interface
-import lib_mo
+import file_parser, lib_mo, error_handler, cclib_interface, units
 import numpy
 
 class dens_ana_base:
@@ -36,6 +35,7 @@ class dens_ana_base:
         Read the (transition) density matrices and some supplementary information.
         """
         rtype = self.ioptions.get('rtype')
+        if self.ioptions['read_libwfa']: self.mos = None
         
         if rtype=='ricc2':
             self.state_list = file_parser.file_parser_ricc2(self.ioptions).read(self.mos)
@@ -45,7 +45,7 @@ class dens_ana_base:
             self.state_list = file_parser.file_parser_libwfa(self.ioptions).read()
         elif rtype=='qcadc':
             self.state_list = file_parser.file_parser_qcadc(self.ioptions).read()
-        elif rtype=='qctddft':
+        elif rtype=='qctddft':            
             self.state_list = file_parser.file_parser_qctddft(self.ioptions).read(self.mos)            
         elif rtype in ['mcscf', 'colmcscf']:
             self.state_list = file_parser.file_parser_col_mcscf(self.ioptions).read(self.mos)
@@ -75,6 +75,16 @@ class dens_ana_base:
                 self.ioptions['molden_orbitals'] = False
         else:
             raise error_handler.ElseError(rtype, 'rtype')
+        
+        self.extra_info()
+        
+    def extra_info(self):
+        for state in self.state_list:
+            try:
+                state['lam'] = units.energy['nm'] / (state['exc_en'] / units.energy['eV'])
+            except ZeroDivisionError:
+                pass
+        
           
 #--------------------------------------------------------------------------#          
 # Output

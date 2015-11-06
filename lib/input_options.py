@@ -353,6 +353,7 @@ class dens_ana_options(read_options):
         self['rfile']   = None # file to read
         self['ana_files'] = [] # list of files to analyze
         self['read_binary'] = False # read binary files rather than standard output (if applicable)
+        self['read_libwfa'] = False # switch to libwfa output (applicable for qctddft)
         self['s_or_t'] = None # state or transition density matrix analysis
         self['ignore_irreps'] = [] # ignore irreps in the MO file
         

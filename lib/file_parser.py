@@ -595,7 +595,15 @@ class file_parser_qctddft(file_parser_libwfa):
             
         print "Parsing %s for %s ..."%(self.ioptions.get('rfile'), ststr)
         
-        for line in open(self.ioptions.get('rfile'), 'r'):
+#        for line in open(self.ioptions.get('rfile'), 'r'):
+        rfileh = open(self.ioptions.get('rfile'),'r') 
+        while True: # loop over all lines
+            try:
+                line = rfileh.next()
+            except StopIteration:
+              print "Finished parsing file %s"%self.ioptions.get('rfile')  
+              break
+
             if ststr in line:
                 tdread = True
             elif 'TDDFT calculation will be performed' in line:
@@ -604,6 +612,10 @@ class file_parser_qctddft(file_parser_libwfa):
                 tdread = False
             elif 'Excited State Analysis' in line:
                 libwfa = True
+                if len(state_list) == 0:
+                    errstr = "No excitation energy parsed!"
+                    errstr+= "\n   Please, set 'TDA=True' if this was a TDA calculation."
+                    raise(error_handler.MsgError(errstr))
             elif 'SA-NTO Decomposition' in line:
                 libwfa = False
                     
@@ -614,14 +626,32 @@ class file_parser_qctddft(file_parser_libwfa):
                     
                     state_list[-1]['state_num'] = int(words[2])
                     state_list[-1]['exc_en'] = float(words[-1])
-                    state_list[-1]['name'] = 'X%i'%state_list[-1]['state_num']
                     
-                    state_list[-1]['tden'] = self.init_den(mos, rect=True)
+                    line = rfileh.next()
+                    line = rfileh.next()
+                    words = line.split()
+                    
+                    if words[0] == 'Multiplicity:':
+                        state_list[-1]['mult'] = '(%s)'%words[1][0]
+                    else:
+                        state_list[-1]['mult'] = '(-)'
+                        
+                    state_list[-1]['name'] = 'es_%i%s'%(state_list[-1]['state_num'], state_list[-1]['mult'])
+                    
+                    if self.ioptions['read_libwfa']:
+                        om_filen = 'es_%i_ctnum_atomic.om'%state_list[-1]['state_num']
+                        (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile(om_filen)
+                        
+                        if not typ==None:
+                            state_list[-1]['Om']   = om_at.sum()
+                            state_list[-1]['OmAt'] = om_at                        
+                    else:
+                        state_list[-1]['tden'] = self.init_den(mos, rect=True)
                     
                 elif 'Strength' in line:
                     state_list[-1]['osc_str'] = float(words[-1])
                     
-                elif 'amplitude' in line:
+                elif 'amplitude' in line and not self.ioptions['read_libwfa']:
                     # ignore the Y vector.
                     #    Otherwise the Y would go into the virt-occ block!
                     if 'Y:' in line: continue
@@ -645,9 +675,10 @@ class file_parser_qctddft(file_parser_libwfa):
                 elif 'Exciton analysis of the transition density matrix' in line:
                     exc_diff = False
                     exc_1TDM = True
-                    
-                self.parse_keys(state_list[istate-1], exc_diff, exc_1TDM, line)             
+                
+                self.parse_keys(state_list[istate-1], exc_diff, exc_1TDM, line)
         
+        rfileh.close()
         return state_list
 
 #---

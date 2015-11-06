@@ -1,0 +1,11 @@
+rtype='qctddft'
+rfile='qchem.out.new'
+read_libwfa=True
+TDA=False
+at_lists=[[1], [2, 6, 23, 7, 16, 5, 15, 14], [3, 12, 25, 13, 22, 9, 20, 21], [4, 19, 11, 10, 18, 8, 17, 24]]
+coor_file='qchem.out.new'
+coor_format='qcout'
+prop_list=['Om', 'POSi', 'POSf', 'PR', 'CT', 'MC', 'LC', 'MLCT', 'LMCT', 'LLCT', 'RMSeh', 'dexc']
+output_file='tden_summ_libwfa.txt'
+output_prec=(10, 6)
+mcfmt='% 10E'
