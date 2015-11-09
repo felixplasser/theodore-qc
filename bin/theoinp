@@ -102,7 +102,8 @@ class write_options_theo(input_options.write_options):
         if self.has_key('rfile'):
            self.read_str('Main file to read', 'rfile', self['rfile'])
         
-        # switch for libwfa   
+        # switch for libwfa
+        self['read_libwfa'] = False        
         if self['rtype'] in ['qctddft']:
             if self.read_yn('Did you run "state_analysis=True"?', 'read_libwfa', False):
                 self['mo_file'] = None

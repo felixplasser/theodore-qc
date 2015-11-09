@@ -3,6 +3,7 @@ Utilities for reading and writing options from/to an input file.
 """
 
 import error_handler
+import readline
 
 class options:
     """
@@ -183,10 +184,14 @@ class write_options(options):
         print
         print title
         
-        inpstr = 'Choice: '
+        inpstr = 'Choice (autocomplete enabled): '
         if not default=='': inpstr += '[%s] '%default
-            
+        
+        readline.set_completer_delims(' \t\n;')
+        readline.parse_and_bind("tab: complete")    # activate autocomplete            
         val = raw_input(inpstr)
+        readline.parse_and_bind("tab: ")            # deactivate autocomplete
+    
         if val=='': val = default
 
         return val
