@@ -279,6 +279,13 @@ class MO_set_molden(MO_set):
         
         for line in fileh:
             words = line.replace('=',' ').split()
+            
+            if 'molden format' in line.lower():
+                if not '[Molden Format]' in line:
+                    print " WARNING: the header may not be understood by Jmol:"
+                    print line,
+                    print " This has to be changed to:"
+                    print " [Molden Format]"
         
             # what section are we in
             if '[' in line:
