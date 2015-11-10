@@ -3,7 +3,6 @@ Utilities for reading and writing options from/to an input file.
 """
 
 import error_handler
-import readline
 
 class options:
     """
@@ -96,6 +95,8 @@ class read_options(options):
         self.init = self.read_ifile()
         
         if check_init: self.check_init()
+        
+        self.post_process()
     
     def check_init(self):
         """
@@ -160,12 +161,19 @@ class read_options(options):
             return default
         else:
             return self.opt_dict[option]
+        
+    def post_process(self):
+        pass
 
 class write_options(options):
     """
     General class for writing options to an input file.
     """
     def __init__(self, ifile):
+        # readline creates weird output of the form [?1034h
+        #   it should only be imported here
+        import readline
+
         options.__init__(self, ifile)
         
         self.ostr = ''    
@@ -381,6 +389,11 @@ class dens_ana_options(read_options):
         
         # Program specific options
         self['TDA'] = False
+
+#    def post_process(self):
+#        if not 'coor_file' in self and 'mo_file' in self:
+#            self['coor_file'] = self['mo_file']
+#            self['coor_format'] = 'molden'
                 
 class tden_ana_options(dens_ana_options):
     """

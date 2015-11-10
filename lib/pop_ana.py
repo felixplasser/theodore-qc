@@ -3,7 +3,7 @@ Module for population analysis.
 Currently only Mulliken style analysis is supported.
 """
 
-import error_handler
+import error_handler, lib_struc
 import numpy
 
 class pop_ana:
@@ -41,9 +41,11 @@ class pop_printer:
     """
     Printer for population analysis data.
     """
-    def __init__(self):
+    def __init__(self, struc):
         self.pop_types = []
         self.pops = []
+        
+        self.struc = struc
         
     ## \brief Add population data    
     # \param pop_type name to be printed
@@ -66,7 +68,7 @@ class pop_printer:
         
         retstr = ''
         
-        hstr = '%5s'%'Atom'
+        hstr = '%6s'%'Atom'
         for pop_type in self.pop_types:
             hstr += '%10s'%pop_type
             
@@ -75,7 +77,10 @@ class pop_printer:
         retstr += "\n" + len(hstr) * '-' + "\n"
         
         for iat in xrange(len(self.pops[0])):
-            retstr += '%5i'%(iat + 1)
+            if self.struc==None:
+                retstr += '%6i'%(iat+1)
+            else:
+                retstr += '%3s%3i'%(self.struc.ret_symbol(iat+1), iat+1)
             for pop in self.pops:
                 retstr += '% 10.5f'%pop[iat]
             retstr += '\n'

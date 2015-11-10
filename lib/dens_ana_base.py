@@ -1,4 +1,4 @@
-import file_parser, lib_mo, error_handler, cclib_interface, units
+import file_parser, lib_mo, error_handler, cclib_interface, units, lib_struc
 import numpy
 
 class dens_ana_base:
@@ -85,6 +85,15 @@ class dens_ana_base:
             except ZeroDivisionError:
                 pass
         
+        if 'coor_file' in self.ioptions:
+            self.struc = lib_struc.structure()
+            self.struc.read_file(self.ioptions['coor_file'], self.ioptions['coor_format'])
+        elif 'mo_file' in self.ioptions:
+            self.struc = lib_struc.structure()
+            self.struc.read_file(self.ioptions['mo_file'], 'molden')
+        else:
+            self.struc = None
+            
           
 #--------------------------------------------------------------------------#          
 # Output

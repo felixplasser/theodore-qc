@@ -1,5 +1,6 @@
 """
 Tools for molecular structure analysis and manipulation.
+This is a wrapper to python-openbabel.
 """
 
 import os, shutil, locale
@@ -34,14 +35,14 @@ class structure:
         self.file_path = file_path
         self.file_type = file_type
         self.mol = openbabel.OBMol()
-        
+
         if self.file_type in self.new_types:
             self.read_new_type()
         else:
             obconversion = openbabel.OBConversion()
             obconversion.SetInFormat(file_type)
             obconversion.ReadFile(self.mol, file_path)
-            
+
     def read_new_type(self):
         """
         Routine for reading a file type not contained in open babel.
@@ -69,7 +70,7 @@ class structure:
                  at_num = 99
               obatom.SetAtomicNum(at_num)
 
-              coords = [float(word) for word in words[2:5]] 
+              coords = [float(word) for word in words[2:5]]
               obatom.SetVector(*coords)
               self.tinker_extra.append(words[5:])
               # maybe one could use SetSymbol here
@@ -84,7 +85,7 @@ class structure:
               words = line.split()
               obatom = openbabel.OBAtom()
               obatom.SetAtomicNum(int(float(words[1])))
-              coords = [float(word)*units.length['A'] for word in words[2:5]] 
+              coords = [float(word)*units.length['A'] for word in words[2:5]]
               obatom.SetVector(*coords)
 
               self.mol.AddAtom(obatom)
@@ -146,7 +147,7 @@ class structure:
         for i in xrange(self.mol.NumAtoms()):
             atom = self.mol.GetAtom(i+1)
             vec_list += [atom.x(), atom.y(), atom.z()]
-           
+
         return numpy.array(vec_list)
 
     def ret_3xN_matrix(self, at_list=None):
@@ -162,19 +163,19 @@ class structure:
         for i in at_list:
             atom = self.mol.GetAtom(i)
             mat_list += [[atom.x(), atom.y(), atom.z()]]
-            
+
         return numpy.array(mat_list)
-        
-        
+
+
     def ret_moved_structure(self, add_vec, name=''):
         """
         Move the structure by <add_vec>.
         """
         if name == '': name = self.name
-        
+
         coor_mat = self.ret_3xN_matrix()
         coor_mat += add_vec
-        
+
         ret_struc = structure(name=name)
         ret_struc.read_file_3xN_matrix(self.file_path, self.file_type, coor_mat)
         return ret_struc
@@ -183,63 +184,63 @@ class structure:
         """
         Return the distance between atoms indexed i and j.
         """
-        
+
         OBAtom_i = self.mol.GetAtom(i)
         OBAtom_j = self.mol.GetAtom(j)
-        
+
         pos_i = numpy.array([OBAtom_i.x(), OBAtom_i.y(), OBAtom_i.z()])
         pos_j = numpy.array([OBAtom_j.x(), OBAtom_j.y(), OBAtom_j.z()])
 
         return numpy.dot(pos_i - pos_j, pos_i - pos_j)**.5
-        
+
     def ret_distance_matrix(self):
         """
         Return a matrix containing all the distances between atoms.
         """
         num_at = self.mol.NumAtoms()
-        
+
         ret_mat = numpy.zeros([num_at, num_at])
-        
+
         for iat in xrange(num_at):
             for jat in xrange(iat+1, num_at):
                 bij = self.ret_bond_length(iat+1, jat+1)
                 ret_mat[iat, jat] = bij
                 ret_mat[jat, iat] = bij
-                
+
         return ret_mat
-    
+
     def ret_bend(self, i, j, k):
         """
         Return the bending angle between atoms indexed i, j, k.
         """
-        
+
         OBAtom_i = self.mol.GetAtom(i)
         OBAtom_j = self.mol.GetAtom(j)
         OBAtom_k = self.mol.GetAtom(k)
-        
+
         pos_i = numpy.array([OBAtom_i.x(), OBAtom_i.y(), OBAtom_i.z()])
         pos_j = numpy.array([OBAtom_j.x(), OBAtom_j.y(), OBAtom_j.z()])
         pos_k = numpy.array([OBAtom_k.x(), OBAtom_k.y(), OBAtom_k.z()])
 
         vec1 = pos_i - pos_j
         vec2 = pos_k - pos_j
-        
+
         len_1 = numpy.sqrt(numpy.dot(vec1,vec1))
         len_2 = numpy.sqrt(numpy.dot(vec2,vec2))
 
         return numpy.arccos(numpy.dot(vec1, vec2) / (len_1*len_2)) / numpy.pi * 180
-    
+
     def ret_tors(self, i, j, k, l):
         """
         Return the torsion angle between atoms indexed i, j, k, l.
         """
         # Dihedral angle computed according to (http://en.wikipedia.org/wiki/Dihedral_angle) to get the full 360 deg range.
-        
+
         OBAtom_i = self.mol.GetAtom(i)
         OBAtom_j = self.mol.GetAtom(j)
         OBAtom_k = self.mol.GetAtom(k)
         OBAtom_l = self.mol.GetAtom(l)
-        
+
         pos_i = numpy.array([OBAtom_i.x(), OBAtom_i.y(), OBAtom_i.z()])
         pos_j = numpy.array([OBAtom_j.x(), OBAtom_j.y(), OBAtom_j.z()])
         pos_k = numpy.array([OBAtom_k.x(), OBAtom_k.y(), OBAtom_k.z()])
@@ -248,28 +249,31 @@ class structure:
         vec1 = pos_j - pos_i
         vec2 = pos_k - pos_j
         vec3 = pos_l - pos_k
-        
+
         cross1 = numpy.cross(vec1, vec2)
         cross2 = numpy.cross(vec2, vec3)
-        
+
         norm2 = numpy.sqrt(numpy.dot(vec2, vec2))
         dot1 = numpy.dot(vec1, cross2)
         dot2 = numpy.dot(cross1, cross2)
-        
+
         return numpy.arctan2(norm2 * dot1, dot2) / numpy.pi * 180
-    
+
     def ret_symbol(self, i):
         """
         Returns the symbol of atom i.
         """
-        return Z_symbol_dict[self.mol.GetAtom(i).GetAtomicNum()]
+        try:
+            return Z_symbol_dict[self.mol.GetAtom(i).GetAtomicNum()]
+        except KeyError:
+            return 'X'
 
     def ret_num_at(self):
         """
         Returns the number of atoms in the file.
         """
         return self.mol.NumAtoms()
-    
+
     def ret_mass_vector(self, power):
         """
         Returns a vector with the masses of the atoms (each 1 time) taken to the <power> power.
@@ -280,7 +284,7 @@ class structure:
             mass_list += [atom.GetAtomicMass()**power]
 
         return numpy.array(mass_list, float)
-        
+
     def ret_partition(self,cutBonds=[]):
         """
         Return a partition according to different non-bonded molecules.
@@ -290,7 +294,7 @@ class structure:
         at_lists = []
         chk_list = []
         remaining_atoms = [self.mol.NumAtoms()-i for i in xrange(self.mol.NumAtoms())]
-        
+
         while(len(remaining_atoms)>0): # do the loop as long as there are still atoms which are not in at_lists
             if len(chk_list) > 0:
                 curr_at = chk_list.pop()
@@ -300,7 +304,7 @@ class structure:
                 curr_at = remaining_atoms.pop()
                 at_lists[-1].append(curr_at)
             #print 'curr_at:',curr_at
-            
+
             atom = self.mol.GetAtom(curr_at)
             for bonded in openbabel.OBAtomAtomIter(atom):
                 bind = bonded.GetIdx()
@@ -312,11 +316,11 @@ class structure:
                         chk_list.append(bind)
                         at_lists[-1].append(bind)
                         #print bind
-            
-            
-        
+
+
+
         return at_lists
-    
+
     def make_coord_file(self, file_path, file_type='tmol'):
         """
         Write the structure file.
@@ -336,7 +340,7 @@ class structure:
         num_at = self.mol.NumAtoms()
 
         if file_type == 'txyz2':
-          outfile.write('%i from MSMT\n'%num_at) 
+          outfile.write('%i from MSMT\n'%num_at)
           for ind in xrange(1, num_at+1):
             obatom = self.mol.GetAtom(ind)
             outstr  = ' %6i'%ind
@@ -365,7 +369,7 @@ class structure:
           atstrs={}
           for ind in xrange(1, num_at+1):
             obatom  = self.mol.GetAtom(ind)
-            
+
             outstr  = '%2s'%Z_symbol_dict[obatom.GetAtomicNum()]
             outstr += ' %7.1f'%obatom.GetAtomicNum()
             outstr += '% 14.8f'%(obatom.x() / units.length['A'])
@@ -376,13 +380,13 @@ class structure:
             outstr += '% 14.8f\n'%obatom.GetExactMass()
 
             Z = obatom.GetAtomicNum()
-            
+
             if not Z in atnums:
                 atnums.append(Z)
                 atstrs[Z] = []
-            
+
             atstrs[Z].append(outstr)
-            
+
           for Z in atnums:
               for ostr in atstrs[Z]:
                   outfile.write(ostr)
@@ -399,10 +403,10 @@ class veloc:
         """
         self.file_path = file_path
         self.file_type = file_type
-        
+
         infile = open(self.file_path,'r')
         line = infile.readline()
-        vtmp = []        
+        vtmp = []
 
         if self.file_type == 'vtxyz': # read from tinker.dyn file
             inveloc = False
@@ -419,7 +423,7 @@ class veloc:
         elif self.file_type == 'vnx': # NX veloc file
            while(line!=''):
               vtmp.append([float(word) for word in line.split()])
-              
+
               line = infile.readline()
         else:
            print 'type %s not supported for input'%self.file_type
@@ -429,7 +433,7 @@ class veloc:
 
         self.veloc = numpy.array(vtmp)
         #print self.veloc
-        
+
     def read_struc(self, struc, scale=1.0):
         """
         Initialize with the coordinates of a structure file.

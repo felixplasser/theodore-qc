@@ -46,7 +46,7 @@ class sden_ana(dens_ana_base.dens_ana_base):
         self.printer_base(title, function, lvprt, dens_types=dens_types)
         
     def print_pop_table(self, state, lvprt=2, dens_types=['']):
-        pop_pr = pop_ana.pop_printer()
+        pop_pr = pop_ana.pop_printer(self.struc)
         for dens_type in dens_types:
             pop = self.ret_general_pop(state, dens_type=dens_type)
             
@@ -72,7 +72,7 @@ class sden_ana(dens_ana_base.dens_ana_base):
         self.printer_base(title, function, lvprt)
         
     def print_valence_table(self, state, lvprt=2, BO_data=['V_A', 'F_A']):
-        pop_pr = pop_ana.pop_printer()
+        pop_pr = pop_ana.pop_printer(self.struc)
         for data in BO_data:
             pop = state[data]
             

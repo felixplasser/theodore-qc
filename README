@@ -4,6 +4,7 @@ TheoDORE 1.1.3
 - Create Molden files directly from cclib output
 - Enhanced exciton analysis
 - Support for Mayer bond order analysis
+- Add spectrum.py script for generating a convoluted spectrum
 
 TheoDORE 1.1.2
 - Support for MOLCAS rassi calculations

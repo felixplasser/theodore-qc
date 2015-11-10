@@ -12,9 +12,7 @@ class exciton_analysis:
     def __init__(self):
         self.distmat = None
     
-    def get_distance_matrix(self, coor_file, coor_type):
-        struc = lib_struc.structure()
-        struc.read_file(coor_file, coor_type)
+    def get_distance_matrix(self, struc):
         self.distmat = struc.ret_distance_matrix()
                         
     def ret_RMSeh(self, Om, OmAt):
@@ -40,7 +38,6 @@ class exciton_analysis:
         MA_dist = numpy.dot(OmAt.flatten(), self.distmat.flatten()) / Om
         
         return MA_dist
-
 
     def ret_Eb(self, Om, OmAt, Eb_diag=1.0):
         """
