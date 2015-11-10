@@ -46,12 +46,14 @@ class write_options_theo(input_options.write_options):
         #   None means that the option is not applicable
         #   '' means that no default is given
         
+        self['read_libwfa'] = False                
         # optionally this could be read from dens_ana.in
         if self['rtype'] == 'qcadc':
             self['rfile'] = 'qchem.out'
             self['mo_file'] = None
             self['coor_file'] = 'qchem.out'
             self['coor_format'] = 'qcout'
+            self['read_libwfa'] = True
         elif self['rtype'] == 'libwfa':
             self['rfile'] = None
             self['mo_file'] = None
@@ -103,7 +105,6 @@ class write_options_theo(input_options.write_options):
            self.read_str('Main file to read', 'rfile', self['rfile'])
         
         # switch for libwfa
-        self['read_libwfa'] = False        
         if self['rtype'] in ['qctddft']:
             if self.read_yn('Did you run "state_analysis=True"?', 'read_libwfa', False):
                 self['mo_file'] = None

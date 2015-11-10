@@ -42,7 +42,7 @@ class wfile:
 
 class wtable:
     """
-    Routines for creating a general table.
+    Virtual class with routines for creating a general table.
     """
     def __init__(self, ncol=2):
         self.ncol = ncol
@@ -78,10 +78,10 @@ class wtable:
             self.add_el(el)        
         
     def new_row(self):
-        raise error_hander.PureVirtualError()
+        raise error_handler.PureVirtualError()
     
     def new_el(self, el):
-        raise error_hander.PureVirtualError()
+        raise error_handler.PureVirtualError()
     
     def ret_table(self):
         self.str += self.close_table()
@@ -89,7 +89,20 @@ class wtable:
         return self.str
         
     def close_table(self):
-        raise error_hander.PureVirtualError()
+        raise error_handler.PureVirtualError()
+
+class asciitable(wtable):
+    """
+    Routines for creating a simple ASCII table.
+    """
+    def new_row(self):
+        return '\n'
+    
+    def new_el(self, el):
+        return '% .6f'%el
+    
+    def close_table(self):
+        return '\n'
         
 class htmlfile(wfile):
     """

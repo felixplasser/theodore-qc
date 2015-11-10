@@ -19,8 +19,7 @@ class write_table_options(input_options.write_options):
             self.write_list('prop_list', rstr.split(), lformat="'%s'")
         
         self.choose_list('Output format', 'output_format',
-                         [
-                            ('latex', 'LaTeX source file'),
+                         [  ('latex', 'LaTeX source file'),
                             ('html', 'HTML format')
                          ], 'latex')
         
