@@ -5,6 +5,7 @@ TheoDORE 1.1.3
 - Enhanced exciton analysis
 - Support for Mayer bond order analysis
 - Add spectrum.py script for generating a convoluted spectrum
+- Improved print out
 
 TheoDORE 1.1.2
 - Support for MOLCAS rassi calculations

@@ -80,7 +80,7 @@ class OmFrag_options(input_options.write_options):
         )
         
         self.read_int('Font size', 'fsize', 10)
-        self.read_str("Format of output graphics files", "output_format", "png")
+        self.read_str("Format of output graphics files", "output_format", "png", autocomp=False)
         self.read_yn('Use the same scale for all plots', 'sscale', True)
         if self['sscale']:
             self.read_float('Maximal value to plot', 'vmax', self.maxOm)
@@ -141,9 +141,9 @@ class OmFrag_options(input_options.write_options):
         pylab.figure(figsize=(2,2))        
         ax = pylab.axes()
         ax.arrow(0.15, 0.15, 0.5, 0., head_width=0.05, head_length=0.1, fc='k', ec='k')
-        ax.text(0.20, 0.05, 'electron')
+        ax.text(0.20, 0.05, 'hole')
         ax.arrow(0.15, 0.15, 0., 0.5, head_width=0.05, head_length=0.1, fc='k', ec='k')    
-        ax.text(0.02, 0.20, 'hole', rotation='vertical')
+        ax.text(0.02, 0.20, 'electron', rotation='vertical')
 
         if self['sscale']:
 #            pylab.figure(figsize=(2,2))

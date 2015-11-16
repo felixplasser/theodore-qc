@@ -170,33 +170,36 @@ class write_options(options):
     General class for writing options to an input file.
     """
     def __init__(self, ifile):
-        # readline creates weird output of the form [?1034h
-        #   it should only be imported here
-        import readline
-
         options.__init__(self, ifile)
         
         self.ostr = ''    
     
-    def read_str(self, title, key, default=''):
+    def read_str(self, title, key, *args, **kwargs):
         """
         Read a string from input.
         """
         titlek = "%s (%s):"%(title, key)
         
-        val = self.ret_str(titlek, default)
+        val = self.ret_str(titlek, *args, **kwargs)
                 
         self.write_option(key, val)
         
-    def ret_str(self, title, default=''):
+    def ret_str(self, title, default='', autocomp=True):
+        # readline, which is used for auto completion,
+        #   creates weird output of the form [?1034h
+        #   it should only be imported here
+        import readline
+
         print
         print title
         
-        inpstr = 'Choice (autocomplete enabled): '
+        acstr = ' (autocomplete enabled)' if autocomp else ''
+        inpstr = 'Choice%s: '%acstr
         if not default=='': inpstr += '[%s] '%default
         
-        readline.set_completer_delims(' \t\n;')
-        readline.parse_and_bind("tab: complete")    # activate autocomplete            
+        if autocomp:
+            readline.set_completer_delims(' \t\n;')
+            readline.parse_and_bind("tab: complete")    # activate autocomplete            
         val = raw_input(inpstr)
         readline.parse_and_bind("tab: ")            # deactivate autocomplete
     
