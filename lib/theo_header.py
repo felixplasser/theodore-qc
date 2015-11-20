@@ -6,7 +6,7 @@ def print_header(*args):
 def ret_header(title=None):
     hstr  = width*'=' + '\n'
     
-    hstr += addlinec("TheoDORE 1.1.3")
+    hstr += addlinec("TheoDORE 1.1.4")
     hstr += addlinec("Theoretical Density, Orbital Relaxation and Exciton analysis")
     hstr += addlinec("Felix Plasser")
     

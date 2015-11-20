@@ -1,7 +1,15 @@
 #!/bin/bash
 # source this file to set the paths
 
-export THEODIR=/user/plasserf/programs/TheoDORE/GIT
+# Find the path of this script and set THEODIR automatically
+ABSPATH=`readlink -e ${BASH_SOURCE[@]}`
+export THEODIR=`dirname ${ABSPATH}`
+# If this does not work set it manually and modify the next line
+# export THEODIR=/user/plasserf/programs/TheoDORE/GIT
+
+echo "THEODIR set to $THEODIR"
+
+# set PATH and PYTHONPATH
 export PATH=$THEODIR/bin:$PATH
 export PYTHONPATH=$THEODIR/lib
 

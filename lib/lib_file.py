@@ -181,13 +181,18 @@ class summ_file:
     Class for analyzing the summary files.
     """
     def __init__(self, fname):
+        self.ddict = {}
+        self.state_labels = []
+        
+#       try:
         f = open(fname, 'r')
+#        except IOError:
+#            print ' WARNING: file %s not found!'%fname
+#            self.header = ''
+#            return
         
         self.header = f.next().split()
         f.next()
-        
-        self.ddict = {}
-        self.state_labels = []
         
         while True:
                 try:

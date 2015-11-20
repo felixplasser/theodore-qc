@@ -19,9 +19,9 @@ class write_plot_options(input_options.write_options):
         """
         print "This script allows to combine information from several TheoDORE runs into one graph."
         print "   These jobs are assumed to be located in subdirectories of the current directory."
-        
-        sdirs = [dirn for dirn in os.listdir('.') if os.path.isdir(dirn)]
-        
+       
+        sdirs = sorted([dirn for dirn in os.listdir('.') if os.path.isdir(dirn)])
+       
         print "The following subdirectories were found:"
         self.print_list(sdirs)
         rstr = self.ret_str("Please enter the order in which they should appear, e.g. '1 2 4 3'")
@@ -80,7 +80,7 @@ class write_plot_options(input_options.write_options):
         
         htable = lib_file.htmltable(ncol=4)
         
-        set1 = self.data[0][self['state_labels'][0]]
+        #set1 = self.data[0][self['state_labels'][0]] # not used anywhere??
         
         matplotlib.rc('font', size=self['fsize'])
         
