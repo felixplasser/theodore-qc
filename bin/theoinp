@@ -179,7 +179,7 @@ class write_options_theo(input_options.write_options):
         return struc.ret_partition()                
     
     def coor_file(self):
-        self.read_str('Coordinate file', 'coor_file', self['coor_file'])
+        self.read_str('Coordinate file', 'coor_file', self['coor_file'], True)
         self.read_str('Format of coordinate file', 'coor_format', self['coor_format'])
         
     def set_Om_desc(self):

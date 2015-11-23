@@ -59,17 +59,16 @@ class options:
             sum_list+=at_list
             lens.append(len(at_list))
             
+        numen = len(sum_list)
+        maxen = max(sum_list)
+        
         if prt_lvl >= 1:
             print '\nChecking whether the at_lists definition is valid ...'
-        if prt_lvl >= 2:
-            print 'at_lists=', at_lists
-        if prt_lvl >= 1:
+            if prt_lvl >= 2:
+                print 'at_lists=', at_lists
             print '  %i lists with individual numbers of entries:'%(num_lists)
             print lens
             
-        numen = len(sum_list)
-        maxen = max(sum_list)
-        if prt_lvl >= 1:
             print '  %i total entries, with maximal value %i'%(numen,maxen)
             
         for i in xrange(1,maxen+1):

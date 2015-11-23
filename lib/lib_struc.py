@@ -285,7 +285,7 @@ class structure:
 
         return numpy.array(mass_list, float)
 
-    def ret_partition(self,cutBonds=[]):
+    def ret_partition(self,cutBonds=[], lvprt=1):
         """
         Return a partition according to different non-bonded molecules.
         cutBonds is a list of tuples for bonds to cut. The order does not matter
@@ -299,11 +299,9 @@ class structure:
             if len(chk_list) > 0:
                 curr_at = chk_list.pop()
             else:
-                #print 'new at_list'
                 at_lists.append([])
                 curr_at = remaining_atoms.pop()
                 at_lists[-1].append(curr_at)
-            #print 'curr_at:',curr_at
 
             atom = self.mol.GetAtom(curr_at)
             for bonded in openbabel.OBAtomAtomIter(atom):
@@ -315,11 +313,35 @@ class structure:
                         del remaining_atoms[remaining_atoms.index(bind)]
                         chk_list.append(bind)
                         at_lists[-1].append(bind)
-                        #print bind
 
-
+        if lvprt >= 1:
+            print "\n*** Fragment composition ***"
+            for i, at_list in enumerate(at_lists):
+                print "  Fragment %i: %s"%(i+1, self.ret_at_list_composition(at_list))
 
         return at_lists
+
+    def ret_at_list_composition(self, at_list):
+        """
+        Return a string describing the atoms contained in at_list,
+           e.g. C4H5N3
+        """
+        symb_list = []
+        at_dict = {}
+
+        for iat in at_list:
+            symb = self.ret_symbol(iat)
+            try:
+                at_dict[symb] += 1
+            except KeyError:
+                at_dict[symb]  = 1
+                symb_list.append(symb)
+
+        ret_str = ''
+        for symb in sorted(symb_list):
+            ret_str += '%s%i '%(symb, at_dict[symb])
+
+        return ret_str
 
     def make_coord_file(self, file_path, file_type='tmol'):
         """
