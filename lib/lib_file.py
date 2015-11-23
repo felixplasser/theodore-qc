@@ -147,6 +147,7 @@ class latexfile(wfile):
         if graphicx:
             self.f.write("\\usepackage{graphicx}\n")
             self.f.write("\\newcommand{\\incMO}{\\includegraphics[trim = 1.00cm 1.00cm 1.00cm 1.00cm, clip=true,width=6.00 cm]}\n\n")
+            self.f.write("\\newcommand{\\incplot}{\\includegraphics[width=6.00 cm]}\n\n")
         self.f.write("\\begin{document}\n")
         if not title==None: self.f.write("%s\n"%title)
         

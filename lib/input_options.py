@@ -184,7 +184,7 @@ class write_options(options):
                 
         self.write_option(key, val)
         
-    def ret_str(self, title, default='', autocomp=True):
+    def ret_str(self, title, default='', autocomp=False):
         # readline, which is used for auto completion,
         #   creates weird output of the form [?1034h
         #   it should only be imported here

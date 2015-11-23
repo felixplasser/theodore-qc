@@ -90,7 +90,7 @@ class mo_output_tex(mo_output):
                 moex = []
             
     def post(self, ofileh):
-        self.ltable.close_table()
+        #self.ltable.close_table() # not needed??
         ofileh.write(self.ltable.ret_table()) 
         
 class mocoll:

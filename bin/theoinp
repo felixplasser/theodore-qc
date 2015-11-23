@@ -102,7 +102,7 @@ class write_options_theo(input_options.write_options):
             
     def set_read_options(self):
         if self.has_key('rfile'):
-           self.read_str('Main file to read', 'rfile', self['rfile'])
+           self.read_str('Main file to read', 'rfile', self['rfile'], autocomp=True)
         
         # switch for libwfa
         if self['rtype'] in ['qctddft']:
@@ -118,7 +118,7 @@ class write_options_theo(input_options.write_options):
         
         mo_str = 'MO file (Molden format)\
                       \n -> This file should ideally contain a square invertible coefficient matrix'
-        self.read_str(mo_str, 'mo_file', self['mo_file'])
+        self.read_str(mo_str, 'mo_file', self['mo_file'], True)
         
         if self['rtype'] == 'ricc2':
             print
@@ -127,7 +127,7 @@ class write_options_theo(input_options.write_options):
             print "     from the control file before running tm2molden."
         
         if self['rtype'] == 'nos':
-            nodir = self.ret_str('Directory with the NO files:', '.')
+            nodir = self.ret_str('Directory with the NO files:', '.', True)
             print "%s contains the following files:"%nodir
             
             lfiles = sorted(os.listdir(nodir))
@@ -272,7 +272,7 @@ It is assumed that you ran a RASSI job using the TRD1 option
 Please specify this directory and choose, which files will be analyzed,
     e.g. only transitions to the ground state.
         """
-        ddir = self.ret_str('Directory with the TRD2 files:', 'TRD')
+        ddir = self.ret_str('Directory with the TRD2 files:', 'TRD', True)
         print "%s contains the following files:"%ddir
         
         lfiles = sorted(os.listdir(ddir))

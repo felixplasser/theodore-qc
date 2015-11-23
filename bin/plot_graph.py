@@ -77,8 +77,12 @@ class write_plot_options(input_options.write_options):
         hfname = 'graphs.html'
         hfile = lib_file.htmlfile(hfname)
         hfile.pre('Property graphs')
+        htable = lib_file.htmltable(ncol=3)
         
-        htable = lib_file.htmltable(ncol=4)
+        lfname = 'graphs.tex'
+        lfile  = lib_file.latexfile(lfname)
+        lfile.pre('Property graphs', graphicx=True)
+        ltable = lib_file.latextable(ncol=2)
         
         #set1 = self.data[0][self['state_labels'][0]] # not used anywhere??
         
@@ -117,11 +121,15 @@ class write_plot_options(input_options.write_options):
             
             tel  = '<img src="%s", border="1" width="400">'%pname
             htable.add_el(tel)
+            
+            lel = "\\incplot{%s}"%pname
+            ltable.add_el(lel)
                 
         hfile.write(htable.ret_table()) 
-        hfile.post()
+        hfile.post(lvprt=1)
         
-        print " HTML file %s containing the property graphs written."%hfname
+        lfile.write(ltable.ret_table())
+        lfile.post(lvprt=1)
         
     def txt_files(self):
         """
