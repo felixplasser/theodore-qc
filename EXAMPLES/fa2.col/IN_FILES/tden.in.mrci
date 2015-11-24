@@ -13,3 +13,4 @@ prop_list=['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt', 'PRNTO', 'RMSeh']
 output_file='tden_summ.txt.mrci'
 mcfmt='% 10E'
 output_prec=(10, 6)
+eh_pop=2

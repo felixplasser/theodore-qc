@@ -194,6 +194,15 @@ class write_options_theo(input_options.write_options):
             self['prop_list'] += ['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt']
         elif ichoice==2:
             self['prop_list'] += ['Om', 'POSi','POSf','PR','CT','MC','LC','MLCT','LMCT','LLCT']                    
+    
+    def set_eh_pop(self):
+        """
+        Print-out of e/h populations.
+        """
+        eh_list = ['None', 'For fragments', 'For fragments and individual atoms']
+        
+        ichoice = self.ret_choose_list('Print-out of electron/hole populations', eh_list, 1)
+        self.write_option('eh_pop', ichoice-1)
             
     def write_prop_list(self):
         if len(self['prop_list']) == 0: return
@@ -300,6 +309,7 @@ def run_theoinp():
             if wopt.ret_yn('Perform CT number analysis?', True):
                 wopt.make_at_lists()
                 wopt.set_Om_desc()
+                wopt.set_eh_pop()
                 
             wopt.nto_ana()            
                 
