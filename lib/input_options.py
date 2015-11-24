@@ -413,7 +413,8 @@ class tden_ana_options(dens_ana_options):
         self['Om_formula'] = 1
         self['at_lists'] = None
         self['prop_list'] = ['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt']
-        self['print_OmFrag'] = True # print out the Omega matrix
+        self['print_OmFrag'] = True # print out the Omega matrix to a file
+        self['eh_pop'] = 1 # print e/h populations: 1 - for fragments, 2 - also for atoms
         
         # program flow
         self['comp_ntos'] = True

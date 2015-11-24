@@ -3,7 +3,7 @@ Analysis routines for transition density matrices.
 """
 
 
-import dens_ana_base, Om_descriptors, lib_mo, error_handler
+import dens_ana_base, Om_descriptors, lib_mo, error_handler, pop_ana
 import numpy
 
 numpy.set_printoptions(precision=6, suppress=True)
@@ -116,6 +116,54 @@ class tden_ana(dens_ana_base.dens_ana_base):
         Om, OmAt = self.ret_Om_OmAt(state)
         
         print "RMS e-h sep.: %8.6f Ang"%state['RMSeh']
+
+#---
+
+    def print_all_eh_pop(self, lvprt=2):
+        """
+        Print electron/hole population analysis.
+        """
+        if self.ioptions['eh_pop'] == 0: return
+        
+        print "*** Electron/hole population analysis ***"
+        
+        if 'at_lists' in self.ioptions:
+            title = 'Decomposition over fragments'
+            function = self.print_eh_Frag
+            self.printer_base(title, function, lvprt)
+        
+        if self.ioptions['eh_pop'] >= 2:
+            title = 'Decomposition over individual atoms'
+            function = self.print_eh_At
+            self.printer_base(title, function, lvprt)        
+        
+    def print_eh_Frag(self, state, lvprt=2):
+        Om, OmFrag = self.ret_Om_OmFrag(state)
+        
+        hpop = numpy.sum(OmFrag, 1)
+        epop = numpy.sum(OmFrag, 0)
+        
+        pop_pr = pop_ana.pop_printer(self.struc)
+        pop_pr.add_pop('h+', hpop)
+        pop_pr.add_pop('e-', epop)
+        pop_pr.add_pop('sum', hpop+epop)
+        pop_pr.add_pop('diff', hpop-epop)
+        
+        print pop_pr.ret_table_Frag(self.ioptions['at_lists'])
+        
+    def print_eh_At(self, state, lvprt=2):
+        Om, OmAt = self.ret_Om_OmAt(state)
+        
+        hpop = numpy.sum(OmAt, 1)
+        epop = numpy.sum(OmAt, 0)
+        
+        pop_pr = pop_ana.pop_printer(self.struc)
+        pop_pr.add_pop('h+', hpop)
+        pop_pr.add_pop('e-', epop)
+        pop_pr.add_pop('sum', hpop+epop)
+        pop_pr.add_pop('diff', hpop-epop)
+        
+        print pop_pr.ret_table()
 
 #--------------------------------------------------------------------------#        
 # Find data

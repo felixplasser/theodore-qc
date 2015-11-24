@@ -44,10 +44,12 @@ if 'mo_file' in ioptions: tdena.read_mos()
     
 tdena.read_dens()
 
-if'at_lists' in ioptions:
+if 'at_lists' in ioptions or ioptions['eh_pop'] >= 1:
+    tdena.compute_all_OmAt()
+
+if 'at_lists' in ioptions:
     tdena.compute_all_OmFrag()
-    if ioptions['print_OmFrag']:
-        tdena.fprint_OmFrag()
+    if ioptions['print_OmFrag']: tdena.fprint_OmFrag()
         
 if ioptions['comp_ntos']: tdena.compute_all_NTO()
 
@@ -59,6 +61,8 @@ if 'RMSeh' in ioptions.get('prop_list') or 'MAeh' in ioptions.get('prop_list') o
 #--------------------------------------------------------------------------#        
 # Print-out
 #--------------------------------------------------------------------------# 
+
+tdena.print_all_eh_pop()
 
 tdena.print_summary()
 

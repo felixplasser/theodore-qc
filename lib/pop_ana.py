@@ -58,6 +58,17 @@ class pop_printer:
         
         self.pop_types.append(pop_type)
         self.pops.append(pop)
+    
+    def header(self, inp):
+        hstr = inp
+        for pop_type in self.pop_types:
+            hstr += '%10s'%pop_type
+            
+        retstr  = len(hstr) * '-' + "\n"
+        retstr += hstr            
+        retstr += "\n" + len(hstr) * '-' + "\n"
+        
+        return hstr, retstr
         
     def ret_table(self):
         """
@@ -66,16 +77,9 @@ class pop_printer:
         if len(self.pop_types) == 0:
             return "  ... no population analysis data available."
         
-        retstr = ''
+        hstr, retstr = self.header('%6s'%'Atom')        
         
-        hstr = '%6s'%'Atom'
-        for pop_type in self.pop_types:
-            hstr += '%10s'%pop_type
-            
-        retstr += len(hstr) * '-' + "\n"
-        retstr += hstr            
-        retstr += "\n" + len(hstr) * '-' + "\n"
-        
+        # main part
         for iat in xrange(len(self.pops[0])):
             if self.struc==None:
                 retstr += '%6i'%(iat+1)
@@ -85,9 +89,40 @@ class pop_printer:
                 retstr += '% 10.5f'%pop[iat]
             retstr += '\n'
 
+        # sums
         retstr += len(hstr) * '-' + "\n"
         
-        retstr += '%5s'%''
+        retstr += '%6s'%''
+        for pop in self.pops:
+            retstr += '% 10.5f'%pop.sum()
+        
+        retstr += "\n" + len(hstr) * '-' + "\n"
+        
+        return retstr
+    
+    def ret_table_Frag(self, at_lists):
+        """
+        Return a table over fragments.
+        """
+        if len(self.pop_types) == 0:
+            return "  ... no population analysis data available."
+               
+        hstr, retstr = self.header('%15s'%'Fragment')
+        
+        # main part
+        for i in xrange(len(self.pops[0])):
+            if self.struc==None:
+                retstr += '%15i'%(i+1)
+            else:
+                retstr += '%15s'%(self.struc.ret_at_list_composition(at_lists[i]))
+            for pop in self.pops:
+                retstr += '% 10.5f'%pop[i]
+            retstr += '\n'
+
+        # sums
+        retstr += len(hstr) * '-' + "\n"
+        
+        retstr += '%15s'%''
         for pop in self.pops:
             retstr += '% 10.5f'%pop.sum()
         

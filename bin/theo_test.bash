@@ -74,7 +74,7 @@ do
     for rfile in `ls "$sdir/REF_FILES"`
     do
         echo "  -> $rfile"
-        diff -I TheoDORE "$sdir/REF_FILES/$rfile" $rfile
+        diff -I TheoDORE -w "$sdir/REF_FILES/$rfile" $rfile
         chk=$((chk+$?))
     done
     
