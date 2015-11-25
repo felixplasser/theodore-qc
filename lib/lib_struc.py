@@ -340,12 +340,7 @@ class structure:
         ret_str = ''
         for symb in sorted(symb_list):
             numel = at_dict[symb]
-            ret_str += symb if numel==1 else '%s%i '%(symb, numel)
-            
-            #if at_dict[symb] == 1:
-            #    ret_str += symb
-            #else:
-            #    ret_str += '%s%i '%(symb, at_dict[symb])
+            ret_str += '%s '%symb if numel==1 else '%s%i '%(symb, numel)
 
         return ret_str
 

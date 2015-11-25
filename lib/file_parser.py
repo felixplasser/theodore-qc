@@ -422,9 +422,16 @@ class file_parser_libwfa(file_parser_base):
 
         line=rfile.readline()
         words=line.split()
-        typ = words[0]
-        excen = float(words[1]) if len(words) >= 2 else  0.
-        osc   = float(words[2]) if len(words) >= 3 else -1.
+        
+        if words[1] == '<-->':
+            # ccman2 output
+            typ = words[2]
+            excen = float(words[3]) if len(words) >= 4 else  0.
+            osc   = float(words[4]) if len(words) >= 5 else -1.
+        else:
+            typ = words[0]
+            excen = float(words[1]) if len(words) >= 2 else  0.
+            osc   = float(words[2]) if len(words) >= 3 else -1.
 
         line=rfile.readline()
         words=line.split()

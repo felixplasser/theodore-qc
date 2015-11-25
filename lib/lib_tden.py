@@ -125,7 +125,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         """
         if self.ioptions['eh_pop'] == 0: return
         
-        print "*** Electron/hole population analysis ***"
+        print "\n*** Electron/hole population analysis ***"
         
         if 'at_lists' in self.ioptions:
             title = 'Decomposition over fragments'
