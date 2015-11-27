@@ -25,7 +25,7 @@ class spec_options(input_options.write_options):
         
         self.spec = spectrum(**self.opt_dict)
         
-        self.read_str("Name of the file to analyze", "ana_file", "tden_summ.txt")
+        self.read_str("Name of the file to analyze", "ana_file", "tden_summ.txt", True)
         
     def make_spec(self):
         sfile = lib_file.summ_file(self['ana_file'])
@@ -48,6 +48,7 @@ class spec_options(input_options.write_options):
         if do_plots:
             self.spec.plot(xunit='eV', pname='spectrum_eV.png')
             self.spec.plot(xunit='nm', pname='spectrum_nm.png')
+            self.spec.plot(xunit='rcm', pname='spectrum_rcm.png')
         
 # Code adapted from SHARC
 class gauss:
@@ -67,6 +68,7 @@ class lorentz:
 class spectrum:
     def __init__(self,npts,emin,emax,fwhm,lineshape):
       self.npts=npts
+      (self.emin, self.emax) = (emin, emax)
       if lineshape==1:
           self.f=gauss(fwhm)
       elif lineshape==2:
@@ -77,7 +79,7 @@ class spectrum:
       self.lam = [lamev / en for en in self.en]
       self.spec=[ 0. for i in range(self.npts+1) ]
       
-      self.sticks=[] # list of pairs (A,x0)
+      self.sticks=[] # list of pairs (A,x0), unit for x0: eV
       
     def add(self,A,x0):
         if A==0.:
@@ -114,21 +116,31 @@ class spectrum:
         if xunit.lower() == 'ev':
             xlist = self.en
             pylab.xlabel('Energy (eV)')
-            xfac = 0.
+            plot_sticks = self.sticks
+            (xmin, xmax) = (self.emin, self.emax)
         elif xunit.lower() == 'nm':
+            xfac = units.energy['nm'] * units.energy['eV']            
             xlist = self.lam
             #pylab.xlabel(r'$\lambda$') not working ...
             pylab.xlabel('Wavelength (nm)')
-            xfac = units.energy['nm'] * units.energy['eV']
+            plot_sticks = [(A, xfac/x0) for A,x0 in self.sticks]
+            (xmin, xmax) = (xfac / self.emin, xfac / self.emax)
+        elif xunit.lower() == 'rcm':
+            xfac = 1. / units.energy['eV'] * units.energy['rcm']
+            xlist = [en * xfac for en in self.en]
+            pylab.xlabel('Wavenumber (1/cm)')            
+            plot_sticks = [(A, x0 * xfac) for A,x0 in self.sticks]
+            (xmin, xmax) = (self.emin * xfac, self.emax * xfac)
         else:
             raise error_handler.ElseError(xunit, 'xunit')
         pylab.ylabel('Absorption (norm.)')
         
         pylab.plot(xlist, self.spec, 'k-')
         
-        for A,x0 in self.sticks:
-            pylab.plot([xfac/x0, xfac/x0], [0., A], 'r-')
+        for A,x0 in plot_sticks:
+            pylab.plot([x0, x0], [-1., A], 'rx-')
         
+        pylab.axis(xmin=xmin, xmax=xmax, ymin=0., ymax=1.)
         pylab.savefig(pname)
         
         if lvprt >= 1:

@@ -82,6 +82,7 @@ class dens_ana_base:
         for state in self.state_list:
             try:
                 state['lam'] = units.energy['nm'] / (state['exc_en'] / units.energy['eV'])
+                state['nu']  = state['exc_en'] / units.energy['eV'] * units.energy['rcm'] / 1000
             except ZeroDivisionError:
                 pass
         

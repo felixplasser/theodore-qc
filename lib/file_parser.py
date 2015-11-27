@@ -423,7 +423,7 @@ class file_parser_libwfa(file_parser_base):
         line=rfile.readline()
         words=line.split()
         
-        if words[1] == '<-->':
+        if '<-->' in line:
             # ccman2 output
             typ = words[2]
             excen = float(words[3]) if len(words) >= 4 else  0.
@@ -468,6 +468,7 @@ class file_parser_libwfa(file_parser_base):
         self.parse_key(state, 'nunl', line, 'Number of unpaired electrons')                
         self.parse_key(state, 'p', line, 'Number of detached / attached electrons')
         self.parse_key(state, 'PRNTO', line, 'PR_NTO')
+        self.parse_key(state, '2P', line, 'Two-photon absorption cross-section')
             
         if exc_diff:
             self.parse_key(state, 'sigD', line, 'Hole size')
