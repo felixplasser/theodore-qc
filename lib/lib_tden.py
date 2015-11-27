@@ -319,9 +319,9 @@ class tden_ana(dens_ana_base.dens_ana_base):
         state['PRNTO'] = lams * lams / (lam*lam).sum()
         
         # entanglement entropy
-        loglam = numpy.log2(lam/lams)
+        #   take out the zeros since 0*log(0)=0
+        loglam = numpy.array([0. if lami <= 0. else numpy.log2(lami/lams) for lami in lam])
         state['S_HE'] = -2.*sum(lam/lams * loglam)
-        print state['S_HE']
         state['Z_HE'] = 2.**(state['S_HE']/2.)
         
         return U, lam, Vt
