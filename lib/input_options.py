@@ -385,7 +385,8 @@ class dens_ana_options(read_options):
         self['irrep_labels'] = ['I1', 'I2', 'I3', 'I4', 'I5', 'I6', 'I7', 'I8']
         self['ncore'] = {} # dictionary: number of frozen core orbitals per irrep
         
-        # atomic coordinates
+        # atoms
+        self['at_lists'] = None
         self['coor_file'] = None 
         self['coor_format'] = None
         
@@ -411,7 +412,6 @@ class tden_ana_options(dens_ana_options):
         
         # CT number analysis
         self['Om_formula'] = 1
-        self['at_lists'] = None
         self['prop_list'] = ['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt']
         self['print_OmFrag'] = True # print out the Omega matrix to a file
         self['eh_pop'] = 1 # print e/h populations: 1 - for fragments, 2 - also for atoms
@@ -443,3 +443,11 @@ class sden_ana_options(dens_ana_options):
         
         self['rd_ene'] = False # interpret energies as occupations in the NO files
         
+class fcd_ana_options(dens_ana_options):
+    """
+    Input options for fragment charge difference analysis.
+    """
+    def set_defaults(self):
+        dens_ana_options.set_defaults(self)
+        
+        self['state_pair'] = None

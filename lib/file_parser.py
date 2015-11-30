@@ -868,7 +868,6 @@ class file_parser_col_mcscf(file_parser_col):
         for lfile in sorted(os.listdir('WORK')):
             # Find the suitable files. This could also be done with regexps ...
             if not '.iwfmt' in lfile: continue
-            #if (not 'mcsd1fl' in lfile) and (not 'mcad1fl' in lfile): continue
             if not 'mcsd1fl' in lfile: continue
             
             if self.ioptions['s_or_t'] == 't':
@@ -887,6 +886,30 @@ class file_parser_col_mcscf(file_parser_col):
         
         if len(state_list) == 0:
             raise error_handler.MsgError('No density file found! Did you run write_den.bash?')
+        
+        return state_list
+    
+    def read_fcd(self, mos):
+        state_list = []
+        
+        ist1 = self.ioptions['state_pair'][0]
+        ist2 = self.ioptions['state_pair'][1]
+        
+        fn1  = "mcsd1fl.drt1.st%2.2i.iwfmt"%ist1
+        fn2  = "mcsd1fl.drt1.st%2.2i.iwfmt"%ist2
+        fn12 = "mcsd1fl.drt1.st%2.2i-st%2.2i.iwfmt"%(ist1, ist2)
+        fn21 = "mcsd1fl.drt1.st%2.2i-st%2.2i.iwfmt"%(ist2, ist1)
+        
+        state_list.append({})
+        self.read_mc_sden(state_list[-1], mos, fn1)
+        state_list.append({})
+        self.read_mc_sden(state_list[-1], mos, fn2)
+        state_list.append({})
+        try:
+            self.read_mc_tden(state_list[-1], mos, fn12)
+        except IOError:
+            print "File %s not found, trying %s..."%(fn12, fn21)
+            self.read_mc_tden(state_list[-1], mos, fn21)
         
         return state_list
     

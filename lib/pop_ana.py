@@ -41,7 +41,7 @@ class pop_printer:
     """
     Printer for population analysis data.
     """
-    def __init__(self, struc):
+    def __init__(self, struc=None):
         self.pop_types = []
         self.pops = []
         
@@ -130,3 +130,29 @@ class pop_printer:
         
         return retstr
     
+    def ret_table_FCD(self, at_lists):
+        """
+        Table for FCD.
+        """
+        hstr, retstr = self.header('%15s'%'Fragment')
+        
+        # main part
+        for i in xrange(len(self.pops[0])):
+            if self.struc==None:
+                retstr += '%15i'%(i+1)
+            else:
+                retstr += '%15s'%(self.struc.ret_at_list_composition(at_lists[i]))
+            for pop in self.pops:
+                retstr += '% 10.5f'%pop[i]
+            retstr += '\n'
+
+        # sums
+        retstr += len(hstr) * '-' + "\n"
+        
+        retstr += '%15s'%'FCD'
+        for pop in self.pops:
+            retstr += '% 10.5f'%(pop[1]-pop[0])
+        
+        retstr += "\n" + len(hstr) * '-' + "\n"
+        
+        return retstr

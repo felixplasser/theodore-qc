@@ -86,10 +86,8 @@ class sden_ana(dens_ana_base.dens_ana_base):
                 BOval = BOlist[jat]
                 if BOval > 1.5:
                     print "{0:>3}={1:<3}:{2:>7.4f}".format(iat+1, jat+1, BOval)
-                    # print "%i=%i: %.4f"%(iat+1, jat+1, BOval)
                 elif BOval > 0.5:
                     print "{0:>3}-{1:<3}:{2:>7.4f}".format(iat+1, jat+1, BOval)
-                    #print "%i-%i: %.4f"%(iat+1, jat+1, BOval)
             
         
 #--------------------------------------------------------------------------#        
