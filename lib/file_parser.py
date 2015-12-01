@@ -765,14 +765,22 @@ class file_parser_col(file_parser_base):
                 new = "%i%s"%(imo-self.ioptions['ncore'][irr], irr)
                 mos.syms2[isym] = new
         
-        state['tden'] = self.init_den(mos)
-        
-        tmp = filen.replace('state','').replace('drt','').replace('trncils.FROM','').split('TO')
+        tmp = filen.replace('LISTINGS/','').replace('state','').replace('drt','').replace('trncils.FROM','').split('TO')
         ir_st_ref = tmp[0].split('.')
         ir_st_exc = tmp[1].split('.')
+        
         state['irrep'] = self.ioptions.get('irrep_labels')[int(ir_st_exc[0]) - 1]
         state['state_ind'] = int(ir_st_exc[1])
         state['name'] = '%s.%i-%i'%(state['irrep'], int(ir_st_ref[1]), state['state_ind'])
+
+        if ir_st_ref==ir_st_exc:
+            state['sden'] = self.init_den(mos)
+            dfac = 1.
+            mat = state['sden']
+        else:
+            state['tden'] = self.init_den(mos)
+            dfac = 1. / numpy.sqrt(2)
+            mat = state['tden']
         
         rfile = open(filen,'r')
         while True:
@@ -784,14 +792,13 @@ class file_parser_col(file_parser_base):
                 print 'file %s, reading:'%filen
                 print line.strip('\n')
                 line=rfile.next()
-                self.read_block_mat(state, mos, rfile, sym=1)
+                self.read_block_mat(mat, mos, rfile, sym=1, dfac=dfac)
             elif 'asymm-trans density matrix:' in line:
                 print 'reading ...'
                 print line[:-1]
                 line=rfile.next()
-                self.read_block_mat(state, mos, rfile, sym=-1)
+                self.read_block_mat(mat, mos, rfile, sym=-1, dfac=dfac)
             elif 'Transition energy:  ' in line:
-                #words=rfile.next().split() # use the next line with "eV"
                 words=line.split() # use the line with "a.u." because it is given with more digits
                 state['exc_en']=float(words[2]) * units.energy['eV']
                 rfile.next()
@@ -800,13 +807,11 @@ class file_parser_col(file_parser_base):
                 state['osc_str']=float(words[-1])
         rfile.close()
                 
-    def read_block_mat(self, state, mos, rfile, sym):
+    def read_block_mat(self, mat, mos, rfile, sym, dfac=1.):
         """
         Parse the block matrix output in the listing file.
         This is not the cleanest routine but it seems to work ...
         """
-        isqr2 = 1. / numpy.sqrt(2.)       
-
         while(1):
             words=rfile.next().replace('MO','').split()
             
@@ -837,9 +842,9 @@ class file_parser_col(file_parser_base):
                     if val*val > 0.01: print "(%2i->%2i)-(%s->%s), val=% 8.4f"%\
                        (head_inds[i],left_ind,mos.syms2[head_inds[i]],mos.syms2[left_ind],val)
                     
-                    state['tden'][head_inds[i],left_ind] += isqr2 * val
+                    mat[head_inds[i],left_ind] += dfac * val
                     if left_ind != head_inds[i]:
-                        state['tden'][left_ind,head_inds[i]] += isqr2 * sym*val
+                        mat[left_ind,head_inds[i]] += dfac * sym*val
                         
                 words=rfile.next().replace('MO','').split()
                 
@@ -849,6 +854,7 @@ class file_parser_col_mrci(file_parser_col):
     def read(self, mos):
         if self.ioptions['s_or_t'] == 's':
             raise error_handler.MsgError('analyze_sden.py not implemented for col_mrci! Use "nos" instead.')
+            # it is actually possible to have bra=ket transitions in transmomin ...
             
         state_list = []
         
@@ -859,6 +865,29 @@ class file_parser_col_mrci(file_parser_col):
             state_list.append({})
             self.read_trncils(state_list[-1], mos, 'LISTINGS/%s'%lfile)
 
+        return state_list
+    
+    def read_fcd(self, mos):
+        state_list = [{}, {}, {}]
+        
+        ist1 = self.ioptions['state_pair'][0]
+        ist2 = self.ioptions['state_pair'][1]
+        
+        fn1  = "LISTINGS/trncils.FROMdrt1.state%iTOdrt1.state%i"%(ist1, ist1)
+        fn2  = "LISTINGS/trncils.FROMdrt1.state%iTOdrt1.state%i"%(ist2, ist2)
+        fn12 = "LISTINGS/trncils.FROMdrt1.state%iTOdrt1.state%i"%(ist1, ist2)
+        fn21 = "LISTINGS/trncils.FROMdrt1.state%iTOdrt1.state%i"%(ist2, ist1)
+        
+        self.read_trncils(state_list[0], mos, fn1)
+        self.read_trncils(state_list[1], mos, fn2)
+        if os.path.exists(fn12):
+            self.read_trncils(state_list[2], mos, fn12)
+        elif os.path.exists(fn21):
+            self.read_trncils(state_list[2], mos, fn21)
+        else:
+            print "Not using transition charges."
+            state_list[2] == None   
+        
         return state_list
     
 class file_parser_col_mcscf(file_parser_col):
@@ -890,7 +919,7 @@ class file_parser_col_mcscf(file_parser_col):
         return state_list
     
     def read_fcd(self, mos):
-        state_list = []
+        state_list = [{}, {}, {}]
         
         ist1 = self.ioptions['state_pair'][0]
         ist2 = self.ioptions['state_pair'][1]
@@ -900,16 +929,17 @@ class file_parser_col_mcscf(file_parser_col):
         fn12 = "mcsd1fl.drt1.st%2.2i-st%2.2i.iwfmt"%(ist1, ist2)
         fn21 = "mcsd1fl.drt1.st%2.2i-st%2.2i.iwfmt"%(ist2, ist1)
         
-        state_list.append({})
-        self.read_mc_sden(state_list[-1], mos, fn1)
-        state_list.append({})
-        self.read_mc_sden(state_list[-1], mos, fn2)
-        state_list.append({})
+        self.read_mc_sden(state_list[0], mos, fn1)
+        self.read_mc_sden(state_list[1], mos, fn2)
         try:
-            self.read_mc_tden(state_list[-1], mos, fn12)
+            self.read_mc_tden(state_list[2], mos, fn12)
         except IOError:
             print "File %s not found, trying %s..."%(fn12, fn21)
-            self.read_mc_tden(state_list[-1], mos, fn21)
+            try:
+                self.read_mc_tden(state_list[2], mos, fn21)
+            except IOError:
+                print "Not using transition charges."
+                state_list[2] == None
         
         return state_list
     
@@ -942,9 +972,6 @@ class file_parser_nos(file_parser_base):
     """
     def read(self, mos):
         state_list = []
-        
-        #state_list.append({})
-        #self.read_ref_nos(state_list[-1], mos)
         
         for no_file in self.ioptions['ana_files']:
             state_list.append({})
