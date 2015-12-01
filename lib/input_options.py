@@ -371,6 +371,7 @@ class dens_ana_options(read_options):
         self['read_libwfa'] = False # switch to libwfa output (applicable for qctddft)
         self['s_or_t'] = None # state or transition density matrix analysis
         self['ignore_irreps'] = [] # ignore irreps in the MO file
+        self['rd_ene'] = False # interpret energies as occupations in the NO files
         
         # Output options
         self['output_file']   = "ana_summ.txt"
@@ -380,6 +381,19 @@ class dens_ana_options(read_options):
         self['mcfmt']          = '% 10E' # format for molden coefficients
         self['output_prec']   = (7,3) # number of digits and decimal digits for output summary
         
+        # tden analysis
+        self['Om_formula'] = 1
+        self['prop_list'] = []
+        self['print_OmFrag'] = True # print out the Omega matrix to a file
+        self['eh_pop'] = 1 # print e/h populations: 1 - for fragments, 2 - also for atoms
+        self['comp_ntos'] = True
+
+        # sden analysis
+        self['pop_ana'] = True
+        self['unpaired_ana'] = True
+        self['AD_ana'] = True
+        self['BO_ana'] = True
+
         # Additional information
         # irrep labels for output
         self['irrep_labels'] = ['I1', 'I2', 'I3', 'I4', 'I5', 'I6', 'I7', 'I8']
@@ -393,10 +407,6 @@ class dens_ana_options(read_options):
         # Program specific options
         self['TDA'] = False
 
-#    def post_process(self):
-#        if not 'coor_file' in self and 'mo_file' in self:
-#            self['coor_file'] = self['mo_file']
-#            self['coor_format'] = 'molden'
                 
 class tden_ana_options(dens_ana_options):
     """
@@ -409,15 +419,7 @@ class tden_ana_options(dens_ana_options):
         
         # Output options
         self['output_file']   = "tden_summ.txt"        
-        
-        # CT number analysis
-        self['Om_formula'] = 1
         self['prop_list'] = ['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt']
-        self['print_OmFrag'] = True # print out the Omega matrix to a file
-        self['eh_pop'] = 1 # print e/h populations: 1 - for fragments, 2 - also for atoms
-        
-        # program flow
-        self['comp_ntos'] = True
         
         # exciton analysis options
         self['Eb_diag'] = 1.0
@@ -433,15 +435,7 @@ class sden_ana_options(dens_ana_options):
                 
         # Output options
         self['output_file']   = "sden_summ.txt"
-        self['prop_list'] = ['nu', 'nunl', 'p']
-        
-        # Which analyses to carry out
-        self['pop_ana'] = True
-        self['unpaired_ana'] = True
-        self['AD_ana'] = True
-        self['BO_ana'] = True
-        
-        self['rd_ene'] = False # interpret energies as occupations in the NO files
+        self['prop_list'] = ['nu', 'nunl', 'p']        
         
 class fcd_ana_options(dens_ana_options):
     """
