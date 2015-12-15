@@ -20,6 +20,7 @@ def ihelp():
 #--------------------------------------------------------------------------# 
 
 tmp = sys.argv.pop(0)
+if len(sys.argv) == 0: ihelp()
 
 no_files = []
 ifile = 'dens_ana.in'

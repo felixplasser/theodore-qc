@@ -377,6 +377,7 @@ class dens_ana_options(read_options):
         self['output_file']   = "ana_summ.txt"
         self['jmol_orbitals'] = True  # output orbitals in jmol format?
         self['molden_orbitals'] = False  # output orbitals in molden format?
+        self['min_occ'] = 0.05 # Minimal occupation for orbital print out
         self['alphabeta'] = False # use alpha/beta rather than neg./pos. to code for hole/electron?
         self['mcfmt']          = '% 10E' # format for molden coefficients
         self['output_prec']   = (7,3) # number of digits and decimal digits for output summary

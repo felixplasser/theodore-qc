@@ -12,8 +12,10 @@ class diab_base(dens_ana_base.dens_ana_base):
         """
         Print a summary.
         """
-        O_ren = (O22 - O11) / (O11 + O22)
-        etas  = 0.5 * numpy.arccos(O_ren)
+        #O_ren = (O22 - O11) / (O11 + O22)
+        etas  = 0.5 * numpy.arccos((O22-O11)/2.)
+        
+        print "FCD analysis. Correct?"
         
         if O12==None:
             print '%15s%12s'%('', 'simplified')

@@ -300,10 +300,10 @@ class tden_ana(dens_ana_base.dens_ana_base):
         for state in self.state_list:
             (U, lam, Vt) = self.ret_NTO(state)
             if jmol_orbs:
-                self.export_NTOs_jmol(state, jmolNTO, U, lam, Vt)
+                self.export_NTOs_jmol(state, jmolNTO, U, lam, Vt, minlam=self.ioptions['min_occ'])
                 
             if self.ioptions['molden_orbitals']:
-                self.export_NTOs_molden(state, U, lam, Vt)
+                self.export_NTOs_molden(state, U, lam, Vt, minlam=self.ioptions['min_occ'])
             
         if jmol_orbs:
             jmolNTO.post()

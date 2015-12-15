@@ -136,10 +136,10 @@ class sden_ana(dens_ana_base.dens_ana_base):
             (ad, W) = self.ret_NDO(state, self.state_list[0])
             
             if jmol_orbs:
-                self.export_NDOs_jmol(state, jmolNDO, ad, W)
+                self.export_NDOs_jmol(state, jmolNDO, ad, W, minad=self.ioptions['min_occ'])
             
             if self.ioptions['molden_orbitals']:
-                self.export_NDOs_molden(state, ad, W)
+                self.export_NDOs_molden(state, ad, W, minad=self.ioptions['min_occ'])
             
             if self.ioptions.get('pop_ana'):    
                 self.set_AD(state, ad, W)
