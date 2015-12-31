@@ -1,0 +1,28 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\author{Felix Plasser}
+\title{1TDM Descriptors}
+\begin{document}
+\begin{tabular}{ccc}
+\hline 
+\textbf{Symbol} & \textbf{Formula} & \textbf{Description} \\ 
+\hline
+\\
+Om & $\Omega = \sum_{AB}\Omega_{AB}$ & norm of the 1TDM, single-exc. character \\*[1.5ex]
+POSi & $\Omega^{-1}\sum_A A\left(\sum_B \Omega_{AB}\right)$ & initial/hole position	 \\*[1.5ex]
+POSf & $\Omega^{-1}\sum_B B\left(\sum_A \Omega_{AB}\right)$ & final/electron position	 \\*[1.5ex]
+POS & $(\textrm{POSi} + \textrm{POSf})/2$ & average position \\*[1.2ex]
+CT  & $\omega_{CT}=\Omega^{-1}\sum_{A,B\neq A}\Omega_{AB}$ & charge transfer \\*[1.5ex]
+CT2  & $\omega_{CT2}=\Omega^{-1}\sum_{A,B\not\in \lbrace A-1,A,A+1\rbrace}\Omega_{AB}$ & CT to second nearest neighbour \\*[1.5ex]
+PRi & $\Omega^{2}/\sum_A\left(\sum_B \Omega_{AB}\right)^2$ & initial/hole delocalization \\*[1.5ex]
+PRf & $\Omega^{2}/\sum_B\left(\sum_A \Omega_{AB}\right)^2$ & final/electron delocalization \\*[1.5ex]
+PR & $(\textrm{PRi}+\textrm{PRf})/2$ & arithmetic mean delocalization\\*[1.2ex]
+PRh & $2/(\textrm{PRi}+\textrm{PRf})/2$ & arithmetic mean delocalization\\*[1.2ex]
+\hline 
+\end{tabular} 
+
+\end{document}
