@@ -78,7 +78,7 @@ class dens_ana_base:
         
         self.extra_info()
         
-    def extra_info(self):
+    def extra_info(self, lvprt=1):
         for state in self.state_list:
             try:
                 state['lam'] = units.energy['nm'] / (state['exc_en'] / units.energy['eV'])
@@ -95,6 +95,11 @@ class dens_ana_base:
         else:
             self.struc = None
             
+	if lvprt>=1 and not self.struc==None:
+            print "\n Structure file parsed"
+            num_at = self.struc.ret_num_at()
+            print "Number of atoms: %i"%num_at
+            print "Composition: %s"%self.struc.ret_at_list_composition(range(1, num_at+1))
           
 #--------------------------------------------------------------------------#          
 # Output
