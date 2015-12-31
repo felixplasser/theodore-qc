@@ -21,7 +21,7 @@ For more information see Ref~\cite{DMAT}.
 \\~\\
 \begin{tabular}{clc}
 \hline 
-\textbf{Symbol} & \textbf{Formula} & \textbf{Description} \\ 
+\textbf{Key} & \textbf{Formula} & \textbf{Description} \\ 
 \hline
 \\
 Om & $\Omega = \sum_{AB}\Omega_{AB}$ & norm of the 1TDM, single-exc. character \\*[1.5ex]
@@ -30,12 +30,13 @@ POSf & $\om{POSf}=\Omega^{-1}\sum_B B\left(\sum_A \Omega_{AB}\right)$ & final/el
 POS & $\om{POS}=(\om{POSi} + \om{POSf})/2$ & average position \\*[1.2ex]
 CT  & $\om{CT}=\Omega^{-1}\sum_{A,B\neq A}\Omega_{AB}$ & charge transfer \\*[1.5ex]
 CT2  & $\om{CT2}=\Omega^{-1}\sum_{A,B\not\in \lbrace A-1,A,A+1\rbrace}\Omega_{AB}$ & CT to second nearest neighbour \\*[1.5ex]
+CTnt & $\om{CTnt}=\om{POSf} - \om{POSi}$ & net CT distance \\*[1.2ex]
 PRi & $\om{PRi}=\Omega^{2}/\sum_A\left(\sum_B \Omega_{AB}\right)^2$ & initial/hole delocalization \\*[1.5ex]
 PRf & $\om{PRf}=\Omega^{2}/\sum_B\left(\sum_A \Omega_{AB}\right)^2$ & final/electron delocalization \\*[1.5ex]
 PR & $\om{PR}=(\om{PRi}+\om{PRf})/2$ & arithmetic mean delocalization\\*[1.2ex]
 PRh & $\om{PRh}=2/(\om{PRi}^{-1}+\om{PRf}^{-1})$ & harmonic mean delocalization\\*[1.2ex]
 COH & $\om{COH}=\Omega^{2}/\left(\om{PR}\sum_{AB}\Omega_{AB}{}^2\right)$ & coherence length\\*[1.5ex]
-COHh & $\om{COHh}=\Omega^{2}/\left(\om{PRh}\sum_{AB}\Omega_{AB}{}^2\right)$ & harm. mean coherence length\\*[1.5ex]
+COHh & $\om{COHh}=\Omega^{2}/\left(\om{PRh}\sum_{AB}\Omega_{AB}{}^2\right)$ & harmonic mean coherence length\\*[1.5ex]
 \hline 
 \end{tabular} 
 
@@ -45,7 +46,7 @@ $M$ is the central metal atom (specified as the first fragment in \texttt{at\_li
 \\~\\
 \begin{tabular}{clc}
 \hline 
-\textbf{Symbol} & \textbf{Formula} & \textbf{Description} \\ 
+\textbf{Key} & \textbf{Formula} & \textbf{Description} \\ 
 \hline
 \\
 MC & $\om{MC}=\Omega^{-1}\Omega_{MM}$ & metal centered contribution \\*[1.5ex]
@@ -54,8 +55,7 @@ MLCT & $\om{MLCT}=\Omega^{-1}\sum_L\Omega_{ML}$ & metal-to-ligand CT contributio
 LMCT & $\om{LMCT}=\Omega^{-1}\sum_L\Omega_{LM}$ & ligand-to-metal CT contribution\\*[1.5ex]
 LLCT & $\om{LLCT}=\Omega^{-1}\sum_{L\neq L'}\Omega_{LL'}$ & ligand-to-ligand CT contribution\\*[1.5ex]
 \hline 
-\end{tabular} 
-
+\end{tabular}
 
 \begin{thebibliography}{9}
 \bibitem{DMAT} F. Plasser and H. Lischka \textit{JCTC} \doi{10.1021/ct300307c}.
