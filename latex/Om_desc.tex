@@ -1,28 +1,65 @@
-\documentclass[12pt,a4paper]{report}
+\documentclass[12pt,a4paper]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{color}
 \author{Felix Plasser}
 \title{1TDM Descriptors}
+
+\newcommand{\om}[1]{\omega_{\textrm{#1}}}
+\newcommand{\doi}[1]{\href{http://dx.doi.org/#1}{\textcolor{blue}{\bf DOI: #1}}}
+
 \begin{document}
-\begin{tabular}{ccc}
+\section{Standard 1TDM descriptors}
+Standard fragment based descriptors of the one-particle transition density matrix (1TDM).
+$A$ and $B$ are the indices of the fragments as defined in \texttt{at\_lists} .
+For more information see Ref~\cite{DMAT}.
+\\~\\
+\begin{tabular}{clc}
 \hline 
 \textbf{Symbol} & \textbf{Formula} & \textbf{Description} \\ 
 \hline
 \\
 Om & $\Omega = \sum_{AB}\Omega_{AB}$ & norm of the 1TDM, single-exc. character \\*[1.5ex]
-POSi & $\Omega^{-1}\sum_A A\left(\sum_B \Omega_{AB}\right)$ & initial/hole position	 \\*[1.5ex]
-POSf & $\Omega^{-1}\sum_B B\left(\sum_A \Omega_{AB}\right)$ & final/electron position	 \\*[1.5ex]
-POS & $(\textrm{POSi} + \textrm{POSf})/2$ & average position \\*[1.2ex]
-CT  & $\omega_{CT}=\Omega^{-1}\sum_{A,B\neq A}\Omega_{AB}$ & charge transfer \\*[1.5ex]
-CT2  & $\omega_{CT2}=\Omega^{-1}\sum_{A,B\not\in \lbrace A-1,A,A+1\rbrace}\Omega_{AB}$ & CT to second nearest neighbour \\*[1.5ex]
-PRi & $\Omega^{2}/\sum_A\left(\sum_B \Omega_{AB}\right)^2$ & initial/hole delocalization \\*[1.5ex]
-PRf & $\Omega^{2}/\sum_B\left(\sum_A \Omega_{AB}\right)^2$ & final/electron delocalization \\*[1.5ex]
-PR & $(\textrm{PRi}+\textrm{PRf})/2$ & arithmetic mean delocalization\\*[1.2ex]
-PRh & $2/(\textrm{PRi}+\textrm{PRf})/2$ & arithmetic mean delocalization\\*[1.2ex]
+POSi & $\om{POSi}=\Omega^{-1}\sum_A A\left(\sum_B \Omega_{AB}\right)$ & initial/hole position	 \\*[1.5ex]
+POSf & $\om{POSf}=\Omega^{-1}\sum_B B\left(\sum_A \Omega_{AB}\right)$ & final/electron position	 \\*[1.5ex]
+POS & $\om{POS}=(\om{POSi} + \om{POSf})/2$ & average position \\*[1.2ex]
+CT  & $\om{CT}=\Omega^{-1}\sum_{A,B\neq A}\Omega_{AB}$ & charge transfer \\*[1.5ex]
+CT2  & $\om{CT2}=\Omega^{-1}\sum_{A,B\not\in \lbrace A-1,A,A+1\rbrace}\Omega_{AB}$ & CT to second nearest neighbour \\*[1.5ex]
+PRi & $\om{PRi}=\Omega^{2}/\sum_A\left(\sum_B \Omega_{AB}\right)^2$ & initial/hole delocalization \\*[1.5ex]
+PRf & $\om{PRf}=\Omega^{2}/\sum_B\left(\sum_A \Omega_{AB}\right)^2$ & final/electron delocalization \\*[1.5ex]
+PR & $\om{PR}=(\om{PRi}+\om{PRf})/2$ & arithmetic mean delocalization\\*[1.2ex]
+PRh & $\om{PRh}=2/(\om{PRi}^{-1}+\om{PRf}^{-1})$ & harmonic mean delocalization\\*[1.2ex]
+COH & $\om{COH}=\Omega^{2}/\left(\om{PR}\sum_{AB}\Omega_{AB}{}^2\right)$ & coherence length\\*[1.5ex]
+COHh & $\om{COHh}=\Omega^{2}/\left(\om{PRh}\sum_{AB}\Omega_{AB}{}^2\right)$ & harm. mean coherence length\\*[1.5ex]
 \hline 
 \end{tabular} 
+
+\section{Transition metal complexes}
+Specific 1TDM descriptors to be used for transition metal complexes \cite{Ircomp}.
+$M$ is the central metal atom (specified as the first fragment in \texttt{at\_lists}), $L,L'$ are the ligands.
+\\~\\
+\begin{tabular}{clc}
+\hline 
+\textbf{Symbol} & \textbf{Formula} & \textbf{Description} \\ 
+\hline
+\\
+MC & $\om{MC}=\Omega^{-1}\Omega_{MM}$ & metal centered contribution \\*[1.5ex]
+LC & $\om{LC}=\Omega^{-1}\sum_L\Omega_{LL}$ & locally excited ligand centered contribution \\*[1.5ex]
+MLCT & $\om{MLCT}=\Omega^{-1}\sum_L\Omega_{ML}$ & metal-to-ligand CT contribution \\*[1.5ex]
+LMCT & $\om{LMCT}=\Omega^{-1}\sum_L\Omega_{LM}$ & ligand-to-metal CT contribution\\*[1.5ex]
+LLCT & $\om{LLCT}=\Omega^{-1}\sum_{L\neq L'}\Omega_{LL'}$ & ligand-to-ligand CT contribution\\*[1.5ex]
+\hline 
+\end{tabular} 
+
+
+\begin{thebibliography}{9}
+\bibitem{DMAT} F. Plasser and H. Lischka \textit{JCTC} \doi{10.1021/ct300307c}.
+\bibitem{Ircomp} F. Plasser and A. Dreuw \textit{JPCA} \doi{10.1021/jp5122917}.
+\end{thebibliography}
 
 \end{document}
