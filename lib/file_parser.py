@@ -127,7 +127,14 @@ class file_parser_ricc2(file_parser_base):
             #print conf.virt, mos.syms.index(conf.virt), mos.syms.index(conf.virt) - ihomo, conf.coeff
             ivirt = mos.syms.index(conf.virt)
 
-            state['tden'][iocc,ivirt] = conf.coeff
+            try:
+                state['tden'][iocc,ivirt] = conf.coeff
+            except:
+                print "\nERROR setting %s->%s (%i->%i) transition"%(conf.occ, conf.virt, iocc+1, ivirt+1)
+                print "Did you delete the line"
+                print "       implicit core=   x virt=    x"
+                print "  from the control file before running tm2molden?\n"
+                raise
                 
     def set_tden_bin(self, state, mos, lvprt=1):
         """
@@ -136,7 +143,6 @@ class file_parser_ricc2(file_parser_base):
         iirrep=self.ioptions['irrep_labels'].index(state['irrep']) + 1
         smult=state['mult']
         istate=state['state_ind']
-        #CCfilen = 'CCRE0-%i--%s---%i'%(iirrep, smult, istate)
         CCfilen = 'CCRE0{0:->2d}{1:->3s}{2:->4d}'.format(iirrep, smult, istate)
 
         if lvprt >= 1: print 'Reading binary file %s ...'%CCfilen
