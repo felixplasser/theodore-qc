@@ -225,8 +225,9 @@ class write_options_theo(input_options.write_options):
     def exciton_ana(self):
         if self.ret_yn('Compute approximate exciton size?', True):
             self['prop_list'] += ['RMSeh']
-            print "\nMolecular coordinates for exciton analysis:"
-            self.coor_file()
+            if not self['rtype'] == 'cclib':
+                print "\nMolecular coordinates for exciton analysis:"
+                self.coor_file()
             
         if self['rtype'] in ('qcadc','qctddft'):
             if self.ret_yn('Parse exciton information from libwfa analysis?', True):

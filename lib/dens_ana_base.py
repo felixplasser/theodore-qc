@@ -66,6 +66,8 @@ class dens_ana_base:
             self.mos = ccli.read_mos()
             self.read2_mos()
             self.state_list = ccli.read(self.mos)
+
+            self.struc = ccli.ret_struc()
             
             # Write a Molden file if possible
             if errcode == 0:
@@ -92,10 +94,10 @@ class dens_ana_base:
         elif 'mo_file' in self.ioptions:
             self.struc = lib_struc.structure()
             self.struc.read_file(self.ioptions['mo_file'], 'molden')
-        else:
+        elif self.ioptions['rtype'] != 'cclib':
             self.struc = None
-            
-	if lvprt>=1 and not self.struc==None:
+
+        if lvprt>=1 and not self.struc==None:
             print "\n Structure file parsed"
             num_at = self.struc.ret_num_at()
             print "Number of atoms: %i"%num_at

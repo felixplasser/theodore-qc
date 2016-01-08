@@ -5,7 +5,13 @@ Download and install cclib if you want to use the functions.
 """
 
 import file_parser, lib_mo, error_handler, units, lib_struc
-
+try:
+    import openbabel
+except ImportError:
+    print " *** Warning: python-openbabel not found! ***"
+    print " Using emulation program with limited capabilities ..."
+    import OB_repl as openbabel
+    
 class file_parser_cclib(file_parser.file_parser_base):
     def __init__(self, *args, **kwargs):
         file_parser.file_parser_base.__init__(self, *args, **kwargs)
@@ -18,12 +24,17 @@ class file_parser_cclib(file_parser.file_parser_base):
         """
         try:
             import cclib.parser
+            print "Using cclib version %s"%cclib.__version__
         except ImportError:
             print "\n ERROR: Did not find the external cclib package!"
             print "Please, download and install cclib to use this functionality.\n"
-            raise
-               
-        return cclib.parser.ccopen(rfile).parse()
+            raise            
+
+        cfile = cclib.parser.ccopen(rfile)
+        if cfile == None:
+            raise error_handler.MsgError('File %s cannot be parsed by cclib!'%rfile)
+        
+        return cfile.parse()
     
     def read(self, mos, rect_dens=True):
         """
@@ -94,9 +105,9 @@ class file_parser_cclib(file_parser.file_parser_base):
                 print '%15s ...'%attr, chk
 
         if lvprt >= 1:
-            print "\nAttributes for creation of Molden file:"
+            print "\nAttributes for structure parsing and creation of Molden file:"
             
-        for attr in ['gbasis', 'atomcoords', 'atomnos']:
+        for attr in ['gbasis', 'natom', 'atomcoords', 'atomnos']:
             chk = hasattr(self.data, attr)
             if not chk: errcode = max(1, errcode)
             
@@ -114,6 +125,17 @@ class file_parser_cclib(file_parser.file_parser_base):
         mos.read(self.data, lvprt=2)
         
         return mos
+    
+    def ret_struc(self,lvprt=1):
+        if lvprt>=1: print "Reading cclib structure ..."
+        struc = structrue_cclib()
+        #try:
+        struc.read_cclib(self.data)
+        #except AttributeError:
+        #    print "  cclib structure could not be read!"
+        #    return None
+        #else:
+        return struc
     
 class MO_set_cclib(lib_mo.MO_set_molden):
     def read(self, data, lvprt=1):
@@ -181,3 +203,15 @@ class MO_set_cclib(lib_mo.MO_set_molden):
             self.header+= "\n"
         
         self.export_AO(self.ens, self.occs, self.mo_mat.transpose(), fname, cfmt, occmin)
+
+class structrue_cclib(lib_struc.structure):
+    def read_cclib(self, data, lvprt=1):
+        self.mol = openbabel.OBMol()
+        
+        for iat in xrange(data.natom):
+            obatom = openbabel.OBAtom()
+            obatom.SetAtomicNum(int(data.atomnos[iat]))
+            coords = data.atomcoords[-1][iat]
+            obatom.SetVector(*coords)
+            
+            self.mol.AddAtom(obatom)
