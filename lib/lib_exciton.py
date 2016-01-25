@@ -22,7 +22,14 @@ class exciton_analysis:
         if self.distmat == None:
             raise error_handler.MsgError("Compute the distance matrix first!")
         
-        MS_dist = numpy.dot(OmAt.flatten(), self.distmat.flatten()**2.) / Om
+        try:
+            MS_dist = numpy.dot(OmAt.flatten(), self.distmat.flatten()**2.) / Om
+        except:
+            print "\n Error when computing MS_dist!"
+            print " Please, check the coordinate file."
+            print " OmAt: %i x %i"%(len(OmAt), len(OmAt[0]))
+            print " distmat: %i x %i"%(len(self.distmat), len(self.distmat[0]))
+            raise
         
         RMS_dist = numpy.sqrt(MS_dist)
         

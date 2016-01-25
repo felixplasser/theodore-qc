@@ -3,7 +3,8 @@ Release notes:
 TheoDORE 1.2
 - Extended output for e/h populations
 - Support for Q-Chem/CC computations
-- Fragment charge differences
+- Fragment charge differences (experimental)
+- User input
 
 TheoDORE 1.1.4
 - Bugfix for e/h correlation plots

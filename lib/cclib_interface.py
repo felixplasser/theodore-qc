@@ -88,7 +88,7 @@ class file_parser_cclib(file_parser.file_parser_base):
             print "\nChecking if the logfile %s can be parsed by cclib ..."%self.ioptions['rfile']
             print "\nEssential attributes:"
             
-        for attr in ['mocoeffs', 'natom', 'homos', 'moenergies', 'etenergies', 'etsyms', 'etsecs']:
+        for attr in ['mocoeffs', 'atombasis', 'natom', 'homos', 'moenergies', 'etenergies', 'etsyms', 'etsecs']:
             chk = hasattr(self.data, attr)
             if not chk: errcode = 2
             
