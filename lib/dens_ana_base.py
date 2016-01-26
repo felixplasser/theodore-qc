@@ -93,7 +93,7 @@ class dens_ana_base:
             self.struc.read_file(self.ioptions['coor_file'], self.ioptions['coor_format'])
         elif 'mo_file' in self.ioptions:
             self.struc = lib_struc.structure()
-            self.struc.read_file(self.ioptions['mo_file'], 'molden')
+            self.struc.read_at_dicts(self.mos.at_dicts)
         elif self.ioptions['rtype'] != 'cclib':
             self.struc = None
 
@@ -101,7 +101,7 @@ class dens_ana_base:
             print "\n Structure file parsed"
             num_at = self.struc.ret_num_at()
             print "Number of atoms: %i"%num_at
-            print "Composition: %s"%self.struc.ret_at_list_composition(range(1, num_at+1))
+            print "Composition: %s\n"%self.struc.ret_at_list_composition(range(1, num_at+1))
           
 #--------------------------------------------------------------------------#          
 # Output
@@ -193,5 +193,3 @@ class dens_ana_base:
             return state[prop]
         else:
             return None
-
-          

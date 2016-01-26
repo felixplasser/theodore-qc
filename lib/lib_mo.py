@@ -15,6 +15,7 @@ class MO_set:
         self.header = '' # header info for print-out
         self.num_at = 0
         self.basis_fcts = [] # info about basis functions
+        self.at_dicts = [] # info about atoms: {'Z':, 'x':, 'y':, 'z':}   
         
         self.S = None
         self.mo_mat = None
@@ -238,16 +239,16 @@ class MO_set_molden(MO_set):
     def read(self, lvprt=1):
         """
         Read in MO coefficients from a molden File.
-        """
-        
+        """        
         MO = False
         GTO = False
+        ATOMS = False
         mo_vecs = []
         mo_ind = 0
         self.syms = [] # list with the orbital descriptions. they are entered after Sym in the molden file.
         self.occs = [] # occupations
         self.ens  = [] # orbital energies (or whatever is written in that field)
-            
+
         num_bas={'s':1,'p':3,'sp':4,'d':6,'f':10,'g':15}
         
         orient={'s':['1'],
@@ -291,6 +292,7 @@ class MO_set_molden(MO_set):
             if '[' in line:
                 MO = False
                 GTO = False
+                ATOMS = False
             
             if '[MO]' in line:
                 if lvprt >= 2: print "Found [MO] tag"
@@ -331,6 +333,12 @@ class MO_set_molden(MO_set):
                   for i in xrange(num_bas[orbsymb]):
                     self.basis_fcts.append(basis_fct(curr_at, orbsymb, orient[orbsymb][i]))
                     num_orb+=1
+                    
+            elif '[atoms]' in line.lower():
+                ATOMS = True
+            elif ATOMS:
+                words = line.split()
+                self.at_dicts.append({'Z':int(words[2]), 'x':float(words[3]), 'y':float(words[4]), 'z':float(words[5])})
 
             if not MO:
                 self.header += line

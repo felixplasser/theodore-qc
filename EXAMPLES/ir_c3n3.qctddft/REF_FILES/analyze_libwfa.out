@@ -40,6 +40,11 @@ Reading: es_6_ctnum_atomic.om ...
  All values read in
 Finished parsing file qchem.out.new
 
+ Structure file parsed
+Number of atoms: 25
+Composition: C9 H12 Ir N3 
+
+
 *** Electron/hole population analysis ***
 
 Decomposition over fragments

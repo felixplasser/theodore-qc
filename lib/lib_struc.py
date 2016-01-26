@@ -141,6 +141,21 @@ class structure:
             atom = self.mol.GetAtom(iat)
             atom.SetVector(coor_mat[imat][0], coor_mat[imat][1], coor_mat[imat][2])
 
+    def read_at_dicts(self, at_dicts):
+        """
+        Create a mol from information specified in a list of dictionaries.
+        [{'Z':, 'x':, 'y':, 'z':}, ...]
+        """
+        self.mol = openbabel.OBMol()
+        
+        for iat in xrange(len(at_dicts)):
+            obatom = openbabel.OBAtom()
+            obatom.SetAtomicNum(at_dicts[iat]['Z'])
+            coords = (at_dicts[iat]['x'], at_dicts[iat]['y'], at_dicts[iat]['z'])
+            obatom.SetVector(*coords)
+            
+            self.mol.AddAtom(obatom)
+            
     def ret_vector(self):
         " All the coordinates in one vector "
         vec_list = []

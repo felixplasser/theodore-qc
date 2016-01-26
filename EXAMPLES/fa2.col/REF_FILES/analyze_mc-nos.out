@@ -1,5 +1,5 @@
 ================================================================================
-|                                TheoDORE 1.1.3                                |
+|                                TheoDORE 1.1.4                                |
 |         Theoretical Density, Orbital Relaxation and Exciton analysis         |
 |                                Felix Plasser                                 |
 --------------------------------------------------------------------------------
@@ -53,6 +53,11 @@ Number of MOs read in: 44
 Dimension: 44,44,...,44
 Number of basis functions parsed:  44
  ... inverting C
+
+ Structure file parsed
+Number of atoms: 8
+Composition: C2 H4 O2 
+
 A/D analysis for mc.D1.st02
 Computing A/D densities ...
 A/D analysis for mc.D1.st03

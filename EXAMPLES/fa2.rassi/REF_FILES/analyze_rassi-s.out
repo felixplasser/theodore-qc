@@ -51,6 +51,11 @@ Reading TRD/TRD2_003_003 ...
 (i,j)=(15,15), val= 1.537
 (i,j)=(16,16), val= 0.636
 (i,j)=(17,17), val= 0.543
+
+ Structure file parsed
+Number of atoms: 8
+Composition: C2 H4 O2 
+
 A/D analysis for RASSI_2
 Computing A/D densities ...
 A/D analysis for RASSI_3

@@ -104,6 +104,11 @@ Dimension: 95,95,...,95
 Number of basis functions parsed:  95
 MO-matrix not square: 95 x 36
   Using the Moore-Penrose pseudo inverse instead.
+
+ Structure file parsed
+Number of atoms: 10
+Composition: C4 H5 N 
+
 A/D analysis for triplet_0_1_no
  WARNING: pA + pD = -0.01170600 != 0.
 Computing A/D densities ...
