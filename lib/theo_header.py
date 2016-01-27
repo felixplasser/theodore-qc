@@ -3,10 +3,10 @@ width=80
 def print_header(*args):
     print ret_header(*args)
     
-def ret_header(title=None):
+def ret_header(title=None, ver='1.2'):
     hstr  = width*'=' + '\n'
     
-    hstr += addlinec("TheoDORE 1.1.4")
+    hstr += addlinec("TheoDORE %s"%ver)
     hstr += addlinec("Theoretical Density, Orbital Relaxation and Exciton analysis")
     hstr += addlinec("Felix Plasser")
     
@@ -27,7 +27,7 @@ def ret_header(title=None):
     hstr += addlinel("Phys. Rev. A (2014), 90, 052521.")
     hstr += addlinec()
     hstr += addlinel("Program citation:", 3)
-    hstr += addlinel("F. Plasser \"TheoDORE: a package for theoretical density, orbital")
+    hstr += addlinel("F. Plasser \"TheoDORE %s: a package for theoretical density, orbital"%ver)
     hstr += addlinel("relaxation, and exciton analysis\"; available from")
     hstr += addlinel("http://theodore-qc.sourceforge.net")
 
