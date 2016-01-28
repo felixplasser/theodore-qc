@@ -475,6 +475,8 @@ class file_parser_libwfa(file_parser_base):
         self.parse_key(state, 'p', line, 'Number of detached / attached electrons')
         self.parse_key(state, 'PRNTO', line, 'PR_NTO')
         self.parse_key(state, '2P', line, 'Two-photon absorption cross-section')
+        self.parse_key(state, 'S_HE', line, 'Entanglement entropy')
+        self.parse_key(state, 'Z_HE', line, 'Number of entangled states')
             
         if exc_diff:
             self.parse_key(state, 'sigD', line, 'Hole size')
