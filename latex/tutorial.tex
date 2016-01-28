@@ -1,0 +1,310 @@
+\documentclass[DIV=12,headings=normal]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman,USenglish]{babel}
+
+\usepackage[intlimits]{amsmath}
+\usepackage{amssymb}
+\usepackage{icomma}
+\usepackage{braket}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{hyperref}
+
+\usepackage{graphicx}
+%\usepackage{subfig}
+\usepackage{booktabs}
+\usepackage{pdflscape}
+\usepackage{subfigure}
+
+\usepackage{tikz}
+% \usetikzlibrary{decorations}
+% \usetikzlibrary{decorations.pathmorphing}
+% \usetikzlibrary{plotmarks}
+% \usetikzlibrary{patterns}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.3}
+\usepgfplotslibrary{groupplots}
+
+\usepackage{siunitx}
+\sisetup{decimalsymbol=comma}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage{fancyhdr}
+
+\usepackage[version=3,arrows=pgf]{mhchem}
+
+\usepackage{lmodern}
+\usepackage{fancyvrb}
+
+\setkomafont{subject}{\usekomafont{title}}
+\setkomafont{caption}{\small}
+% \captionsetup[subfloat]{font={default,small}}
+
+\newsavebox\MBox
+\newcommand\Cline[2][red]{{\sbox\MBox{#2}%
+  \rlap{\usebox\MBox}\color{#1}\rule[-1.2\dp\MBox]{\wd\MBox}{0.5pt}}}
+
+\newcommand{\comment}[1]{\textcolor{blue}{#1}}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\redl}[1]{\Cline{\textcolor{red}{#1}}}
+\newcommand{\reds}[1]{\redl{\scriptsize #1}}
+
+\newcommand{\comm}[1]{
+\small
+%\begin{Verbatim}%[commandchars=\\\{\}]
+~> \redl{#1}
+%\end{Verbatim}
+\normalsize
+}
+\newcommand{\incmo}[1]{\includegraphics[trim=1cm 1cm 1cm 1cm, clip=true, width=4cm]{#1}}
+
+\let\origttfamily=\ttfamily % alte Definition von \ttfamily sichern
+\renewcommand{\ttfamily}{\origttfamily \hyphenchar\font=`\-}
+
+\newcommand{\greybox}[1]{
+  \vspace{3mm}
+  \fcolorbox{black}{black!15}{
+    \begin{minipage}{0.9\textwidth}\textit{#1}\end{minipage}}
+  \vspace{3mm}
+}
+
+\newcommand{\todo}[1]{\textcolor{red}{#1}}
+\newcommand{\col}{\textsc{Columbus}}
+\newcommand{\molcas}{\textsc{Molcas}}
+\newcommand{\seward}{\texttt{Seward}}
+
+\newcommand{\theo}{\textsc{TheoDORE}}
+
+\newcounter{number}
+\newcommand{\numbering}[1]{\thenumber. #1\addtocounter{number}{1}}
+\newcommand{\renumber}{\setcounter{number}{1}}
+
+\pgfplotsset{every tick label/.append style={/pgf/number format/use comma,/pgf/number format/1000 sep={}}}
+\pgfplotsset{scaled ticks=false}
+\pgfplotsset{small,width=0.6\textwidth,max space between ticks=35}
+\pgfplotsset{tick style={thin,black}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\fancyhf{}				%Leeren aller Header, Footer
+\fancyhead{}		%Links
+\fancyfoot[L]{\theo{} tutorial}
+\fancyfoot[R]{\thepage}			%Seite x von y
+\renewcommand{\headrulewidth}{0pt}	%Linie unter Header
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\subject{\Large A Tutorial for \theo}
+\title{\LARGE A Tutorial for \theo~1.2}
+\author{\large Felix~Plasser}
+\publishers{\small \textit{Institute for Theoretical Chemistry -- University of Vienna}}
+\date{\large Vienna, 2016\\[3em]}
+
+\begin{document}
+
+\pagestyle{fancy}
+\selectlanguage{USenglish}
+
+\maketitle
+%\cleardoublepage
+
+\tableofcontents
+\clearpage
+
+\section{Before Starting}
+
+\subsection{Introduction}
+
+This tutorial will give you an introduction into various functionalities of the \theo{} program package.
+
+\subsection{Installation}
+
+For the installation, follow the steps described at
+
+\url{https://sourceforge.net/p/theodore-qc/wiki/Installation/} \\
+
+It is necessary to set up, both, the \texttt{PATH} and \texttt{PYTHONPATH} environment variables.
+
+\subsection{Notation}
+
+The following notation is used:
+
+\scriptsize
+\begin{Verbatim}[commandchars=\\\{\}]
+This kind of font indiates what is seen on the screen
+\redl{and the command lines that you should write <ENTER>}  \comment{! Comments come here}
+\end{Verbatim}
+\normalsize
+
+\greybox{Important information related to \theo{} but not necessarily connected to the current job comes in boxes like this.}
+\clearpage
+\section{Natural transition orbitals}
+
+As a first step, we will plot the natural transition orbitals (NTOs) in the case of the formaldehyde dimer computed with RI-CC2 in \textsc{Turbomole}.
+
+\subsection{Input generation}
+\label{sec:inpnto}
+
+The input files are taken from the \texttt{EXAMPLES} directory in the \theo{} distribution
+
+\comm{cp -r \$THEODIR/EXAMPLES/fa2.ricc2/QC\_FILES/ Tutorial} \\
+
+Inside the \texttt{Tutorial} directory, run the input program
+
+\comm{theoinp}
+
+\scriptsize
+\begin{Verbatim}[commandchars=\\\{\}]
+Type of job (rtype):
+  [ 1]      qcadc - Q-Chem ADC (libwfa output)
+  [ 2]     libwfa - General libwfa output
+  [ 3]    qctddft - Q-Chem TDDFT
+  [ 4]   colmcscf - Columbus MCSCF
+  [ 5]    colmrci - Columbus MR-CI (tden analysis)
+  [ 6]      rassi - Molcas RASSI
+  [ 7]        nos - Read natural orbitals (Molden format) for sden analysis: Columbus, Molcas, ...
+  [ 8]      ricc2 - Turbomole ricc2
+  [ 9]       escf - Turbomole escf
+  [10]      cclib - Use external cclib library: Gaussian, ORCA, GAMESS, ...
+Choice: [8] \redl{8 <ENTER>} \comment{! \texttt{theoinp} tries to guess the program used according to the files present}
+
+Main file to read (rfile):
+Choice (autocomplete enabled): [ricc2.out] \redl{<ENTER>}
+
+MO file (Molden format)
+ -> This file should ideally contain a square invertible coefficient matrix (mo_file):
+Choice (autocomplete enabled): [molden.input] \redl{<ENTER>}
+
+ *** Warning: in the case of ricc2 you have to delete the line
+       implicit core=   x virt=    x
+     from the control file before running tm2molden.
+ \comment{! A consistent file is given here. But in general, one should be careful when using \texttt{ricc2}}
+
+Analysis of transition density matrices?
+Choice (y/n): [y] \redl{<ENTER>}
+
+Perform CT number analysis?
+Choice (y/n): [y] \redl{n <ENTER>} \comment{! Do not perform a charge transfer number analysis to keep things simple}
+
+Perform natural transition orbital (NTO) analysis?
+Choice (y/n): [y] \redl{<ENTER>}
+
+NTOs as Jmol script? (jmol_orbitals):
+Choice (y/n): [y] \redl{y <ENTER>} \comment{! Type "y" if you have the \textsc{Jmol} program available}
+
+NTOs in Molden format (molden_orbitals):
+Choice (y/n): [n] \redl{y <ENTER>} \comment{! Type "y" if you want files in \textsc{Molden} format}
+
+Use alpha/beta rather then negative/positive to code for hole/particle orbitals? (alphabeta):
+Choice (y/n): [n] \redl{n <ENTER>} \comment{! Only for special applications}
+
+Perform exciton analysis?
+Choice (y/n): [y] \redl{n <ENTER>}
+
+Adjust detailed output options?
+Choice (y/n): [n] \redl{<ENTER>}
+
+Name of input file
+Choice: [dens_ana.in] \redl{<ENTER>}
+Finished: File dens_ana.in written.
+\end{Verbatim}
+\normalsize
+
+After going through these steps, the file \texttt{dens\_ana.in} with the following content is written:
+
+\scriptsize
+\begin{Verbatim}[commandchars=\\\{\}]
+rtype='ricc2'
+rfile='ricc2.out'
+mo_file='molden.input'
+comp_ntos=True
+jmol_orbitals=True
+molden_orbitals=True
+alphabeta=False
+prop_list=['PRNTO']
+\end{Verbatim}
+\normalsize
+
+\greybox{To learn more about the available keywords check:\\
+\url{https://sourceforge.net/p/theodore-qc/wiki/Keywords/}
+}
+
+
+\subsection{Transition density matrix (1TDM) analysis}
+
+To run the 1TDM analysis to produce the NTOs, simply type:
+
+\comm{analyze\_tden.py}
+
+After some technical information, you will find the following output summary
+
+\scriptsize
+\begin{Verbatim}[commandchars=\\\{\}]
+state       dE(eV)     f  PRNTO \comment{! label of the state / exc. energy / osc. strength / NTO participation ratio}
+-------------------------------
+1(1)a        4.174 0.000  1.943
+2(1)a        4.192 0.000  1.952
+3(1)a        7.944 0.000  1.849
+4(1)a        8.021 0.164  1.882
+5(1)a        8.755 0.000  1.991
+6(1)a        8.763 0.052  1.998
+\end{Verbatim}
+\normalsize
+\clearpage
+
+\subsection{Plotting of the orbitals}
+
+If you selected to export files in \textsc{Molden} format, one file for each individual state will be present
+
+\scriptsize
+\begin{Verbatim}[commandchars=\\\{\}]
+nto_1-1-a.mld  nto_2-1-a.mld  nto_3-1-a.mld  nto_4-1-a.mld  nto_5-1-a.mld  nto_6-1-a.mld
+\end{Verbatim}
+\normalsize
+
+You can visualize them with any program of your choice.
+
+In the case of using \textsc{Jmol} a short cut is available.
+To plot all the orbitals in one go, simply type
+
+\comm{jmol -n nto\_jmol.spt}
+
+Then \textsc{Jmol} will create \texttt{.png} files for all the orbitals.
+To look at all these orbitals at once open the file \texttt{nto.html} in a browser.\\
+
+\begin{tabular}{|ccl|}
+\hline
+\textbf{1-1-a} &&\comment{! state label}\\
+\comment{! hole/occupied NTO} & \comment{! particle/virtual NTO}\\
+\incmo{fa2ntos/NTO1-1o-56.png} & \incmo{fa2ntos/NTO1-1v-56.png} &\\
+0.556 & 0.556 & \comment{! NTO amplitudes $\lambda_i$}\\
+\incmo{fa2ntos/NTO1-2o-39.png} & \incmo{fa2ntos/NTO1-2v-39.png} &\\
+0.394 & 0.394&\\
+\hline
+\textbf{2-1-a}&&\\
+\incmo{fa2ntos/NTO2-1o-56.png} & \incmo{fa2ntos/NTO2-1v-56.png} &\\
+0.556 & 0.556 &\\
+\incmo{fa2ntos/NTO2-2o-41.png} & \incmo{fa2ntos/NTO2-2v-41.png} &\\
+0.405 & 0.405&\\
+\hline
+\end{tabular}
+
+\greybox{In both cases two NTO pairs are required to describe that transition, in agreement with ${\rm PR}_{\rm NTO}\approx 2$.}
+\clearpage
+
+\section{Charge transfer number analysis}
+In this part an analysis of the charge transfer numbers is carried out.
+This requires dividing the system into fragments, which are analyzed together.
+
+\section{Using the external cclib library}
+
+\scriptsize
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\normalsize
+
+
+\end{document}
