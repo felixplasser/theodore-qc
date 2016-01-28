@@ -407,6 +407,9 @@ The meaning of these values are discussed in Refs~\cite{DMAT, DMAT_ADC_II} and a
 
 \begin{itemize}
 \item
+The \texttt{Om} or $\Omega$ value is formally the one-electron excitation character.
+However, in the case of RI-CC2 or TDDFT this is simply a normalization factor.
+\item
 The values $\om{POS}=1.500$ and $\om{PR}=2.000$ in all cases mean that the excitation is distributed evenly between fragment 1 and fragment 2 (for symmetry reasons)
 \item
 The crucial information lies in the $\om{CT}$ value. $\om{CT}\approx 0$ for the first four excited states, meaning that this are mostly coupled local excitations (Frenkel excitons). For the last two states $\om{CT}$ is greater than 0.8 indicating that these are charge resonance states.
@@ -598,7 +601,25 @@ Again run:
 
 \comm{analyze\_tden.py}
 
-\section{Hexatriene (\textsc{Columbus}) - Advanced fragment input and double excitations}
+The output looks similar as it did before.
+
+\scriptsize
+\begin{Verbatim}[commandchars=\\\{\}]
+state       dE(eV)     f     Om    POS     PR     CT    COH   CTnt  RMSeh
+-------------------------------------------------------------------------
+Singlet-A2   3.583 0.000  1.000  1.500  2.000  0.698  1.729  0.000  3.179
+Singlet-B1   3.635 0.000  1.000  1.500  2.000  0.737  1.633  0.000  3.257
+Singlet-B1   4.242 0.000  1.001  1.500  2.000  0.262  1.632  0.000  2.141
+Singlet-A2   4.284 0.000  1.001  1.500  2.000  0.301  1.727 -0.000  2.256
+Singlet-B2   7.793 0.011  1.001  1.500  2.000  0.958  1.088  0.000  3.656
+Singlet-A1   7.851 0.001  1.000  1.500  2.000  0.992  1.015  0.000  3.717
+...
+\end{Verbatim}
+\normalsize
+
+The difference to before is that at the TDDFT/PBE level used here the CT states are lower in energy
+
+\section{Advanced fragment input (Columbus)}
 \label{sec:advinp}
 Take the input files from the \texttt{EXAMPLES} directory in the \theo{} distribution
 
