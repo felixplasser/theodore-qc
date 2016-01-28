@@ -50,6 +50,8 @@
 \newcommand{\red}[1]{\textcolor{red}{#1}}
 \newcommand{\redl}[1]{\Cline{\textcolor{red}{#1}}}
 \newcommand{\reds}[1]{\redl{\scriptsize #1}}
+\newcommand{\doi}[1]{\href{http://dx.doi.org/#1}{\textcolor{blue}{\bf DOI:~#1}}}
+\newcommand{\om}[1]{\omega_{\textrm{#1}}}
 
 \newcommand{\comm}[1]{
 \small
@@ -59,6 +61,7 @@
 \normalsize
 }
 \newcommand{\incmo}[1]{\includegraphics[trim=1cm 1cm 1cm 1cm, clip=true, width=4cm]{#1}}
+\newcommand{\incom}[1]{\includegraphics[width=3cm]{#1}}
 
 \let\origttfamily=\ttfamily % alte Definition von \ttfamily sichern
 \renewcommand{\ttfamily}{\origttfamily \hyphenchar\font=`\-}
@@ -71,9 +74,6 @@
 }
 
 \newcommand{\todo}[1]{\textcolor{red}{#1}}
-\newcommand{\col}{\textsc{Columbus}}
-\newcommand{\molcas}{\textsc{Molcas}}
-\newcommand{\seward}{\texttt{Seward}}
 
 \newcommand{\theo}{\textsc{TheoDORE}}
 
@@ -140,7 +140,7 @@ This kind of font indiates what is seen on the screen
 
 \greybox{Important information related to \theo{} but not necessarily connected to the current job comes in boxes like this.}
 \clearpage
-\section{Natural transition orbitals}
+\section{Natural transition orbitals (Turbomole)}
 
 As a first step, we will plot the natural transition orbitals (NTOs) in the case of the formaldehyde dimer computed with RI-CC2 in \textsc{Turbomole}.
 
@@ -149,9 +149,9 @@ As a first step, we will plot the natural transition orbitals (NTOs) in the case
 
 The input files are taken from the \texttt{EXAMPLES} directory in the \theo{} distribution
 
-\comm{cp -r \$THEODIR/EXAMPLES/fa2.ricc2/QC\_FILES/ Tutorial} \\
+\comm{cp -r \$THEODIR/EXAMPLES/fa2.ricc2/QC\_FILES/ fa2.tutorial} \\
 
-Inside the \texttt{Tutorial} directory, run the input program
+Inside the \texttt{fa2.tutorial} directory, run the input program
 
 \comm{theoinp}
 
@@ -278,15 +278,15 @@ To look at all these orbitals at once open the file \texttt{nto.html} in a brows
 \hline
 \textbf{1-1-a} &&\comment{! state label}\\
 \comment{! hole/occupied NTO} & \comment{! particle/virtual NTO}\\
-\incmo{fa2ntos/NTO1-1o-56.png} & \incmo{fa2ntos/NTO1-1v-56.png} &\\
+\incmo{fa2/NTO1-1o-56.png} & \incmo{fa2/NTO1-1v-56.png} &\\
 0.556 & 0.556 & \comment{! NTO amplitudes $\lambda_i$}\\
-\incmo{fa2ntos/NTO1-2o-39.png} & \incmo{fa2ntos/NTO1-2v-39.png} &\\
+\incmo{fa2/NTO1-2o-39.png} & \incmo{fa2/NTO1-2v-39.png} &\\
 0.394 & 0.394&\\
 \hline
 \textbf{2-1-a}&&\\
-\incmo{fa2ntos/NTO2-1o-56.png} & \incmo{fa2ntos/NTO2-1v-56.png} &\\
+\incmo{fa2/NTO2-1o-56.png} & \incmo{fa2/NTO2-1v-56.png} &\\
 0.556 & 0.556 &\\
-\incmo{fa2ntos/NTO2-2o-41.png} & \incmo{fa2ntos/NTO2-2v-41.png} &\\
+\incmo{fa2/NTO2-2o-41.png} & \incmo{fa2/NTO2-2v-41.png} &\\
 0.405 & 0.405&\\
 \hline
 \end{tabular}
@@ -294,11 +294,174 @@ To look at all these orbitals at once open the file \texttt{nto.html} in a brows
 \greybox{In both cases two NTO pairs are required to describe that transition, in agreement with ${\rm PR}_{\rm NTO}\approx 2$.}
 \clearpage
 
-\section{Charge transfer number analysis}
+\section{Charge transfer number and exciton analysis (Turbomole)}
 In this part an analysis of the charge transfer numbers is carried out.
 This requires dividing the system into fragments, which are analyzed together.
+Choosing which atoms are grouped into individual fragments and how these fragments are arranged is the first critical step in the charge transfer number analysis. Special care has to be taken when choosing these fragments, and it is possibly necessary to try different settings.
 
-\section{Using the external cclib library}
+\subsection{Input generation}
+First, it is helpful to look at the molecule using a molecular structure editor (e.g. Avogadro) and display the atom lables.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[trim=1cm 2cm 1cm 2cm, clip=true, scale=1]{fa2/fa2avo.png}
+\caption{Atom numbering in the formaldehyde dimer.}
+\label{fig:fanrs}
+\end{center}
+\end{figure}
+
+In the present simple case we want to divide our molecule into two fragments, one for each molecule.
+One fragment will contain the atom indices 1,3,5,7 the other one 2,4,6,8.
+
+After deciding on the fragment definition run 
+
+\comm{theoinp}
+
+And start out the same as in Section~\ref{sec:inpnto}. Then continue:
+
+\scriptsize
+\begin{Verbatim}[commandchars=\\\{\}]
+Perform CT number analysis?
+Choice (y/n): [y] \redl{y <ENTER>} \comment{! This time we want to do the CT number analysis}
+
+Mode for specifying molecular fragments (at_lists):
+  [ 1] Manual input
+  [ 2] Automatic generation from coordinate file (using python-openbabel)
+  [ 3] Leave empty and fill out later
+Choice: \redl{1 <ENTER>} \comment{! We use "Manual input" here, for other options see Section \ref{sec:advinp}}
+
+Input the indices of the atoms belonging to fragment 1:
+(separated by spaces)
+Choice: \redl{1 3 5 7 <ENTER>} \comment{! Atom indices according to Figure \ref{fig:fanrs}}
+
+Input the indices of the atoms belonging to fragment 2:
+(separated by spaces)
+Choice: \redl{2 4 6 8 <ENTER>}
+
+Input the indices of the atoms belonging to fragment 3:
+(separated by spaces)
+Choice:\redl{<ENTER>} \comment{! Leave empty to quit}
+
+Checking whether the at_lists definition is valid ...
+at_lists= [[1, 3, 5, 7], [2, 4, 6, 8]]
+  2 lists with individual numbers of entries:
+[4, 4] \comment{! Two fragments with four atoms each}
+  8 total entries, with maximal value 8
+
+Omega descriptors to be computed:
+  [ 1] Standard set
+  [ 2] Transition metal complex
+  [ 3] None
+Choice: [1]\redl{<ENTER>}
+
+Print-out of electron/hole populations
+  [ 1] None
+  [ 2] For fragments
+  [ 3] For fragments and individual atoms
+Choice: [1]\redl{1 <ENTER>} \comment{! for the symmetric case this analysis does not really help}
+
+Perform natural transition orbital (NTO) analysis?
+Choice (y/n): [y]\redl{n <ENTER>} \comment{! already did that before ...}
+
+Perform exciton analysis?
+Choice (y/n): [y]\redl{<ENTER>} \comment{! Let's do the exciton analysis here, as well}
+
+Compute approximate exciton size?
+Choice (y/n): [y]\redl{<ENTER>}
+
+Molecular coordinates for exciton analysis:
+\comment{! for the exciton analysis, it is necessary to have a coordinate file}
+Coordinate file (coor_file):
+Choice (autocomplete enabled): [coord]\redl{<ENTER>}
+
+Format of coordinate file (coor_format):
+Choice: [tmol]\redl{<ENTER>} \comment{! this is the format as recognized by openbabel}
+
+...
+
+\end{Verbatim}
+\normalsize
+
+\subsection{Transition density matrix (1TDM) analysis}
+
+Again run:
+
+\comm{analyze\_tden.py}
+
+Now, a more extended print-out is available:
+
+\scriptsize
+\begin{Verbatim}[commandchars=\\\{\}]
+state       dE(eV)     f     Om    POS     PR     CT    COH   CTnt  RMSeh
+-------------------------------------------------------------------------
+1(1)a        4.174 0.000  0.950  1.500  2.000  0.020  1.041  0.000  1.234
+2(1)a        4.192 0.000  0.961  1.500  2.000  0.025  1.052 -0.000  1.245
+3(1)a        7.944 0.000  0.971  1.500  2.000  0.175  1.405  0.000  2.362
+4(1)a        8.021 0.164  0.968  1.500  2.000  0.207  1.490 -0.000  2.427
+5(1)a        8.755 0.000  0.973  1.500  2.000  0.847  1.349 -0.000  3.454
+6(1)a        8.763 0.052  0.973  1.500  2.000  0.812  1.440  0.000  3.403
+\end{Verbatim}
+\normalsize
+
+The meaning of these values are discussed in Refs~\cite{DMAT, DMAT_ADC_II} and at the \href{https://sourceforge.net/p/theodore-qc/wiki/Transition density matrix analysis/}{documentation wiki}. Only a brief explanation shall be given here:
+
+\begin{itemize}
+\item
+The values $\om{POS}=1.500$ and $\om{PR}=2.000$ in all cases mean that the excitation is distributed evenly between fragment 1 and fragment 2 (for symmetry reasons)
+\item
+The crucial information lies in the $\om{CT}$ value. $\om{CT}\approx 0$ for the first four excited states, meaning that this are mostly coupled local excitations (Frenkel excitons). For the last two states $\om{CT}$ is greater than 0.8 indicating that these are charge resonance states.
+\item
+The trend in the CT values is also reflected by the (approximated) root-mean square electron-hole separation (RMSeh, also denoted $\tilde{d}_{exc}$) given in \AA.\cite{PPV_Steffi}
+This value is is about equal to the intermolecular separation of 3.5~\AA{} in the case of the charge resonance states while it is significantly smaller for the locally excited states.
+\end{itemize}
+
+\subsection{Electron-hole correlation plots}
+To create electron-hole correlation plots, run
+
+\comm{plot\_OmFrag.py}
+
+Simply use all default values an then look at \texttt{OmFrag.html} in a browser.\\
+
+\begin{tabular}{|cccc|}
+\hline
+\multicolumn{4}{|l|}{\textbf{Electron-hole correlation plots of the Omega matrices for the}}\\
+\multicolumn{4}{|l|}{\textbf{individual states.}}\\
+\incom{fa2/pcolor_11a.png}&
+\incom{fa2/pcolor_21a.png}&
+\incom{fa2/pcolor_31a.png}&
+\incom{fa2/pcolor_41a.png}\\
+1(1)a & 2(1)a & 3(1)a & 4(1)a\\
+\incom{fa2/pcolor_51a.png}&
+\incom{fa2/pcolor_61a.png}&
+\incom{fa2/axes.png}&
+\\
+5(1)a & 6(1)a & Axes/Scale & \\
+\hline
+\end{tabular} \\
+
+Here, the results are rather trivial since there are only two fragments in the calculation, which are also equivalent for symmetry reasons.
+The locally excited states are represented by black boxes on the main diagonal (going from lower left to upper right) while the charge resonance states are distinguished by off-diagonal contributions.
+
+\section{Interface to the external cclib library (\textsc{Gaussian~09})}
+\todo{in progress...}
+
+\section{Hexatriene (\textsc{Columbus}) - Advanced fragment input and double excitations}
+\label{sec:advinp}
+Take the input files from the \texttt{EXAMPLES} directory in the \theo{} distribution
+
+\comm{cp -r \$THEODIR/EXAMPLES/hexatriene.colmrci/QC\_FILES/ hexatriene.tutorial} \\
+
+\subsection{Automatic fragment generation using Avogadro}
+In this part, method for automatic fragment generation is discussed.
+This method relies on the \textsc{Avogadro} molecular structure editor.
+
+First the \texttt{geom} file in \textsc{Columbus} format has to be converted to the more common xyz format.
+
+\comm{babel.py col geom xyz geom.xyz}
+
+This file can be opened with avogadro
+
+\comm{avogadro geom.xyz}
 
 \scriptsize
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -306,5 +469,11 @@ This requires dividing the system into fragments, which are analyzed together.
 \end{Verbatim}
 \normalsize
 
+\begin{thebibliography}{9}
+\bibitem{DMAT} F. Plasser and H. Lischka \textit{JCTC} \textbf{2012}, 8, 2777. \doi{10.1021/ct300307c}.
+\bibitem{DMAT_ADC_II} F. Plasser, S. A. B\"appler, M. Wormit, A. Dreuw \textit{JCP} \textbf{2014}, 141, 024107. \doi{10.1063/1.4885820}
+\bibitem{PPV_Steffi} S. A. Mewes, J.-M. Mewes, A. Dreuw, F. Plasser \textit{PCCP} \textbf{2016}, 18, 2548. \doi{10.1039/C5CP07077E}
+%\bibitem{Ircomp} F. Plasser and A. Dreuw \textit{JPCA} \doi{10.1021/jp5122917}.
+\end{thebibliography}
 
 \end{document}
