@@ -452,12 +452,14 @@ Take the input files from the \texttt{EXAMPLES} directory in the \theo{} distrib
 \comm{cp -r \$THEODIR/EXAMPLES/hexatriene.colmrci/QC\_FILES/ hexatriene.tutorial} \\
 
 \subsection{Fragment preparation using Avogadro}
-In this part, method for automatic fragment generation is discussed.
+In this part, a method for automatic fragment generation is discussed.
 This method relies on the \textsc{Avogadro} molecular structure editor.
 
 First the \texttt{geom} file in \textsc{Columbus} format has to be converted to the more common xyz format.
 
 \comm{babel.py col geom xyz geom.xyz}
+
+\greybox{This step is specific for \textsc{Columbus}. In many other cases \textsc{Avogadro} can directly read the structure file or log file used.}
 
 This file can be opened with avogadro
 
