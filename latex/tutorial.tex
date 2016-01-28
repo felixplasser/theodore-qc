@@ -49,6 +49,7 @@
 \newcommand{\comment}[1]{\textcolor{blue}{#1}}
 \newcommand{\red}[1]{\textcolor{red}{#1}}
 \newcommand{\redl}[1]{\Cline{\textcolor{red}{#1}}}
+\newcommand{\rede}[1]{\redl{#1 <ENTER}}
 \newcommand{\reds}[1]{\redl{\scriptsize #1}}
 \newcommand{\doi}[1]{\href{http://dx.doi.org/#1}{\textcolor{blue}{\bf DOI:~#1}}}
 \newcommand{\om}[1]{\omega_{\textrm{#1}}}
@@ -378,7 +379,6 @@ Format of coordinate file (coor_format):
 Choice: [tmol]\redl{<ENTER>} \comment{! this is the format as recognized by openbabel}
 
 ...
-
 \end{Verbatim}
 \normalsize
 
@@ -443,7 +443,160 @@ Here, the results are rather trivial since there are only two fragments in the c
 The locally excited states are represented by black boxes on the main diagonal (going from lower left to upper right) while the charge resonance states are distinguished by off-diagonal contributions.
 
 \section{Interface to the external cclib library (\textsc{Gaussian~09})}
-\todo{in progress...}
+\textsc{Gaussian}, GAMESS, \textsc{Orca}, and some other programs can be parsed through the cclib library, which has to be installed separately.
+
+Start by copying the relevant files
+
+\comm{cp -r \$THEODIR/EXAMPLES/fa2.cclib/QC\_FILES/ fa2.cclib.btutorial} \\
+
+When using cclib, one should start by checking whether the file can be parsed correctly
+
+\subsection{Check the log file}
+\comm{cc\_check.py gaussian.log}
+
+\scriptsize
+\begin{Verbatim}[commandchars=\\\{\}]
+...
+Essential attributes:
+       mocoeffs ... True
+      atombasis ... True
+          natom ... True
+          homos ... True
+     moenergies ... True
+     etenergies ... True
+         etsyms ... True
+         etsecs ... True
+
+Optional attributes:
+         etoscs ... True
+     aooverlaps ... False
+         mosyms ... True
+
+Attributes for structure parsing and creation of Molden file:
+         gbasis ... False \comment{! gbasis is missing - no \textsc{Molden} files}
+          natom ... True
+     atomcoords ... True
+        atomnos ... True
+
+
+ gaussian.log can be parsed by using rtype='cclib' in dens_ana.in.\comment{! this is the important part}
+ But conversion to Molden format is not possible
+\end{Verbatim}
+\normalsize
+
+\subsection{Input generation}
+As usual:
+
+\comm{theoinp}
+
+\scriptsize
+\begin{Verbatim}[commandchars=\\\{\}]
+Type of job (rtype):
+  [ 1]      qcadc - Q-Chem ADC (libwfa output)
+  [ 2]     libwfa - General libwfa output
+  [ 3]    qctddft - Q-Chem TDDFT
+  [ 4]   colmcscf - Columbus MCSCF
+  [ 5]    colmrci - Columbus MR-CI (tden analysis)
+  [ 6]      rassi - Molcas RASSI
+  [ 7]        nos - Read natural orbitals (Molden format) for sden analysis: Columbus, Molcas, ...
+  [ 8]      ricc2 - Turbomole ricc2
+  [ 9]       escf - Turbomole escf
+  [10]      cclib - Use external cclib library: Gaussian, ORCA, GAMESS, ...
+Choice: \rede{10}
+
+Main file to read (rfile):
+Choice (autocomplete enabled): \rede{gaussian.log}
+
+Analysis of transition density matrices?
+Choice (y/n): [y]\rede{}
+
+Perform CT number analysis?
+Choice (y/n): [y]\rede{}
+Fragment definition for CT nubmer analysis
+
+Mode for specifying molecular fragments (at_lists):
+  [ 1] Manual input
+  [ 2] Automatic generation from coordinate file (using python-openbabel)
+  [ 3] Leave empty and fill out later
+Choice:\rede{2} \comment{! since there are two well-separated molecules, we can use the automatic mode}
+
+Automatic generation of at_lists partitioning ...
+
+Coordinate file (coor_file):
+Choice (autocomplete enabled): \rede{gaussian.log} \comment{! simply take the log file}
+
+Format of coordinate file (coor_format):
+Choice: g09 \comment{! format, as recongized by openbabel}
+\end{Verbatim}
+\normalsize
+
+\greybox{The relevant formats are:\\
+\rm
+\textsc{Gaussian} - g03, g09\\
+\textsc{GAMESS} - gamout \\
+\textsc{Q-Chem} - qcout}
+
+\scriptsize
+\begin{Verbatim}[commandchars=\\\{\}]
+*** Fragment composition *** \comment{! Check that everything worked}
+  Fragment 1: C H2 O \comment{! This looks reasonable: two formaldehyde molecules}
+  Fragment 2: C H2 O
+
+Checking whether the at_lists definition is valid ...
+at_lists= [[1, 3, 5, 7], [2, 4, 6, 8]] \comment{! correct indices}
+  2 lists with individual numbers of entries:
+[4, 4]
+  8 total entries, with maximal value 8
+
+Omega descriptors to be computed:
+  [ 1] Standard set
+  [ 2] Transition metal complex
+  [ 3] None
+Choice: [1] \rede{}
+
+Print-out of electron/hole populations
+  [ 1] None
+  [ 2] For fragments
+  [ 3] For fragments and individual atoms
+Choice: [1] \rede{2}
+
+Perform natural transition orbital (NTO) analysis?
+Choice (y/n): [y] \rede{n} \comment{! no possibility to visualize them if \textsc{Molden} export does not work}
+
+Perform exciton analysis?
+Choice (y/n): [y] \rede{}
+
+Compute approximate exciton size?
+Choice (y/n): [y] \rede{}
+
+Adjust detailed output options?
+Choice (y/n): [n] \rede{}
+
+Name of input file
+Choice: [dens_ana.in] \rede{}
+Finished: File dens_ana.in written.
+\end{Verbatim}
+\normalsize
+
+The following file \texttt{dens\_ana.in} was created:
+
+\scriptsize
+\begin{Verbatim}[commandchars=\\\{\}]
+rtype='cclib'
+rfile='gaussian.log'
+coor_file='gaussian.log'
+coor_format='g09'
+at_lists=[[1, 3, 5, 7], [2, 4, 6, 8]]
+eh_pop=1
+comp_ntos=False
+prop_list=['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt', 'RMSeh']
+\end{Verbatim}
+\normalsize
+
+\subsection{Transition density matrix (1TDM) analysis}
+Again run:
+
+\comm{analyze\_tden.py}
 
 \section{Hexatriene (\textsc{Columbus}) - Advanced fragment input and double excitations}
 \label{sec:advinp}
