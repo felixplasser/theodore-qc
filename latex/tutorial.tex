@@ -120,9 +120,12 @@
 
 This tutorial will give you an introduction into various functionalities of the \theo{} program package.
 
-input files
+input files, same as \texttt{theo\_test.bash}
+from the \texttt{EXAMPLES} directory in the \theo{} distribution.
 
 various jobs, various quantum chemistry programs
+
+It is advisable to go through the whole tutorial but it is of course possible to skip some of the
 
 \subsection{Installation}
 
@@ -257,7 +260,7 @@ state       dE(eV)     f  PRNTO \comment{! label of the state / exc. energy / os
 6(1)a        8.763 0.052  1.998
 \end{Verbatim}
 \normalsize
-\clearpage
+
 
 \subsection{Plotting of the orbitals}
 
@@ -271,6 +274,7 @@ nto_1-1-a.mld  nto_2-1-a.mld  nto_3-1-a.mld  nto_4-1-a.mld  nto_5-1-a.mld  nto_6
 
 You can visualize them with any program of your choice.
 
+\clearpage
 In the case of using \textsc{Jmol} a short cut is available.
 To plot all the orbitals in one go, simply type
 
@@ -282,7 +286,7 @@ To look at all these orbitals at once open the file \texttt{nto.html} in a brows
 \begin{tabular}{|ccl|}
 \hline
 \textbf{1-1-a} &&\comment{! state label}\\
-\comment{! hole/occupied NTO} & \comment{! particle/virtual NTO}\\
+\comment{! hole/occupied NTO} & \comment{! particle/virtual NTO}&\\
 \incmo{fa2/NTO1-1o-56.png} & \incmo{fa2/NTO1-1v-56.png} &\\
 0.556 & 0.556 & \comment{! NTO amplitudes $\lambda_i$}\\
 \incmo{fa2/NTO1-2o-39.png} & \incmo{fa2/NTO1-2v-39.png} &\\
@@ -297,6 +301,18 @@ To look at all these orbitals at once open the file \texttt{nto.html} in a brows
 \end{tabular}
 
 \greybox{In both cases two NTO pairs are required to describe that transition, in agreement with ${\rm PR}_{\rm NTO}\approx 2$.}
+
+\textit{Technical note:} To get the precise pictures shown here, modify the \texttt{nto\_jmol.spt} script:
+\scriptsize
+\begin{Verbatim}[commandchars=\\\{\}]
+load molden.input FILTER "nosort"                                                                                                    
+mo titleformat "" 
+rotate x 90 \comment{! add}
+rotate y 10 \comment{! add}
+...
+\end{Verbatim}
+\normalsize
+
 \clearpage
 
 \section{Charge transfer number and exciton analysis (Turbomole)}
@@ -452,12 +468,12 @@ The locally excited states are represented by black boxes on the main diagonal (
 
 \section{Interface to the external cclib library (\textsc{Gaussian~09})}
 \textsc{Gaussian}, GAMESS, \textsc{Orca}, and some other programs can be parsed through the cclib library, which has to be installed separately.
-The present example will also need the \texttt{openbabel-python} package.
+The present example will also need the \texttt{python-openbabel} package.
 If these are available, proceed:
 
 Start by copying the relevant files
 
-\comm{cp -r \$THEODIR/EXAMPLES/fa2.cclib/QC\_FILES/ fa2.cclib.btutorial} \\
+\comm{cp -r \$THEODIR/EXAMPLES/fa2.cclib/QC\_FILES/ fa2.cclib.tutorial} \\
 
 \subsection{Check the log file}
 When using cclib, one should start by checking whether the file can be parsed correctly
@@ -632,7 +648,7 @@ The difference to before is that at the TDDFT/PBE level used here the CT states 
 The secure way for fragment definition is always the manual mode described in Section~\ref{sec:inpnto}.
 In some cases, i.e. when the fragments of interest are separate molecules, one can use the option "Automatic generation from coordinate file" in \texttt{theoinp}.
 A more involved method for automatic fragment definition is described in the next section.
-This method relies on the \textsc{Avogadro} molecular structure editor and the availability of the \texttt{openbabel-python} package.
+This method relies on the \textsc{Avogadro} molecular structure editor and the availability of the \texttt{python-openbabel} package.
 
 This method is described in the next two sections.
 If you just wish to run the job without the input generation, copy the \texttt{dens\_ana.in file} given at the bottom of Section~\ref{sec:inpcol}
@@ -712,7 +728,7 @@ Mode for specifying molecular fragments (at_lists):
   [ 1] Manual input
   [ 2] Automatic generation from coordinate file (using python-openbabel)
   [ 3] Leave empty and fill out later
-Choice: \rede{2} \comment{! use automatic generation}
+Choice: \rede{2} \comment{! use automatic generation if python-openbabel is available}
 Automatic generation of at_lists partitioning ...
 
 Coordinate file (coor_file):
@@ -778,11 +794,205 @@ prop_list=['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt']
 \end{Verbatim}
 \normalsize
 
-\greybox{When using the automatic fragment definition, it is generally advisable to check the results using a graphical representation of the molecule (e.g. Figure~\ref{fig:avo}) and to adjust the input if necessary.}
+\greybox{When using the automatic fragment definition, it is generally advisable to check the results using a graphical representation of the molecule (e.g. Figure~\ref{fig:avo}) and to adjust the file if necessary.}
 
 \subsection{Transition density matrix (1TDM) analysis}
+As always:
 
-\section{Attachment/detachment analysis (Molcas)}
+\comm{analyze\_tden.py}
+
+\scriptsize
+\begin{Verbatim}[commandchars=\\\{\}]
+Decomposition over fragments
+I1.1-2
+-------------------------------------------------------
+       Fragment        h+        e-       sum      diff
+-------------------------------------------------------
+         C2 H3    0.12017   0.11046   0.23063   0.00972
+         C2 H2    0.13515   0.15458   0.28973  -0.01944
+         C2 H3    0.12017   0.11046   0.23063   0.00972
+-------------------------------------------------------
+                  0.37549   0.37549   0.75099  -0.00000
+-------------------------------------------------------
+
+...
+
+state       dE(eV)     f     Om    POS     PR     CT    COH   CTnt
+------------------------------------------------------------------
+I1.1-2       5.565 0.000  0.375  2.000  2.955  0.823  2.670  0.000
+I2.1-1       6.530 1.254  0.865  2.000  2.885  0.613  2.845  0.000
+I2.1-2       6.772 0.006  0.432  2.000  2.838  0.938  1.641  0.000
+\end{Verbatim}
+\normalsize
+
+\greybox{The first and third states show predominant double excitation character $(\Omega<0.5)$.
+Note, that in these cases the 1TDM analysis does not provide a complete description.}
+
+\section{Attachment/detachment analysis (Molcas - natural orbitals)}
+While the previous examples were focused on an analysis of the transition density matrices, TheoDORE can also analyze state- and difference-density matrices.
+These are most conveniently read in through natural orbital (NO) files in \textsc{Molden} format.
+
+\subsection{Input generation}
+Get the input files
+
+\comm{cp -r \$THEODIR/EXAMPLES/fa2.rassi/QC\_FILES/ fa2.rassi.tutorial} \\
+
+Call
+
+\comm{theoinp} \\
+
+\scriptsize
+\begin{Verbatim}[commandchars=\\\{\}]
+Type of job (rtype):
+  [ 1]      qcadc - Q-Chem ADC (libwfa output)
+  [ 2]     libwfa - General libwfa output     
+  [ 3]    qctddft - Q-Chem TDDFT              
+  [ 4]   colmcscf - Columbus MCSCF
+  [ 5]    colmrci - Columbus MR-CI (tden analysis)
+  [ 6]      rassi - Molcas RASSI
+  [ 7]        nos - Read natural orbitals (Molden format) for sden analysis: Columbus, Molcas, ...
+  [ 8]      ricc2 - Turbomole ricc2
+  [ 9]       escf - Turbomole escf
+  [10]      cclib - Use external cclib library: Gaussian, ORCA, GAMESS, ...
+Choice: [6] \rede{7} \comment{! let's use the generic NO interface here}
+
+MO file (Molden format)
+ -> This file should ideally contain a square invertible coefficient matrix (mo_file):
+Choice (autocomplete enabled): \rede{molcas.rasscf.molden}
+
+Directory with the NO files:
+Choice (autocomplete enabled): [.] \rede{}
+. contains the following files:
+  [ 1] MOLCAS.input
+  [ 2] MOLDEN.1
+  [ 3] MOLDEN.2
+  [ 4] MOLDEN.3
+  [ 5] TRD
+  [ 6] geom.xyz
+  [ 7] molcas.log
+  [ 8] molcas.rasscf.molden
+
+Input indices of required files (separated by spaces)
+ Start with ground state.
+Choice: \rede{2 3 4} \comment{! we want to analyze the files MOLDEN.1, MOLDEN.2, MOLDEN.3}
+
+Analysis of state density matrices?
+Choice (y/n): [y] \rede{}
+
+Print out Mulliken populations? (pop_ana):
+Choice (y/n): [y] \rede{}
+
+Compute number of unpaired electrons? (unpaired_ana):
+Choice (y/n): [y]  \rede{n} \comment{! this does not currently work in the case of spin-NOs as used by Molcas}
+
+Attachment/detachment analysis (AD_ana):
+Choice (y/n): [y] \rede{y}
+
+NDOs as Jmol script? (jmol_orbitals):
+Choice (y/n): [y] \rede{}
+
+NDOs in Molden format? (molden_orbitals):
+Choice (y/n): [n] \rede{}
+
+Mayer bond order and valence analysis? (BO_ana):
+Choice (y/n): [y] \rede{}
+
+Adjust detailed output options?
+Choice (y/n): [n] \rede{}
+
+Name of input file
+Choice: [dens_ana.in] \rede{}
+Finished: File dens_ana.in written.
+\end{Verbatim}
+\normalsize
+
+\subsection{State density matrix analysis}
+This time, we run the program
+
+\comm{analyze\_sden.py}
+
+\scriptsize
+\begin{Verbatim}[commandchars=\\\{\}\_]
+Mulliken populations \comment{! ground state}
+MOLDEN.1            
+----------------    
+  Atom     state    
+----------------    
+  C  1   5.92413    
+  C  2   5.92413    
+  O  3   8.35389    
+  O  4   8.35389    
+  H  5   0.86099    
+  H  6   0.86099    
+  H  7   0.86099    
+  H  8   0.86099    
+----------------    
+        32.00002    
+----------------    
+
+MOLDEN.2 \comment{! first excited state}
+------------------------------------
+  Atom     state       det       att
+------------------------------------
+  C  1   6.04465   0.03847  -0.15898 \comment{! detachment/attachment with respect to ground state}
+  C  2   6.04465   0.03847  -0.15898
+  O  3   8.28628   0.45914  -0.39152
+  O  4   8.28628   0.45914  -0.39152
+  H  5   0.83454   0.02650  -0.00004
+  H  6   0.83454   0.02650  -0.00004
+  H  7   0.83454   0.02650  -0.00004
+  H  8   0.83454   0.02650  -0.00004
+------------------------------------
+        32.00000   1.10119  -1.10117 \comment{! sum: promotion number \textit{p}}
+------------------------------------
+
+...
+
+Valence information \comment{! valence analysis from Ref. \cite{Mayer_BO}}
+ Total valence (V\_A)
+ Free valence (F\_A) 
+MOLDEN.1            
+--------------------------
+  Atom       V\_A       F\_A
+--------------------------
+  C  1   3.67354   0.19140
+  C  2   3.67354   0.19140
+  O  3   1.85728   0.19063
+  O  4   1.85728   0.19063
+  H  5   0.93361   0.00012
+  H  6   0.93361   0.00012
+  H  7   0.93361   0.00012
+  H  8   0.93361   0.00012
+--------------------------
+        14.79604   0.76452
+--------------------------
+
+Bond order information \comment{! bond orders from Ref. \cite{Mayer_BO}}
+ <at1>-<at2> : <bond order>
+MOLDEN.1
+  1=3  : 1.6330 \comment{! C1=03 double bond}
+  1-5  : 0.9229 \comment{! C1-H5 single bond}
+  1-7  : 0.9229
+  2=4  : 1.6330
+  2-6  : 0.9229
+  2-8  : 0.9229
+MOLDEN.2
+  1-3  : 1.2048 \comment{! reduced bond order in the exc. state}
+  1-5  : 0.9145
+  1-7  : 0.9145
+  2-4  : 1.2048
+  2-6  : 0.9145
+  2-8  : 0.9145
+...
+\end{Verbatim}
+\normalsize
+
+\subsection{Plotting of the orbitals}
+In the case of using \textsc{Jmol}, you can use the automatic functionality for creating the natural difference orbitals (NDOs)
+
+\comm{jmol -n ndo\_jmol.spt}
+
+\greybox{The NDOs are in general similar to the NTOs, only that they also contain contributions from double excitations and orbital relaxation \cite{DMAT_ADC_II}}.
 
 \scriptsize
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -795,6 +1005,7 @@ prop_list=['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt']
 \bibitem{DMAT} F. Plasser and H. Lischka \textit{JCTC} \textbf{2012}, 8, 2777. \doi{10.1021/ct300307c}.
 \bibitem{DMAT_ADC_II} F. Plasser, S. A. B\"appler, M. Wormit, A. Dreuw \textit{JCP} \textbf{2014}, 141, 024107. \doi{10.1063/1.4885820}
 \bibitem{PPV_Steffi} S. A. Mewes, J.-M. Mewes, A. Dreuw, F. Plasser \textit{PCCP} \textbf{2016}, 18, 2548. \doi{10.1039/C5CP07077E}
+\bibitem{Mayer_BO} I. Mayer \textit{IJQC} \textbf{1986}, 29, 477. \doi{10.1002/qua.560290108}
 %\bibitem{Ircomp} F. Plasser and A. Dreuw \textit{JPCA} \doi{10.1021/jp5122917}.
 \end{thebibliography}
 
