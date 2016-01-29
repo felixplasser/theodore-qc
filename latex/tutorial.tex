@@ -120,13 +120,17 @@
 
 This tutorial will give you an introduction into various functionalities of the \theo{} program package.
 
+input files
+
+various jobs, various quantum chemistry programs
+
 \subsection{Installation}
 
 For the installation, follow the steps described at
 
 \url{https://sourceforge.net/p/theodore-qc/wiki/Installation/} \\
 
-It is necessary to set up, both, the \texttt{PATH} and \texttt{PYTHONPATH} environment variables.
+It is necessary to set up, both, the \texttt{THEODIR}, \texttt{PATH} and \texttt{PYTHONPATH} environment variables.
 
 \subsection{Notation}
 
@@ -301,6 +305,7 @@ This requires dividing the system into fragments, which are analyzed together.
 Choosing which atoms are grouped into individual fragments and how these fragments are arranged is the first critical step in the charge transfer number analysis. Special care has to be taken when choosing these fragments, and it is possibly necessary to try different settings.
 
 \subsection{Input generation}
+\label{sec:inpnto}
 First, it is helpful to look at the molecule using a molecular structure editor (e.g. Avogadro) and display the atom lables.
 
 \begin{figure}[h]
@@ -447,14 +452,16 @@ The locally excited states are represented by black boxes on the main diagonal (
 
 \section{Interface to the external cclib library (\textsc{Gaussian~09})}
 \textsc{Gaussian}, GAMESS, \textsc{Orca}, and some other programs can be parsed through the cclib library, which has to be installed separately.
+The present example will also need the \texttt{openbabel-python} package.
+If these are available, proceed:
 
 Start by copying the relevant files
 
 \comm{cp -r \$THEODIR/EXAMPLES/fa2.cclib/QC\_FILES/ fa2.cclib.btutorial} \\
 
+\subsection{Check the log file}
 When using cclib, one should start by checking whether the file can be parsed correctly
 
-\subsection{Check the log file}
 \comm{cc\_check.py gaussian.log}
 
 \scriptsize
@@ -619,15 +626,24 @@ Singlet-A1   7.851 0.001  1.000  1.500  2.000  0.992  1.015  0.000  3.717
 
 The difference to before is that at the TDDFT/PBE level used here the CT states are lower in energy
 
-\section{Advanced fragment input (Columbus)}
+\section{Advanced fragment input and double excitations (Columbus)}
 \label{sec:advinp}
+
+The secure way for fragment definition is always the manual mode described in Section~\ref{sec:inpnto}.
+In some cases, i.e. when the fragments of interest are separate molecules, one can use the option "Automatic generation from coordinate file" in \texttt{theoinp}.
+A more involved method for automatic fragment definition is described in the next section.
+This method relies on the \textsc{Avogadro} molecular structure editor and the availability of the \texttt{openbabel-python} package.
+
+This method is described in the next two sections.
+If you just wish to run the job without the input generation, copy the \texttt{dens\_ana.in file} given at the bottom of Section~\ref{sec:inpcol}
+
 Take the input files from the \texttt{EXAMPLES} directory in the \theo{} distribution
 
 \comm{cp -r \$THEODIR/EXAMPLES/hexatriene.colmrci/QC\_FILES/ hexatriene.tutorial} \\
 
+
+\clearpage
 \subsection{Fragment preparation using Avogadro}
-In this part, a method for automatic fragment generation is discussed.
-This method relies on the \textsc{Avogadro} molecular structure editor.
 
 First the \texttt{geom} file in \textsc{Columbus} format has to be converted to the more common xyz format.
 
@@ -635,15 +651,145 @@ First the \texttt{geom} file in \textsc{Columbus} format has to be converted to 
 
 \greybox{This step is specific for \textsc{Columbus}. In many other cases \textsc{Avogadro} can directly read the structure file or log file used.}
 
-This file can be opened with avogadro
+This file can be opened with \textsc{Avogadro}
 
 \comm{avogadro geom.xyz}
+
+In \textsc{Avogadro} the following steps have to be performed (Figure~\ref{fig:avo})
+
+\begin{enumerate}
+\item
+Click the pen (draw tool)
+\item
+Uncheck "Adjust Hydrogens"
+\item
+Right-click the bonds that you wish to delete to divide the molecule into fragments
+\item
+Save the file as \texttt{geom.mol} \comment{! use a structure format with explicit bonds}
+\end{enumerate}
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[trim=0cm 0cm 0.1cm 0cm, clip=true, scale=0.5]{avo_instructions.png}
+\caption{Fragment definition using \textsc{Avogadro}.}
+\label{fig:avo}
+\end{center}
+\end{figure}
+
+\subsection{Input generation}
+\label{sec:inpcol}
+Now run \texttt{theoinp} using the newly created \texttt{geom.mol} file as a template.
+
+\comm{theoinp}
+
+\scriptsize
+\begin{Verbatim}[commandchars=\\\{\}]
+Type of job (rtype):
+  [ 1]      qcadc - Q-Chem ADC (libwfa output)
+  [ 2]     libwfa - General libwfa output
+  [ 3]    qctddft - Q-Chem TDDFT
+  [ 4]   colmcscf - Columbus MCSCF
+  [ 5]    colmrci - Columbus MR-CI (tden analysis)
+  [ 6]      rassi - Molcas RASSI
+  [ 7]        nos - Read natural orbitals (Molden format) for sden analysis: Columbus, Molcas, ...
+  [ 8]      ricc2 - Turbomole ricc2
+  [ 9]       escf - Turbomole escf
+  [10]      cclib - Use external cclib library: Gaussian, ORCA, GAMESS, ...
+Choice: [5] \rede{}
+
+MO file (Molden format)
+ -> This file should ideally contain a square invertible coefficient matrix (mo_file):
+Choice (autocomplete enabled): [MOLDEN/molden_mo_mc.sp] \rede{}
+
+Analysis of transition density matrices?
+Choice (y/n): [y] \rede{}
+
+Perform CT number analysis?
+Choice (y/n): [y] \rede{y}
+Fragment definition for CT nubmer analysis
+
+Mode for specifying molecular fragments (at_lists):
+  [ 1] Manual input
+  [ 2] Automatic generation from coordinate file (using python-openbabel)
+  [ 3] Leave empty and fill out later
+Choice: \rede{2} \comment{! use automatic generation}
+Automatic generation of at_lists partitioning ...
+
+Coordinate file (coor_file):
+Choice (autocomplete enabled): [geom] \rede{geom.mol} \comment{! specify the newly created file}
+
+Format of coordinate file (coor_format):
+Choice: [col] \rede{mol}
+
+*** Fragment composition ***
+  Fragment 1: C2 H3
+  Fragment 2: C2 H3
+  Fragment 3: C2 H2
+\comment{! fragment composition looks ok, only that the central \ce{C2H2} fragment is at the end}
+Checking whether the at_lists definition is valid ...
+at_lists= [[1, 3, 7, 9, 11], [2, 4, 8, 10, 12], [5, 6, 13, 14]]
+  3 lists with individual numbers of entries:
+[5, 5, 4]
+  14 total entries, with maximal value 14
+
+Omega descriptors to be computed:
+  [ 1] Standard set
+  [ 2] Transition metal complex
+  [ 3] None
+Choice: [1] \rede{}
+
+Print-out of electron/hole populations
+  [ 1] None
+  [ 2] For fragments
+  [ 3] For fragments and individual atoms
+Choice: [1] \rede{2}
+
+Perform natural transition orbital (NTO) analysis?
+Choice (y/n): [y] \rede{n}
+
+Perform exciton analysis?
+Choice (y/n): [y] \rede{n}
+
+Were there frozen core orbitals in the calculation?
+Choice (y/n): [y] \rede{n} \comment{! for general \textsc{Columbus} jobs frozen core orbitals would have to be specified here}
+
+Adjust detailed output options?
+Choice (y/n): [n] \rede{}
+
+Name of input file
+Choice: [dens_ana.in] \rede{}
+Finished: File dens_ana.in written.
+\end{Verbatim}
+\normalsize
+
+In the \texttt{dens\_ana.in} file, it is necessary to adjust the fragment definitions in \texttt{at\_lists} to make sure that the central \ce{C2H2} fragment is really in the middle.
+The file should look like this:
+
+\scriptsize
+\begin{Verbatim}[commandchars=\\\{\}]
+rtype='colmrci'
+mo_file='MOLDEN/molden_mo_mc.sp'
+coor_file='geom.mol'
+coor_format='mol'
+at_lists=[[1, 3, 7, 9, 11], [5, 6, 13, 14], [2, 4, 8, 10, 12]] \comment{! this was adjusted manually}
+eh_pop=1
+comp_ntos=False
+prop_list=['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt']
+\end{Verbatim}
+\normalsize
+
+\greybox{When using the automatic fragment definition, it is generally advisable to check the results using a graphical representation of the molecule (e.g. Figure~\ref{fig:avo}) and to adjust the input if necessary.}
+
+\subsection{Transition density matrix (1TDM) analysis}
+
+\section{Attachment/detachment analysis (Molcas)}
 
 \scriptsize
 \begin{Verbatim}[commandchars=\\\{\}]
 
 \end{Verbatim}
 \normalsize
+
 
 \begin{thebibliography}{9}
 \bibitem{DMAT} F. Plasser and H. Lischka \textit{JCTC} \textbf{2012}, 8, 2777. \doi{10.1021/ct300307c}.
