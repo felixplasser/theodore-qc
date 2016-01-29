@@ -10,12 +10,19 @@ print """\
 Usage: molecular structure conversion based on the openbabel package
      - increased support for Columbus (col) and Tinker (txyz2) formats
      - velocity conversion Newton-X (vnx) and Tinker (vtxyz)
-     
+
 Syntax: babel.py <intype> <infile> <outtype> <outfile>
-       e.g. babel.py tmol coord xyz coord.xyz
+   e.g. babel.py tmol coord xyz coord.xyz
+   or   babel.py <infile> <outfile>
+
 """
 
-if len(sys.argv) < 4+1:
+if len(sys.argv) == 4+1:
+    (intype,infile,outtype,outfile) = sys.argv[1:]
+elif len(sys.argv) == 2+1:
+    (infile,outfile) = sys.argv[1:]
+    intype = outtype = None
+else:
     print"""  Supported file types:
     col -- Columbus and Newton-X format
     colr -- Columbus format, atoms reordered
@@ -25,10 +32,8 @@ if len(sys.argv) < 4+1:
   additionally all formats from openbabel are included
     type 'babel -H' for a complete list"""
     
-    print '\nFour arguments required.'
+    print '\nTwo or four arguments required.'
     sys.exit()
-    
-(intype,infile,outtype,outfile) = sys.argv[1:]
 
 if intype in lib_struc.veloc_types: # special treatment of velocities
     veloc = struc_linalg.veloc()

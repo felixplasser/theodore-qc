@@ -11,7 +11,7 @@ except ImportError:
     print " *** Warning: python-openbabel not found! ***"
     print " Using emulation program with limited capabilities ..."
     import OB_repl as openbabel
-import units
+import units, error_handler
 
 Z_symbol_dict = {1:'H',5:'B',6:'C',7:'N',8:'O',9:'F',15:'P',16:'S',17:'Cl',26:'Fe',34:'Se',35:'Br',50:'Sn',53:'I',77:'Ir'}
 symbol_Z_dict = {}
@@ -28,20 +28,42 @@ class structure:
         self.name = name
         self.new_types = ['txyz2','col','colr','nx'] # these are defined here
 
-    def read_file(self, file_path, file_type='tmol'):
+    def read_file(self, file_path, file_type=None):
         """
         Read in the structure from a file.
         """
         self.file_path = file_path
-        self.file_type = file_type
+        self.file_type = file_type if file_type != None else self.guess_file_type(file_path, file_type)
         self.mol = openbabel.OBMol()
 
         if self.file_type in self.new_types:
             self.read_new_type()
         else:
             obconversion = openbabel.OBConversion()
-            obconversion.SetInFormat(file_type)
-            obconversion.ReadFile(self.mol, file_path)
+            if not obconversion.SetInFormat(self.file_type):
+                raise error_handler.MsgError("Format %s not supported by openbabel for input."%ftype)
+            if not obconversion.ReadFile(self.mol, file_path):
+                raise error_handler.MsgError("Error reading coordinate file %s"%file_path)
+
+    def guess_file_type(self, file_path, file_type, lvprt=1):
+        file_name = file_path.split('/')[-1]
+        if file_name == 'geom':
+            return 'col'
+        elif file_name == 'coord':
+            return 'tmol'
+        elif file_name == 'coord.qchem':
+            return 'qcin'
+        elif file_name == 'qchem.out':
+            return 'qcout'
+
+        fparts = file_name.split('.')
+        if len(fparts) == 1:
+            raise error_handler.MsgError('File format cannot be detected for %s'%file_name)
+        else:
+            ret_type = fparts[-1]
+            if lvprt>=1:
+                print "Detected file type: %s"%ret_type
+            return ret_type
 
     def read_new_type(self):
         """
@@ -359,16 +381,19 @@ class structure:
 
         return ret_str
 
-    def make_coord_file(self, file_path, file_type='tmol'):
+    def make_coord_file(self, file_path, file_type=None):
         """
         Write the structure file.
         """
-        if file_type in self.new_types:
-            self.make_coord_new(file_path, file_type)
+        ftype = file_type if file_type != None else self.guess_file_type(file_path, file_type)
+        if ftype in self.new_types:
+            self.make_coord_new(file_path, ftype)
         else:
             obconversion = openbabel.OBConversion()
-            obconversion.SetOutFormat(file_type)
-            obconversion.WriteFile(self.mol, file_path)
+            if not obconversion.SetOutFormat(ftype):
+                raise error_handler.MsgError("Format %s not supported by openbabel for output."%ftype)
+            if not obconversion.WriteFile(self.mol, file_path):
+                raise error_handler.MsgError("Error writing coordinate file %s"%file_path)
 
     def make_coord_new(self, file_path, file_type):
         """
