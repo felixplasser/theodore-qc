@@ -1,4 +1,6 @@
 \documentclass[DIV=12,headings=normal]{scrartcl}
+\setlength{\parskip}{1em}
+\setlength{\parindent}{0pt}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -18,19 +20,9 @@
 \usepackage{pdflscape}
 \usepackage{subfigure}
 
-\usepackage{tikz}
-% \usetikzlibrary{decorations}
-% \usetikzlibrary{decorations.pathmorphing}
-% \usetikzlibrary{plotmarks}
-% \usetikzlibrary{patterns}
-\usepackage{pgfplots}
-\pgfplotsset{compat=1.3}
-\usepgfplotslibrary{groupplots}
-
 \usepackage{siunitx}
-\sisetup{decimalsymbol=comma}
+%\sisetup{decimalsymbol=comma}
 \usepackage{multirow}
-\usepackage{url}
 \usepackage{fancyhdr}
 
 \usepackage[version=3,arrows=pgf]{mhchem}
@@ -43,24 +35,23 @@
 % \captionsetup[subfloat]{font={default,small}}
 
 \newsavebox\MBox
-\newcommand\Cline[2][red]{{\sbox\MBox{#2}%
-  \rlap{\usebox\MBox}\color{#1}\rule[-1.2\dp\MBox]{\wd\MBox}{0.5pt}}}
+%\newcommand\Cline[2][red]{{\sbox\MBox{#2}%
+%  \rlap{\usebox\MBox}\color{#1}\rule[-1.2\dp\MBox]{\wd\MBox}{0.5pt}}}
 
 \newcommand{\comment}[1]{\textcolor{blue}{#1}}
 \newcommand{\red}[1]{\textcolor{red}{#1}}
-\newcommand{\redl}[1]{\Cline{\textcolor{red}{#1}}}
-\newcommand{\rede}[1]{\redl{#1 <ENTER}}
-\newcommand{\reds}[1]{\redl{\scriptsize #1}}
-\newcommand{\doi}[1]{\href{http://dx.doi.org/#1}{\textcolor{blue}{\bf DOI:~#1}}}
+\newcommand{\redl}[1]{{\textcolor{red}{\underline{#1}}}}
+\newcommand{\rede}[1]{\redl{#1 <ENTER>}}
+
+\newcommand{\doi}[1]{\href{http://dx.doi.org/#1}{\textcolor{blue}{DOI:~#1}}}
 \newcommand{\om}[1]{\omega_{\textrm{#1}}}
 
 \newcommand{\comm}[1]{
 \small
-%\begin{Verbatim}%[commandchars=\\\{\}]
 ~> \redl{#1}
-%\end{Verbatim}
 \normalsize
 }
+
 \newcommand{\incmo}[1]{\includegraphics[trim=1cm 1cm 1cm 1cm, clip=true, width=4cm]{#1}}
 \newcommand{\incom}[1]{\includegraphics[width=3cm]{#1}}
 
@@ -81,11 +72,6 @@
 \newcounter{number}
 \newcommand{\numbering}[1]{\thenumber. #1\addtocounter{number}{1}}
 \newcommand{\renumber}{\setcounter{number}{1}}
-
-\pgfplotsset{every tick label/.append style={/pgf/number format/use comma,/pgf/number format/1000 sep={}}}
-\pgfplotsset{scaled ticks=false}
-\pgfplotsset{small,width=0.6\textwidth,max space between ticks=35}
-\pgfplotsset{tick style={thin,black}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -110,30 +96,19 @@
 
 \maketitle
 %\cleardoublepage
-
+\vspace{-2em}
 \tableofcontents
 \clearpage
 
 \section{Before Starting}
 
 \subsection{Introduction}
+This tutorial is intended to provide an overview over the functionalities of the \theo{} program package.
+Various tasks of different complexity are discussed using interfaces to different quantum chemistry packages.
+It is advisable to go through the whole tutorial but it is of course possible to skip some of the later sections.
 
-This tutorial will give you an introduction into various functionalities of the \theo{} program package.
-
-input files, same as \texttt{theo\_test.bash}
-from the \texttt{EXAMPLES} directory in the \theo{} distribution.
-
-various jobs, various quantum chemistry programs
-
-It is advisable to go through the whole tutorial but it is of course possible to skip some of the
-
-\subsection{Installation}
-
-For the installation, follow the steps described at
-
-\url{https://sourceforge.net/p/theodore-qc/wiki/Installation/} \\
-
-It is necessary to set up, both, the \texttt{THEODIR}, \texttt{PATH} and \texttt{PYTHONPATH} environment variables.
+All input files are contained in the \texttt{EXAMPLES} directory in the \theo{} distribution.
+They are the same files accessed by the \texttt{theo\_test.bash} program.
 
 \subsection{Notation}
 
@@ -147,6 +122,18 @@ This kind of font indiates what is seen on the screen
 \normalsize
 
 \greybox{Important information related to \theo{} but not necessarily connected to the current job comes in boxes like this.}
+
+\subsection{Installation}
+In case of using \texttt{bash} it should suffice to type
+
+\comm{source /mypath/TheoDORE\_1.2/setpaths.bash} \comment{\scriptsize ! replace /mypath with your actual installation}
+
+to set up the required \texttt{THEODIR}, \texttt{PATH} and \texttt{PYTHONPATH} environment variables.
+
+For more information, see
+
+\url{https://sourceforge.net/p/theodore-qc/wiki/Installation/}
+
 \clearpage
 \section{Natural transition orbitals (Turbomole)}
 
@@ -188,7 +175,7 @@ Choice (autocomplete enabled): [molden.input] \redl{<ENTER>}
  *** Warning: in the case of ricc2 you have to delete the line
        implicit core=   x virt=    x
      from the control file before running tm2molden.
- \comment{! A consistent file is given here. But in general, one should be careful when using \texttt{ricc2}}
+ \comment{! Everything works here but in general one should remember this when using \texttt{ricc2}}
 
 Analysis of transition density matrices?
 Choice (y/n): [y] \redl{<ENTER>}
@@ -275,13 +262,13 @@ nto_1-1-a.mld  nto_2-1-a.mld  nto_3-1-a.mld  nto_4-1-a.mld  nto_5-1-a.mld  nto_6
 You can visualize them with any program of your choice.
 
 \clearpage
-In the case of using \textsc{Jmol} a short cut is available.
+In the case of using \textsc{Jmol} a shortcut is available.
 To plot all the orbitals in one go, simply type
 
 \comm{jmol -n nto\_jmol.spt}
 
 Then \textsc{Jmol} will create \texttt{.png} files for all the orbitals.
-To look at all these orbitals at once open the file \texttt{nto.html} in a browser.\\
+To look at all these orbitals at once open the file \texttt{nto.html} in a browser.
 
 \begin{tabular}{|ccl|}
 \hline
@@ -300,9 +287,8 @@ To look at all these orbitals at once open the file \texttt{nto.html} in a brows
 \hline
 \end{tabular}
 
-\greybox{In both cases two NTO pairs are required to describe that transition, in agreement with ${\rm PR}_{\rm NTO}\approx 2$.}
-
-\textit{Technical note:} To get the precise pictures shown here, modify the \texttt{nto\_jmol.spt} script:
+\greybox{In both cases two NTO pairs are required to describe the transition, in agreement with ${\rm PR}_{\rm NTO}\approx 2$.}\\
+\textit{Technical note:} To get the precise pictures shown here, modify the \texttt{nto\_jmol.spt} script
 \scriptsize
 \begin{Verbatim}[commandchars=\\\{\}]
 load molden.input FILTER "nosort"                                                                                                    
@@ -318,10 +304,10 @@ rotate y 10 \comment{! add}
 \section{Charge transfer number and exciton analysis (Turbomole)}
 In this part an analysis of the charge transfer numbers is carried out.
 This requires dividing the system into fragments, which are analyzed together.
-Choosing which atoms are grouped into individual fragments and how these fragments are arranged is the first critical step in the charge transfer number analysis. Special care has to be taken when choosing these fragments, and it is possibly necessary to try different settings.
+Choosing which atoms are grouped into individual fragments and how these fragments are arranged is the first critical step in the charge transfer number analysis. Special care has to be taken when choosing these fragments, and it is often necessary to try different settings.
 
 \subsection{Input generation}
-\label{sec:inpnto}
+\label{sec:inpct}
 First, it is helpful to look at the molecule using a molecular structure editor (e.g. Avogadro) and display the atom lables.
 
 \begin{figure}[h]
@@ -398,11 +384,10 @@ Choice (autocomplete enabled): [coord]\redl{<ENTER>}
 
 Format of coordinate file (coor_format):
 Choice: [tmol]\redl{<ENTER>} \comment{! this is the format as recognized by openbabel}
-
 ...
 \end{Verbatim}
 \normalsize
-
+%
 \subsection{Transition density matrix (1TDM) analysis}
 
 Again run:
@@ -424,18 +409,18 @@ state       dE(eV)     f     Om    POS     PR     CT    COH   CTnt  RMSeh
 \end{Verbatim}
 \normalsize
 
-The meaning of these values are discussed in Refs~\cite{DMAT, DMAT_ADC_II} and at the \href{https://sourceforge.net/p/theodore-qc/wiki/Transition density matrix analysis/}{documentation wiki}. Only a brief explanation shall be given here:
+The meaning of these values is discussed in Refs~\cite{DMAT, DMAT_ADC_II} and at the \href{https://sourceforge.net/p/theodore-qc/wiki/Transition density matrix analysis/}{documentation wiki}. Only a brief explanation shall be given here:
 
 \begin{itemize}
 \item
-The \texttt{Om} or $\Omega$ value is formally the one-electron excitation character.
-However, in the case of RI-CC2 or TDDFT this is simply a normalization factor.
+In the case of using \texttt{ricc2} the first value \texttt{Om} or $\Omega$ is just a normalization factor.
+In cases, where an exact 1TDM is available, this is the one-electron excitation character.
 \item
 The values $\om{POS}=1.500$ and $\om{PR}=2.000$ in all cases mean that the excitation is distributed evenly between fragment 1 and fragment 2 (for symmetry reasons)
 \item
-The crucial information lies in the $\om{CT}$ value. $\om{CT}\approx 0$ for the first four excited states, meaning that this are mostly coupled local excitations (Frenkel excitons). For the last two states $\om{CT}$ is greater than 0.8 indicating that these are charge resonance states.
+The crucial information lies in the $\om{CT}$ value. $\om{CT}\approx 0$ for the first four excited states, meaning that these are mostly coupled local excitations (Frenkel excitons). For the last two states $\om{CT}$ is greater than 0.8 indicating that these are charge resonance states.
 \item
-The trend in the CT values is also reflected by the (approximated) root-mean square electron-hole separation (RMSeh, also denoted $\tilde{d}_{exc}$) given in \AA.\cite{PPV_Steffi}
+The trend in the CT values is also reflected by the (approximated) root-mean square electron-hole separation (RMSeh, also denoted $\tilde{d}_{exc}$) given in \AA~\cite{PPV_Steffi}.
 This value is is about equal to the intermolecular separation of 3.5~\AA{} in the case of the charge resonance states while it is significantly smaller for the locally excited states.
 \end{itemize}
 
@@ -463,7 +448,7 @@ Simply use all default values an then look at \texttt{OmFrag.html} in a browser.
 \hline
 \end{tabular} \\
 
-Here, the results are rather trivial since there are only two fragments in the calculation, which are also equivalent for symmetry reasons.
+Here, the results are rather trivial since there are only two fragments in the calculation, which are equivalent for symmetry reasons.
 The locally excited states are represented by black boxes on the main diagonal (going from lower left to upper right) while the charge resonance states are distinguished by off-diagonal contributions.
 
 \section{Interface to the external cclib library (\textsc{Gaussian~09})}
@@ -473,7 +458,7 @@ If these are available, proceed:
 
 Start by copying the relevant files
 
-\comm{cp -r \$THEODIR/EXAMPLES/fa2.cclib/QC\_FILES/ fa2.cclib.tutorial} \\
+\comm{cp -r \$THEODIR/EXAMPLES/fa2.cclib/QC\_FILES/ fa2.cclib.tutorial}
 
 \subsection{Check the log file}
 When using cclib, one should start by checking whether the file can be parsed correctly
@@ -624,7 +609,7 @@ Again run:
 
 \comm{analyze\_tden.py}
 
-The output looks similar as it did before.
+The output looks similar as it did before only that at the TDDFT/PBE level the CT states are lower in energy.
 
 \scriptsize
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -640,8 +625,7 @@ Singlet-A1   7.851 0.001  1.000  1.500  2.000  0.992  1.015  0.000  3.717
 \end{Verbatim}
 \normalsize
 
-The difference to before is that at the TDDFT/PBE level used here the CT states are lower in energy
-
+\clearpage
 \section{Advanced fragment input and double excitations (Columbus)}
 \label{sec:advinp}
 
@@ -651,7 +635,7 @@ A more involved method for automatic fragment definition is described in the nex
 This method relies on the \textsc{Avogadro} molecular structure editor and the availability of the \texttt{python-openbabel} package.
 
 This method is described in the next two sections.
-If you just wish to run the job without the input generation, copy the \texttt{dens\_ana.in file} given at the bottom of Section~\ref{sec:inpcol}
+If you just wish to run the job without the input generation, copy the \texttt{dens\_ana.in file} given at the bottom of Section~\ref{sec:inpcol}.
 
 Take the input files from the \texttt{EXAMPLES} directory in the \theo{} distribution
 
@@ -665,7 +649,7 @@ First the \texttt{geom} file in \textsc{Columbus} format has to be converted to 
 
 \comm{babel.py col geom xyz geom.xyz}
 
-\greybox{This step is specific for \textsc{Columbus}. In many other cases \textsc{Avogadro} can directly read the structure file or log file used.}
+\greybox{This step is specific for \textsc{Columbus}. In many other cases \textsc{Avogadro} can directly read the structure file or logfile.}
 
 This file can be opened with \textsc{Avogadro}
 
@@ -740,8 +724,8 @@ Choice: [col] \rede{mol}
 *** Fragment composition ***
   Fragment 1: C2 H3
   Fragment 2: C2 H3
-  Fragment 3: C2 H2
-\comment{! fragment composition looks ok, only that the central \ce{C2H2} fragment is at the end}
+  Fragment 3: C2 H2 \comment{! the central \ce{C2H2} fragment is at the end ...}
+\comment{  ! ... his has to be changed (see below)}
 Checking whether the at_lists definition is valid ...
 at_lists= [[1, 3, 7, 9, 11], [2, 4, 8, 10, 12], [5, 6, 13, 14]]
   3 lists with individual numbers of entries:
@@ -793,14 +777,14 @@ comp_ntos=False
 prop_list=['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt']
 \end{Verbatim}
 \normalsize
-
-\greybox{When using the automatic fragment definition, it is generally advisable to check the results using a graphical representation of the molecule (e.g. Figure~\ref{fig:avo}) and to adjust the file if necessary.}
-
+\vspace{-1em}
+\greybox{When using the automatic fragment definition, it is generally advisable to check the results using a graphical representation of the molecule (c.f. Figure~\ref{fig:avo}) and to adjust things if necessary.}
+\vspace{-1.5em}
 \subsection{Transition density matrix (1TDM) analysis}
+\vspace{-1em}
 As always:
-
 \comm{analyze\_tden.py}
-
+\vspace{-0.5em}
 \scriptsize
 \begin{Verbatim}[commandchars=\\\{\}]
 Decomposition over fragments
@@ -830,16 +814,13 @@ Note, that in these cases the 1TDM analysis does not provide a complete descript
 
 \section{Attachment/detachment analysis (Molcas - natural orbitals)}
 While the previous examples were focused on an analysis of the transition density matrices, TheoDORE can also analyze state- and difference-density matrices.
-These are most conveniently read in through natural orbital (NO) files in \textsc{Molden} format.
+These are most conveniently read in as natural orbital (NO) files in \textsc{Molden} format.
 
 \subsection{Input generation}
-Get the input files
+Get the input files \\
+\comm{cp -r \$THEODIR/EXAMPLES/fa2.rassi/QC\_FILES/ fa2.rassi.tutorial}
 
-\comm{cp -r \$THEODIR/EXAMPLES/fa2.rassi/QC\_FILES/ fa2.rassi.tutorial} \\
-
-Call
-
-\comm{theoinp} \\
+and call \comm{theoinp}
 
 \scriptsize
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -912,7 +893,7 @@ This time, we run the program
 \comm{analyze\_sden.py}
 
 \scriptsize
-\begin{Verbatim}[commandchars=\\\{\}\_]
+\begin{Verbatim}[commandchars=\\\{\}]
 Mulliken populations \comment{! ground state}
 MOLDEN.1            
 ----------------    
@@ -992,7 +973,14 @@ In the case of using \textsc{Jmol}, you can use the automatic functionality for 
 
 \comm{jmol -n ndo\_jmol.spt}
 
-\greybox{The NDOs are in general similar to the NTOs, only that they also contain contributions from double excitations and orbital relaxation \cite{DMAT_ADC_II}}.
+\greybox{The NDOs are in general similar to the NTOs, only that they also contain contributions from double excitations and orbital relaxation \cite{DMAT_ADC_II}.}
+
+\section{Contact}
+If you have any questions about this tutorial or about the \textsc{TheoDORE} program, please use the forum:
+
+\url{https://sourceforge.net/p/theodore-qc/discussion/bugs_questions/}
+
+You can also reach me via email: \texttt{felix.plasser at univie.ac.at}
 
 \scriptsize
 \begin{Verbatim}[commandchars=\\\{\}]
