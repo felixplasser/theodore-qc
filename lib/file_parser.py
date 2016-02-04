@@ -592,16 +592,13 @@ class file_parser_qcadc(file_parser_libwfa):
         
         return omname
     
-class file_parser_qctddft(file_parser_libwfa):
+class file_parser_qctddft(file_parser_libwfa):   
     def read(self, mos):
         """
         Read the X vector from standard output. Y is discarded.
         """
         state_list = []
-        exc_diff = False
-        exc_1TDM = False
-        tdread = False
-        libwfa = False
+        exc_diff = exc_1TDM = tdread = libwfa = False
         istate = 1
         
         if self.ioptions.get('TDA'):
@@ -634,6 +631,13 @@ class file_parser_qctddft(file_parser_libwfa):
                     raise(error_handler.MsgError(errstr))
             elif 'SA-NTO Decomposition' in line:
                 libwfa = False
+            elif 'Welcome to Q-Chem' in line:
+                if len(state_list) > 0:
+                    print "\n WARNING: found second Q-Chem job!\n   Deleting everything parsed so far.\n"
+
+                state_list = []
+                exc_diff = exc_1TDM = tdread = libwfa = False
+                istate = 1
                     
             if tdread:                
                 words = line.replace(':','').split()

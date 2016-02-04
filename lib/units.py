@@ -32,9 +32,12 @@ dipole={'D':2.54174619,
 }
 constants={'Nl':6.02214179E23}
 
-# short cuts
+# shortcuts
 def eV2nm(val):
     return energy['eV']*energy['nm']/val
+
+def nm2eV(val):
+    return eV2nm(val)
 
 def eVdiff(au1,au2):
     print "%.5f eV"%((au2-au1)*energy['eV'])
