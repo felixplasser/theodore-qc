@@ -180,7 +180,7 @@ class mocoll_occ(mocoll):
         
         self.molist = []
         for imo, occ in enumerate(self.moset.occs):
-            if occmin <= occ <= occmax:
+            if occmin <= abs(occ) <= occmax:
                 self.molist.append(imo)        
 
 class jmol_options(input_options.write_options):
@@ -205,8 +205,8 @@ class jmol_options(input_options.write_options):
         elif self['spec'] == 'frontier':
             self.read_int('Number of frontier orbitals',  'en_ind', 3)
         elif self['spec'] == 'occ':
-            self.read_float('Minimal occupancy', 'occmin', 0.01)
-            self.read_float('Maximal occupancy', 'occmax', 1.99)
+            self.read_float('Minimal absolute occupancy', 'occmin', 0.01)
+            self.read_float('Maximal absolute occupancy', 'occmax', 1.99)
         else:
             raise error_handler.ElseError(self['spec'], 'spec')
         
