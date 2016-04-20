@@ -200,7 +200,7 @@ class file_parser_ricc2(file_parser_base):
             print "Finished parsing file %s"%rfile  
             break
           else:
-            if ' sym | multi | state' in line:
+            if (' sym | multi | state' in line) and ('excitation energies' in line):
                 # parse the multiplicity from here
                 multis = []
                 line = lines.next()
@@ -243,8 +243,9 @@ class file_parser_ricc2(file_parser_base):
                 words = line.split()
                 ret_list[curr_osc]['osc_str'] = float(words[5])
                 curr_osc+=1
-            elif 'irred. repres.:' in line:
-                self.ioptions['irrep_labels'] = line.split()[2:]
+            #elif 'irred. repres.:' in line:
+            elif 'real representations' in line:
+                self.ioptions['irrep_labels'] = line.split()[6:]
         return ret_list
 
 #---
@@ -1113,7 +1114,10 @@ class file_parser_rassi(file_parser_base):
         rfile = open(filen,'r')
         
         while(True):
-            line = rfile.next()
+            try:
+                line = rfile.next()
+            except:
+                break
             
             if 'Total energies (spin-free)' in line:
                 words = rfile.next().split()

@@ -41,7 +41,7 @@ class structure:
         else:
             obconversion = openbabel.OBConversion()
             if not obconversion.SetInFormat(self.file_type):
-                raise error_handler.MsgError("Format %s not supported by openbabel for input."%ftype)
+                raise error_handler.MsgError("Format %s not supported by openbabel for input."%self.file_type)
             if not obconversion.ReadFile(self.mol, file_path):
                 raise error_handler.MsgError("Error reading coordinate file %s"%file_path)
 
