@@ -17,7 +17,8 @@ energy={'au':1.0,
 }
 length={'au':1.0,
         'A':0.529177249,
-        'm':0.529177249E-10
+        'm':0.529177249E-10,
+        'cm':0.529177249E-8
 }
 time={'au':1.0,
       'fs':0.0241888432,
@@ -30,7 +31,13 @@ mass={'au':1.0,
 dipole={'D':2.54174619,
         'Cm':8.47835267E-30
 }
-constants={'Nl':6.02214179E23}
+constants={'Nl':6.02214179E23,
+           'c0':137 # speed of light in a.u.
+}
+
+# derived quantities
+tpa={}
+tpa['GM']=10**50 * length['cm']**4 * time['s']
 
 # shortcuts
 def eV2nm(val):

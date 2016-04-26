@@ -2,7 +2,7 @@ Release notes:
 
 TheoDORE 1.2.1
 - Fixes for Q-Chem and Turbomole read-out
-- Automatic File detection for babel.py
+- Automatic file detection for babel.py
 
 TheoDORE 1.2
 - Extended output for e/h populations
