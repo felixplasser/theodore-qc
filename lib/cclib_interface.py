@@ -16,7 +16,7 @@ class file_parser_cclib(file_parser.file_parser_base):
     def __init__(self, *args, **kwargs):
         file_parser.file_parser_base.__init__(self, *args, **kwargs)
 
-        self.data = self.get_data(self.ioptions['rtype'], self.ioptions['rfile'])
+        self.data, self.prog = self.get_data(self.ioptions['rtype'], self.ioptions['rfile'])
 
     def get_data(self, rtype, rfile):
         """
@@ -37,11 +37,9 @@ class file_parser_cclib(file_parser.file_parser_base):
             print("Parsing %s ..."%str(cfile))
 
         prog = str(cfile).split()[0]
-        if prog == 'ADF':
-            raise error_handler.MsgError("For ADF, use rtype='adf'")
 
-        return cfile.parse()
-    
+        return cfile.parse(), prog
+
     def read(self, mos, rect_dens=True):
         """
         Convert the information to data analyzed by TheoDORE.
@@ -61,7 +59,6 @@ class file_parser_cclib(file_parser.file_parser_base):
             state_list.append({})
             state = state_list[-1]
 
-            state['state_ind'] = ist + 1
             state['exc_en'] = exc_en / units.energy['rcm'] * units.energy['eV']
             try:
                 state['osc_str'] = self.data.etoscs[ist]
@@ -69,6 +66,16 @@ class file_parser_cclib(file_parser.file_parser_base):
                 state['osc_str'] = -1.
             state['irrep'] = self.data.etsyms[ist]
 
+        if self.prog == 'ADF':
+            self.tden_adf(state_list, mos, rect_dens)
+        else:
+            self.tden_cclib(state_list, mos, rect_dens)
+
+        return state_list
+
+    def tden_cclib(self, state_list, mos, rect_dens):
+        for ist, state in enumerate(state_list):
+            state['state_ind'] = ist + 1
             state['name'] = '%i%s'%(state['state_ind'],state['irrep'])
             print("\n" + state['name'])
 
@@ -81,7 +88,79 @@ class file_parser_cclib(file_parser.file_parser_base):
                 if coeff*coeff > 0.05:
                     print " (%i->%i), coeff=% .4f"%(iocc+1, ivirt+1, coeff)
 
-        return state_list
+    def tden_adf(self, state_list, mos, rect_dens):
+        print("\n   WARNING: Using experimental ADF interface\n")
+
+        raise error_handler.MsgError("ADF intrface not ready")
+
+        import kf
+
+        print("Opening file TAPE21 ...")
+        rfile = kf.kffile('TAPE21')
+
+        try:
+            nmo = int(rfile.read('A','nmo_A'))
+            nelec = int(rfile.read('General','electrons'))
+        except:
+            print("\n  ERROR: reading file TAPE21!\n")
+            raise
+        assert nelec%2==0, "Odd number of electrons"
+
+        group = rfile.read('Geometry','grouplabel')[0]
+        if not group in ['NOSYM', 'C1', 'c1']:
+            print("grouplabel: " + group)
+            raise error_handler.MsgError('No support for symmetry')
+
+        nocc = nelec / 2
+        assert nocc == mos.ret_ihomo() + 1
+        nvirt = nmo - nocc
+        assert nvirt == mos.ret_num_mo() - nocc
+
+        try:
+            nsing = len(rfile.read('All excitations','All Sing-Sing excitations'))
+        except TypeError:
+            nsing = 0
+        try:
+            ntrip = len(rfile.read('All excitations','All Sing-Trip excitations'))
+        except TypeError:
+            ntrip = 0
+
+        assert nsing+ntrip == len(state_list)
+
+        istate = 0
+        for ising in range(nsing):
+            state = state_list[istate]
+
+            state['state_ind'] = ising + 1
+            state['mult'] = 1
+            state['name'] = '%i(%i)%s'%(state['state_ind'], state['mult'] ,state['irrep'])
+
+            state['tden'] = self.init_den(mos, rect=rect_dens)
+            eigen = rfile.read('Excitations SS A','eigenvector %s'%(istate+1))
+            state['tden'][:,nocc:nmo] = eigen.reshape(nocc, nvirt)
+            istate += 1
+
+            print state['name']
+            tden = state['tden']
+            for i in range(len(tden)):
+                for j in range(len(tden[0])):
+                    val = tden[i, j]
+                    if val*val > 0.1:
+                        print "(%i -> %i) % .4f"%(i+1,j+1,val)
+
+        for itrip in range(ntrip):
+            state = state_list[istate]
+
+            state['state_ind'] = itrip + 1
+            state['mult'] = 3
+            state['name'] = '%i(%i)%s'%(state['state_ind'], state['mult'] ,state['irrep'])
+
+            state['tden'] = self.init_den(mos, rect=rect_dens)
+            eigen = rfile.read('Excitations ST A','eigenvector %s'%(istate+1 - nsing))
+            state['tden'][:,nocc:nmo] = eigen.reshape(nocc, nvirt)
+            istate += 1
+
+        rfile.close()
 
     def check(self, lvprt=1):
         """
@@ -158,8 +237,9 @@ class MO_set_cclib(lib_mo.MO_set_molden):
         self.occs = (self.ihomo + 1) * [1.] + (len(self.ens) - self.ihomo - 1) * [0.]
 
         for iat, baslist in enumerate(data.atombasis):
+            #print iat, baslist
             for ibas in baslist:
-                self.basis_fcts.append(lib_mo.basis_fct(iat, '?', '?'))
+                self.basis_fcts.append(lib_mo.basis_fct(iat+1, '?', '?'))
 
         try:
             self.syms = data.mosyms

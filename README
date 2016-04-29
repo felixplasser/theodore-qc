@@ -1,5 +1,8 @@
 Release notes:
 
+TheoDORE 1.2.2
+- Crucial bugfix for all cclib jobs
+
 TheoDORE 1.2.1
 - Fixes for Q-Chem and Turbomole read-out
 - Automatic file detection for babel.py
