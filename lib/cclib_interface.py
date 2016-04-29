@@ -11,13 +11,13 @@ except ImportError:
     print " *** Warning: python-openbabel not found! ***"
     print " Using emulation program with limited capabilities ..."
     import OB_repl as openbabel
-    
+
 class file_parser_cclib(file_parser.file_parser_base):
     def __init__(self, *args, **kwargs):
         file_parser.file_parser_base.__init__(self, *args, **kwargs)
-        
+
         self.data = self.get_data(self.ioptions['rtype'], self.ioptions['rfile'])
-        
+
     def get_data(self, rtype, rfile):
         """
         Call cclib to read in the data.
@@ -28,20 +28,26 @@ class file_parser_cclib(file_parser.file_parser_base):
         except ImportError:
             print "\n ERROR: Did not find the external cclib package!"
             print "Please, download and install cclib to use this functionality.\n"
-            raise            
+            raise
 
         cfile = cclib.parser.ccopen(rfile)
         if cfile == None:
             raise error_handler.MsgError('File %s cannot be parsed by cclib!'%rfile)
-        
+        else:
+            print("Parsing %s ..."%str(cfile))
+
+        prog = str(cfile).split()[0]
+        if prog == 'ADF':
+            raise error_handler.MsgError("For ADF, use rtype='adf'")
+
         return cfile.parse()
     
     def read(self, mos, rect_dens=True):
         """
         Convert the information to data analyzed by TheoDORE.
         """
-        state_list = []        
-        
+        state_list = []
+
         try:
             core_orbs = sum(self.data.coreelectrons) / 2
             if core_orbs > 0:
@@ -50,11 +56,11 @@ class file_parser_cclib(file_parser.file_parser_base):
                 rect_dens = False
         except AttributeError:
             pass
-            
+
         for ist, exc_en in enumerate(self.data.etenergies):
             state_list.append({})
             state = state_list[-1]
-            
+
             state['state_ind'] = ist + 1
             state['exc_en'] = exc_en / units.energy['rcm'] * units.energy['eV']
             try:
@@ -62,70 +68,69 @@ class file_parser_cclib(file_parser.file_parser_base):
             except AttributeError:
                 state['osc_str'] = -1.
             state['irrep'] = self.data.etsyms[ist]
-            
+
             state['name'] = '%i%s'%(state['state_ind'],state['irrep'])
-            
+            print("\n" + state['name'])
+
             state['tden'] = self.init_den(mos, rect=rect_dens)
-            #print " len:", len(state['tden']), len(state['tden'][0])
-            print "\n", state['name']
             for conf in self.data.etsecs[ist]:
                 [(iocc, spocc), (ivirt, spvirt), coeff] = conf
                 assert(iocc < ivirt) # de-excitations cannot be handled at this point
                 state['tden'][iocc, ivirt] = coeff
-                
+
                 if coeff*coeff > 0.05:
                     print " (%i->%i), coeff=% .4f"%(iocc+1, ivirt+1, coeff)
-    
+
         return state_list
-    
+
     def check(self, lvprt=1):
         """
         Check if the input file can be used by cclib.
         """
         errcode = 0
-        
+
         if lvprt >= 1:
             print "\nChecking if the logfile %s can be parsed by cclib ..."%self.ioptions['rfile']
             print "\nEssential attributes:"
-            
+
         for attr in ['mocoeffs', 'atombasis', 'natom', 'homos', 'moenergies', 'etenergies', 'etsyms', 'etsecs']:
             chk = hasattr(self.data, attr)
             if not chk: errcode = 2
-            
+
             if lvprt >= 1:
                 print '%15s ...'%attr, chk
-                
+
         if lvprt >= 1:
             print "\nOptional attributes:"
-            
+
         for attr in ['etoscs', 'aooverlaps', 'mosyms']:
             chk = hasattr(self.data, attr)
-            
+
             if lvprt >= 1:
                 print '%15s ...'%attr, chk
 
         if lvprt >= 1:
             print "\nAttributes for structure parsing and creation of Molden file:"
-            
+
         for attr in ['gbasis', 'natom', 'atomcoords', 'atomnos']:
             chk = hasattr(self.data, attr)
             if not chk: errcode = max(1, errcode)
-            
+
             if lvprt >= 1:
                 print '%15s ...'%attr, chk
-                
+
         return errcode
-    
+
     def read_mos(self):
         """
         Return an MO_set object in TheoDORE format.
         """
         mos = MO_set_cclib(file = None)
-        
+
         mos.read(self.data, lvprt=2)
-        
+
         return mos
-    
+
     def ret_struc(self,lvprt=1):
         if lvprt>=1: print "Reading cclib structure ..."
         struc = structrue_cclib()
@@ -136,7 +141,7 @@ class file_parser_cclib(file_parser.file_parser_base):
         #    return None
         #else:
         return struc
-    
+
 class MO_set_cclib(lib_mo.MO_set_molden):
     def read(self, data, lvprt=1):
         """
@@ -145,37 +150,37 @@ class MO_set_cclib(lib_mo.MO_set_molden):
         self.mo_mat = data.mocoeffs[0].transpose()
         if lvprt >= 1:
             print "MO-matrix read from cclib, dimension: %i x %i"%(len(self.mo_mat), len(self.mo_mat[0]))
-        
+
         self.num_at = data.natom
-            
+
         self.ens = data.moenergies[0]
         self.ihomo = data.homos[0]
-        self.occs = (self.ihomo + 1) * [1.] + (len(self.ens) - self.ihomo - 1) * [0.]        
-               
+        self.occs = (self.ihomo + 1) * [1.] + (len(self.ens) - self.ihomo - 1) * [0.]
+
         for iat, baslist in enumerate(data.atombasis):
             for ibas in baslist:
                 self.basis_fcts.append(lib_mo.basis_fct(iat, '?', '?'))
-                
+
         try:
             self.syms = data.mosyms
         except AttributeError:
             self.syms = ['X'] * len(self.ens)
-                
+
         try: self.S = data.aooverlaps
         except AttributeError: pass
-        
+
         try: self.atomnos = data.atomnos
         except AttributeError: pass
-        
+
         try: self.coords = data.atomcoords[-1]
         except AttributeError: pass
-        
+
         try: self.gbasis = data.gbasis
         except AttributeError: pass
-        
+
     def ret_ihomo(self):
         return self.ihomo
-    
+
     def write_molden_file(self, fname='out.mld', cfmt='% 10E', occmin=-1):
         """
         Write a file in Molden format.
@@ -195,23 +200,23 @@ class MO_set_cclib(lib_mo.MO_set_molden):
             for bas in at:
                 typ = bas[0]
                 exps = bas[1]
-                
+
                 self.header+= "%3s %5i 1.00\n"%(typ, len(exps))
-                
+
                 for exp in exps:
                     self.header+= "%18.10E %18.10E\n"%exp
             self.header+= "\n"
-        
+
         self.export_AO(self.ens, self.occs, self.mo_mat.transpose(), fname, cfmt, occmin)
 
 class structrue_cclib(lib_struc.structure):
     def read_cclib(self, data, lvprt=1):
         self.mol = openbabel.OBMol()
-        
+
         for iat in xrange(data.natom):
             obatom = openbabel.OBAtom()
             obatom.SetAtomicNum(int(data.atomnos[iat]))
             coords = data.atomcoords[-1][iat]
             obatom.SetVector(*coords)
-            
+
             self.mol.AddAtom(obatom)
