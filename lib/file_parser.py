@@ -84,8 +84,8 @@ class configuration:
             self.coeff  = float(words[0])
             self.weight = float(words[1])
         except:
-            print "\n ERROR when parsing line:"
-            print line
+            print("\n ERROR when parsing line:")
+            print(line)
             raise
         
 #--------------------------------------------------------------------------#        

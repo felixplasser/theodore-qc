@@ -8,8 +8,8 @@ import file_parser, lib_mo, error_handler, units, lib_struc
 try:
     import openbabel
 except ImportError:
-    print " *** Warning: python-openbabel not found! ***"
-    print " Using emulation program with limited capabilities ..."
+    print(" *** Warning: python-openbabel not found! ***")
+    print(" Using emulation program with limited capabilities ...")
     import OB_repl as openbabel
 
 class file_parser_cclib(file_parser.file_parser_base):
@@ -24,10 +24,10 @@ class file_parser_cclib(file_parser.file_parser_base):
         """
         try:
             import cclib.parser
-            print "Using cclib version %s"%cclib.__version__
+            print("Using cclib version %s"%cclib.__version__)
         except ImportError:
-            print "\n ERROR: Did not find the external cclib package!"
-            print "Please, download and install cclib to use this functionality.\n"
+            print("\n ERROR: Did not find the external cclib package!")
+            print("Please, download and install cclib to use this functionality.\n")
             raise
 
         cfile = cclib.parser.ccopen(rfile)
@@ -49,8 +49,8 @@ class file_parser_cclib(file_parser.file_parser_base):
         try:
             core_orbs = sum(self.data.coreelectrons) / 2
             if core_orbs > 0:
-                print "\n WARNING: %i core orbitals detected"%core_orbs
-                print " Please check the results carefully!\n"
+                print("\n WARNING: %i core orbitals detected"%core_orbs)
+                print(" Please check the results carefully!\n")
                 rect_dens = False
         except AttributeError:
             pass
@@ -86,12 +86,12 @@ class file_parser_cclib(file_parser.file_parser_base):
                 state['tden'][iocc, ivirt] = coeff
 
                 if coeff*coeff > 0.05:
-                    print " (%i->%i), coeff=% .4f"%(iocc+1, ivirt+1, coeff)
+                    print(" (%i->%i), coeff=% .4f"%(iocc+1, ivirt+1, coeff))
 
     def tden_adf(self, state_list, mos, rect_dens):
         print("\n   WARNING: Using experimental ADF interface\n")
 
-        raise error_handler.MsgError("ADF intrface not ready")
+        #raise error_handler.MsgError("ADF intrface not ready")
 
         import kf
 
@@ -140,13 +140,13 @@ class file_parser_cclib(file_parser.file_parser_base):
             state['tden'][:,nocc:nmo] = eigen.reshape(nocc, nvirt)
             istate += 1
 
-            print state['name']
+            print(state['name'])
             tden = state['tden']
             for i in range(len(tden)):
                 for j in range(len(tden[0])):
                     val = tden[i, j]
                     if val*val > 0.1:
-                        print "(%i -> %i) % .4f"%(i+1,j+1,val)
+                        print("(%i -> %i) % .4f"%(i+1,j+1,val))
 
         for itrip in range(ntrip):
             state = state_list[istate]
@@ -169,34 +169,34 @@ class file_parser_cclib(file_parser.file_parser_base):
         errcode = 0
 
         if lvprt >= 1:
-            print "\nChecking if the logfile %s can be parsed by cclib ..."%self.ioptions['rfile']
-            print "\nEssential attributes:"
+            print("\nChecking if the logfile %s can be parsed by cclib ..."%self.ioptions['rfile'])
+            print("\nEssential attributes:")
 
         for attr in ['mocoeffs', 'atombasis', 'natom', 'homos', 'moenergies', 'etenergies', 'etsyms', 'etsecs']:
             chk = hasattr(self.data, attr)
             if not chk: errcode = 2
 
             if lvprt >= 1:
-                print '%15s ...'%attr, chk
+                print('%15s ... %s'%(attr, chk))
 
         if lvprt >= 1:
-            print "\nOptional attributes:"
+            print("\nOptional attributes:")
 
         for attr in ['etoscs', 'aooverlaps', 'mosyms']:
             chk = hasattr(self.data, attr)
 
             if lvprt >= 1:
-                print '%15s ...'%attr, chk
+                print('%15s ... %s'%(attr, chk))
 
         if lvprt >= 1:
-            print "\nAttributes for structure parsing and creation of Molden file:"
+            print("\nAttributes for structure parsing and creation of Molden file:")
 
         for attr in ['gbasis', 'natom', 'atomcoords', 'atomnos']:
             chk = hasattr(self.data, attr)
             if not chk: errcode = max(1, errcode)
 
             if lvprt >= 1:
-                print '%15s ...'%attr, chk
+                print('%15s ... %s'%(attr, chk))
 
         return errcode
 
@@ -211,7 +211,7 @@ class file_parser_cclib(file_parser.file_parser_base):
         return mos
 
     def ret_struc(self,lvprt=1):
-        if lvprt>=1: print "Reading cclib structure ..."
+        if lvprt>=1: print("Reading cclib structure ...")
         struc = structrue_cclib()
         #try:
         struc.read_cclib(self.data)
@@ -228,7 +228,7 @@ class MO_set_cclib(lib_mo.MO_set_molden):
         """
         self.mo_mat = data.mocoeffs[0].transpose()
         if lvprt >= 1:
-            print "MO-matrix read from cclib, dimension: %i x %i"%(len(self.mo_mat), len(self.mo_mat[0]))
+            print("MO-matrix read from cclib, dimension: %i x %i"%(len(self.mo_mat), len(self.mo_mat[0])))
 
         self.num_at = data.natom
 
@@ -237,9 +237,9 @@ class MO_set_cclib(lib_mo.MO_set_molden):
         self.occs = (self.ihomo + 1) * [1.] + (len(self.ens) - self.ihomo - 1) * [0.]
 
         for iat, baslist in enumerate(data.atombasis):
-            #print iat, baslist
             for ibas in baslist:
                 self.basis_fcts.append(lib_mo.basis_fct(iat+1, '?', '?'))
+        assert(self.ret_num_bas() == data.atombasis[-1][-1]+1)
 
         try:
             self.syms = data.mosyms
