@@ -105,7 +105,7 @@ Number of basis functions parsed:  95
 MO-matrix not square: 95 x 36
   Using the Moore-Penrose pseudo inverse instead.
 
- Structure file parsed
+Reading structure from mo_file qchem.mld
 Number of atoms: 10
 Composition: C4 H5 N 
 

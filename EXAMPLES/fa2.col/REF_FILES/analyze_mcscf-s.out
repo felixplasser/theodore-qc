@@ -57,7 +57,7 @@ Reading mcsd1fl.drt1.st03.iwfmt ...
 (i,j)=(29,29), val= 0.994
 (i,j)=(30,30), val= 0.850
 
- Structure file parsed
+Reading structure from mo_file MOLDEN/molden_mo_mc.sp
 Number of atoms: 8
 Composition: C2 H4 O2 
 

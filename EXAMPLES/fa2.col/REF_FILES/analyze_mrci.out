@@ -56,7 +56,7 @@ file LISTINGS/trncils.FROMdrt1.state2TOdrt1.state3, reading:
 reading ...
           asymm-trans density matrix: diagonal part
 
- Structure file parsed
+Reading structure from coor_file geom.xyz
 Number of atoms: 8
 Composition: C2 H4 O2 
 

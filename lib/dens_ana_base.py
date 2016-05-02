@@ -68,7 +68,7 @@ class dens_ana_base:
             self.state_list = ccli.read(self.mos)
 
             self.struc = ccli.ret_struc()
-            
+
             # Write a Molden file if possible
             if errcode == 0:
                 self.mos.write_molden_file(fname='MOs.mld')
@@ -87,18 +87,24 @@ class dens_ana_base:
                 state['rcm']  = state['exc_en'] / units.energy['eV'] * units.energy['rcm'] / 1000
             except ZeroDivisionError:
                 pass
-        
+
         if 'coor_file' in self.ioptions:
+            if lvprt >= 1:
+                print("\nReading structure from coor_file %s"%self.ioptions['coor_file'])
             self.struc = lib_struc.structure()
             self.struc.read_file(self.ioptions['coor_file'], self.ioptions['coor_format'])
+        elif self.ioptions['rtype'] == 'cclib':
+            if lvprt >= 1:
+                print("\nUsing cclib structure")
         elif 'mo_file' in self.ioptions:
+            if lvprt >= 1:
+                print("\nReading structure from mo_file %s"%self.ioptions['mo_file'])
             self.struc = lib_struc.structure()
             self.struc.read_at_dicts(self.mos.at_dicts)
-        elif self.ioptions['rtype'] != 'cclib':
+        else:
             self.struc = None
 
-        if lvprt>=1 and not self.struc==None:
-            print "\n Structure file parsed"
+        if lvprt >= 1 and not self.struc==None:
             num_at = self.struc.ret_num_at()
             print "Number of atoms: %i"%num_at
             print "Composition: %s\n"%self.struc.ret_at_list_composition(range(1, num_at+1))

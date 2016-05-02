@@ -52,7 +52,7 @@ Reading TRD/TRD2_003_003 ...
 (i,j)=(16,16), val= 0.636
 (i,j)=(17,17), val= 0.543
 
- Structure file parsed
+Reading structure from mo_file molcas.rasscf.molden
 Number of atoms: 8
 Composition: C2 H4 O2 
 

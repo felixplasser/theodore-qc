@@ -211,7 +211,6 @@ class file_parser_cclib(file_parser.file_parser_base):
         return mos
 
     def ret_struc(self,lvprt=1):
-        if lvprt>=1: print("Reading cclib structure ...")
         struc = structrue_cclib()
         #try:
         struc.read_cclib(self.data)
@@ -291,6 +290,9 @@ class MO_set_cclib(lib_mo.MO_set_molden):
 
 class structrue_cclib(lib_struc.structure):
     def read_cclib(self, data, lvprt=1):
+        if lvprt>=1:
+            print("Reading cclib structure with %i atoms."%data.natom)
+
         self.mol = openbabel.OBMol()
 
         for iat in xrange(data.natom):

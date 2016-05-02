@@ -54,7 +54,7 @@ Dimension: 44,44,...,44
 Number of basis functions parsed:  44
  ... inverting C
 
- Structure file parsed
+Reading structure from mo_file MOLDEN/molden_mo_mc.sp
 Number of atoms: 8
 Composition: C2 H4 O2 
 

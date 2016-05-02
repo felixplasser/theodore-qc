@@ -69,7 +69,7 @@ Number of basis functions parsed:  44
 MO-matrix not square: 44 x 88
   Using the Moore-Penrose pseudo inverse instead.
 
- Structure file parsed
+Reading structure from mo_file molcas.rasscf.molden
 Number of atoms: 8
 Composition: C2 H4 O2 
 
