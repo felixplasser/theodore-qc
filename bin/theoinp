@@ -141,15 +141,15 @@ class write_options_theo(input_options.write_options):
     
     def make_at_lists(self):
         print "Fragment definition for CT nubmer analysis"
-        aexpl = ['Manual input', 'Automatic generation from coordinate file (using python-openbabel)', \
-                 'Leave empty and fill out later']
+        aexpl = ['Manual input', 'Automatic generation by fragment (using python-openbabel)', \
+                'Automatic generation by element (using python-openbabel)', 'Leave empty and fill out later']
         ichoice = self.ret_choose_list('Mode for specifying molecular fragments (at_lists):', aexpl)
         
         if ichoice==1:
             self['at_lists'] = self.read_at_lists()
-        elif ichoice==2:
-            self['at_lists'] = self.file_at_lists()
-        elif ichoice==3:
+        elif ichoice==2 or ichoice == 3:
+            self['at_lists'] = self.file_at_lists(ichoice)
+        elif ichoice==4:
             self['at_lists'] = [[]]
             self.ostr += 'at_lists=\n'
             return
@@ -169,14 +169,19 @@ class write_options_theo(input_options.write_options):
             
         return atl_tmp
             
-    def file_at_lists(self):
+    def file_at_lists(self, mode):
         print "Automatic generation of at_lists partitioning ..."
         self.coor_file()
         
         struc = lib_struc.structure()
         struc.read_file(file_path=self['coor_file'], file_type=self['coor_format'])
     
-        return struc.ret_partition()                
+        if mode == 2:
+            return struc.ret_partition()
+        elif mode == 3:
+            return struc.ret_el_partition()
+        else:
+            raise error_handler.ElseError('mode', mode)
     
     def coor_file(self):
         self.read_str('Coordinate file', 'coor_file', self['coor_file'], True)

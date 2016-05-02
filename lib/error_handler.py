@@ -20,6 +20,7 @@ class PureVirtualError(MsgError):
     """
     Use this to mark pure virtual functions in an abstract base class
     These have to be redefined by the inherited class.
+    -> One could use NotImplementedError instead
     """
     def __init__(self):
         self.errmsg = "Virtual function is pure!"

@@ -358,6 +358,29 @@ class structure:
 
         return at_lists
 
+    def ret_el_partition(self, lvprt=1):
+        """
+        Return a partition according to the element types.
+        """
+        tmp_dict = {}
+        for i in xrange(self.mol.NumAtoms()):
+            atom = self.mol.GetAtom(i+1)
+            Z = atom.GetAtomicNum()
+            if not Z in tmp_dict:
+                tmp_dict[Z] = []
+            tmp_dict[Z].append(i+1)
+
+        at_lists = []
+        for Z, at_list in tmp_dict.iteritems():
+            at_lists.append(at_list)
+        
+        if lvprt >= 1:
+            print "\n*** Fragment composition ***"
+            for i, at_list in enumerate(at_lists):
+                print "  Fragment %i: %s"%(i+1, self.ret_at_list_composition(at_list))
+
+        return at_lists
+
     def ret_at_list_composition(self, at_list):
         """
         Return a string describing the atoms contained in at_list,
