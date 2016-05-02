@@ -136,6 +136,11 @@ class tden_ana(dens_ana_base.dens_ana_base):
             title = 'Decomposition over individual atoms'
             function = self.print_eh_At
             self.printer_base(title, function, lvprt)        
+
+        if self.ioptions['eh_pop'] >= 3:
+            title = 'Decomposition over individual basis functions'
+            function = self.print_eh_Bas
+            self.printer_base(title, function, lvprt)        
         
     def print_eh_Frag(self, state, lvprt=2):
         Om, OmFrag = self.ret_Om_OmFrag(state)
@@ -160,6 +165,20 @@ class tden_ana(dens_ana_base.dens_ana_base):
         epop = numpy.sum(OmAt, 0)
         
         pop_pr = pop_ana.pop_printer(self.struc)
+        pop_pr.add_pop('h+', hpop)
+        pop_pr.add_pop('e-', epop)
+        pop_pr.add_pop('sum', hpop+epop)
+        pop_pr.add_pop('diff', hpop-epop)
+        
+        print pop_pr.ret_table()
+
+    def print_eh_Bas(self, state, lvprt=2):
+        OmBas = state['OmBas']
+        
+        hpop = numpy.sum(OmBas, 1)
+        epop = numpy.sum(OmBas, 0)
+        
+        pop_pr = pop_ana.pop_printer()
         pop_pr.add_pop('h+', hpop)
         pop_pr.add_pop('e-', epop)
         pop_pr.add_pop('sum', hpop+epop)
@@ -243,15 +262,19 @@ class tden_ana(dens_ana_base.dens_ana_base):
         else:
             raise error_handler.MsgError("Om_formula=%i for CT numbers not implemented!"%formula)
         
+        # store OmBas if needed
+        if self.ioptions['eh_pop'] >= 3:
+            state['OmBas'] = OmBas
+        
         for i in xrange(self.num_bas):
-            iat = self.mos.basis_fcts[i].at_ind - 1 
+            iat = self.mos.basis_fcts[i].at_ind - 1
             for j in xrange(self.num_bas):
                 jat = self.mos.basis_fcts[j].at_ind - 1
                 state['Om'] += OmBas[i, j]
                 state['OmAt'][iat, jat] += OmBas[i, j]
                 
         return state['Om'], state['OmAt']
-        
+
 #---    
 
     def compute_all_OmFrag(self):

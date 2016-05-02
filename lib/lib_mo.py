@@ -370,11 +370,18 @@ class basis_fct:
     """
     Container for basisfunction information.
     """
-    def __init__(self, at_ind, l, ml):
-        self.at_ind = at_ind # atom where the function is located
+    def __init__(self, at_ind=-1, l='?', ml='?'):
+        self.set(at_ind, l, ml)
+        
+    def set(self, at_ind=-1, l='?', ml='?'):
+        self.at_ind = at_ind # atom where the function is located, starting at 1
         self.l = l   # s, p, d, f
         self.ml = ml # x, y, z
-        
+
+    def __str__(self):
+        return "Basis function (%s, %s) at atom %i"%(self.l, self.ml, self.at_ind)
+    
+
 class jmol_MOs:
     """
     Class for producing input for the Jmol program that can be used to plot MOs.

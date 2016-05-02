@@ -89,7 +89,7 @@ class file_parser_cclib(file_parser.file_parser_base):
                     print(" (%i->%i), coeff=% .4f"%(iocc+1, ivirt+1, coeff))
 
     def tden_adf(self, state_list, mos, rect_dens):
-        print("\n   WARNING: Using experimental ADF interface\n")
+        print("\n   Using new ADF interface\n")
 
         #raise error_handler.MsgError("ADF intrface not ready")
 
@@ -140,7 +140,8 @@ class file_parser_cclib(file_parser.file_parser_base):
             state['tden'][:,nocc:nmo] = eigen.reshape(nocc, nvirt)
             istate += 1
 
-            print(state['name'])
+            # print-out
+            print(state['name'])        
             tden = state['tden']
             for i in range(len(tden)):
                 for j in range(len(tden[0])):
@@ -159,6 +160,15 @@ class file_parser_cclib(file_parser.file_parser_base):
             eigen = rfile.read('Excitations ST A','eigenvector %s'%(istate+1 - nsing))
             state['tden'][:,nocc:nmo] = eigen.reshape(nocc, nvirt)
             istate += 1
+
+            # print-out
+            print(state['name'])        
+            tden = state['tden']
+            for i in range(len(tden)):
+                for j in range(len(tden[0])):
+                    val = tden[i, j]
+                    if val*val > 0.1:
+                        print("(%i -> %i) % .4f"%(i+1,j+1,val))
 
         rfile.close()
 
@@ -235,10 +245,14 @@ class MO_set_cclib(lib_mo.MO_set_molden):
         self.ihomo = data.homos[0]
         self.occs = (self.ihomo + 1) * [1.] + (len(self.ens) - self.ihomo - 1) * [0.]
 
+        self.basis_fcts = [lib_mo.basis_fct(-1) for ibas in range(self.ret_num_bas())]
+        maxbas = -1
         for iat, baslist in enumerate(data.atombasis):
+            maxbas = max([maxbas] + baslist)
             for ibas in baslist:
-                self.basis_fcts.append(lib_mo.basis_fct(iat+1, '?', '?'))
-        assert(self.ret_num_bas() == data.atombasis[-1][-1]+1)
+                self.basis_fcts[ibas].set(iat + 1)
+
+        assert(self.ret_num_bas() == maxbas+1)
 
         try:
             self.syms = data.mosyms

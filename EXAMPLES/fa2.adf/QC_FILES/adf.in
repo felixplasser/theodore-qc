@@ -1,0 +1,54 @@
+ATOMS
+C          1.75000        0.00000        0.59225
+C         -1.75000        0.00000        0.59225
+O          1.75000        0.00000       -0.59537
+O         -1.75000        0.00000       -0.59537
+H          1.75000        0.92490        1.17073
+H         -1.75000        0.92490        1.17073
+H          1.75000       -0.92490        1.17073
+H         -1.75000       -0.92490        1.17073
+END
+
+SYMMETRY NOSYM
+
+BASIS
+type DZ
+core None
+createoutput None
+END
+
+XC
+GGA PBE
+END
+
+EXCITATION
+DAVIDSON
+lowest 3
+END
+
+EPRINT
+SFO EIG OVL
+
+SCF
+iterations 100
+END
+
+BeckeGrid
+    Quality Good
+End
+
+
+ZlmFit
+    Quality Normal
+End
+
+NOPRINT LOGFILE
+
+
+
+
+
+
+
+
+

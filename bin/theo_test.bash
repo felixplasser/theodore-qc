@@ -3,7 +3,7 @@
 PDIR=`pwd`
 
 echo "theo_test.bash [<module>]"
-echo "  available modules: standard, all, cclib"
+echo "  available modules: standard, all, cclib, adf"
 
 echo "Starting theo_test.bash"
 echo "THEODIR=$THEODIR"
@@ -15,15 +15,17 @@ fi
 
 stddirs="pyrrole.qcadc hexatriene.colmrci fa2.ricc2 pv2p.escf pv2p.qctddft ir_c3n3.qctddft pyridine.ricc2 fa2.col fa2.rassi"
 cclibdirs="fa2.cclib SnH4-ecp.firefly"
+adfdirs="fa2.adf"
 
 if [ $# == 0 ]
 then
     rundirs=$stddirs
 else
     case "$1" in
-    "all") rundirs="$stddirs $cclibdirs";;
+    "all") rundirs="$stddirs $cclibdirs $adfdirs";;
     "standard") rundirs="$stddirs";;
-    "cclib") rundirs="$cclibdirs";;    
+    "cclib") rundirs="$cclibdirs";;
+    "adf") rundirs="$adfdirs";;
     esac
 fi
 
