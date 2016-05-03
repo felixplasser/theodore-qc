@@ -1,0 +1,3 @@
+[submodule "external/cclib"]
+	path = external/cclib
+	url = git@github.com:felixplasser/cclib.git
