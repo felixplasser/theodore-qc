@@ -1,3 +1,4 @@
-lib/*.pyc
+*.pyc
+lib/cclib
 DOXYGEN
 TheoDORE.komodoproject

@@ -3,7 +3,7 @@ width=80
 def print_header(*args):
     print(ret_header(*args))
     
-def ret_header(title=None, ver='1.2.2'):
+def ret_header(title=None, ver='1.2.3'):
     hstr  = width*'=' + '\n'
     
     hstr += addlinec("TheoDORE %s"%ver)

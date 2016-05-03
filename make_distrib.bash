@@ -13,8 +13,10 @@ then
    exit 1
 fi
 
+SDIR=`pwd`
+
 LTDIR="TheoDORE_$1"
-TDIR="../$LTDIR"
+TDIR="$SDIR/../Versions/$LTDIR"
 echo "Creating new version in $TDIR"
 
 if [ -d $TDIR ]
@@ -36,5 +38,13 @@ cp -r EXAMPLES $TDIR
 mkdir $TDIR/lib
 cp lib/*.py $TDIR/lib
 
-cd ..
+# cclib as used by TheoDORE
+cp -r external/cclib/src/cclib $TDIR/lib
+# also copy the source because of LGPL
+mkdir $TDIR/external
+cd $SDIR/external
+tar -czf $TDIR/external/cclib.tgz cclib/ANNOUNCE cclib/CHANGELOG cclib/INSTALL cclib/LICENSE cclib/logo_for_ccl.svg cclib/logo.png cclib/manifest.py cclib/README.md cclib/setup.py cclib/src/ cclib/test/ cclib/THANKS
+
+# create tar with shorter relative paths
+cd $SDIR/../Versions
 tar -czf $LTDIR.tgz $LTDIR
