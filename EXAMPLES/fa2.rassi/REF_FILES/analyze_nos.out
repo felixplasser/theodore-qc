@@ -1,5 +1,5 @@
 ================================================================================
-|                                TheoDORE 1.1.4                                |
+|                                TheoDORE 1.2.3                                |
 |         Theoretical Density, Orbital Relaxation and Exciton analysis         |
 |                                Felix Plasser                                 |
 --------------------------------------------------------------------------------
@@ -18,7 +18,7 @@
 |     Phys. Rev. A (2014), 90, 052521.                                         |
 |                                                                              |
 |   Program citation:                                                          |
-|     F. Plasser "TheoDORE: a package for theoretical density, orbital         |
+|     F. Plasser "TheoDORE 1.2.3: a package for theoretical density, orbital   |
 |     relaxation, and exciton analysis"; available from                        |
 |     http://theodore-qc.sourceforge.net                                       |
 --------------------------------------------------------------------------------

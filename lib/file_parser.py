@@ -1061,6 +1061,10 @@ class file_parser_rassi(file_parser_base):
     def read(self, mos):
         state_list = []
         
+        print("""
+   Analyzing RASSI job.
+   WARNING: this only works if all states derive from the same RASSCF calculation!\n""")
+        
         (energies, oscs) = self.read_rassi_output(self.ioptions['rfile'])
         
         if not os.path.exists('TRD'):

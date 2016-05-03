@@ -1,5 +1,5 @@
 ================================================================================
-|                                TheoDORE 1.1.3                                |
+|                                TheoDORE 1.2.3                                |
 |         Theoretical Density, Orbital Relaxation and Exciton analysis         |
 |                                Felix Plasser                                 |
 --------------------------------------------------------------------------------
@@ -18,7 +18,7 @@
 |     Phys. Rev. A (2014), 90, 052521.                                         |
 |                                                                              |
 |   Program citation:                                                          |
-|     F. Plasser "TheoDORE: a package for theoretical density, orbital         |
+|     F. Plasser "TheoDORE 1.2.3: a package for theoretical density, orbital   |
 |     relaxation, and exciton analysis"; available from                        |
 |     http://theodore-qc.sourceforge.net                                       |
 --------------------------------------------------------------------------------
@@ -32,6 +32,10 @@ Number of MOs read in: 44
 Dimension: 44,44,...,44
 Number of basis functions parsed:  44
  ... inverting C
+
+   Analyzing RASSI job.
+   WARNING: this only works if all states derive from the same RASSCF calculation!
+
 Reading TRD/TRD2_001_001 ...
 (i,j)=(12,12), val= 1.894
 (i,j)=(13,13), val= 1.888
