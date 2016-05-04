@@ -1,46 +1,5 @@
-Release notes:
+The TheoDORE (Theoretical Density, Orbital Relaxation and Exciton analysis) package is a general purpose program suite for the analysis of excited states obtained from quantum chemical excited state calculations.
 
-TheoDORE 1.3
-- Interface for ADF
-- Fragment definition by element
+For more information, go to http://theodore-qc.sourceforge.net/. Please use the discussion forum at https://sourceforge.net/p/theodore-qc/discussion if you have any question.
 
-TheoDORE 1.2.2
-- Crucial bugfix for all cclib jobs
-
-TheoDORE 1.2.1
-- Fixes for Q-Chem and Turbomole read-out
-- Automatic file detection for babel.py
-
-TheoDORE 1.2
-- Extended output for e/h populations
-- Support for Q-Chem/CC computations
-- Fragment charge differences (experimental)
-- User input
-
-TheoDORE 1.1.4
-- Bugfix for e/h correlation plots
-
-TheoDORE 1.1.3
-- Create Molden files directly from cclib output
-- Enhanced exciton analysis
-- Support for Mayer bond order analysis
-- Add spectrum.py script for generating a convoluted spectrum
-- Improved print out
-
-TheoDORE 1.1.2
-- Support for MOLCAS rassi calculations
-- Some adjustments for Q-Chem 4.3
-- Fix for FIREFLY ECP computations
-
-TheoDORE 1.1.1
-- Improved output and graphics
-
-TheoDORE 1.1
-- Interface to cclib for parsing of ORCA, Gaussian, GAMESS and other programs
-- Parsing of binary files for ricc2 response vector read-out
-- New script plot_graph.py for convenient generation of graphs
-- New script convert_table.py for creating tables in LaTeX format
-- Additional Utility scripts
-
-TheoDORE 1.0
-- First release
+TheoDORE uses the cclib library (http://cclib.github.io) for some of its file parsing work.
