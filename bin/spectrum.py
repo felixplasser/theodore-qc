@@ -97,8 +97,8 @@ class spectrum:
         for i, sp in enumerate(self.spec):
             self.spec[i] = sp / smax
 
-        for i, stick in enumerate(self.sticks):
-            self.sticks[i] = (stick[0] / smax, stick[1])
+        #for i, stick in enumerate(self.sticks):
+         #   self.sticks[i] = (stick[0] / smax, stick[1])
 
     def ascii_file(self, fname='spectrum.dat'):
         wf = lib_file.wfile(fname)
@@ -133,7 +133,7 @@ class spectrum:
             (xmin, xmax) = (self.emin * xfac, self.emax * xfac)
         else:
             raise error_handler.ElseError(xunit, 'xunit')
-        pylab.ylabel('Absorption (norm.)')
+        pylab.ylabel('Oscillator strength')
         
         pylab.plot(xlist, self.spec, 'k-')
         

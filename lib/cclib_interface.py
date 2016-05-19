@@ -64,7 +64,7 @@ class file_parser_cclib(file_parser.file_parser_base):
                 state['osc_str'] = self.data.etoscs[ist]
             except AttributeError:
                 state['osc_str'] = -1.
-            state['irrep'] = self.data.etsyms[ist]
+            state['irrep'] = self.data.etsyms[ist].replace('let-', '')
 
         if self.prog == 'ADF':
             self.tden_adf(state_list, mos, rect_dens)

@@ -1,4 +1,5 @@
 #!/bin/bash
+# call this on vanadium
 
 cd pyinstall || exit 2
 

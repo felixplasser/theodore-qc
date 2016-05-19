@@ -219,7 +219,7 @@ class write_options_theo(input_options.write_options):
         
         if self.ret_yn('Perform natural transition orbital (NTO) analysis?', True):
             self.ostr += 'comp_ntos=True\n'
-            self['prop_list'] += ['PRNTO']
+            self['prop_list'] += ['PRNTO', 'Z_HE']
             self.read_yn('NTOs as Jmol script?', 'jmol_orbitals', True)
             self.read_yn('NTOs in Molden format', 'molden_orbitals', False)
             if self['molden_orbitals']:
