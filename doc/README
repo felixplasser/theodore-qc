@@ -2,6 +2,7 @@ Release notes:
 
 TheoDORE 1.3
 - Interface for ADF
+- cclib taken as part of the distribution
 - Electron/hole entanglement entropy
 - Automatic fragment definition by element
 
