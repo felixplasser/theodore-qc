@@ -3,7 +3,7 @@
 PDIR=`pwd`
 
 echo "theo_test.bash [<module>]"
-echo "  available modules: standard, all, cclib, adf"
+echo "  available modules: standard, all, openbabel, cclib, adf"
 
 echo "Starting theo_test.bash"
 echo "THEODIR=$THEODIR"
@@ -13,7 +13,8 @@ if [ -z "$THEODIR" ]; then
    exit 1
 fi
 
-stddirs="pyrrole.qcadc hexatriene.colmrci fa2.ricc2 pv2p.escf pv2p.qctddft ir_c3n3.qctddft pyridine.ricc2 fa2.col fa2.rassi"
+stddirs="pyrrole.qcadc hexatriene.colmrci fa2.ricc2 pv2p.escf pv2p.qctddft pyridine.ricc2 fa2.col fa2.rassi"
+obdirs="ir_c3n3.qctddft"
 cclibdirs="fa2.cclib SnH4-ecp.firefly"
 adfdirs="fa2.adf"
 
@@ -22,8 +23,9 @@ then
     rundirs=$stddirs
 else
     case "$1" in
-    "all") rundirs="$stddirs $cclibdirs $adfdirs";;
+    "all") rundirs="$stddirs $obdirs $cclibdirs $adfdirs";;
     "standard") rundirs="$stddirs";;
+    "openbabel") rundirs="$obdirs";;
     "cclib") rundirs="$cclibdirs";;
     "adf") rundirs="$adfdirs";;
     esac
@@ -76,7 +78,7 @@ do
     for rfile in `ls "$sdir/REF_FILES"`
     do
         echo "  -> $rfile"
-        diff -I TheoDORE -w "$sdir/REF_FILES/$rfile" $rfile
+        diff -w -I 'TheoDORE\|python-openbabel\|emulation' "$sdir/REF_FILES/$rfile" $rfile
         chk=$((chk+$?))
     done
     

@@ -75,7 +75,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         omf.write("%i\n"%len(self.ioptions['at_lists']))
         for state in self.state_list:
             Om, OmFrag = self.ret_Om_OmFrag(state)
-            if Om == None:
+            if Om is None:
                 continue
             omf.write("%10s %8.5f"%(state['name'], Om))
             for el in OmFrag.flatten():
@@ -145,7 +145,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
     def print_eh_Frag(self, state, lvprt=2):
         Om, OmFrag = self.ret_Om_OmFrag(state)
         
-        if OmFrag == None: return
+        if OmFrag is None: return
         
         hpop = numpy.sum(OmFrag, 1)
         epop = numpy.sum(OmFrag, 0)
@@ -199,7 +199,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         else:
             if not 'Om_desc' in state:
                 Om, OmFrag = self.ret_Om_OmFrag(state)
-                if Om == None: return None
+                if Om is None: return None
                 
                 state['Om_desc'] = Om_descriptors.Om_desc_coll(Om, OmFrag)
             
@@ -289,7 +289,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
             Om, OmFrag = self.ret_Om_OmFrag(state, self.ioptions.get('at_lists'))
             
     def ret_Om_OmFrag(self, state, at_lists=None):
-        if at_lists == None:
+        if at_lists is None:
             try:
                 return state['Om'], state['OmFrag']
             except:
@@ -297,7 +297,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
                 #raise error_handler.MsgError("at_lists not specified")
 
         Om, OmAt = self.ret_Om_OmAt(state)
-        if Om == None:
+        if Om is None:
             return None, None
         
         state['OmFrag'] = numpy.zeros([len(at_lists), len(at_lists)])
@@ -391,7 +391,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
     def analyze_excitons(self, exciton_ana):
         for state in self.state_list:
             Om, OmAt = self.ret_Om_OmAt(state)
-            if Om == None: continue
+            if Om is None: continue
             
             state['RMSeh'] = exciton_ana.ret_RMSeh(Om, OmAt)
             state['MAeh']  = exciton_ana.ret_MAeh(Om, OmAt)

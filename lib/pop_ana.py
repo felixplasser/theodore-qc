@@ -14,7 +14,8 @@ class pop_ana:
         raise error_handler.PureVirtualError()
     
     def ret_pop(self, dens, mos, Deff=None):
-        if Deff==None: Deff = self.ret_Deff(dens, mos)
+        if Deff is None:
+            Deff = self.ret_Deff(dens, mos)
         
         mp = numpy.zeros(mos.num_at)
         
@@ -54,7 +55,7 @@ class pop_printer:
         """
         Add population data to be stored in the printer class.
         """
-        if pop==None: return
+        if pop is None: return
         
         self.pop_types.append(pop_type)
         self.pops.append(pop)
@@ -81,7 +82,7 @@ class pop_printer:
         
         # main part
         for iat in xrange(len(self.pops[0])):
-            if self.struc==None:
+            if self.struc is None:
                 retstr += '%6i'%(iat+1)
             else:
                 retstr += '%3s%3i'%(self.struc.ret_symbol(iat+1), iat+1)
@@ -111,7 +112,7 @@ class pop_printer:
         
         # main part
         for i in xrange(len(self.pops[0])):
-            if self.struc==None:
+            if self.struc is None:
                 retstr += '%15i'%(i+1)
             else:
                 retstr += '%15s'%(self.struc.ret_at_list_composition(at_lists[i]))
@@ -138,7 +139,7 @@ class pop_printer:
         
         # main part
         for i in xrange(len(self.pops[0])):
-            if self.struc==None:
+            if self.struc is None:
                 retstr += '%15i'%(i+1)
             else:
                 retstr += '%15s'%(self.struc.ret_at_list_composition(at_lists[i]))

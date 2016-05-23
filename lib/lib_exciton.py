@@ -19,7 +19,7 @@ class exciton_analysis:
         """
         Return the root mean square electron-hole distance (Ang).
         """
-        if self.distmat == None:
+        if not type(self.distmat) is numpy.ndarray:
             raise error_handler.MsgError("Compute the distance matrix first!")
         
         try:
@@ -39,7 +39,7 @@ class exciton_analysis:
         """
         Return the mean absolute electron-hole distance (Ang).
         """
-        if self.distmat == None:
+        if not type(self.distmat) is numpy.ndarray:
             raise error_handler.MsgError("Compute the distance matrix first!")
         
         MA_dist = numpy.dot(OmAt.flatten(), self.distmat.flatten()) / Om
@@ -50,7 +50,7 @@ class exciton_analysis:
         """
         Return an approximate exciton binding energy (eV).
         """
-        if self.distmat == None:
+        if not type(self.distmat) is numpy.ndarray:
             raise error_handler.MsgError("Compute the distance matrix first!")
         
         Eb_dist = self.distmat.flatten() / units.length['A']
