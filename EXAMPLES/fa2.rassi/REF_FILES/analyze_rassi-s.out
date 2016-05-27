@@ -32,8 +32,7 @@ Number of MOs read in: 44
 Dimension: 44,44,...,44
 Number of basis functions parsed:  44
  ... inverting C
-
-   Analyzing RASSI job.
+Analyzing RASSI job without libwfa.
    WARNING: this only works if all states derive from the same RASSCF calculation!
 
 Reading TRD/TRD2_001_001 ...

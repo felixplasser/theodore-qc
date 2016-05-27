@@ -368,7 +368,7 @@ class dens_ana_options(read_options):
         self['rfile']   = None # file to read
         self['ana_files'] = [] # list of files to analyze
         self['read_binary'] = False # read binary files rather than standard output (if applicable)
-        self['read_libwfa'] = False # switch to libwfa output (applicable for qctddft)
+        self['read_libwfa'] = False # switch to libwfa output (applicable for qctddft, rassi)
         self['s_or_t'] = None # state or transition density matrix analysis
         self['ignore_irreps'] = [] # ignore irreps in the MO file
         self['rd_ene'] = False # interpret energies as occupations in the NO files
@@ -436,7 +436,18 @@ class sden_ana_options(dens_ana_options):
                 
         # Output options
         self['output_file']   = "sden_summ.txt"
-        self['prop_list'] = ['nu', 'nunl', 'p']        
+        self['prop_list'] = ['nu', 'nunl', 'p']
+
+class libwfa_parse_options(dens_ana_options):
+    """
+    Input for parsing libwfa output.
+    """
+    def set_defaults(self):
+        dens_ana_options.set_defaults(self)
+        
+        self['output_file']   = "libwfa_summ.txt"
+        self['prop_list'] = ['Om_', 'nu', 'nunl', 'PRNTO', 'Z_HE', 'dexc', 'dH-E', 'sigH', 'sigE', 'COV', 'Corr', 'p', 'sigD', 'sigA']
+        self['read_libwfa'] = True
         
 class fcd_ana_options(dens_ana_options):
     """

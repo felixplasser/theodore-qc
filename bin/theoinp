@@ -235,9 +235,9 @@ class write_options_theo(input_options.write_options):
                 self.coor_file()
             
         if self['rtype'] in ('qcadc','qctddft'):
-            if self.ret_yn('Parse exciton information from libwfa analysis?', True):
+            if self.ret_yn('Parse exciton information from libwfa analysis?', False):
                 self['prop_list'] += ['dexc', 'dH-E', 'sigH', 'sigE', 'COV', 'Corr']
-            if self.ret_yn('Parse 1DDM exciton information from libwfa analysis?', True):
+            if self.ret_yn('Parse 1DDM exciton information from libwfa analysis?', False):
                 self['prop_list'] += ['sigD', 'sigA']
 
     def AD_ana(self):
