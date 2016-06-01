@@ -1170,7 +1170,7 @@ class file_parser_rassi(file_parser_libwfa):
                 if not self.ioptions['read_libwfa']:
                     break
 
-            elif 'RASSI analysis for state' in line:
+            elif 'RASSI analysis for reference state' in line or 'RASSI analysis for state' in line:
                 state_list.append({})
                 state = state_list[-1]
                 istate = len(state_list)
@@ -1181,7 +1181,7 @@ class file_parser_rassi(file_parser_libwfa):
                 line = rfile.next()
                 state['exc_en'] = float(line.split()[1])
                 try:
-                    state['osc_str'] = oscs[(1, istate+1)]
+                    state['osc_str'] = oscs[(1, istate)]
                 except:
                     pass
 

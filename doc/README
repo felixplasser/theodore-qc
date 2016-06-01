@@ -1,5 +1,9 @@
 Release notes:
 
+- add parse_libwfa.py script
+- support for MOLCAS/libwfa
+- script for fragment decomposition
+
 TheoDORE 1.3
 - Interface for ADF
 - cclib taken as part of the distribution

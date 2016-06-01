@@ -9,8 +9,8 @@ import sys
 theo_header.print_header('Parse libwfa output')
 
 def ihelp():
-    print " parse_libwfa.py <logfile> <type>]\n"
-    print "  type: qcadc, qctddft"
+    print " parse_libwfa.py <logfile> <type>\n"
+    print "  type: qcadc, qctddft, rassi\n"
     print " Command line options:"
     print "  -h, -H, -help: print this help"
     print "  -ifile, -f [dens_ana.in]: name of the input file"
