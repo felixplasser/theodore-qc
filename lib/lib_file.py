@@ -10,7 +10,10 @@ class wfile:
     def __init__(self, fname):
         self.f = open(fname, 'w')
         self.name = fname
-        
+
+    def __str__(self):
+        return self.name
+
     def pre(self, title):
         """
         Initialization.
