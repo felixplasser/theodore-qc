@@ -1,0 +1,22 @@
+# Run using SANDER file-based interface for TeraChem
+#
+basis        6-31gs
+method       pbe
+precision    mixed
+threall      0.9999999999999999E-11
+convthre     0.3000000000000000E-04
+dftd         no
+maxit        5000
+dftgrid        1
+cis             yes
+rap             yes
+cisnumstates    10
+cismaxiter  100
+cisnos   yes
+cisprintthresh 0.01
+charge         0
+spinmult       1
+gpus        1  0  1
+run         energy
+coordinates geom.xyz
+end

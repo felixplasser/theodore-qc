@@ -995,6 +995,55 @@ class file_parser_col_mcscf(file_parser_col):
         (eref, eexc) = self.read_iwfmt(state['sden'], 'WORK/'+filen)
         state['exc_en'] = eexc
 
+class file_parser_terachem(file_parser_base):
+    """
+    Read terachem TDDFT job.
+    """
+    def read(self, mos):
+        state_list = []
+
+        rfileh = open(self.ioptions['rfile'], 'r')
+        while True: # loop over all lines
+            try:
+                line = rfileh.next()
+            except StopIteration:
+              print "Reached end of file %s"%self.ioptions.get('rfile')
+              break
+
+            if 'Largest CI coefficients' in line:
+                state_list.append({})
+                state = state_list[-1]
+                state['tden'] = self.init_den(mos, rect=True)
+
+                while True:
+                    line = rfileh.next()
+                    words = line.split()
+                    if len(words) == 0: break
+
+                    iocc  = int(words[0]) - 1
+                    avirt = int(words[2]) - 1
+                    coeff = float(words[-1])
+
+                    state['tden'][iocc, avirt] = coeff
+
+            elif 'Final Excited State Results' in line:
+                line = rfileh.next()
+                line = rfileh.next()
+                line = rfileh.next()
+                for state in state_list:
+                    line = rfileh.next()
+                    words = line.split()
+
+                    state['state_ind'] = int(words[0])
+                    state['name'] = 'A' + words[0]
+                    state['exc_en'] = float(words[2])
+                    state['osc_str'] = float(words[3])
+
+        rfileh.close()
+
+        return state_list
+
+
 class file_parser_nos(file_parser_base):
     """
     Interpret the MO-file as a diagonal density.

@@ -53,6 +53,8 @@ class dens_ana_base:
             self.state_list = file_parser.file_parser_col_mrci(self.ioptions).read(self.mos)
         elif rtype in ['rassi', 'molcas']:
             self.state_list = file_parser.file_parser_rassi(self.ioptions).read(self.mos)
+        elif rtype.lower() == 'terachem':
+            self.state_list = file_parser.file_parser_terachem(self.ioptions).read(self.mos)
         elif rtype.lower() == 'nos':
             self.state_list = file_parser.file_parser_nos(self.ioptions).read(self.mos)
         elif rtype.lower() in ['cclib', 'gamess', 'orca']:
