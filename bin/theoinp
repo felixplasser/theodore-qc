@@ -127,10 +127,12 @@ class write_options_theo(input_options.write_options):
         self.read_str(mo_str, 'mo_file', self['mo_file'], True)
 
         if self['rtype'] == 'ricc2':
-            print
-            print " *** Warning: in the case of ricc2 you have to delete the line"
-            print "       implicit core=   x virt=    x"
-            print "     from the control file before running tm2molden."
+            self.read_yn('Read binary CCRE0 files?', 'read_binary', False)
+            if not self['read_binary']:
+                print
+                print " *** Warning: without read_binary you have to delete the line"
+                print "       implicit core=   x virt=    x"
+                print "     from the control file before running tm2molden."
 
         if self['rtype'] == 'nos':
             nodir = self.ret_str('Directory with the NO files:', '.', True)

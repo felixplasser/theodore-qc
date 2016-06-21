@@ -1,9 +1,9 @@
 Release notes:
 
-- Added parse_libwfa.py script
+- Interface to Terachem
+- Parse libwfa output (parse_libwfa.py)
 - Support for MOLCAS/libwfa
-- Script for fragment decomposition
-- Support for Terachem
+- Script for fragment decomposition (plot_frag_decomp.py)
 
 TheoDORE 1.3
 - Interface for ADF
