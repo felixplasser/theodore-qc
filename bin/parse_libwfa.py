@@ -6,8 +6,6 @@ Script for parsing libwfa output.
 import theo_header, dens_ana_base, input_options
 import sys
 
-theo_header.print_header('Parse libwfa output')
-
 def ihelp():
     print " parse_libwfa.py <logfile> <type>\n"
     print "  type: qcadc, qctddft, rassi\n"
@@ -34,11 +32,13 @@ while len(sys.argv)>0:
     else:
         args2.append(arg)
 
-#if len(no_files) == 0: ihelp()
+if len(args2) != 2: ihelp()
 
 ioptions = input_options.libwfa_parse_options(ifile, check_init=False)
 ioptions['rfile'] = args2[0]
 ioptions['rtype'] = args2[1]
+
+theo_header.print_header('Parse libwfa output', ioptions=ioptions)
 
 #--------------------------------------------------------------------------#        
 # Parsing and computations

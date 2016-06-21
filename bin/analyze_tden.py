@@ -6,7 +6,6 @@ Driver script for transition density matrix analysis.
 import theo_header, lib_tden, lib_exciton, input_options, error_handler
 import os, sys, time
 
-theo_header.print_header('Transition density matrix analysis')
 (tc, tt) = (time.clock(), time.time())
 
 def ihelp():
@@ -38,6 +37,7 @@ if not os.path.exists(ifile):
     ihelp()
     
 ioptions = input_options.tden_ana_options(ifile)
+theo_header.print_header('Transition density matrix analysis', ioptions=ioptions)
 
 tdena = lib_tden.tden_ana(ioptions)
 if 'mo_file' in ioptions: tdena.read_mos()

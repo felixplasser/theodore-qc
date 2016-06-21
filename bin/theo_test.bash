@@ -3,7 +3,7 @@
 PDIR=`pwd`
 
 echo "theo_test.bash [<module>]"
-echo "  available modules: standard, all, openbabel, cclib, adf"
+echo "  available modules: standard, all, openbabel, cclib, adf, noadf"
 
 echo "Starting theo_test.bash"
 echo "THEODIR=$THEODIR"
@@ -24,6 +24,7 @@ then
 else
     case "$1" in
     "all") rundirs="$stddirs $obdirs $cclibdirs $adfdirs";;
+    "noadf") rundirs="$stddirs $obdirs $cclibdirs";;
     "standard") rundirs="$stddirs";;
     "openbabel") rundirs="$obdirs";;
     "cclib") rundirs="$cclibdirs";;
@@ -78,7 +79,7 @@ do
     for rfile in `ls "$sdir/REF_FILES"`
     do
         echo "  -> $rfile"
-        diff -w -I 'TheoDORE\|python-openbabel\|emulation' "$sdir/REF_FILES/$rfile" $rfile
+        diff -w -I 'TheoDORE\|python-openbabel\|emulation\|wall time' "$sdir/REF_FILES/$rfile" $rfile
         chk=$((chk+$?))
     done
     
