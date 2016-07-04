@@ -3,7 +3,7 @@
 Create a convoluted spectrum from the oscillator strengths.
 """
 
-import math
+import math, numpy
 import theo_header, units, lib_file, input_options, error_handler
 
 do_plots = True
@@ -25,27 +25,61 @@ class spec_options(input_options.write_options):
 
         self.spec = spectrum(**self.opt_dict)
 
-#        rstr = self.read_str("Names of the files to analyze:\n(separated by spaces)")
-#        self['ana_files'] = rstr.split()
-
         self.read_int("Weighting: 1 - osc. str., 2 - uniform (DOS)", "weight", 1)
+        self.read_yn("Use restrictions?", "restr", False)
+        if self['restr']:
+            self.restrictions()
 
-    def make_spec(self):
+        #self.read_yn("Normalize the spectrum?", "normalize", not self['restr'])
+
+    def restrictions(self):
+        self['rlist'] = []
+
+        for irestr in range(1, 1000):
+            rstr = self.ret_str('Input restriction #%i (e.g. "CT > 0.5")'%irestr)
+            if rstr == '': break
+
+            words = rstr.split()
+            self['rlist'].append((words[0], words[1], words[2]))
+
+        print
+
+    def make_spec(self, lvprt=2):
         for filen in self['ana_files']:
             sfile = lib_file.summ_file(filen)
             header = sfile.ret_header()
             ddict  = sfile.ret_ddict()
             state_labels = sfile.ret_state_labels()
 
+            n = ntake = 0
+
             for state in state_labels:
+                n += 1
                 try:
                     f = ddict[state]['f']
                 except KeyError:
                     f = 0.
 
-                self.spec.add(f, ddict[state]['dE(eV)'])
+                if self['restr']:
+                    for restr in self['rlist']:
+                        evalstr = ("ddict[state]['%s'] %s %s")%restr
+                        if not eval(evalstr):
+                            break
+                    else:
+                        self.spec.add(f, ddict[state]['dE(eV)'])
+                        ntake += 1
+                else:
+                    self.spec.add(f, ddict[state]['dE(eV)'])
+                    ntake += 1
 
-        self.spec.normalize(self['weight'])
+            if lvprt >= 2:
+                print "Considering %3i out of %3i states from %s"%(ntake, n, filen)
+
+        if lvprt >= 1:
+            self.spec.info()
+
+        #if self['normalize']:
+            #self.spec.normalize()
 
         self.spec.ascii_file()
 
@@ -81,24 +115,27 @@ class spectrum:
       self.en = [emin + float(i)/self.npts*(emax-emin) for i in range(self.npts+1)]       # the energy grid needs to be calculated only once
       lamev = units.energy['nm'] * units.energy['eV']
       self.lam = [lamev / en for en in self.en]
-      self.spec=[ 0. for i in range(self.npts+1) ]
-      self.dos=[ 0. for i in range(self.npts+1) ]
+      self.spec=numpy.array([ 0. for i in range(self.npts+1) ])
+      self.dos=numpy.array([ 0. for i in range(self.npts+1) ])
 
       self.sticks=[] # list of pairs (A,x0), unit for x0: eV
 
     def add(self,A,x0):
-        if A==0.:
-            return
-
-        self.sticks += [(A,x0)]
-
         for i in range(self.npts+1):
-            self.spec[i]+=self.f.ev(A,x0,self.en[i])
-            self.dos[i] +=self.f.ev(1.,x0,self.en[i])
+            self.dos[i] +=self.f.ev(.1,x0,self.en[i])
 
-    def normalize(self, weight):
+        if A!=0.:
+            self.sticks += [(A,x0)]
+
+            for i in range(self.npts+1):
+                self.spec[i]+=self.f.ev(A,x0,self.en[i])
+
+    def info(self):
+        print "\nSpectrum costructed from %i states with non-vanishing osc. strength"%len(self.sticks)
+
+    def normalize(self):
         smax = max(self.spec)
-        print 'Normalizing the spectrum ...'
+        print 'Normalizing the spectrum...'
         print 'Maximum: % .5f'%smax
         for i, sp in enumerate(self.spec):
             self.spec[i] = sp / smax
@@ -149,11 +186,11 @@ class spectrum:
         pylab.ylabel('Oscillator strength')
 
         if weight == 1:
-            pylab.plot(xlist, self.spec, 'k-')
+            pylab.plot(xlist, self.spec / max(self.spec), 'k-')
             for A,x0 in plot_sticks:
                 pylab.plot([x0, x0], [-1., A], 'rx-')
         elif weight == 2:
-            pylab.plot(xlist, self.dos, 'k-')
+            pylab.plot(xlist, self.dos / max(self.dos), 'k-')
         else:
             raise error_handler.ElseError('weight', weight)
 

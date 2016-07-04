@@ -4,6 +4,7 @@ Release notes:
 - Parse libwfa output (parse_libwfa.py)
 - Support for MOLCAS/libwfa
 - Script for fragment decomposition (plot_frag_decomp.py)
+- More flexible spectrum generation (spectrum.py)
 
 TheoDORE 1.3
 - Interface for ADF
