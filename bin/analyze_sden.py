@@ -52,5 +52,6 @@ if ioptions['BO_ana']:  sdena.compute_all_BO()
 #--------------------------------------------------------------------------#
 if ioptions['pop_ana']: sdena.print_all_pop_table()
 if ioptions['BO_ana']:  sdena.print_all_BO()
+if ioptions['mo_pop_type'] > 0: sdena.print_mo_pops(ioptions['mo_pop_type'])
 
 sdena.print_summary()

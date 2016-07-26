@@ -53,6 +53,10 @@ class sden_ana(dens_ana_base.dens_ana_base):
             pop_pr.add_pop(dens_type, pop)
             
         print pop_pr.ret_table()
+
+    def print_mo_pops(self, mo_pop_type=1, lvprt=2):
+        ppm = pop_ana.pop_printer_mo()
+        ppm.print_mo_pops(self.mos, mo_pop_type)
         
     def print_all_BO(self, lvprt=2):
         """

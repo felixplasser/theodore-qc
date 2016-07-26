@@ -1,5 +1,7 @@
 Release notes:
 
+- Orbital population analysis
+
 - Interface to Terachem
 - Parse libwfa output (parse_libwfa.py)
 - Support for MOLCAS/libwfa

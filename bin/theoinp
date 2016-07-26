@@ -146,6 +146,8 @@ class write_options_theo(input_options.write_options):
             nolist = [os.path.join(nodir,lfiles[noind]) for noind in noinds]
             self.write_option('ana_files', nolist)
 
+            self.read_yn('Intepret energies as orbital occupations (for Q-Chem)', 'rd_ene', False)
+
 
     def make_at_lists(self):
         print "Fragment definition for CT nubmer analysis"
