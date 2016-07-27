@@ -1,6 +1,6 @@
 Release notes:
 
-- Orbital population analysis
+- Population analysis of MOs
 
 - Interface to Terachem
 - Parse libwfa output (parse_libwfa.py)

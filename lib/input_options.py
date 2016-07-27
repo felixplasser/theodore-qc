@@ -362,6 +362,9 @@ class dens_ana_options(read_options):
     Input options for density analysis.
     """
     def set_defaults(self):
+        # General options
+        self['lvprt'] = 1 # print level
+
         # Read options
         self['mo_file'] = None
         self['rtype']   = None # type of input
@@ -371,6 +374,7 @@ class dens_ana_options(read_options):
         self['read_libwfa'] = False # switch to libwfa output (applicable for qctddft, rassi)
         self['s_or_t'] = None # state or transition density matrix analysis
         self['ignore_irreps'] = [] # ignore irreps in the MO file
+        self['min_bf'] = () # minimal contribution of a basis function type in the MO file, e.g. (2, 0.5)
         self['rd_ene'] = False # interpret energies as occupations in the NO files
         
         # Output options

@@ -97,7 +97,6 @@ class MO_set:
                 mp[ilab] += CCinv[ibas]
             return mp
 
-
     def ret_ihomo(self):
         """
         Return the HOMO index (starting with 0).
@@ -417,7 +416,7 @@ class basis_fct:
         return "Basis function (%s, %s) at atom %i"%(self.l, self.ml, self.at_ind)
 
     def label(self):
-        return "%s_%s"%(self.l, self.ml)
+        return "%s-%s"%(self.l, self.ml)
 
 class jmol_MOs:
     """

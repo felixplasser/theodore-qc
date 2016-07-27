@@ -1100,11 +1100,25 @@ class file_parser_nos(file_parser_base):
 
         if not self.ioptions['ignore_irreps'] == []:
             print "  Ignoring irreps: ", self.ioptions['ignore_irreps']
-            for ibas, sym in enumerate(nos.syms):
+            for imo, sym in enumerate(nos.syms):
                 for iirr in self.ioptions['ignore_irreps']:
                     if iirr in sym:
                         #print "%s -> 0"%sym
-                        nos.occs[ibas] = 0.
+                        nos.occs[imo] = 0.
+
+        if not(self.ioptions['min_bf'] == ()):
+            ntake = 0
+            ibf, vbf = self.ioptions['min_bf']
+            print "Selecting only NOs with %s > %f ..."%(nos.bf_labels[ibf], vbf)
+            for imo in range(nos.ret_num_mo()):
+                pop = nos.ret_mo_pop(imo, dosum=2)
+                if pop[ibf] > vbf:
+                    if self.ioptions['lvprt'] >= 2: print("Selecting MO %i, occ = %.3f"%(imo+1, nos.occs[imo]))
+                    ntake += 1
+                else:
+                    nos.occs[imo] = 0.
+                    if self.ioptions['lvprt'] >= 2: print("Discarding MO %i"%(imo+1))
+            print "%i NOs selected."%ntake
 
         T = numpy.dot(ref_mos.ret_mo_mat(trnsp=False, inv=True), nos.mo_mat)
 
