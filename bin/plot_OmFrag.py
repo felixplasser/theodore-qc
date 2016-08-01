@@ -147,8 +147,8 @@ class OmFrag_options(input_options.write_options):
 
         if self['sscale']:
 #            pylab.figure(figsize=(2,2))
-            
-            pylab.pcolor(numpy.zeros([1, 1]), cmap=pylab.get_cmap(name=self['cmap']), vmin=0., vmax=self.maxOm)
+
+            pylab.pcolor(numpy.zeros([1, 1]), cmap=pylab.get_cmap(name=self['cmap']), vmin=0., vmax=self['vmax'])
             
             pylab.colorbar()
             
