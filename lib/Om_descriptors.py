@@ -88,7 +88,13 @@ class Om_desc_coll:
         elif desc == 'PRh':
             self.descriptors[desc] = \
                 2. / (self.ret_desc('PRi')**-1. + self.ret_desc('PRf')**-1.)
-            
+
+        elif desc == 'DEL':
+            self.descriptors[desc] = \
+                1. / sum( \
+                    sum ((self.OmNorm[A,B] + self.OmNorm[B,A])/2. for B in xrange(self.numFrag))**2 \
+                for A in xrange(self.numFrag))
+
         elif desc == 'COH':
             self.descriptors[desc] = \
                 1. / sum( \

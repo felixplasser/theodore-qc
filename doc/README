@@ -1,7 +1,7 @@
 Release notes:
 
+TheoDORE 1.4
 - Population analysis of MOs
-
 - Interface to Terachem
 - Parse libwfa output (parse_libwfa.py)
 - Support for MOLCAS/libwfa
