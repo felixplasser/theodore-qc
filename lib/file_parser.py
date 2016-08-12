@@ -1022,7 +1022,10 @@ class file_parser_terachem(file_parser_base):
 
                     iocc  = int(words[0]) - 1
                     avirt = int(words[2]) - 1
-                    coeff = float(words[-1])
+                    if ('X' in line) and ('Y' in line): # rpa case
+                        coeff = float(line.split(':')[2].split('Y')[0])
+                    else:
+                        coeff = float(words[-1])
 
                     state['tden'][iocc, avirt] = coeff
 
