@@ -88,7 +88,7 @@ class OBConversion:
         while(not '$' in line):
               words = line.split()
               obatom = OBAtom()
-              obatom.SetAtomicNum(symbol_Z_dict[words[3].upper()])
+              obatom.SetAtomicNum(symbol_Z_dict[words[3][0].upper()+words[3][1:]])
               coords = [float(word) * units.length['A'] for word in words[0:3]]
               obatom.SetVector(*coords)
 

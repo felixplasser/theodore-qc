@@ -52,7 +52,7 @@ class MO_set:
         else:
             if lvprt >= 1:
                 print 'MO-matrix not square: %i x %i'%(len(self.mo_mat),len(self.mo_mat[0]))
-                print '  Using the Moore-Penrose pseudo inverse instead.'
+                print '  Using the Moore-Penrose pseudo inverse.'
             self.inv_mo_mat = numpy.linalg.pinv(self.mo_mat)
 
     def ret_mo_mat(self, trnsp=False, inv=False):
@@ -390,6 +390,13 @@ class MO_set_molden(MO_set):
 
         if len(mo_vecs[0])!=num_orb:
             raise error_handler.MsgError('Inconsistent number of basis functions!')
+
+        if len(mo_vecs[-1]) == 0:
+            lv = [len(mo_vec) for mo_vec in mo_vecs]
+            imax = lv.index(0)
+            print '*** WARNING: MO file contains MO vectors of zero length!'
+            print 'Using only the first %i entries'%imax
+            mo_vecs = mo_vecs[:imax]
 
         try:
            self.mo_mat = numpy.array(mo_vecs).transpose()
