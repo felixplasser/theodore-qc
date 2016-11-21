@@ -152,7 +152,10 @@ class write_plot_options(input_options.write_options):
                 wf.write('%10s'%ana_dir)
                 
                 for state in self['state_labels']:
-                    wf.write('%10.5f'%self.data[idir][state][key])
+                    try:
+                        wf.write('%10.5f'%self.data[idir][state][key])
+                    except KeyError:
+                        wf.write('    -     ')
                 
                 wf.write('\n')
                 

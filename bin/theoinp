@@ -60,6 +60,7 @@ class write_options_theo(input_options.write_options):
             self['mo_file'] = None
             self['coor_file'] = 'qchem.out'
             self['coor_format'] = 'qcout'
+            self['read_libwfa'] = True
         elif self['rtype'] == 'qctddft':
             self['rfile'] = 'qchem.out'
             self['mo_file'] = 'qchem.mld'
@@ -244,7 +245,7 @@ class write_options_theo(input_options.write_options):
                 print "\nMolecular coordinates for exciton analysis:"
                 self.coor_file()
 
-        if self['rtype'] in ('qcadc','qctddft'):
+        if self['read_libwfa']:
             if self.ret_yn('Parse exciton information from libwfa analysis?', False):
                 self['prop_list'] += ['dexc', 'dH-E', 'sigH', 'sigE', 'COV', 'Corr']
             if self.ret_yn('Parse 1DDM exciton information from libwfa analysis?', False):
@@ -265,8 +266,8 @@ class write_options_theo(input_options.write_options):
         self.read_yn('Mayer bond order and valence analysis?', 'BO_ana', True)
 
     def ddm_parse(self):
-        if self['rtype'] == 'qcadc':
-            if self.ret_yn('Parse 1DDM exciton information from ADCMAN job?', True):
+        if self['read_libwfa']:
+            if self.ret_yn('Parse 1DDM exciton information from libwfa job?', True):
                 self['prop_list'] += ['dD-A', 'sigD', 'sigA']
 
     def get_ncore(self):
@@ -332,7 +333,7 @@ def run_theoinp():
             if wopt.ret_yn('Perform exciton analysis?', True):
                 wopt.exciton_ana()
 
-    if (not dotden) and (wopt['rtype'] in ['nos', 'colmcscf', 'rassi']):
+    if (not dotden) and (wopt['rtype'] in ['nos', 'colmcscf', 'rassi', 'libwfa']):
         if wopt.ret_yn('Analysis of state density matrices?', True):
             wopt.read_yn('Print out Mulliken populations?', 'pop_ana', True)
             if wopt['rtype'] in ['nos']:

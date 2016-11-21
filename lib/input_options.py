@@ -398,6 +398,7 @@ class dens_ana_options(read_options):
         self['unpaired_ana'] = True
         self['AD_ana'] = True
         self['BO_ana'] = True
+        self['min_BO'] = 0.5 # minimal bond order to print
         self['mo_pop_type'] = -1
 
         # Additional information

@@ -318,6 +318,8 @@ class MO_set_molden(MO_set):
                     print " This has to be changed to:"
                     print " [Molden Format]"
 
+                    line = '[Molden Format]'
+
             # what section are we in
             if '[' in line:
                 MO = False

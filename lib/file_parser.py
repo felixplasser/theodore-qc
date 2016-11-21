@@ -30,13 +30,21 @@ class file_parser_base:
             nvirt = num_mo - nocc
             return numpy.zeros([nocc, num_mo])
 
-    def parse_key(self, state, key, line, search_string, ind=-1):
+    def parse_key(self, state, key, line, search_string, ind=-1, rfile=None):
         """
         Find search_string in the specified line and set it as state[key].
+        If rfile is given, then the next line is searched for x,y,z components.
         """
         if search_string in line:
             sr_line = line.strip(search_string).replace(',','')
             state[key] = float(sr_line.split()[ind])
+
+            if not rfile is None:
+                line=rfile.next().replace(',','').replace(']','')
+                words = line.split()
+                state['%sx'%key] = float(words[-3])
+                state['%sy'%key] = float(words[-2])
+                state['%sz'%key] = float(words[-1])
 
     def delete_chars(self, line, delete):
         """
@@ -473,7 +481,7 @@ class file_parser_libwfa(file_parser_base):
 
         return typ, excen, osc, dima, dimb, outarr
 
-    def parse_line(self, state, line):
+    def parse_line(self, state, line, rfile=None):
         if 'Exciton analysis of the difference density matrix' in line:
             self.excD = True
             self.excT = False
@@ -481,9 +489,9 @@ class file_parser_libwfa(file_parser_base):
             self.excD = False
             self.excT = True
 
-        self.parse_keys(state, self.excD, self.excT, line)
+        self.parse_keys(state, self.excD, self.excT, line, rfile)
 
-    def parse_keys(self, state, exc_diff, exc_1TDM, line):
+    def parse_keys(self, state, exc_diff, exc_1TDM, line, rfile=None):
         self.parse_key(state, 'dip', line, 'Total dipole')
         self.parse_key(state, 'r2', line, 'Total <r^2>')
         self.parse_key(state, 'nu', line, 'Number of unpaired electrons:', 2)
@@ -494,16 +502,18 @@ class file_parser_libwfa(file_parser_base):
         self.parse_key(state, '2P', line, 'Two-photon absorption cross-section')
         self.parse_key(state, 'S_HE', line, 'Entanglement entropy')
         self.parse_key(state, 'Z_HE', line, 'Nr of entangled states')
+        self.parse_key(state, 'mu', line, 'Dipole moment [D]', rfile=rfile)
+        self.parse_key(state, 'sigR', line, 'RMS size of the density', rfile=rfile)
 
         if exc_diff:
-            self.parse_key(state, 'sigD', line, 'Hole size')
-            self.parse_key(state, 'sigA', line, 'Electron size')
+            self.parse_key(state, 'sigD', line, 'Hole size', rfile=rfile)
+            self.parse_key(state, 'sigA', line, 'Electron size', rfile=rfile)
             self.parse_key(state, 'dD-A', line, '|<r_e - r_h>|')
 
         if exc_1TDM:
-            self.parse_key(state, 'dexc', line, 'RMS electron-hole separation')
-            self.parse_key(state, 'sigH', line, 'Hole size')
-            self.parse_key(state, 'sigE', line, 'Electron size')
+            self.parse_key(state, 'dexc', line, 'RMS electron-hole separation', rfile=rfile)
+            self.parse_key(state, 'sigH', line, 'Hole size', rfile=rfile)
+            self.parse_key(state, 'sigE', line, 'Electron size', rfile=rfile)
             self.parse_key(state, 'dH-E', line, '|<r_e - r_h>|')
             self.parse_key(state, 'COV', line, 'Covariance(r_h, r_e) [Ang^2]')
             self.parse_key(state, 'Corr', line, 'Correlation coefficient')
@@ -1228,6 +1238,8 @@ class file_parser_rassi(file_parser_libwfa):
                 rfile.next()
                 words = rfile.next().split()
                 while(len(words) > 1):
+                    if words[1] == 'Max':
+                        break
                     ist = int(words[0])
                     jst = int(words[1])
                     osc = float(words[2])
@@ -1254,7 +1266,7 @@ class file_parser_rassi(file_parser_libwfa):
                 libwfa = True
 
             elif libwfa:
-                self.parse_line(state, line)
+                self.parse_line(state, line, rfile)
 
         rfile.close()
 
