@@ -1,5 +1,8 @@
 Release notes:
 
+- Interface to dgrid for plotting (dgrid_prep.py)
+- Minor bug fixes
+
 TheoDORE 1.4
 - Population analysis of MOs
 - Interface to Terachem
