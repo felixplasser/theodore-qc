@@ -1154,18 +1154,18 @@ class file_parser_rassi(file_parser_libwfa):
 
         (energies, oscs, tmp_state_list) = self.read_rassi_output(self.ioptions['rfile'])
 
-        if not (self.ioptions['read_libwfa'] or os.path.exists('TRD')):
-            errmsg= """read_libwfa=False and no TRD directory present!
-    To run the job you have to:
-    1. Run &RASSI specifying the TRD1 keyword
-    2. Run &WFA
-    3. set read_libwfa=True in dens_ana.in
-
-    or
-    1. Run &RASSI specifying the TRD1 keyword
-    2. call 'mkdir TRD && cp $WorkDir/TRD2* TRD'"""
-
-            raise error_handler.MsgError(errmsg)
+    #    if not (self.ioptions['read_libwfa'] or os.path.exists('TRD')):
+    #        errmsg= """read_libwfa=False and no TRD directory present!
+    #To run the job you have to:
+    #1. Run &RASSI specifying the TRD1 keyword
+    #2. Run &WFA
+    #3. set read_libwfa=True in dens_ana.in
+    #
+    #or
+    #1. Run &RASSI specifying the TRD1 keyword
+    #2. call 'mkdir TRD && cp $WorkDir/TRD2* TRD'"""
+    #
+    #        raise error_handler.MsgError(errmsg)
 
         if (self.ioptions['read_libwfa']):
             state_list = tmp_state_list
