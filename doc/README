@@ -1,6 +1,7 @@
 Release notes:
 
 - Interface to dgrid for plotting (dgrid_prep.py)
+- Interface to gnuplot (plot_graph.py)
 - Minor bug fixes
 
 TheoDORE 1.4

@@ -64,7 +64,7 @@ class mo_output_html(mo_output):
     def print_mos(self):
         for imo in self.moc.molist:
             el = '<img src="%s" "border="1" width="%i">'%(self.moc.mopath(imo), self.jopt['width'])
-            el += self.moc.mo_extra(imo,pref="<br> MO %i:"%imo)
+            el += self.moc.mo_extra(imo,pref="<br> MO %i:"%(imo+1))
             self.htable.add_el(el)
 
     def post(self, ofileh):

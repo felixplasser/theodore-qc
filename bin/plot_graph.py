@@ -29,18 +29,25 @@ class write_plot_options(input_options.write_options):
         dlist = [sdirs[idir] for idir in ilist]
         
         self.write_list('ana_dirs', dlist, "'%s'")
-        
+               
         self.read_str("Name of the file to analyze in each directory", "ana_file", "tden_summ.txt")
         
-        rstr = self.ret_str("Labels of the states of interest as they appear in %s (separated by spaces)"%self['ana_file'])
-        self.write_list('state_labels', rstr.split(), lformat="'%s'")
+        labstr = self.ret_str("Labels of the states of interest as they appear in %s (separated by spaces)"%self['ana_file'])
+        self.write_list('state_labels', labstr.split())
+
+        rstr = self.ret_str("State labels for the legend", labstr)
+        self.write_list('leg_labels', rstr.split())
         
         self.read_yn('Create plots using pylab?', 'doplots', True)
         if self['doplots']:
             self.read_int('Font size', 'fsize', 10)
             self.read_str("Format of output graphics files", "output_format", "png")
-            
-        self.read_yn('Print txt files with the information', 'dotxt', True)
+
+        self.read_yn('Create input for gnuplot?', 'dognu', False)
+        if self['dognu']:
+            self['dotxt'] = True
+        else:
+            self.read_yn('Print txt files with the information', 'dotxt', True)
         
     def read_data(self):
         """
@@ -50,6 +57,7 @@ class write_plot_options(input_options.write_options):
         """
         self.data = []
         self.main_header = ''
+        self.data_avail = []
             
         for ana_dir in self['ana_dirs']:
             sfile = lib_file.summ_file(os.path.join(ana_dir, self['ana_file']))
@@ -94,7 +102,7 @@ class write_plot_options(input_options.write_options):
             print 'Plotting %s ...'%key
             pylab.figure(figsize=(6,4))
             
-            for state in self['state_labels']:
+            for i, state in enumerate(self['state_labels']):
                 ylist = []
                 for iana_dir in xrange(len(self['ana_dirs'])):
                     try:
@@ -103,7 +111,7 @@ class write_plot_options(input_options.write_options):
                         print " ... not able to plot %s for %s."%(key, state)
                         break
                 else:
-                    pylab.plot(range(len(ylist)), ylist, 'x-', label=state)
+                    pylab.plot(range(len(ylist)), ylist, 'x-', label=self['leg_labels'][i])
             
             pylab.title(key)
             
@@ -137,6 +145,8 @@ class write_plot_options(input_options.write_options):
         """
         for key in self.main_header[1:]:
             if key == 'fname': continue
+
+            found_data = False
             
             fname = '%s.txt'%key
             print 'Writing %s ...'%fname
@@ -144,7 +154,7 @@ class write_plot_options(input_options.write_options):
             wf = open(fname, 'w')
             
             wf.write('%10s'%'dir')
-            for state in self['state_labels']:
+            for state in self['leg_labels']:
                 wf.write('%10s'%state)
 
             wf.write('\n')                
@@ -154,22 +164,68 @@ class write_plot_options(input_options.write_options):
                 for state in self['state_labels']:
                     try:
                         wf.write('%10.5f'%self.data[idir][state][key])
+                        found_data = True
                     except KeyError:
-                        wf.write('    -     ')
+                        #wf.write('    -     ')
+                        wf.write('    nan   ')
                 
                 wf.write('\n')
                 
             wf.close()
+            
+            if found_data: self.data_avail.append(key)
+
+    def gnu_inp(self):
+        """
+        Create input for gnuplot.
+        """
+        #TODO: One could take all the settings out of the loop and then write the plot commands explicitly.
+
+        propstr = ""
+        for key in self.main_header[1:]:
+            if key in self.data_avail:
+                propstr += " " + key
+
+        ticstr = "set xtics ("
+        for i, ad in enumerate(self['ana_dirs']):
+            if i > 0: ticstr += ", "
+            ticstr += "'%s' %i"%(ad, i+1)
+        ticstr += ")\n"
+        
+        plotstr = "plot"
+        for i, leg in enumerate(self['leg_labels']):
+            if i > 0: plotstr += ","
+            plotstr += ' name.".txt" using %i title "%s"'%(i+2, leg)
+        plotstr += "\n"
+
+        fname = 'graph.gnuplot'
+        with open(fname, 'w') as wf:
+            wf.write("set terminal pngcairo size 800,600 enhanced font 'Helvetica,15' linewidth 3\n\n")
+            wf.write('set xlabel "Directory"\n')
+            wf.write('set xrange [%.1f:%.1f]\n'%(0.5, len(self['ana_dirs']) + 0.5))
+            wf.write(ticstr)
+            wf.write('set xtics nomirror rotate by -45\n')
+            wf.write('set style data linespoints\n\n')
+            wf.write('do for [name in "%s"] {\n'%propstr)
+            wf.write('  set output name.".png"\n\n')
+            wf.write('set ylabel name\n')
+            wf.write(plotstr)
+            wf.write('}\n')
+            wf.write('quit\n')
+
+        print("gnuplot script %s created."%fname)
 
 class read_plot_options(input_options.read_options):
     def set_defaults(self):
         self['ana_dirs']=None
         self['ana_file']='tden_summ.txt'
         self['state_labels']=None
+        self['leg_labels']=None
         self['fsize']=10
         self['output_format']='png'
         self['doplots']=True
         self['dotxt']=True
+        self['dognu']=True
         
 def run_plot():
     infilen = 'graph.in'
@@ -186,14 +242,13 @@ def run_plot():
         popt.copy(ropt)
     else:        
         popt.plot_input()
+        popt.flush()
     
     popt.read_data()
     
     if popt['doplots']: popt.plot()
     if popt['dotxt']:   popt.txt_files()
-    
-    if not copy:
-        popt.flush()
+    if popt['dognu']:   popt.gnu_inp()
     
 if __name__ == '__main__':
     theo_header.print_header('Graph plotting')
