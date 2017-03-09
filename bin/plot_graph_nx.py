@@ -10,15 +10,15 @@ class write_plot_options_nx(lib_plot.write_plot_options):
         self['ana_dirs']=[]
         self['ana_file']='nx.log'
         self['state_labels']=None
-        self['fsize'] = 10
         self['dognu'] = False
 
-        self.read_int('Number of states to plot', 'nstate', 2)
+        self.read_int('Number of states to plot', 'nstate', 10)
         self.read_float('Minimum time', 'tmin', 0.)
         self.read_float('Maximum time', 'tmax', 10000.)
 
         self.read_yn('Create plots using pylab?', 'doplots', True)
         if self['doplots']:
+            self.read_int('Font size', 'fsize', 15)
             self.read_str("Format of output graphics files", "output_format", "png")
 
         self.read_yn('Print txt files with the information', 'dotxt', True)
@@ -60,6 +60,7 @@ class write_plot_options_nx(lib_plot.write_plot_options):
                             pdict[prop] = float(words[i+1])
                         except ValueError:
                             pass
+                    pdict['ddE'] = pdict['dE(eV)'] - ddict[state_labels[0]]['dE(eV)']
                     line = f.next()
 
             if 'FINISHING STEP' in line:
@@ -77,7 +78,7 @@ class write_plot_options_nx(lib_plot.write_plot_options):
 
         f.close()
 
-        self.main_header = header
+        self.main_header = header + ['ddE']
         self['state_labels'] = state_labels + ['act']
         self['leg_labels'] = state_labels + ['act']
 
