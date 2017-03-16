@@ -199,6 +199,7 @@ class file_parser_ricc2(file_parser_base):
         Return information about configurations in a Turbomole calculation.
         """
         ret_list = []
+        nsing = 0 # number of singlet states
         curr_osc = 0 # running index for oscillator strengths
         lines = open(rfile,'r')
         while True: # loop over all lines
@@ -234,6 +235,8 @@ class file_parser_ricc2(file_parser_base):
                 ret_list[-1]['irrep'] = words[4]
                 ret_list[-1]['state_ind'] = int(words[6])
                 ret_list[-1]['mult'] = multis.pop(0)
+                if ret_list[-1]['mult'] == '1':
+                    nsing += 1
 
                 for i in xrange(3): line = lines.next()
 
@@ -249,9 +252,13 @@ class file_parser_ricc2(file_parser_base):
 
             elif 'oscillator strength (length gauge)' in line:
                 words = line.split()
-                ret_list[curr_osc]['osc_str'] = float(words[5])
+                if curr_osc < nsing:
+                    ret_list[curr_osc]['osc_str'] = float(words[5])
+                elif curr_osc == len(ret_list):
+                    print "\nWARNING: More oscillator strengths than singlet states!"
+                    print "   This is ok if you are computing state-to-state properties.\n"
                 curr_osc+=1
-            #elif 'irred. repres.:' in line:
+
             elif 'real representations' in line:
                 self.ioptions['irrep_labels'] = line.split()[6:]
         return ret_list
