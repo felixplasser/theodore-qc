@@ -91,8 +91,6 @@ class file_parser_cclib(file_parser.file_parser_base):
     def tden_adf(self, state_list, mos, rect_dens):
         print("\n   Using new ADF interface\n")
 
-        #raise error_handler.MsgError("ADF intrface not ready")
-
         import kf
 
         print("Opening file TAPE21 ...")
@@ -221,7 +219,7 @@ class file_parser_cclib(file_parser.file_parser_base):
         return mos
 
     def ret_struc(self,lvprt=1):
-        struc = structrue_cclib()
+        struc = structure_cclib()
         #try:
         struc.read_cclib(self.data)
         #except AttributeError:
@@ -302,7 +300,7 @@ class MO_set_cclib(lib_mo.MO_set_molden):
 
         self.export_AO(self.ens, self.occs, self.mo_mat.transpose(), fname, cfmt, occmin)
 
-class structrue_cclib(lib_struc.structure):
+class structure_cclib(lib_struc.structure):
     def read_cclib(self, data, lvprt=1):
         if lvprt>=1:
             print("Reading cclib structure with %i atoms."%data.natom)

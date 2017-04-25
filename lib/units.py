@@ -26,7 +26,8 @@ time={'au':1.0,
 }
 
 mass={'au':1.0,
-      'kg':9.10938188E-31
+      'kg':9.10938188E-31,
+      'amu':1822.889 # atomic mass unit in a.u. = 1/constants['Nl']/mass['kg']/1000
 }
 dipole={'D':2.54174619,
         'Cm':8.47835267E-30
