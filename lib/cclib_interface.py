@@ -90,7 +90,6 @@ class file_parser_cclib(file_parser.file_parser_base):
 
     def tden_adf(self, state_list, mos, rect_dens):
         print("\n   Using new ADF interface\n")
-
         import kf
 
         print("Opening file TAPE21 ...")
@@ -139,7 +138,7 @@ class file_parser_cclib(file_parser.file_parser_base):
             istate += 1
 
             # print-out
-            print(state['name'])        
+            print(state['name'])
             tden = state['tden']
             for i in range(len(tden)):
                 for j in range(len(tden[0])):
@@ -160,7 +159,7 @@ class file_parser_cclib(file_parser.file_parser_base):
             istate += 1
 
             # print-out
-            print(state['name'])        
+            print(state['name'])
             tden = state['tden']
             for i in range(len(tden)):
                 for j in range(len(tden[0])):
@@ -212,7 +211,11 @@ class file_parser_cclib(file_parser.file_parser_base):
         """
         Return an MO_set object in TheoDORE format.
         """
-        mos = MO_set_cclib(file = None)
+        if self.prog == 'ADF':
+            #mos = MO_set_adf(file = None)
+            mos = MO_set_cclib(file = None)
+        else:
+            mos = MO_set_cclib(file = None)
 
         mos.read(self.data, lvprt=2)
 
@@ -220,12 +223,8 @@ class file_parser_cclib(file_parser.file_parser_base):
 
     def ret_struc(self,lvprt=1):
         struc = structure_cclib()
-        #try:
         struc.read_cclib(self.data)
-        #except AttributeError:
-        #    print "  cclib structure could not be read!"
-        #    return None
-        #else:
+
         return struc
 
 class MO_set_cclib(lib_mo.MO_set_molden):
@@ -299,6 +298,53 @@ class MO_set_cclib(lib_mo.MO_set_molden):
             self.header+= "\n"
 
         self.export_AO(self.ens, self.occs, self.mo_mat.transpose(), fname, cfmt, occmin)
+
+class MO_set_adf(lib_mo.MO_set_molden):
+    def read(self, data, lvprt=1):
+        """
+        Read MOs from TAPE21 file.
+        """
+        print("\n   Using new ADF interface\n")
+        import kf
+
+        print("Opening file TAPE21 ...")
+        rfile = kf.kffile('TAPE21')
+
+        NAO = rfile.read('Basis','naos')
+        NMO = rfile.read('A','nmo_A')
+
+        self.mo_mat = rfile.read('A','Eigen-Bas_A').reshape(NAO, NMO)
+        if lvprt >= 1:
+            print("MO-matrix read from TAPE21, dimension: " + str(self.mo_mat.shape))
+
+        self.num_at = data.natom
+
+        self.ens = rfile.read('A','eps_A')
+        self.ihomo = data.homos[0]
+        self.occs = rfile.read('A','froc_A')
+
+        npart = rfile.read("A","npart")
+
+        print npart
+        print data.atombasis
+
+        # assign basis functions to atoms
+        # This can be found at
+        # BAS: List of all Elementary Cartesian Basis Functions
+
+        self.basis_fcts = [lib_mo.basis_fct(-1) for ibas in range(self.ret_num_bas())]
+        maxbas = -1
+        for iat, baslist in enumerate(data.atombasis):
+            maxbas = max([maxbas] + baslist)
+            print baslist
+            for ibas in baslist:
+                self.basis_fcts[ibas].set(iat + 1)
+
+        assert(self.ret_num_bas() == maxbas+1)
+
+        rfile.close()
+
+        raise error_handler.NIError
 
 class structure_cclib(lib_struc.structure):
     def read_cclib(self, data, lvprt=1):
