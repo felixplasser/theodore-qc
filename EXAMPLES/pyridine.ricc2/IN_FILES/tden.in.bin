@@ -11,3 +11,4 @@ prop_list=['Om', 'POS', 'POSi', 'POSf', 'PR', 'PRi', 'PRf', 'CT', 'COH', 'CTnt',
 output_prec=(9,5)
 output_file='tden_summ_bin.txt'
 read_binary=True
+print_OmAt=False

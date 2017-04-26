@@ -5,3 +5,4 @@ coor_file='qchem.xyz'
 coor_format='xyz'
 prop_list=['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt', 'RMSeh']
 output_file='tden_summ.txt.libwfa'
+print_OmAt=False

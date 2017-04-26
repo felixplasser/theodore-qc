@@ -9,3 +9,4 @@ prop_list=['Om', 'POSi', 'POSf', 'PR', 'CT', 'MC', 'LC', 'MLCT', 'LMCT', 'LLCT',
 output_file='tden_summ_libwfa.txt'
 output_prec=(10, 6)
 mcfmt='% 10E'
+print_OmAt=False

@@ -5,6 +5,8 @@ Release notes:
 - Interface to Newton-X (plot_graph_nx.py)
 - Interface to dgrid for plotting (dgrid_prep.py)
 - Interface to gnuplot (plot_graph.py)
+- New script for transition density matrix overlap
+- Restart option for analyze_tden.py
 - Minor bug fixes
 
 TheoDORE 1.4

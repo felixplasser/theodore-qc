@@ -389,7 +389,8 @@ class dens_ana_options(read_options):
         # tden analysis
         self['Om_formula'] = 1
         self['prop_list'] = []
-        self['print_OmFrag'] = True # print out the Omega matrix to a file
+        self['print_OmAt'] = True   # print the atomic Omega matrix to an .npy file
+        self['print_OmFrag'] = True # print out the fragment Omega matrix to an ASCII file
         self['eh_pop'] = 1 # print e/h populations: 1 - for fragments, 2 - also for atoms
         self['comp_ntos'] = True
 

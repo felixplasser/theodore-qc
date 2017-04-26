@@ -2,9 +2,9 @@
 Analysis routines for transition density matrices.
 """
 
-
 import dens_ana_base, Om_descriptors, lib_mo, error_handler, pop_ana
 import numpy
+import os
 
 numpy.set_printoptions(precision=6, suppress=True)
 
@@ -251,8 +251,17 @@ class tden_ana(dens_ana_base.dens_ana_base):
         """
         Computation of Omega matrices and storage in memory.
         """
-        for state in self.state_list:
-            Om, OmAt = self.ret_Om_OmAt(state)
+        if self.ioptions['print_OmAt'] and os.path.exists('OmAt.npy'):
+            Omtmp = numpy.load('OmAt.npy')
+            print "Reading Omega matrix from OmAt.npy"
+            for i, state in enumerate(self.state_list):
+                state['Om']   = numpy.sum(Omtmp[i])
+                state['OmAt'] = Omtmp[i]
+        else:
+            for state in self.state_list:
+                Om, OmAt = self.ret_Om_OmAt(state)
+            if self.ioptions['print_OmAt']:
+                numpy.save('OmAt.npy', [state['OmAt'] for state in self.state_list])
 
     def ret_Om_OmAt(self, state):
         """
