@@ -407,7 +407,7 @@ class structure:
 
         return ret_str
 
-    def make_coord_file(self, file_path, file_type=None):
+    def make_coord_file(self, file_path, file_type=None, lvprt=0):
         """
         Write the structure file.
         """
@@ -420,6 +420,8 @@ class structure:
                 raise error_handler.MsgError("Format %s not supported by openbabel for output."%ftype)
             if not obconversion.WriteFile(self.mol, file_path):
                 raise error_handler.MsgError("Error writing coordinate file %s"%file_path)
+        if lvprt >= 1:
+            print("Coordinate file %s written."%file_path)
 
     def make_coord_new(self, file_path, file_type):
         """
