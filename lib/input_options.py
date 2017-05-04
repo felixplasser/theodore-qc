@@ -409,6 +409,7 @@ class dens_ana_options(read_options):
         
         # atoms
         self['at_lists'] = None
+        self['frag_lists'] = None
         self['coor_file'] = None 
         self['coor_format'] = None
         

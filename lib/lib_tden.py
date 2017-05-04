@@ -83,44 +83,6 @@ class tden_ana(dens_ana_base.dens_ana_base):
             omf.write("\n")
 
         omf.close()
-
-    def fprint_ehFrag(self, fname="ehFrag.txt"):
-        """
-        Print a file containing the e/h populations.
-        """
-        ehinfo = []
-
-        for state in self.state_list:
-            ehinfo.append([])
-
-            Om, OmFrag = self.ret_Om_OmFrag(state)
-            if Om is None:
-                continue
-
-            ehinfo[-1].append( numpy.sum(OmFrag, 0)) #epop
-            ehinfo[-1].append(-numpy.sum(OmFrag, 1)) #hpop
-
-        try:
-           nF = len(ehinfo[0][0])
-        except IndexError:
-            return
-
-        nstate = len(self.state_list)
-
-        f = open(fname, 'w')
-        for state in self.state_list:
-            f.write('%10s'%state['name'])
-        f.write('\n')
-        for iF in range(nF):
-            for istate in range(nstate):
-                f.write('%10.6f'%ehinfo[istate][0][iF])
-            f.write('\n')
-        for iF in range(nF):
-            for istate in range(nstate):
-                f.write('%10.6f'%ehinfo[istate][1][nF-iF-1])
-            f.write('\n')
-
-        f.close()
 #---
 
     def print_all_Om_descriptors(self, lvprt=2, desc_list=[]):
@@ -188,6 +150,10 @@ class tden_ana(dens_ana_base.dens_ana_base):
         hpop = numpy.sum(OmFrag, 1)
         epop = numpy.sum(OmFrag, 0)
 
+        for ifrag in range(len(self.ioptions['at_lists'])):
+            state["H_%i"%(ifrag+1)] = hpop[ifrag]
+            state["E_%i"%(ifrag+1)] = epop[ifrag]
+
         pop_pr = pop_ana.pop_printer(self.struc)
         pop_pr.add_pop('h+', hpop)
         pop_pr.add_pop('e-', epop)
@@ -195,6 +161,20 @@ class tden_ana(dens_ana_base.dens_ana_base):
         pop_pr.add_pop('diff', hpop-epop)
 
         print pop_pr.ret_table_Frag(self.ioptions['at_lists'])
+
+    def fprint_ehFrag(self, fname="ehFrag.txt"):
+        """
+        Print a file containing the e/h populations.
+        """
+        eh_list = []
+        for ifrag in range(len(self.ioptions['at_lists'])):
+            eh_list.append("H_%i"%(ifrag+1))
+            eh_list.append("E_%i"%(ifrag+1))
+
+        ostr = self.ret_summ_table(eh_list)
+
+        open(fname, 'w').write(ostr)
+        print "File %s with information about e/h populations written."%fname
 
     def print_eh_At(self, state, lvprt=2):
         Om, OmAt = self.ret_Om_OmAt(state)
