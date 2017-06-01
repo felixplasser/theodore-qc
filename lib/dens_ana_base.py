@@ -102,7 +102,7 @@ class dens_ana_base:
                 print("\nReading structure from coor_file %s"%self.ioptions['coor_file'])
             self.struc = lib_struc.structure()
             self.struc.read_file(self.ioptions['coor_file'], self.ioptions['coor_format'])
-        elif self.ioptions['rtype'] in ['cclib', 'gamess', 'orca', 'adf']:
+        elif self.ioptions['rtype'].lower() in ['cclib', 'gamess', 'orca', 'adf']:
             if lvprt >= 1:
                 print("\nUsing cclib / ADF structure")
         elif 'mo_file' in self.ioptions:

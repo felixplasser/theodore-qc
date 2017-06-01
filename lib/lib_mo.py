@@ -502,7 +502,7 @@ class MO_set_adf(MO_set):
         xyz = f.read('Geometry', 'xyz').reshape(self.num_at, 3) * units.length['A']
 
         for iat in range(self.num_at):
-            self.at_dicts.append({'Z':atom_Z[iat], 'x':xyz[iat, 0], 'y':xyz[iat, 1], 'z':xyz[iat, 2]})
+            self.at_dicts.append({'Z':atom_Z[atomorder[iat]-1], 'x':xyz[atomorder[iat]-1, 0], 'y':xyz[atomorder[iat]-1, 1], 'z':xyz[atomorder[iat]-1, 2]})
 
 ## get AO overlap matrix
 ## NOTE: Smat is only read from TAPE15 !

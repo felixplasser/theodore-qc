@@ -1084,8 +1084,6 @@ class file_parser_adf(file_parser_base):
         nocc = nelec / 2
         assert nocc == mos.ret_ihomo() + 1
         nvirt = nmo - nocc
-        print mos.mo_mat.shape
-        print nmo, mos.ret_num_mo(), mos.ret_num_bas()
         assert nvirt == mos.ret_num_mo() - nocc
 
         try:
