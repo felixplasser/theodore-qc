@@ -99,7 +99,7 @@ for state1 in tdena1.state_list:
     mdim = tden1.shape[0]
     SDS1 = numpy.dot(SMO[:mdim,:mdim], DS1)
     for state2 in tdena2.state_list:
-        if state1['mult'] == state2['mult']:
+        if (not 'mult' in state1) or (state1['mult'] == state2['mult']):
             tden2 = state2['tden']
             OV = sum((SDS1 * tden2).flatten())
             print " % .8f"%OV,

@@ -25,6 +25,8 @@ class write_options_theo(input_options.write_options):
                 rdef = 'ricc2'
             else:
                 rdef = 'escf'
+        elif os.path.exists('TAPE21'):
+            rdef = 'adf'
 
         self.choose_list(
             'Type of job',
@@ -40,6 +42,7 @@ class write_options_theo(input_options.write_options):
             ('ricc2', 'Turbomole ricc2'),
             ('escf', 'Turbomole escf'),
             ('terachem', 'Terachem (TDDFT)'),
+            ('adf', 'ADF (TDDFT)'),
             ('cclib', 'Use external cclib library: Gaussian, ORCA, GAMESS, ...')
         ], rdef)
 
@@ -94,6 +97,11 @@ class write_options_theo(input_options.write_options):
         elif self['rtype'] == 'terachem':
             self['rfile'] = ''
             self['mo_file'] = 'inpfile.molden'
+            self['coor_file'] = ''
+            self['coor_format'] = ''
+        elif self['rtype'] == 'adf':
+            self['rfile'] = 'TAPE21'
+            self['mo_file'] = None
             self['coor_file'] = ''
             self['coor_format'] = ''
         elif self['rtype'] == 'cclib':
@@ -231,17 +239,18 @@ class write_options_theo(input_options.write_options):
         if self.ret_yn('Perform natural transition orbital (NTO) analysis?', True):
             self.ostr += 'comp_ntos=True\n'
             self['prop_list'] += ['PRNTO', 'Z_HE']
-            self.read_yn('NTOs as Jmol script?', 'jmol_orbitals', True)
-            self.read_yn('NTOs in Molden format', 'molden_orbitals', False)
-            if self['molden_orbitals']:
-                self.read_yn('Use alpha/beta rather then negative/positive to code for hole/particle orbitals?', 'alphabeta', False)
+            if not self['rtype'] in ['adf']:
+                self.read_yn('NTOs as Jmol script?', 'jmol_orbitals', True)
+                self.read_yn('NTOs in Molden format', 'molden_orbitals', False)
+                if self['molden_orbitals']:
+                    self.read_yn('Use alpha/beta rather then negative/positive to code for hole/particle orbitals?', 'alphabeta', False)
         else:
             self.ostr += 'comp_ntos=False\n'
 
     def exciton_ana(self):
         if self.ret_yn('Compute approximate exciton size?', True):
             self['prop_list'] += ['RMSeh']
-            if not self['rtype'] == 'cclib':
+            if not self['rtype'] in ['cclib', 'adf']:
                 print "\nMolecular coordinates for exciton analysis:"
                 self.coor_file()
 
@@ -255,10 +264,11 @@ class write_options_theo(input_options.write_options):
         self.read_yn('Attachment/detachment analysis', 'AD_ana', True)
         if self['AD_ana']:
             self['prop_list'] += ['p']
-            self.read_yn('NDOs as Jmol script?', 'jmol_orbitals', True)
-            self.read_yn('NDOs in Molden format?', 'molden_orbitals', False)
-            if self['molden_orbitals']:
-                self.read_yn('Use alpha/beta rather then negative/positive to code for det./att. orbitals?', 'alphabeta', False)
+            if not self['rtype'] in ['adf']:
+                self.read_yn('NDOs as Jmol script?', 'jmol_orbitals', True)
+                self.read_yn('NDOs in Molden format?', 'molden_orbitals', False)
+                if self['molden_orbitals']:
+                    self.read_yn('Use alpha/beta rather then negative/positive to code for det./att. orbitals?', 'alphabeta', False)
         else:
             self.write_option('jmol_orbitals', 'False')
 

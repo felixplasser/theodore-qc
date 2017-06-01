@@ -2,6 +2,8 @@ Download the newest TheoDORE release and tutorial.
 
 Release notes:
 
+- New interface for ADF (reading only the TAPE21 file)
+
 TheoDORE 1.5
 - Interface to Newton-X (plot_graph_nx.py)
 - Interface to dgrid for plotting (dgrid_prep.py)

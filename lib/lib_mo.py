@@ -2,7 +2,7 @@
 Handling and manipulation of MO-coefficients.
 """
 
-import error_handler, lib_file
+import error_handler, lib_file, units
 import numpy
 
 class MO_set:
@@ -407,7 +407,120 @@ class MO_set_molden(MO_set):
            print "Is there a mismatch between spherical/cartesian functions?\n ---"
            raise
 
+class MO_set_adf(MO_set):
+    """
+    MO_set class for ADF.
+    Note that ADF uses STOs!
+    """
+    def read(self, lvprt=1):
+        """
+        Extract the MOs from the TAPE21 file.
+        Initial code written by S. Mai.
+        """
+        import kf
 
+        f=kf.kffile(self.file)
+        try:
+            self.num_at = int(f.read('Geometry','nr of atoms'))
+        except:
+            print("\n  ERROR: reading TAPE21 file (%s)!\n"%self.file)
+            raise
+
+        natomtype=int(f.read('Geometry','nr of atomtypes'))
+        atomorder=f.read('Geometry','atom order index')
+        atomindex=f.read('Geometry','fragment and atomtype index')
+        atcharge=f.read('Geometry', 'atomtype total charge')
+        nbptr=f.read('Basis','nbptr')
+        naos2=int(f.read('Basis','naos'))
+
+        # get number of basis functions per atomtype
+        nbasis={}
+        for iaty in range(natomtype):
+            nbasis[iaty]=nbptr[iaty+1]-nbptr[iaty]
+
+        if lvprt >= 2:
+            print 'Number of basis functions per atomtype:'
+            print(nbasis)
+
+        # get which atom is of which atomtype
+        atom_type={}
+        for iatom in range(self.num_at):
+            index=atomorder[iatom]-1
+            atom_type[iatom]=atomindex[index+self.num_at]-1
+
+        if lvprt >= 2:
+            print 'Mapping of atoms on atomtypes:'
+            print(atom_type)
+
+        # get number of basis functions
+        naos=0
+        for i in atom_type:
+            naos+=nbasis[atom_type[i]]
+        if lvprt >= 2:
+            print 'Total number of basis functions:', naos
+        assert naos==naos2, "wrong number of orbitals"
+
+        # map basis functions to atoms
+        for iatom in range(self.num_at):
+          index=atomorder[self.num_at+iatom]-1
+          nb=nbasis[atom_type[index]]
+          for iao in range(nb):
+            self.basis_fcts.append(basis_fct(index+1))
+
+        if lvprt >= 3:
+            print 'Basis functions:'
+            for bf in self.basis_fcts:
+                print bf
+
+        # get MO coefficients
+        NAO=int(f.read('Basis','naos'))
+        npart=f.read('A','npart')
+        NMO_A=int(f.read('A','nmo_A'))
+        mocoef_A=f.read('A','Eigen-Bas_A')
+
+        for i in range(len(npart)):
+          npart[i]-=1
+        self.mo_mat = numpy.zeros([NAO, NMO_A])
+        iao=0
+        imo=0
+        for i,el in enumerate(mocoef_A):
+          iao1=npart[iao]
+          self.mo_mat[iao1][imo]=el
+          iao+=1
+          if iao>=NAO:
+            iao=0
+            imo+=1
+
+        nelec = int(f.read('General','electrons'))
+        assert nelec%2==0, "Odd number of electrons not supported"
+        nocc = nelec / 2
+        nvirt = NMO_A - nocc
+        self.occs = nocc * [2.] + nvirt * [0.]
+
+        # read coordinates and elements
+        atom_Z=[int(atcharge[atom_type[i]]) for i in range(self.num_at)]
+        xyz = f.read('Geometry', 'xyz').reshape(self.num_at, 3) * units.length['A']
+
+        for iat in range(self.num_at):
+            self.at_dicts.append({'Z':atom_Z[iat], 'x':xyz[iat, 0], 'y':xyz[iat, 1], 'z':xyz[iat, 2]})
+
+## get AO overlap matrix
+## NOTE: Smat is only read from TAPE15 !
+## hence, if necessary, say "SAVE TAPE21 TAPE15" in input
+#if f2:
+#  NAO = f2.read('Basis','naos')
+#  Smat = f2.read('Matrices','Smat')
+#
+#  ao_ovl=[ [ 0. for i in range(NAO) ] for j in range(NAO) ]
+#  x=0
+#  y=0
+#  for el in Smat:
+#    ao_ovl[x][y]=el
+#    ao_ovl[y][x]=el
+#    x+=1
+#    if x>y:
+#      x=0
+#      y+=1
 
 class basis_fct:
     """

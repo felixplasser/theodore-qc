@@ -55,6 +55,13 @@ class dens_ana_base:
             self.state_list = file_parser.file_parser_rassi(self.ioptions).read(self.mos)
         elif rtype.lower() == 'terachem':
             self.state_list = file_parser.file_parser_terachem(self.ioptions).read(self.mos)
+        elif rtype.lower() == 'adf':
+            self.mos = lib_mo.MO_set_adf(file=self.ioptions.get('rfile'))
+            self.mos.read(lvprt=1)
+            self.read2_mos()
+            self.struc = lib_struc.structure()
+            self.struc.read_at_dicts(self.mos.at_dicts)
+            self.state_list = file_parser.file_parser_adf(self.ioptions).read(self.mos)
         elif rtype.lower() == 'nos':
             self.state_list = file_parser.file_parser_nos(self.ioptions).read(self.mos)
         elif rtype.lower() in ['cclib', 'gamess', 'orca']:
@@ -95,9 +102,9 @@ class dens_ana_base:
                 print("\nReading structure from coor_file %s"%self.ioptions['coor_file'])
             self.struc = lib_struc.structure()
             self.struc.read_file(self.ioptions['coor_file'], self.ioptions['coor_format'])
-        elif self.ioptions['rtype'] == 'cclib':
+        elif self.ioptions['rtype'] in ['cclib', 'gamess', 'orca', 'adf']:
             if lvprt >= 1:
-                print("\nUsing cclib structure")
+                print("\nUsing cclib / ADF structure")
         elif 'mo_file' in self.ioptions:
             if lvprt >= 1:
                 print("\nReading structure from mo_file %s"%self.ioptions['mo_file'])

@@ -1060,6 +1060,97 @@ class file_parser_terachem(file_parser_base):
 
         return state_list
 
+class file_parser_adf(file_parser_base):
+    """
+    Read ADF TDDFT using the TAPE21 file.
+    """
+    def read(self, mos):
+        import kf
+
+        rfile = kf.kffile(self.ioptions['rfile'])
+        try:
+            nmo = int(rfile.read('A','nmo_A'))
+            nelec = int(rfile.read('General','electrons'))
+        except:
+            print("\n  ERROR: reading TAPE21 file (%s)!\n"%self.ioptions['rfile'])
+            raise
+        assert nelec%2==0, "Odd number of electrons not supported"
+
+        group = rfile.read('Geometry','grouplabel')[0]
+        if not group in ['NOSYM', 'C1', 'c1']:
+            print("grouplabel: " + group)
+            raise error_handler.MsgError('No support for symmetry')
+
+        nocc = nelec / 2
+        assert nocc == mos.ret_ihomo() + 1
+        nvirt = nmo - nocc
+        print mos.mo_mat.shape
+        print nmo, mos.ret_num_mo(), mos.ret_num_bas()
+        assert nvirt == mos.ret_num_mo() - nocc
+
+        try:
+            nsing = len(rfile.read('All excitations','All Sing-Sing excitations'))
+            excss = rfile.read('Excitations SS A', 'excenergies') * units.energy['eV']
+            oscss = rfile.read('Excitations SS A', 'oscillator strengths')
+        except TypeError:
+            nsing = 0
+        try:
+            ntrip = len(rfile.read('All excitations','All Sing-Trip excitations'))
+            excst = rfile.read('Excitations ST A', 'excenergies') * units.energy['eV']
+        except TypeError:
+            ntrip = 0
+
+
+        state_list = [{} for istate in range(nsing+ntrip)]
+        istate = 0
+        for ising in range(nsing):
+            state = state_list[istate]
+
+            state['state_ind'] = ising + 1
+            state['exc_en'] = excss[ising]
+            state['osc_str'] = oscss[ising]
+            state['mult'] = 1
+            state['name'] = '%i(%i)A'%(state['state_ind'], state['mult'])
+
+            state['tden'] = self.init_den(mos, rect=True)
+            eigen = rfile.read('Excitations SS A','eigenvector %s'%(istate+1))
+            state['tden'][:,nocc:nmo] = eigen.reshape(nocc, nvirt)
+            istate += 1
+
+            # print-out
+            print(state['name'])
+            tden = state['tden']
+            for i in range(len(tden)):
+                for j in range(len(tden[0])):
+                    val = tden[i, j]
+                    if val*val > 0.1:
+                        print("(%i -> %i) % .4f"%(i+1,j+1,val))
+
+        for itrip in range(ntrip):
+            state = state_list[istate]
+
+            state['state_ind'] = itrip + 1
+            state['exc_en'] = excst[itrip]
+            state['mult'] = 3
+            state['name'] = '%i(%i)A'%(state['state_ind'], state['mult'])
+
+            state['tden'] = self.init_den(mos, rect=True)
+            eigen = rfile.read('Excitations ST A','eigenvector %s'%(istate+1 - nsing))
+            state['tden'][:,nocc:nmo] = eigen.reshape(nocc, nvirt)
+            istate += 1
+
+            # print-out
+            print(state['name'])
+            tden = state['tden']
+            for i in range(len(tden)):
+                for j in range(len(tden[0])):
+                    val = tden[i, j]
+                    if val*val > 0.1:
+                        print("(%i -> %i) % .4f"%(i+1,j+1,val))
+
+        rfile.close()
+
+        return state_list
 
 class file_parser_nos(file_parser_base):
     """

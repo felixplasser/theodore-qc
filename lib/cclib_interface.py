@@ -89,7 +89,7 @@ class file_parser_cclib(file_parser.file_parser_base):
                     print(" (%i->%i), coeff=% .4f"%(iocc+1, ivirt+1, coeff))
 
     def tden_adf(self, state_list, mos, rect_dens):
-        print("\n   Using new ADF interface\n")
+        print("\n   WARNING: using deprecated old ADF interface!\n")
         import kf
 
         print("Opening file TAPE21 ...")
