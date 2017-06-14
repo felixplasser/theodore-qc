@@ -34,7 +34,7 @@ class dens_ana_base:
         """
         Read the (transition) density matrices and some supplementary information.
         """
-        rtype = self.ioptions.get('rtype')
+        rtype = self.ioptions.get('rtype').lower()
         if self.ioptions['read_libwfa']: self.mos = None
 
         if rtype=='ricc2':
@@ -53,18 +53,22 @@ class dens_ana_base:
             self.state_list = file_parser.file_parser_col_mrci(self.ioptions).read(self.mos)
         elif rtype in ['rassi', 'molcas']:
             self.state_list = file_parser.file_parser_rassi(self.ioptions).read(self.mos)
-        elif rtype.lower() == 'terachem':
+        elif rtype == 'terachem':
             self.state_list = file_parser.file_parser_terachem(self.ioptions).read(self.mos)
-        elif rtype.lower() == 'adf':
+        elif rtype == 'adf':
             self.mos = lib_mo.MO_set_adf(file=self.ioptions.get('rfile'))
             self.mos.read(lvprt=1)
             self.read2_mos()
             self.struc = lib_struc.structure()
             self.struc.read_at_dicts(self.mos.at_dicts)
             self.state_list = file_parser.file_parser_adf(self.ioptions).read(self.mos)
-        elif rtype.lower() == 'nos':
+
+            # deactivate print out that is not possible because of the use of STOs
+            self.ioptions['jmol_orbitals'] = False
+            self.ioptions['molden_orbitals'] = False
+        elif rtype == 'nos':
             self.state_list = file_parser.file_parser_nos(self.ioptions).read(self.mos)
-        elif rtype.lower() in ['cclib', 'gamess', 'orca']:
+        elif rtype in ['cclib', 'gamess', 'orca']:
             # these are parsed with the external cclib library
             ccli = cclib_interface.file_parser_cclib(self.ioptions)
 
