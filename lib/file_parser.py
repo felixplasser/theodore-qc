@@ -177,7 +177,10 @@ class file_parser_ricc2(file_parser_base):
             print '  Syms:', mos.syms
 
         if nfrzc > 0:
-            print '\n\n  WARNING: Frozen core orbitals should be kept out of the molden file when Reading CCRE0* files!\n'
+            raise error_handler.MsgError("""Frozen core orbitals detected in the Molden file!
+In the case of read_binary=True, do not delete the line
+       implicit core=   x virt=    x
+from the control file.""")
 
         # write the collected data into the correct block of the 1TDM
         for iocc in xrange(nfrzc, nocc):
