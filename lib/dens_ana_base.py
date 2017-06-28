@@ -157,17 +157,17 @@ class dens_ana_base:
         width, ndec = self.ioptions.get('output_prec')
         oformat = '%% %i.%if'%(width, ndec)
 
-        hstr  = '%-10s'%'state' + '%8s'%'dE(eV)' + '%6s'%'f'
+        hstr  = '%-10s'%'state' + '%*s'%(width+1, 'dE(eV)') + '%*s'%(width-2, 'f')
         hstr +=self.ret_header_string(prop_list, width)
 
         prt_list = []
         for state in self.state_list:
             vstr  = '%-10s'%state['name'][-10:]
-            vstr += ' %7.3f'%state['exc_en']
+            vstr += oformat%state['exc_en']
             try:
-                vstr += ('% 5.3f'%state['osc_str']).replace('-1.000','     -')
+                vstr += (oformat%state['osc_str']).replace('-1.000','     -')
             except KeyError:
-                vstr += '%6s'%'-'
+                vstr += '%*s'%(width, '-')
 
             vstr += self.ret_val_string(prop_list, state, oformat)
 
@@ -176,7 +176,7 @@ class dens_ana_base:
         prt_list.sort()
 
         ostr  = hstr + "\n"
-        ostr += len(hstr) * '-' + "\n"
+        ostr += len(hstr) * '-' + "-\n"
         for en, vstr in prt_list:
             ostr += vstr + "\n"
         return ostr

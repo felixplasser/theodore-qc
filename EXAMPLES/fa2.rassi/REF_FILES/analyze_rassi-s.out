@@ -1,5 +1,5 @@
 ================================================================================
-|                                 TheoDORE 1.4                                 |
+|                                TheoDORE 1.5.1                                |
 |         Theoretical Density, Orbital Relaxation and Exciton analysis         |
 |                                Felix Plasser                                 |
 --------------------------------------------------------------------------------
@@ -15,7 +15,7 @@
 |     J. Chem. Phys. (2014), 141, 024106.                                      |
 |                                                                              |
 |   Program citation:                                                          |
-|     F. Plasser "TheoDORE 1.4: a package for theoretical density, orbital     |
+|     F. Plasser "TheoDORE 1.5.1: a package for theoretical density, orbital   |
 |     relaxation, and exciton analysis"; available from                        |
 |     http://theodore-qc.sourceforge.net                                       |
 --------------------------------------------------------------------------------
@@ -190,10 +190,10 @@ RASSI_3
   2-6  : 0.9145
   2-8  : 0.9145
 
-state       dE(eV)     f         p
-----------------------------------
-RASSI_1      0.000     -         -
-RASSI_2      4.100     -  1.101184
-RASSI_3      4.112     -  1.101353
+state          dE(eV)       f         p
+----------------------------------------
+RASSI_1     0.000000         -         -
+RASSI_2     4.100249         -  1.101184
+RASSI_3     4.111837         -  1.101353
 
 Final output copied to sden_summ.txt.rassi

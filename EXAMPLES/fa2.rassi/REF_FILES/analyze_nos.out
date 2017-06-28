@@ -1,5 +1,5 @@
 ================================================================================
-|                                 TheoDORE 1.4                                 |
+|                                TheoDORE 1.5.1                                |
 |         Theoretical Density, Orbital Relaxation and Exciton analysis         |
 |                                Felix Plasser                                 |
 --------------------------------------------------------------------------------
@@ -15,7 +15,7 @@
 |     J. Chem. Phys. (2014), 141, 024106.                                      |
 |                                                                              |
 |   Program citation:                                                          |
-|     F. Plasser "TheoDORE 1.4: a package for theoretical density, orbital     |
+|     F. Plasser "TheoDORE 1.5.1: a package for theoretical density, orbital   |
 |     relaxation, and exciton analysis"; available from                        |
 |     http://theodore-qc.sourceforge.net                                       |
 --------------------------------------------------------------------------------
@@ -208,10 +208,10 @@ MOLDEN.3
   2-6  : 0.9145
   2-8  : 0.9145
 
-state       dE(eV)     f         p
-----------------------------------
-MOLDEN.1     1.000     -         -
-MOLDEN.2     2.000     -  1.101174
-MOLDEN.3     3.000     -  1.101336
+state          dE(eV)       f         p
+----------------------------------------
+MOLDEN.1    1.000000         -         -
+MOLDEN.2    2.000000         -  1.101174
+MOLDEN.3    3.000000         -  1.101336
 
 Final output copied to sden_summ.txt.nos
