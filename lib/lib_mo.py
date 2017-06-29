@@ -21,6 +21,7 @@ class MO_set:
         self.S = None
         self.mo_mat = None
         self.inv_mo_mat = None
+        self.lowdin_mat = None
 
     def read(self, *args, **kwargs):
         """
@@ -54,6 +55,19 @@ class MO_set:
                 print 'MO-matrix not square: %i x %i'%(len(self.mo_mat),len(self.mo_mat[0]))
                 print '  Using the Moore-Penrose pseudo inverse.'
             self.inv_mo_mat = numpy.linalg.pinv(self.mo_mat)
+
+    def compute_lowdin_mat(self, lvprt=1):
+        print "Performing Lowdin orthogonalization"
+
+        (U, sqrlam, Vt) = numpy.linalg.svd(self.mo_mat)
+
+        if Vt.shape[0] == U.shape[1]:
+            self.lowdin_mat = numpy.dot(U, Vt)
+        elif Vt.shape[0] < U.shape[1]:
+            print '  MO-matrix not square: %i x %i'%(len(self.mo_mat),len(self.mo_mat[0]))
+            self.lowdin_mat = numpy.dot(U[:,:Vt.shape[0]], Vt)
+        else:
+            raise error_handler.ElseError('>', 'Lowdin ortho')
 
     def ret_mo_mat(self, trnsp=False, inv=False):
         """
@@ -167,6 +181,19 @@ class MO_set:
 
                 Dsub = D[:self.ret_num_mo()]
                 return numpy.dot(self.ret_mo_mat(trnsp, inv), Dsub)
+
+    def lowdin_trans(self, D):
+        """
+        MO-AO transformation and Lowdin orthogonalization by using
+           S^0.5 C = U V^T
+        """
+        DUTT = numpy.dot(D, self.lowdin_mat.T)
+        if self.lowdin_mat.shape[1] == DUTT.shape[0]:
+            return numpy.dot(self.lowdin_mat, DUTT)
+        elif self.lowdin_mat.shape[1] > DUTT.shape[0]:
+            return numpy.dot(self.lowdin_mat[:,:DUTT.shape[0]], DUTT)
+        else:
+            raise error_handler.ElseError('<', 'Lowdin trans')
 
     def export_MO(self, ens, occs, U, *args, **kwargs):
         """

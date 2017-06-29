@@ -250,6 +250,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         formula=0: Om_mn = (DS)_mn (SD)_mn [JCTC (2012) 8, 2777]
         formula=1: Om_mn = 1/2 (DS)_mn (SD)_mn + 1/2 D_mn (SDS)_mn [JCP (2014), 141, 024106]
         formula=2: TODO - Loewdin partitioning
+           Om = S^.5 DAO S^.5 = UV^T DMO (UV^T)^T - U, V singular vectors of C
         """
         if 'Om' in state and 'OmAt' in state:
             return state['Om'], state['OmAt']
@@ -265,18 +266,20 @@ class tden_ana(dens_ana_base.dens_ana_base):
       # construction of intermediate matrices
         # S implicitly computed from C
 
-        temp = self.mos.CdotD(D, trnsp=False, inv=False)  # C.DAO
-        DS   = self.mos.MdotC(temp, trnsp=False, inv=True) # DAO.S = C.D.C^(-1)
+        if formula <= 1:
+            temp = self.mos.CdotD(D, trnsp=False, inv=False)  # C.DAO
+            DS   = self.mos.MdotC(temp, trnsp=False, inv=True) # DAO.S = C.D.C^(-1)
+            if formula==1:
+                DAO = self.mos.MdotC(temp, trnsp=True, inv=False) # DAO = C.D.C^T
 
-        if formula==1:
-            DAO = self.mos.MdotC(temp, trnsp=True, inv=False) # DAO = C.D.C^T
+            temp = self.mos.CdotD(D, trnsp=True, inv=True)  # C^(-1,T).DAO
+            SD   = self.mos.MdotC(temp, trnsp=True, inv=False)  # S.DAO = C^(-1,T).DAO.C^T
+            if formula==1:
+                # S.DAO.S = C^(-1,T).D.C^(-1)
+                SDS = self.mos.MdotC(temp, trnsp=False, inv=True)
 
-        temp = self.mos.CdotD(D, trnsp=True, inv=True)  # C^(-1,T).DAO
-        SD   = self.mos.MdotC(temp, trnsp=True, inv=False)  # S.DAO = C^(-1,T).DAO.C^T
-
-        if formula==1:
-            # S.DAO.S = C^(-1,T).D.C^(-1)
-            SDS = self.mos.MdotC(temp, trnsp=False, inv=True)
+        elif formula == 2:
+            SDSh = self.mos.lowdin_trans(D)
 
         # add up the contributions for the different atoms
         state['Om'] = 0.
@@ -286,6 +289,8 @@ class tden_ana(dens_ana_base.dens_ana_base):
             OmBas = DS * SD
         elif formula == 1:
             OmBas = 0.5 * (DS * SD + DAO * SDS)
+        elif formula == 2:
+            OmBas = SDSh * SDSh
         else:
             raise error_handler.MsgError("Om_formula=%i for CT numbers not implemented!"%formula)
 

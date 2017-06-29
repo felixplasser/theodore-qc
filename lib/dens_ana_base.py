@@ -26,7 +26,10 @@ class dens_ana_base:
         self.read2_mos(lvprt)
 
     def read2_mos(self, lvprt=1):
-        self.mos.compute_inverse()
+        if self.ioptions['Om_formula'] <= 1:
+            self.mos.compute_inverse()
+        elif self.ioptions['Om_formula'] == 2:
+            self.mos.compute_lowdin_mat()
         self.num_mo  = self.mos.ret_num_mo()
         self.num_bas = self.mos.ret_num_bas()
 
