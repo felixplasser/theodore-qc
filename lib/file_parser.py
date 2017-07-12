@@ -1365,8 +1365,8 @@ class file_parser_rassi(file_parser_libwfa):
                 words = line.split()
                 typ = words[-1][1:-1]
                 (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile("%s_ctnum_atomic.om"%typ)
-                if abs(exctmp * units.energy['eV'] - state['exc_en']) > 1.e-4:
-                    print " WARNING: inconsistent energies for %s"%typ
+                if abs(exctmp * units.energy['eV'] - state['exc_en']) > 1.e-3:
+                    print " WARNING: inconsistent energies for %s: %.5f/%.5f - skipping."%(typ, exctmp * units.energy['eV'], state['exc_en'])
                 else:
                     state['Om'] = om_at.sum()
                     state['OmAt'] = om_at
