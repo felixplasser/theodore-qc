@@ -219,6 +219,24 @@ class MO_set:
     def export_AO(self, *args, **kwargs):
         raise error_handler.PureVirtualError()
 
+    def bf_blocks(self):
+        """
+        Return a list with the start and end indices for basis functions on the different atoms.
+        """
+        bf_blocks = [0]
+        iat_old = 0
+        for ibas in range(self.ret_num_bas()):
+            iat = self.basis_fcts[ibas].at_ind - 1
+            if iat != iat_old:
+                if not iat == iat_old + 1:
+                    print "Basis functions not ordered. Using slower algorithm."
+                    return None
+                bf_blocks.append(ibas)
+                iat_old = iat
+        bf_blocks.append(self.ret_num_bas())
+
+        return bf_blocks
+
     def symsort(self, irrep_labels, sepov=True):
         """
         Sort MOs by symmetry (in case they are sorted by energy).

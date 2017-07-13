@@ -281,10 +281,6 @@ class tden_ana(dens_ana_base.dens_ana_base):
         elif formula == 2:
             SDSh = self.mos.lowdin_trans(D)
 
-        # add up the contributions for the different atoms
-        state['Om'] = 0.
-        state['OmAt'] = numpy.zeros([self.mos.num_at, self.mos.num_at])
-
         if   formula == 0:
             OmBas = DS * SD
         elif formula == 1:
@@ -298,12 +294,31 @@ class tden_ana(dens_ana_base.dens_ana_base):
         if self.ioptions['eh_pop'] >= 3:
             state['OmBas'] = OmBas
 
-        for i in xrange(self.num_bas):
-            iat = self.mos.basis_fcts[i].at_ind - 1
-            for j in xrange(self.num_bas):
-                jat = self.mos.basis_fcts[j].at_ind - 1
-                state['Om'] += OmBas[i, j]
-                state['OmAt'][iat, jat] += OmBas[i, j]
+        state['Om'] = numpy.sum(OmBas)
+
+        # Add up the contributions for the different atoms
+        #   This needs a lot of computation time!
+        #   But using the optimized "bf_blocks" algorithm significantly speeds up the results.
+
+        state['OmAt'] = numpy.zeros([self.mos.num_at, self.mos.num_at])
+        bf_blocks = self.mos.bf_blocks()
+        # Contiguous indices
+        if not bf_blocks is None:
+            for iat in range(self.mos.num_at):
+                for jat in range(self.mos.num_at):
+                    state['OmAt'][iat, jat] = numpy.sum(OmBas[bf_blocks[iat]:bf_blocks[iat+1], bf_blocks[jat]:bf_blocks[jat+1]])
+        # Non-contiguous indices
+        else:
+            # It looks like the double loop is faster than using indexing arrays (as shown below)
+            at_inds = [self.mos.basis_fcts[i].at_ind - 1 for i in xrange(self.num_bas)]
+            for i, iat in enumerate(at_inds):
+                for j, jat in enumerate(at_inds):
+                    state['OmAt'][iat, jat] += OmBas[i, j]
+
+            #at_inds = numpy.array([self.mos.basis_fcts[i].at_ind - 1 for i in xrange(self.num_bas)], int)
+            #for iat in range(self.mos.num_at):
+            #    for jat in range(self.mos.num_at):
+            #        state['OmAt'][iat, jat] = numpy.sum(OmBas[at_inds==iat][:,at_inds==jat])
 
         return state['Om'], state['OmAt']
 
