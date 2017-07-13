@@ -240,8 +240,11 @@ class write_options_theo(input_options.write_options):
             self.ostr += 'comp_ntos=True\n'
             self['prop_list'] += ['PRNTO', 'Z_HE']
             if not self['rtype'] in ['adf']:
-                self.read_yn('NTOs as Jmol script?', 'jmol_orbitals', True)
-                self.read_yn('NTOs in Molden format', 'molden_orbitals', False)
+                if self['rtype'] == 'ricc2' and self['read_binary'] == True:
+                    self.read_yn('NTOs in Molden format', 'molden_orbitals', True)
+                else:
+                    self.read_yn('NTOs as Jmol script?', 'jmol_orbitals', True)
+                    self.read_yn('NTOs in Molden format', 'molden_orbitals', False)
                 if self['molden_orbitals']:
                     self.read_yn('Use alpha/beta rather then negative/positive to code for hole/particle orbitals?', 'alphabeta', False)
         else:

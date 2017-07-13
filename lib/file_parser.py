@@ -120,7 +120,9 @@ class file_parser_ricc2(file_parser_base):
 
         if self.ioptions.get('read_binary'):
                mos.symsort(self.ioptions['irrep_labels'])
-               self.ioptions['jmol_orbitals'] = False
+               if self.ioptions['jmol_orbitals']:
+                    print " \nWARNING: jmol_orbitals not possible with read_binary. Use molden_orbitals instead!"
+                    self.ioptions['jmol_orbitals'] = False
 
         return state_list
 
