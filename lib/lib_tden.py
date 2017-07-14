@@ -302,23 +302,15 @@ class tden_ana(dens_ana_base.dens_ana_base):
 
         state['OmAt'] = numpy.zeros([self.mos.num_at, self.mos.num_at])
         bf_blocks = self.mos.bf_blocks()
-        # Contiguous indices
-        if not bf_blocks is None:
-            for iat in range(self.mos.num_at):
-                for jat in range(self.mos.num_at):
-                    state['OmAt'][iat, jat] = numpy.sum(OmBas[bf_blocks[iat]:bf_blocks[iat+1], bf_blocks[jat]:bf_blocks[jat+1]])
-        # Non-contiguous indices
-        else:
-            # It looks like the double loop is faster than using indexing arrays (as shown below)
-            at_inds = [self.mos.basis_fcts[i].at_ind - 1 for i in xrange(self.num_bas)]
-            for i, iat in enumerate(at_inds):
-                for j, jat in enumerate(at_inds):
-                    state['OmAt'][iat, jat] += OmBas[i, j]
+        for iat, ist, ien in bf_blocks:
+            for jat, jst, jen in bf_blocks:
+                state['OmAt'][iat, jat] = numpy.sum(OmBas[ist:ien, jst:jen])
 
-            #at_inds = numpy.array([self.mos.basis_fcts[i].at_ind - 1 for i in xrange(self.num_bas)], int)
-            #for iat in range(self.mos.num_at):
-            #    for jat in range(self.mos.num_at):
-            #        state['OmAt'][iat, jat] = numpy.sum(OmBas[at_inds==iat][:,at_inds==jat])
+        # Code with indexing arrays -> slower
+        #at_inds = numpy.array([self.mos.basis_fcts[i].at_ind - 1 for i in xrange(self.num_bas)], int)
+        #for iat in range(self.mos.num_at):
+        #    for jat in range(self.mos.num_at):
+        #        state['OmAt'][iat, jat] = numpy.sum(OmBas[at_inds==iat][:,at_inds==jat])
 
         return state['Om'], state['OmAt']
 

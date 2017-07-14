@@ -222,18 +222,18 @@ class MO_set:
     def bf_blocks(self):
         """
         Return a list with the start and end indices for basis functions on the different atoms.
+        [(iat, ist, ien), ...]
         """
-        bf_blocks = [0]
+        bf_blocks = []
         iat_old = 0
+        ist = 0
         for ibas in range(self.ret_num_bas()):
             iat = self.basis_fcts[ibas].at_ind - 1
             if iat != iat_old:
-                if not iat == iat_old + 1:
-                    print "Basis functions not ordered. Using slower algorithm."
-                    return None
-                bf_blocks.append(ibas)
+                bf_blocks.append((iat_old, ist, ibas))
                 iat_old = iat
-        bf_blocks.append(self.ret_num_bas())
+                ist = ibas
+        bf_blocks.append((iat, ist, self.ret_num_bas()))
 
         return bf_blocks
 
