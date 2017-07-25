@@ -176,7 +176,7 @@ class dens_ana_base:
 
             prt_list.append([state['exc_en'], vstr])
 
-        prt_list.sort()
+        if self.ioptions['print_sorted']: prt_list.sort() 
 
         ostr  = hstr + "\n"
         ostr += len(hstr) * '-' + "-\n"

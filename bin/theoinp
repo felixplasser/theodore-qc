@@ -123,6 +123,9 @@ class write_options_theo(input_options.write_options):
         if self['rtype'] in ['qctddft']:
             if self.read_yn('Did you run "state_analysis=True"?', 'read_libwfa', False):
                 self['mo_file'] = None
+        if self['rtype'] in ['rassi']:
+            if self.read_yn('Did you use &WFA?', 'read_libwfa', True):
+                self['mo_file'] = None
 
         # switch for TDA
         if self['rtype'] in ['qctddft']:
@@ -303,6 +306,7 @@ class write_options_theo(input_options.write_options):
             op = self.ret_str('Output precision, enter as: (<digits>, <dec. digits>)', '(7,3)')
             self.write_option('output_prec', eval(op))
             self.read_str('Format for molden coefficients', 'mcfmt', '% 10E')
+            self.read_yn('Print-out sorted by energies?', 'print_sorted', True)
 
     def get_rassi_list(self):
         print """
@@ -361,7 +365,7 @@ def run_theoinp():
     # Program specific input
     if wopt['rtype'] in ['colmrci']:
         wopt.get_ncore()
-    elif wopt['rtype'] in ['rassi']:
+    elif wopt['rtype'] in ['rassi'] and not wopt['read_libwfa']:
         wopt.get_rassi_list()
 
     wopt.output_options()

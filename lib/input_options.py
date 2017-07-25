@@ -385,6 +385,7 @@ class dens_ana_options(read_options):
         self['alphabeta'] = False # use alpha/beta rather than neg./pos. to code for hole/electron?
         self['mcfmt']          = '% 10E' # format for molden coefficients
         self['output_prec']   = (7,3) # number of digits and decimal digits for output summary
+        self['print_sorted']  = True  # final output sorted by energies
         
         # tden analysis
         self['Om_formula'] = 1
