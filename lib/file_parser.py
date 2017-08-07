@@ -501,7 +501,7 @@ class file_parser_libwfa(file_parser_base):
         self.parse_keys(state, self.excD, self.excT, line, rfile)
 
     def parse_keys(self, state, exc_diff, exc_1TDM, line, rfile=None):
-        self.parse_key(state, 'dip', line, 'Total dipole')
+        self.parse_key(state, 'mu', line, 'Total dipole')
         self.parse_key(state, 'r2', line, 'Total <r^2>')
         self.parse_key(state, 'nu', line, 'Number of unpaired electrons:', 2)
         self.parse_key(state, 'nunl', line, 'Number of unpaired electrons')
@@ -660,6 +660,7 @@ class file_parser_qctddft(file_parser_libwfa):
             elif 'Timing summary' in line:
                 tdread = False
             elif 'Excited State Analysis' in line:
+                tdread = False
                 libwfa = True
                 if len(state_list) == 0:
                     errstr = "No excitation energy parsed!"
