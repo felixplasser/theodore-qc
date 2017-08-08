@@ -349,6 +349,30 @@ class tden_ana(dens_ana_base.dens_ana_base):
 
         return state['Om'], state['OmFrag']
 #---
+    def compute_all_Ombar(self):
+        """
+        Computation of the deexcitation(?) Omega values.
+        """
+        for i, state in enumerate(self.state_list):
+            self.compute_Ombar(state)
+
+    def compute_Ombar(self, state):
+        if 'Ombar' in state:
+            return
+
+        try:
+            D  = state['tden']
+        except KeyError:
+            return
+
+        if D.shape[0] == D.shape[1]:
+            state['Ombar'] = numpy.sum(D * D.T)
+        elif D.shape[0] < D.shape[1]:
+            state['Ombar'] = numpy.sum(D[:,:D.shape[0]] * D[:,:D.shape[0]].T)
+        else:
+            raise error_handler.ElseError('>', 'D.shape')
+
+#---
 
     def compute_all_NTO(self):
         if len(self.state_list) == 0: return
