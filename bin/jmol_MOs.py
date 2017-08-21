@@ -207,6 +207,7 @@ class jmol_options(input_options.write_options):
         elif self['spec'] == 'occ':
             self.read_float('Minimal absolute occupancy', 'occmin', 0.01)
             self.read_float('Maximal absolute occupancy', 'occmax', 1.99)
+            self.read_yn('Preprocess and merge the Molden files', 'preprocess', True)
         else:
             raise error_handler.ElseError(self['spec'], 'spec')
 
@@ -220,6 +221,24 @@ class jmol_options(input_options.write_options):
         self.read_int('Width of images in output html file', 'width', 400)
 
         self.read_yn('Run Jmol?', 'run_jmol', False)
+
+    def preprocess(self, mldfiles, out='merged.mld', eneocc=True):
+        f = open(out, 'w')
+        f.write('[Molden Format]\n')
+
+        mos = lib_mo.MO_set_molden(mldfiles[0])
+        mos.read()
+        for line in mos.header.split('\n')[1:]:
+            f.write(line+'\n')
+        f.write('[MO]\n')
+        f.write(mos.ret_coeffs(self['occmin'], self['occmax'], eneocc, sym=mldfiles[0]))
+
+        for mldfile in mldfiles[1:]:
+            mos = lib_mo.MO_set_molden(mldfile)
+            mos.read()
+            f.write(mos.ret_coeffs(self['occmin'], self['occmax'], eneocc, sym=mldfile))
+
+        f.close()
 
 def run():
     print 'jmol_MOs.py [<mldfile> [<mldfile2> ...]]\n'
@@ -239,6 +258,10 @@ def run():
 
     jopt = jmol_options('jmol.in')
     jopt.jmol_input()
+
+    if jopt['preprocess']:
+        jopt.preprocess(mldfiles)
+        mldfiles = ['merged.mld']
 
     jo = lib_file.wfile('%sjmol_orbitals.spt'%pref)
     ho = lib_file.htmlfile('%sorbitals.html'%pref)

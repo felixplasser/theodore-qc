@@ -3,7 +3,7 @@
 Input generation for TheoDORE runs.
 """
 
-import theo_header, input_options, lib_struc
+import theo_header, input_options, lib_struc, error_handler
 import os
 
 class write_options_theo(input_options.write_options):
@@ -164,14 +164,15 @@ class write_options_theo(input_options.write_options):
     def make_at_lists(self):
         print "Fragment definition for CT nubmer analysis"
         aexpl = ['Manual input', 'Automatic generation by fragment (using python-openbabel)', \
+                'Automatic generation for transition metal complexes (using python-openbabel)', \
                 'Automatic generation by element (using python-openbabel)', 'Leave empty and fill out later']
         ichoice = self.ret_choose_list('Mode for specifying molecular fragments (at_lists):', aexpl)
 
         if ichoice==1:
             self['at_lists'] = self.read_at_lists()
-        elif ichoice==2 or ichoice == 3:
+        elif ichoice in [2,3,4]:
             self['at_lists'] = self.file_at_lists(ichoice)
-        elif ichoice==4:
+        elif ichoice==5:
             self['at_lists'] = [[]]
             self.ostr += 'at_lists=\n'
             return
@@ -201,12 +202,23 @@ class write_options_theo(input_options.write_options):
         if mode == 2:
             return struc.ret_partition()
         elif mode == 3:
+            rstr = self.ret_str('Input the index of the transition metal atom (or indices of the corresponding fragment)')
+            inp_list = [int(iat) for iat in rstr.replace(',', ' ').split()]
+            return struc.ret_partition(inp_lists=[inp_list])
+        elif mode == 4:
             return struc.ret_el_partition()
         else:
             raise error_handler.ElseError('mode', mode)
 
     def coor_file(self):
+        tmp = self['coor_file']
         self.read_str('Coordinate file', 'coor_file', self['coor_file'], True)
+        if self['coor_file'] != tmp:
+            try:
+                tstruc = lib_struc.structure()
+                self['coor_format'] = tstruc.guess_file_type(self['coor_file'])
+            except error_handler.MsgError:
+                pass
         self.read_str('Format of coordinate file', 'coor_format', self['coor_format'])
 
     def set_Om_desc(self):

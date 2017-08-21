@@ -311,6 +311,27 @@ class MO_set_molden(MO_set):
 
         mld.close()
 
+    def ret_coeffs(self, occmin=-1., occmax=100., eneocc=False, sym='X'):
+        outstr = ''
+
+        for imo in range(self.ret_num_mo()):
+            if eneocc:
+                occ = self.ens[imo]
+            else:
+                occ = self.occs[imo]
+            if abs(occ) < occmin: continue
+            if abs(occ) > occmax: continue
+
+            outstr += ' Sym= %s\n'%sym
+            outstr += ' Ene= %f\n'%self.ens[imo]
+            outstr += ' Spin= Alpha\n'
+            outstr += ' Occup= %f\n'%occ
+            print self.mo_mat.shape
+            for ibf, coeff in enumerate(self.mo_mat[:,imo]):
+                outstr += '%10i  % 10E\n'%(ibf+1, coeff)
+
+        return outstr
+
     def read(self, lvprt=1):
         """
         Read in MO coefficients from a molden File.
