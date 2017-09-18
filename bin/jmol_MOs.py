@@ -208,6 +208,8 @@ class jmol_options(input_options.write_options):
             self.read_float('Minimal absolute occupancy', 'occmin', 0.01)
             self.read_float('Maximal absolute occupancy', 'occmax', 1.99)
             self.read_yn('Preprocess and merge the Molden files', 'preprocess', True)
+            if self['preprocess']:
+                self.read_yn('Interpret energies as occupations', 'eneocc', False)
         else:
             raise error_handler.ElseError(self['spec'], 'spec')
 
@@ -222,7 +224,7 @@ class jmol_options(input_options.write_options):
 
         self.read_yn('Run Jmol?', 'run_jmol', False)
 
-    def preprocess(self, mldfiles, out='merged.mld', eneocc=True):
+    def preprocess(self, mldfiles, out='merged.mld'):
         f = open(out, 'w')
         f.write('[Molden Format]\n')
 
@@ -231,12 +233,12 @@ class jmol_options(input_options.write_options):
         for line in mos.header.split('\n')[1:]:
             f.write(line+'\n')
         f.write('[MO]\n')
-        f.write(mos.ret_coeffs(self['occmin'], self['occmax'], eneocc, sym=mldfiles[0]))
+        f.write(mos.ret_coeffs(self['occmin'], self['occmax'], self['eneocc'], sym=mldfiles[0]))
 
         for mldfile in mldfiles[1:]:
             mos = lib_mo.MO_set_molden(mldfile)
             mos.read()
-            f.write(mos.ret_coeffs(self['occmin'], self['occmax'], eneocc, sym=mldfile))
+            f.write(mos.ret_coeffs(self['occmin'], self['occmax'], self['eneocc'], sym=mldfile))
 
         f.close()
 
