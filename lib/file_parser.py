@@ -265,7 +265,26 @@ from the control file.""")
                 self.ioptions['irrep_labels'] = line.split()[6:]
 
             elif 'COSMO-ADC(2) energy differences' in line:
-                print 'Reading COSMO energies'
+                print '\nReading COSMO-ADC(2) energies ...'
+                for i in range(4): line = lines.next()
+
+                istate = 0
+                while True: # loop over information about this excitation
+                    line = lines.next()
+
+                    if '---' in line: continue
+                    if '===' in line: break
+
+                    words = line.replace('|','').split()
+                    irrep, mult, state_ind, exc_en = words[0], words[1], int(words[2]), float(words[-1])
+                    state = ret_list[istate]
+                    if state['irrep'] == irrep and state['mult'] == mult and state['state_ind'] == state_ind:
+                        state['exc_en'] = exc_en
+                    else:
+                        print('Data not matching:', state['irrep'], irrep, state['mult'], mult, state['state_ind'], state_ind)
+                        raise error_handler.MsgError('COSMO-ADC: data not matching')
+
+                    istate += 1
         return ret_list
 
 #---
