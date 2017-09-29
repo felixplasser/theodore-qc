@@ -263,6 +263,9 @@ from the control file.""")
 
             elif 'real representations' in line:
                 self.ioptions['irrep_labels'] = line.split()[6:]
+
+            elif 'COSMO-ADC(2) energy differences' in line:
+                print 'Reading COSMO energies'
         return ret_list
 
 #---
@@ -508,6 +511,8 @@ class file_parser_libwfa(file_parser_base):
         self.parse_key(state, 'p', line, 'Number of detached / attached electrons')
         self.parse_key(state, 'Om_', line, 'Sum of SVs')
         self.parse_key(state, 'PRNTO', line, 'PR_NTO')
+        self.parse_key(state, 'PRD', line, 'PR_D', 6)
+        self.parse_key(state, 'PRA', line, 'PR_A')
         self.parse_key(state, '2P', line, 'Two-photon absorption cross-section')
         self.parse_key(state, 'S_HE', line, 'Entanglement entropy')
         self.parse_key(state, 'Z_HE', line, 'Nr of entangled states')
@@ -1445,4 +1450,3 @@ class file_parser_rassi(file_parser_libwfa):
             raise error_handler.MsgError('Parsing of RASSI output')
         if not sden:
             dens *= 2**(-.5)
-

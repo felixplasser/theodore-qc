@@ -326,7 +326,6 @@ class MO_set_molden(MO_set):
             outstr += ' Ene= %f\n'%self.ens[imo]
             outstr += ' Spin= Alpha\n'
             outstr += ' Occup= %f\n'%occ
-            print self.mo_mat.shape
             for ibf, coeff in enumerate(self.mo_mat[:,imo]):
                 outstr += '%10i  % 10E\n'%(ibf+1, coeff)
 
@@ -661,4 +660,3 @@ class jmol_MOs:
         self.htmlfile.post()
 
         print "\nJmol input file %s.jmol and %s.html written"%(self.name, self.name)
-

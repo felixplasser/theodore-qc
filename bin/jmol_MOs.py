@@ -202,8 +202,10 @@ class jmol_options(input_options.write_options):
         if self['spec'] == 'sten':
             self.read_int('First orbital index to be plotted', 'st_ind', 1)
             self.read_int('Last orbital index to be plotted',  'en_ind', 10)
+            self['preprocess'] = False
         elif self['spec'] == 'frontier':
             self.read_int('Number of frontier orbitals',  'en_ind', 3)
+            self['preprocess'] = False
         elif self['spec'] == 'occ':
             self.read_float('Minimal absolute occupancy', 'occmin', 0.01)
             self.read_float('Maximal absolute occupancy', 'occmax', 1.99)
