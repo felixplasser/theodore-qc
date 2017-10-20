@@ -65,7 +65,6 @@ class tden_ana(dens_ana_base.dens_ana_base):
         print "Omega = %10.7f"%Om
         if lvprt>=2: print OmFrag
 
-
     def fprint_OmFrag(self, fname="OmFrag.txt"):
         """
         Print a file containing the Omega matrix.
@@ -227,9 +226,11 @@ class tden_ana(dens_ana_base.dens_ana_base):
 # Operations
 #--------------------------------------------------------------------------#
 
-    def compute_all_OmAt(self):
+    def compute_all_OmAt(self, fullmat=False):
         """
         Computation of Omega matrices and storage in memory.
+
+        For fullmat==True, also the off-diagonal elements are computed.
         """
         if self.ioptions['print_OmAt'] and os.path.exists('OmAt.npy'):
             Omtmp = numpy.load('OmAt.npy')
@@ -239,17 +240,20 @@ class tden_ana(dens_ana_base.dens_ana_base):
                 state['OmAt'] = Omtmp[i]
         else:
             for state in self.state_list:
-                Om, OmAt = self.ret_Om_OmAt(state)
+                Om, OmAt = self.ret_Om_OmAt(state, fullmat)
             if self.ioptions['print_OmAt']:
                 numpy.save('OmAt.npy', [state['OmAt'] for state in self.state_list])
 
-    def ret_Om_OmAt(self, state):
+        if fullmat:
+            self.compute_OmAt_mat()
+
+    def ret_Om_OmAt(self, state, fullmat=False):
         """
         Construction of the Omega matrix with respect to atoms.
 
         formula=0: Om_mn = (DS)_mn (SD)_mn [JCTC (2012) 8, 2777]
         formula=1: Om_mn = 1/2 (DS)_mn (SD)_mn + 1/2 D_mn (SDS)_mn [JCP (2014), 141, 024106]
-        formula=2: TODO - Loewdin partitioning
+        formula=2: Lowdin partitioning
            Om = S^.5 DAO S^.5 = UV^T DMO (UV^T)^T - U, V singular vectors of C
         """
         if 'Om' in state and 'OmAt' in state:
@@ -280,6 +284,8 @@ class tden_ana(dens_ana_base.dens_ana_base):
 
         elif formula == 2:
             SDSh = self.mos.lowdin_trans(D)
+            if fullmat:
+                state['SDSh'] = SDSh
 
         if   formula == 0:
             OmBas = DS * SD
@@ -314,6 +320,35 @@ class tden_ana(dens_ana_base.dens_ana_base):
 
         return state['Om'], state['OmAt']
 
+    def compute_OmAt_mat(self):
+        """
+        Compute the full matrix including off-diagonal OmAt elements.
+        This is only supported for Lowdin orthogonalization.
+        """
+        print "Computation of off-diagonal Omega matrices ..."
+
+        if not self.ioptions.get('Om_formula') == 2:
+            raise error_handler.MsgError('Only Om_formula==2 supported for full OmAt matrix')
+
+        nstate = len(self.state_list)
+        bf_blocks = self.mos.bf_blocks()
+
+        self.Om_mat = numpy.zeros([nstate, nstate], float)
+        self.Om_At_mats = [[numpy.zeros([self.mos.num_at, self.mos.num_at]) for i in range(nstate)] for j in range(nstate)]
+        for i, istate in enumerate(self.state_list):
+            self.Om_mat[i, i] = istate['Om']
+            self.Om_At_mats[i][i] = istate['OmAt']
+            for j in range(i+1, nstate):
+                jstate = self.state_list[j]
+                #if ('mult' in istate and 'mult' in jstate) and (istate['mult'] != jstate['mult']): continue
+                OmBasIJ = istate['SDSh'] * jstate['SDSh']
+                self.Om_mat[i, j] = numpy.sum(OmBasIJ)
+                self.Om_mat[j, i] = self.Om_mat[i, j]
+
+                for iat, ist, ien in bf_blocks:
+                    for jat, jst, jen in bf_blocks:
+                        self.Om_At_mats[i][j][iat, jat] = numpy.sum(OmBasIJ[ist:ien, jst:jen])
+                        self.Om_At_mats[j][i][iat, jat] = self.Om_At_mats[i][j][iat, jat]
 #---
 
     def compute_all_OmFrag(self):

@@ -1117,21 +1117,20 @@ class file_parser_adf(file_parser_base):
         assert nvirt == mos.ret_num_mo() - nocc
 
         try:
-            nsing = len(rfile.read('All excitations','All Sing-Sing excitations'))
+            self.nsing = len(rfile.read('All excitations','All Sing-Sing excitations'))
             excss = rfile.read('Excitations SS A', 'excenergies') * units.energy['eV']
             oscss = rfile.read('Excitations SS A', 'oscillator strengths')
         except TypeError:
-            nsing = 0
+            self.nsing = 0
         try:
-            ntrip = len(rfile.read('All excitations','All Sing-Trip excitations'))
+            self.ntrip = len(rfile.read('All excitations','All Sing-Trip excitations'))
             excst = rfile.read('Excitations ST A', 'excenergies') * units.energy['eV']
         except TypeError:
-            ntrip = 0
+            self.ntrip = 0
 
-
-        state_list = [{} for istate in range(nsing+ntrip)]
+        state_list = [{} for istate in range(self.nsing+self.ntrip)]
         istate = 0
-        for ising in range(nsing):
+        for ising in range(self.nsing):
             state = state_list[istate]
 
             state['state_ind'] = ising + 1
@@ -1154,7 +1153,7 @@ class file_parser_adf(file_parser_base):
                     if val*val > 0.1:
                         print("(%i -> %i) % .4f"%(i+1,j+1,val))
 
-        for itrip in range(ntrip):
+        for itrip in range(self.ntrip):
             state = state_list[istate]
 
             state['state_ind'] = itrip + 1
@@ -1163,7 +1162,7 @@ class file_parser_adf(file_parser_base):
             state['name'] = '%i(%i)A'%(state['state_ind'], state['mult'])
 
             state['tden'] = self.init_den(mos, rect=True)
-            eigen = rfile.read('Excitations ST A','eigenvector %s'%(istate+1 - nsing))
+            eigen = rfile.read('Excitations ST A','eigenvector %s'%(istate+1 - self.nsing))
             state['tden'][:,nocc:nmo] = eigen.reshape(nocc, nvirt)
             istate += 1
 
