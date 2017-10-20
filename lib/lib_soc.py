@@ -183,6 +183,8 @@ class file_parser_adf_soc(file_parser.file_parser_adf):
         excs_tmp, U = numpy.linalg.eigh(Hsoc)
         assert max(excs_tmp * units.energy['eV'] - excs)<1.E-12, 'Inconsistent Hsoc'
 
+        numpy.savetxt('U.txt', (numpy.conj(U)*U).real, fmt='%.4f', delimiter=' ')
+
         print "Ground state: <S0|E0>^2 = %.5f"%abs(U[-1,0])**2
 
         for a, astate in enumerate(state_list_soc[1:]):
