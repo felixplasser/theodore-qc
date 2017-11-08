@@ -527,7 +527,6 @@ class MO_set_tddftb(MO_set):
                Eig = False
                Occs = False
             elif Eig:
-                print repr(line)
                 self.ens.append(float(line))
                 self.syms.append(str('a'))
             elif Occs:
@@ -596,7 +595,7 @@ class MO_set_tddftb(MO_set):
             print 'Number of atoms: %i'%self.num_at
             print 'Number of MOs read in: %i'%len(mo_vecs)
             print 'Dimension: %i,%i,...,%i'%(len(mo_vecs[0]),len(mo_vecs[1]),len(mo_vecs[-1]))
-#            print 'Number of basis functions parsed: ', num_orb
+            print 'Number of basis functions parsed: ', num_orb
 
         #print (mo_vecs[0])
         if len(mo_vecs[0])!=num_orb:

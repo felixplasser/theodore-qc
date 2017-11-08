@@ -27,6 +27,8 @@ class write_options_theo(input_options.write_options):
                 rdef = 'escf'
         elif os.path.exists('TAPE21'):
             rdef = 'adf'
+        elif os.path.exists('EXC.DAT'):
+            rdef = 'tddftb'
 
         self.choose_list(
             'Type of job',
@@ -260,7 +262,7 @@ class write_options_theo(input_options.write_options):
         if self.ret_yn('Perform natural transition orbital (NTO) analysis?', True):
             self.ostr += 'comp_ntos=True\n'
             self['prop_list'] += ['PRNTO', 'Z_HE']
-            if not self['rtype'] in ['adf']:
+            if not self['rtype'] in ['adf', 'tddftb']:
                 if self['rtype'] == 'ricc2' and self['read_binary'] == True:
                     self.read_yn('NTOs in Molden format', 'molden_orbitals', True)
                 else:
