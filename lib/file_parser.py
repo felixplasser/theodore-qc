@@ -1043,6 +1043,78 @@ class file_parser_terachem(file_parser_base):
 
         return state_list
 
+class file_parser_tddftb(file_parser_base):
+    """
+    Read DFTB+ TDDFTB job.
+    """
+    def read(self, mos):
+        state_list = []  # check if state_list is already allocated
+        occ = []
+        virt = []
+        words = []
+        Coeff = False
+        # read the order of iocc, avirt pairs from the SPX.DAT file. It corresponds to the order in which X+Y coeffs are written in XplusY.DAT file
+        spxfileh = open('SPX.DAT', 'r') # spxfile is SPX.DAT
+        for line in spxfileh:
+            words = line.split()
+            if len(words) == 6:
+               occ.append(int(words[3]))
+               virt.append(int(words[5]))
+        spxfileh.close()
+
+        words = []
+        rfileh = open('XplusY.DAT', 'r') # read X+Y coeffs from XplusY.DAT
+        k = 0
+        for line in rfileh:
+            words = line.split()
+            if 'S' in line:
+                 k += 1
+                 Coeff = True
+                 xply = []
+                 state_list.append({})
+                 state = state_list[-1]
+                 state['tden'] = self.init_den(mos, rect=True)
+            elif Coeff:
+               try:
+                 if words[1] != 'S':
+                     i = -1
+                     for x in range (0,len(words)):
+                         i += 1
+                         xply.append(float(words[i]))
+                 else: continue
+                 j = -1
+                 for x in range (0,len(xply)-1):
+                     j += 1
+                     iocc = occ[j]-1
+                     avirt = virt[j]-1
+                     state['tden'][iocc, avirt] = xply[j]
+               except:
+                 if len(words) == 3 and words[1]=='S': continue
+               state['tden']=state['tden']/numpy.linalg.norm(state['tden'])
+
+        rfileh.close()
+
+        excfile = open(self.ioptions['rfile'], 'r') # rfile is EXC.DAT
+        line = excfile.next()
+        line = excfile.next()
+        line = excfile.next()
+        line = excfile.next()
+        line = excfile.next()
+        state_ind = 0
+        for state in state_list:
+            line = excfile.next()
+            words = line.split()
+            if len(words) == 8:
+               state_ind += 1
+               state['state_ind'] = state_ind
+               state['name'] = str(state_ind) + 'A'
+               state['exc_en'] = float(words[0])
+               state['osc_str'] = float(words[1])
+
+        excfile.close()
+
+        return state_list
+
 
 class file_parser_nos(file_parser_base):
     """
@@ -1321,4 +1393,3 @@ class file_parser_rassi(file_parser_libwfa):
             raise error_handler.MsgError('Parsing of RASSI output')
         if not sden:
             dens *= 2**(-.5)
-

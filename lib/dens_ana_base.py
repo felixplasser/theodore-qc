@@ -21,7 +21,11 @@ class dens_ana_base:
         """
         Read MOs from a separate file, which is given in Molden format.
         """
-        self.mos = lib_mo.MO_set_molden(file=self.ioptions.get('mo_file'))
+        rtype = self.ioptions.get('rtype')
+        if rtype=='tddftb':
+           self.mos = lib_mo.MO_set_tddftb(file=self.ioptions.get('mo_file'))
+        else:  
+           self.mos = lib_mo.MO_set_molden(file=self.ioptions.get('mo_file'))
         self.mos.read(lvprt=lvprt)
         self.read2_mos(lvprt)
 
@@ -55,6 +59,8 @@ class dens_ana_base:
             self.state_list = file_parser.file_parser_rassi(self.ioptions).read(self.mos)
         elif rtype.lower() == 'terachem':
             self.state_list = file_parser.file_parser_terachem(self.ioptions).read(self.mos)
+        elif rtype=='tddftb':
+            self.state_list = file_parser.file_parser_tddftb(self.ioptions).read(self.mos)
         elif rtype.lower() == 'nos':
             self.state_list = file_parser.file_parser_nos(self.ioptions).read(self.mos)
         elif rtype.lower() in ['cclib', 'gamess', 'orca']:

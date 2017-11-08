@@ -398,7 +398,134 @@ class MO_set_molden(MO_set):
            print "Is there a mismatch between spherical/cartesian functions?\n ---"
            raise
 
+class MO_set_tddftb(MO_set):
+    def read(self, lvprt=1):
+        """
+        Read in MO coefficients from eigenvec.out file.
+        """
+        MO = False
+        mo_vecs = []
+        mo_ind = 0
+        mo_mat = []
+        mo_array = []
+        self.syms = [] # list with the orbital descriptions. they are entered after Sym in the molden file.
+        self.occs = [] # occupations
+        self.ens  = [] # orbital energies (or whatever is written in that field)
 
+       # self.header = ''
+
+        filemo = open('eigenvec.out', 'r')
+        MO = False
+
+        for line in filemo:
+            words = line.split()
+            if 'Eigenvector' in line:
+                MO = True
+                mo_vecs.append([])
+            elif MO:
+                 mo_ind += 1
+                 if len(words) != 0:
+                    if len(words) == 3:
+                       mo_vecs[-1].append(float(words[1]))
+                    elif len(words) == 5:
+                       mo_vecs[-1].append(float(words[3]))
+        filemo.close()
+
+        try:
+           mo_array = numpy.array(mo_vecs, order=2)
+           self.mo_mat = numpy.array(mo_array).transpose()
+        except ValueError:
+           print "\n *** Unable to construct MO matrix! ***"
+           print "Is there a mismatch between spherical/cartesian functions?\n ---"
+           raise
+
+        Eig = False
+        Occs = False
+
+        filemosec = open('detailed.out', 'r')
+        for line in filemosec:
+            if 'Eigenvalues /eV' in line:
+               Eig = True
+            elif 'Fillings' in line:
+               Occs = True
+            elif line.strip() == '':
+               Eig = False
+               Occs = False
+            elif Eig:
+                print repr(line)
+                self.ens.append(float(line))
+                self.syms.append(str('a'))
+            elif Occs:
+                self.occs.append(float(line))
+        filemosec.close()
+
+        at_symb = []
+
+        filegeom = open('geom.xyz','r')
+        nline = 0
+        for line in filegeom:
+            nline += 1
+            words = line.split()
+            if nline > 2:
+               self.at_dicts.append({'Z':'', 'x':words[1], 'y':words[2], 'z':words[3]})
+               at_symb.append(str(words[0]))
+               self.num_at += 1
+        filegeom.close()
+
+        num_bas={'s':1,'sp':3,'spd':5}
+        ang_mom={0:'s',1:'p',2:'d'}
+
+        orient={'s':['1'],
+                'sp':['1','2','3'],
+                'spd':['1','2','3','4','5']}
+
+        num_orb = 0
+        ang_momentum = 0
+        curr_at = 0
+        for i in range(0,self.num_at):
+            filewfc = open('wfc.3ob-3-1.hsd','r')
+            atom_name = at_symb[i] + " {"
+            for line in filewfc:
+                atom = False
+                words = line.split()
+                if atom_name in line:
+                 curr_at += 1
+                 for line in filewfc:
+                       words = line.split()
+                       if (len(words) == 0): break
+                       if 'AngularMomentum' in line:
+                               ang_momentum = int(words[2])
+                               if ang_momentum == 0:
+                                    orbsymb = 's'
+                                    orb_deg = 1
+                                    num_orb = num_orb + orb_deg
+                               elif ang_momentum == 1:
+                                    orbsymb = 'sp'
+                                    orb_deg = 3
+                                    num_orb = num_orb + orb_deg
+                               elif ang_momentum == 2:
+                                    orbsymb = 'spd'
+                                    orb_deg = 5
+                                    num_orb = num_orb + orb_deg
+                               for i in xrange(num_bas[orbsymb]):
+                                   self.basis_fcts.append(basis_fct(curr_at, orbsymb, orient[orbsymb][i]))
+                                   label = self.basis_fcts[-1].label()
+                                   if not label in self.bf_labels:
+                                      self.bf_labels.append(label)
+            filewfc.close()
+
+### file parsing finished ###
+
+        if lvprt >= 1 or len(mo_vecs[0])!=num_orb:
+            print '\nMO file %s parsed.'%self.file
+            print 'Number of atoms: %i'%self.num_at
+            print 'Number of MOs read in: %i'%len(mo_vecs)
+            print 'Dimension: %i,%i,...,%i'%(len(mo_vecs[0]),len(mo_vecs[1]),len(mo_vecs[-1]))
+#            print 'Number of basis functions parsed: ', num_orb
+
+        #print (mo_vecs[0])
+        if len(mo_vecs[0])!=num_orb:
+            raise error_handler.MsgError('Inconsistent number of basis functions!')
 
 class basis_fct:
     """
@@ -473,4 +600,3 @@ class jmol_MOs:
         self.htmlfile.post()
 
         print "\nJmol input file %s.jmol and %s.html written"%(self.name, self.name)
-

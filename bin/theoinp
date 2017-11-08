@@ -40,7 +40,8 @@ class write_options_theo(input_options.write_options):
             ('ricc2', 'Turbomole ricc2'),
             ('escf', 'Turbomole escf'),
             ('terachem', 'Terachem (TDDFT)'),
-            ('cclib', 'Use external cclib library: Gaussian, ORCA, GAMESS, ...')
+            ('cclib', 'Use external cclib library: Gaussian, ORCA, GAMESS, ...'),
+            ('tddftb', 'DFTB+ - TDDFTB')
         ], rdef)
 
         # set defaults
@@ -100,6 +101,11 @@ class write_options_theo(input_options.write_options):
             self['mo_file'] = None
             self['coor_file'] = ''
             self['coor_format'] = ''
+        elif self['rtype'] == 'tddftb':
+            self['rfile'] = 'EXC.DAT'
+            self['mo_file'] = 'eigenvec.out'
+            self['coor_file'] = 'geom.xyz'
+            self['coor_format'] = 'xyz'
         else:
             self['rfile'] = ''
             self['mo_file'] = ''
