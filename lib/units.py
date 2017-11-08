@@ -22,11 +22,12 @@ length={'au':1.0,
 }
 time={'au':1.0,
       'fs':0.0241888432,
-      's':0.0241888432E-12
+      's':0.0241888432E-15
 }
 
 mass={'au':1.0,
-      'kg':9.10938188E-31
+      'kg':9.10938188E-31,
+      'amu':1822.889 # atomic mass unit in a.u. = 1/constants['Nl']/mass['kg']/1000
 }
 dipole={'D':2.54174619,
         'Cm':8.47835267E-30
@@ -48,3 +49,22 @@ def nm2eV(val):
 
 def eVdiff(au1,au2):
     print "%.5f eV"%((au2-au1)*energy['eV'])
+
+class converter:
+    def __init__(self):
+        for att, val in energy.iteritems():
+            setattr(self, att, val)
+        for att, val in length.iteritems():
+            setattr(self, att, val)
+        for att, val in time.iteritems():
+            setattr(self, att, val)
+        for att, val in mass.iteritems():
+            setattr(self, att, val)
+        for att, val in dipole.iteritems():
+            setattr(self, att, val)
+        for att, val in constants.iteritems():
+            setattr(self, att, val)
+        for att, val in tpa.iteritems():
+            setattr(self, att, val)
+
+u = converter()

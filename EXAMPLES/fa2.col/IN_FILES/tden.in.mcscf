@@ -12,3 +12,4 @@ prop_list=['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt', 'PRNTO', 'RMSeh']
 output_file='tden_summ.txt.mcscf'
 output_prec=(10, 6)
 mcfmt='% 10E'
+print_OmAt=False

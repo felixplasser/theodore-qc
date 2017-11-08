@@ -19,7 +19,7 @@ def ihelp():
 #--------------------------------------------------------------------------# 
 
 tmp = sys.argv.pop(0)
-if len(sys.argv) == 0: ihelp()
+#if len(sys.argv) == 0: ihelp()
 
 args2 = []
 ifile = 'dens_ana.in'
@@ -32,11 +32,15 @@ while len(sys.argv)>0:
     else:
         args2.append(arg)
 
-if len(args2) != 2: ihelp()
-
 ioptions = input_options.libwfa_parse_options(ifile, check_init=False)
-ioptions['rfile'] = args2[0]
-ioptions['rtype'] = args2[1]
+
+if len(args2) >= 1:
+    ioptions['rfile'] = args2[0]
+    if len(args2) >= 2:
+        ioptions['rtype'] = args2[1]
+
+if (not 'rfile' in ioptions) or (not 'rtype' in ioptions):
+    ihelp()
 
 theo_header.print_header('Parse libwfa output', ioptions=ioptions)
 

@@ -3,7 +3,7 @@
 Input generation for TheoDORE runs.
 """
 
-import theo_header, input_options, lib_struc
+import theo_header, input_options, lib_struc, error_handler
 import os
 
 class write_options_theo(input_options.write_options):
@@ -25,6 +25,8 @@ class write_options_theo(input_options.write_options):
                 rdef = 'ricc2'
             else:
                 rdef = 'escf'
+        elif os.path.exists('TAPE21'):
+            rdef = 'adf'
 
         self.choose_list(
             'Type of job',
@@ -41,6 +43,7 @@ class write_options_theo(input_options.write_options):
             ('escf', 'Turbomole escf'),
             ('terachem', 'Terachem (TDDFT)'),
             ('cclib', 'Use external cclib library: Gaussian, ORCA, GAMESS, ...'),
+            ('adf', 'ADF (TDDFT)'),
             ('tddftb', 'DFTB+ - TDDFTB')
         ], rdef)
 
@@ -61,6 +64,7 @@ class write_options_theo(input_options.write_options):
             self['mo_file'] = None
             self['coor_file'] = 'qchem.out'
             self['coor_format'] = 'qcout'
+            self['read_libwfa'] = True
         elif self['rtype'] == 'qctddft':
             self['rfile'] = 'qchem.out'
             self['mo_file'] = 'qchem.mld'
@@ -96,6 +100,11 @@ class write_options_theo(input_options.write_options):
             self['mo_file'] = 'inpfile.molden'
             self['coor_file'] = ''
             self['coor_format'] = ''
+        elif self['rtype'] == 'adf':
+            self['rfile'] = 'TAPE21'
+            self['mo_file'] = None
+            self['coor_file'] = ''
+            self['coor_format'] = ''
         elif self['rtype'] == 'cclib':
             self['rfile'] = ''
             self['mo_file'] = None
@@ -119,6 +128,9 @@ class write_options_theo(input_options.write_options):
         # switch for libwfa
         if self['rtype'] in ['qctddft']:
             if self.read_yn('Did you run "state_analysis=True"?', 'read_libwfa', False):
+                self['mo_file'] = None
+        if self['rtype'] in ['rassi']:
+            if self.read_yn('Did you use &WFA?', 'read_libwfa', True):
                 self['mo_file'] = None
 
         # switch for TDA
@@ -158,14 +170,15 @@ class write_options_theo(input_options.write_options):
     def make_at_lists(self):
         print "Fragment definition for CT nubmer analysis"
         aexpl = ['Manual input', 'Automatic generation by fragment (using python-openbabel)', \
+                'Automatic generation for transition metal complexes (using python-openbabel)', \
                 'Automatic generation by element (using python-openbabel)', 'Leave empty and fill out later']
         ichoice = self.ret_choose_list('Mode for specifying molecular fragments (at_lists):', aexpl)
 
         if ichoice==1:
             self['at_lists'] = self.read_at_lists()
-        elif ichoice==2 or ichoice == 3:
+        elif ichoice in [2,3,4]:
             self['at_lists'] = self.file_at_lists(ichoice)
-        elif ichoice==4:
+        elif ichoice==5:
             self['at_lists'] = [[]]
             self.ostr += 'at_lists=\n'
             return
@@ -195,12 +208,23 @@ class write_options_theo(input_options.write_options):
         if mode == 2:
             return struc.ret_partition()
         elif mode == 3:
+            rstr = self.ret_str('Input the index of the transition metal atom (or indices of the corresponding fragment)')
+            inp_list = [int(iat) for iat in rstr.replace(',', ' ').split()]
+            return struc.ret_partition(inp_lists=[inp_list])
+        elif mode == 4:
             return struc.ret_el_partition()
         else:
             raise error_handler.ElseError('mode', mode)
 
     def coor_file(self):
+        tmp = self['coor_file']
         self.read_str('Coordinate file', 'coor_file', self['coor_file'], True)
+        if self['coor_file'] != tmp:
+            try:
+                tstruc = lib_struc.structure()
+                self['coor_format'] = tstruc.guess_file_type(self['coor_file'])
+            except error_handler.MsgError:
+                pass
         self.read_str('Format of coordinate file', 'coor_format', self['coor_format'])
 
     def set_Om_desc(self):
@@ -236,21 +260,25 @@ class write_options_theo(input_options.write_options):
         if self.ret_yn('Perform natural transition orbital (NTO) analysis?', True):
             self.ostr += 'comp_ntos=True\n'
             self['prop_list'] += ['PRNTO', 'Z_HE']
-            self.read_yn('NTOs as Jmol script?', 'jmol_orbitals', True)
-            self.read_yn('NTOs in Molden format', 'molden_orbitals', False)
-            if self['molden_orbitals']:
-                self.read_yn('Use alpha/beta rather then negative/positive to code for hole/particle orbitals?', 'alphabeta', False)
+            if not self['rtype'] in ['adf']:
+                if self['rtype'] == 'ricc2' and self['read_binary'] == True:
+                    self.read_yn('NTOs in Molden format', 'molden_orbitals', True)
+                else:
+                    self.read_yn('NTOs as Jmol script?', 'jmol_orbitals', True)
+                    self.read_yn('NTOs in Molden format', 'molden_orbitals', False)
+                if self['molden_orbitals']:
+                    self.read_yn('Use alpha/beta rather then negative/positive to code for hole/particle orbitals?', 'alphabeta', False)
         else:
             self.ostr += 'comp_ntos=False\n'
 
     def exciton_ana(self):
         if self.ret_yn('Compute approximate exciton size?', True):
             self['prop_list'] += ['RMSeh']
-            if not self['rtype'] == 'cclib':
+            if not self['rtype'] in ['cclib', 'adf']:
                 print "\nMolecular coordinates for exciton analysis:"
                 self.coor_file()
 
-        if self['rtype'] in ('qcadc','qctddft'):
+        if self['read_libwfa']:
             if self.ret_yn('Parse exciton information from libwfa analysis?', False):
                 self['prop_list'] += ['dexc', 'dH-E', 'sigH', 'sigE', 'COV', 'Corr']
             if self.ret_yn('Parse 1DDM exciton information from libwfa analysis?', False):
@@ -260,10 +288,11 @@ class write_options_theo(input_options.write_options):
         self.read_yn('Attachment/detachment analysis', 'AD_ana', True)
         if self['AD_ana']:
             self['prop_list'] += ['p']
-            self.read_yn('NDOs as Jmol script?', 'jmol_orbitals', True)
-            self.read_yn('NDOs in Molden format?', 'molden_orbitals', False)
-            if self['molden_orbitals']:
-                self.read_yn('Use alpha/beta rather then negative/positive to code for det./att. orbitals?', 'alphabeta', False)
+            if not self['rtype'] in ['adf']:
+                self.read_yn('NDOs as Jmol script?', 'jmol_orbitals', True)
+                self.read_yn('NDOs in Molden format?', 'molden_orbitals', False)
+                if self['molden_orbitals']:
+                    self.read_yn('Use alpha/beta rather then negative/positive to code for det./att. orbitals?', 'alphabeta', False)
         else:
             self.write_option('jmol_orbitals', 'False')
 
@@ -271,8 +300,8 @@ class write_options_theo(input_options.write_options):
         self.read_yn('Mayer bond order and valence analysis?', 'BO_ana', True)
 
     def ddm_parse(self):
-        if self['rtype'] == 'qcadc':
-            if self.ret_yn('Parse 1DDM exciton information from ADCMAN job?', True):
+        if self['read_libwfa']:
+            if self.ret_yn('Parse 1DDM exciton information from libwfa job?', True):
                 self['prop_list'] += ['dD-A', 'sigD', 'sigA']
 
     def get_ncore(self):
@@ -295,6 +324,7 @@ class write_options_theo(input_options.write_options):
             op = self.ret_str('Output precision, enter as: (<digits>, <dec. digits>)', '(7,3)')
             self.write_option('output_prec', eval(op))
             self.read_str('Format for molden coefficients', 'mcfmt', '% 10E')
+            self.read_yn('Print-out sorted by energies?', 'print_sorted', True)
 
     def get_rassi_list(self):
         print """
@@ -338,7 +368,7 @@ def run_theoinp():
             if wopt.ret_yn('Perform exciton analysis?', True):
                 wopt.exciton_ana()
 
-    if (not dotden) and (wopt['rtype'] in ['nos', 'colmcscf', 'rassi']):
+    if (not dotden) and (wopt['rtype'] in ['nos', 'colmcscf', 'rassi', 'libwfa']):
         if wopt.ret_yn('Analysis of state density matrices?', True):
             wopt.read_yn('Print out Mulliken populations?', 'pop_ana', True)
             if wopt['rtype'] in ['nos']:
@@ -353,7 +383,7 @@ def run_theoinp():
     # Program specific input
     if wopt['rtype'] in ['colmrci']:
         wopt.get_ncore()
-    elif wopt['rtype'] in ['rassi']:
+    elif wopt['rtype'] in ['rassi'] and not wopt['read_libwfa']:
         wopt.get_rassi_list()
 
     wopt.output_options()

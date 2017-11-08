@@ -10,3 +10,4 @@ prop_list=['Om', 'POS', 'PR', 'PRh', 'CT', 'COH', 'COHh', 'PRNTO', 'RMSeh']
 output_file='tden_summ.txt.tda'
 output_prec=(10,6)
 TDA=True
+print_OmAt=False

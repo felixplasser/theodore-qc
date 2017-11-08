@@ -1,0 +1,11 @@
+rtype='adf'
+rfile='TAPE21'
+at_lists=[[1, 2, 3, 4], [5, 6, 7, 8]]
+eh_pop=0
+comp_ntos=True
+jmol_orbitals=False
+molden_orbitals=False
+prop_list=['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt', 'PRNTO', 'RMSeh', 'Z_HE']
+output_prec=(10,6)
+output_file='tden_summ_2adf.txt'
+print_OmAt=False

@@ -1,5 +1,5 @@
 ================================================================================
-|                                 TheoDORE 1.3                                 |
+|                                TheoDORE 1.5.1                                |
 |         Theoretical Density, Orbital Relaxation and Exciton analysis         |
 |                                Felix Plasser                                 |
 --------------------------------------------------------------------------------
@@ -8,15 +8,14 @@
 |                                                                              |
 |   Transition density matrix analysis:                                        |
 |     F. Plasser and H. Lischka                                                |
-|     J. Chem. Theo. Comp. (2012), 8, 2777.                                    |
+|     J. Chem. Theory Comput. (2012), 8, 2777.                                 |
 |                                                                              |
 |   Transition and difference density matrix analysis:                         |
-|     F. Plasser, S. A. Baeppler, M. Wormit, A. Dreuw                          |
-|     J. Chem. Phys. (2014), 141, 024106;                                      |
-|     J. Chem. Phys. (2014), 141, 024107.                                      |
+|     F. Plasser, M. Wormit, A. Dreuw                                          |
+|     J. Chem. Phys. (2014), 141, 024106.                                      |
 |                                                                              |
 |   Program citation:                                                          |
-|     F. Plasser "TheoDORE 1.3: a package for theoretical density, orbital     |
+|     F. Plasser "TheoDORE 1.5.1: a package for theoretical density, orbital   |
 |     relaxation, and exciton analysis"; available from                        |
 |     http://theodore-qc.sourceforge.net                                       |
 --------------------------------------------------------------------------------
@@ -193,10 +192,10 @@ I1.3
   2-6  : 0.9077
   2-8  : 0.9077
 
-state       dE(eV)     f         p
-----------------------------------
-I1.1       -227.678     -         -
-I1.2       -227.532     -  1.100589
-I1.3       -227.416     -  2.106032
+state          dE(eV)       f         p
+----------------------------------------
+I1.1      -227.678358         -         -
+I1.2      -227.532406         -  1.100589
+I1.3      -227.415572         -  2.106032
 
 Final output copied to sden_summ.txt.mcscf

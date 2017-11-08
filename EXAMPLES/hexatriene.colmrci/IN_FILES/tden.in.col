@@ -1,9 +1,11 @@
 rtype='colmrci'
 mo_file='MOLDEN/molden_mo_mc.sp'
 at_lists=[[1, 3, 7, 9, 11],[2, 4, 8, 10, 12],[5, 6, 13, 14]]
+eh_pop=1
 comp_ntos=True
 jmol_orbitals=True
 coor_file='geom'
 coor_format='col'
-prop_list=['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt', 'PRNTO', 'RMSeh']
+prop_list=['Om', 'Ombar', 'POS', 'PR', 'CT', 'COH', 'CTnt', 'PRNTO', 'RMSeh']
 output_prec=(10,6)
+s_or_t='t'

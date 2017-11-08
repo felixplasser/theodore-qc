@@ -2,9 +2,9 @@
 Analysis routines for transition density matrices.
 """
 
-
 import dens_ana_base, Om_descriptors, lib_mo, error_handler, pop_ana
 import numpy
+import os
 
 numpy.set_printoptions(precision=6, suppress=True)
 
@@ -65,7 +65,6 @@ class tden_ana(dens_ana_base.dens_ana_base):
         print "Omega = %10.7f"%Om
         if lvprt>=2: print OmFrag
 
-
     def fprint_OmFrag(self, fname="OmFrag.txt"):
         """
         Print a file containing the Omega matrix.
@@ -83,44 +82,6 @@ class tden_ana(dens_ana_base.dens_ana_base):
             omf.write("\n")
 
         omf.close()
-
-    def fprint_ehFrag(self, fname="ehFrag.txt"):
-        """
-        Print a file containing the e/h populations.
-        """
-        ehinfo = []
-
-        for state in self.state_list:
-            ehinfo.append([])
-
-            Om, OmFrag = self.ret_Om_OmFrag(state)
-            if Om is None:
-                continue
-
-            ehinfo[-1].append( numpy.sum(OmFrag, 0)) #epop
-            ehinfo[-1].append(-numpy.sum(OmFrag, 1)) #hpop
-
-        try:
-           nF = len(ehinfo[0][0])
-        except IndexError:
-            return
-
-        nstate = len(self.state_list)
-
-        f = open(fname, 'w')
-        for state in self.state_list:
-            f.write('%10s'%state['name'])
-        f.write('\n')
-        for iF in range(nF):
-            for istate in range(nstate):
-                f.write('%10.6f'%ehinfo[istate][0][iF])
-            f.write('\n')
-        for iF in range(nF):
-            for istate in range(nstate):
-                f.write('%10.6f'%ehinfo[istate][1][nF-iF-1])
-            f.write('\n')
-
-        f.close()
 #---
 
     def print_all_Om_descriptors(self, lvprt=2, desc_list=[]):
@@ -188,6 +149,10 @@ class tden_ana(dens_ana_base.dens_ana_base):
         hpop = numpy.sum(OmFrag, 1)
         epop = numpy.sum(OmFrag, 0)
 
+        for ifrag in range(len(self.ioptions['at_lists'])):
+            state["H_%i"%(ifrag+1)] = hpop[ifrag]
+            state["E_%i"%(ifrag+1)] = epop[ifrag]
+
         pop_pr = pop_ana.pop_printer(self.struc)
         pop_pr.add_pop('h+', hpop)
         pop_pr.add_pop('e-', epop)
@@ -195,6 +160,20 @@ class tden_ana(dens_ana_base.dens_ana_base):
         pop_pr.add_pop('diff', hpop-epop)
 
         print pop_pr.ret_table_Frag(self.ioptions['at_lists'])
+
+    def fprint_ehFrag(self, fname="ehFrag.txt"):
+        """
+        Print a file containing the e/h populations.
+        """
+        eh_list = []
+        for ifrag in range(len(self.ioptions['at_lists'])):
+            eh_list.append("H_%i"%(ifrag+1))
+            eh_list.append("E_%i"%(ifrag+1))
+
+        ostr = self.ret_summ_table(eh_list)
+
+        open(fname, 'w').write(ostr)
+        print "File %s with information about e/h populations written."%fname
 
     def print_eh_At(self, state, lvprt=2):
         Om, OmAt = self.ret_Om_OmAt(state)
@@ -247,20 +226,35 @@ class tden_ana(dens_ana_base.dens_ana_base):
 # Operations
 #--------------------------------------------------------------------------#
 
-    def compute_all_OmAt(self):
+    def compute_all_OmAt(self, fullmat=False):
         """
         Computation of Omega matrices and storage in memory.
-        """
-        for state in self.state_list:
-            Om, OmAt = self.ret_Om_OmAt(state)
 
-    def ret_Om_OmAt(self, state):
+        For fullmat==True, also the off-diagonal elements are computed.
+        """
+        if self.ioptions['print_OmAt'] and os.path.exists('OmAt.npy'):
+            Omtmp = numpy.load('OmAt.npy')
+            print "Reading Omega matrix from OmAt.npy"
+            for i, state in enumerate(self.state_list):
+                state['Om']   = numpy.sum(Omtmp[i])
+                state['OmAt'] = Omtmp[i]
+        else:
+            for state in self.state_list:
+                Om, OmAt = self.ret_Om_OmAt(state, fullmat)
+            if self.ioptions['print_OmAt']:
+                numpy.save('OmAt.npy', [state['OmAt'] for state in self.state_list])
+
+        if fullmat:
+            self.compute_OmAt_mat()
+
+    def ret_Om_OmAt(self, state, fullmat=False):
         """
         Construction of the Omega matrix with respect to atoms.
 
         formula=0: Om_mn = (DS)_mn (SD)_mn [JCTC (2012) 8, 2777]
         formula=1: Om_mn = 1/2 (DS)_mn (SD)_mn + 1/2 D_mn (SDS)_mn [JCP (2014), 141, 024106]
-        formula=2: TODO - Loewdin partitioning
+        formula=2: Lowdin partitioning
+           Om = S^.5 DAO S^.5 = UV^T DMO (UV^T)^T - U, V singular vectors of C
         """
         if 'Om' in state and 'OmAt' in state:
             return state['Om'], state['OmAt']
@@ -276,27 +270,29 @@ class tden_ana(dens_ana_base.dens_ana_base):
       # construction of intermediate matrices
         # S implicitly computed from C
 
-        temp = self.mos.CdotD(D, trnsp=False, inv=False)  # C.DAO
-        DS   = self.mos.MdotC(temp, trnsp=False, inv=True) # DAO.S = C.D.C^(-1)
+        if formula <= 1:
+            temp = self.mos.CdotD(D, trnsp=False, inv=False)  # C.DAO
+            DS   = self.mos.MdotC(temp, trnsp=False, inv=True) # DAO.S = C.D.C^(-1)
+            if formula==1:
+                DAO = self.mos.MdotC(temp, trnsp=True, inv=False) # DAO = C.D.C^T
 
-        if formula==1:
-            DAO = self.mos.MdotC(temp, trnsp=True, inv=False) # DAO = C.D.C^T
+            temp = self.mos.CdotD(D, trnsp=True, inv=True)  # C^(-1,T).DAO
+            SD   = self.mos.MdotC(temp, trnsp=True, inv=False)  # S.DAO = C^(-1,T).DAO.C^T
+            if formula==1:
+                # S.DAO.S = C^(-1,T).D.C^(-1)
+                SDS = self.mos.MdotC(temp, trnsp=False, inv=True)
 
-        temp = self.mos.CdotD(D, trnsp=True, inv=True)  # C^(-1,T).DAO
-        SD   = self.mos.MdotC(temp, trnsp=True, inv=False)  # S.DAO = C^(-1,T).DAO.C^T
-
-        if formula==1:
-            # S.DAO.S = C^(-1,T).D.C^(-1)
-            SDS = self.mos.MdotC(temp, trnsp=False, inv=True)
-
-        # add up the contributions for the different atoms
-        state['Om'] = 0.
-        state['OmAt'] = numpy.zeros([self.mos.num_at, self.mos.num_at])
+        elif formula == 2:
+            SDSh = self.mos.lowdin_trans(D)
+            if fullmat:
+                state['SDSh'] = SDSh
 
         if   formula == 0:
             OmBas = DS * SD
         elif formula == 1:
             OmBas = 0.5 * (DS * SD + DAO * SDS)
+        elif formula == 2:
+            OmBas = SDSh * SDSh
         else:
             raise error_handler.MsgError("Om_formula=%i for CT numbers not implemented!"%formula)
 
@@ -304,15 +300,55 @@ class tden_ana(dens_ana_base.dens_ana_base):
         if self.ioptions['eh_pop'] >= 3:
             state['OmBas'] = OmBas
 
-        for i in xrange(self.num_bas):
-            iat = self.mos.basis_fcts[i].at_ind - 1
-            for j in xrange(self.num_bas):
-                jat = self.mos.basis_fcts[j].at_ind - 1
-                state['Om'] += OmBas[i, j]
-                state['OmAt'][iat, jat] += OmBas[i, j]
+        state['Om'] = numpy.sum(OmBas)
+
+        # Add up the contributions for the different atoms
+        #   This needs a lot of computation time!
+        #   But using the optimized "bf_blocks" algorithm significantly speeds up the results.
+
+        state['OmAt'] = numpy.zeros([self.mos.num_at, self.mos.num_at])
+        bf_blocks = self.mos.bf_blocks()
+        for iat, ist, ien in bf_blocks:
+            for jat, jst, jen in bf_blocks:
+                state['OmAt'][iat, jat] = numpy.sum(OmBas[ist:ien, jst:jen])
+
+        # Code with indexing arrays -> slower
+        #at_inds = numpy.array([self.mos.basis_fcts[i].at_ind - 1 for i in xrange(self.num_bas)], int)
+        #for iat in range(self.mos.num_at):
+        #    for jat in range(self.mos.num_at):
+        #        state['OmAt'][iat, jat] = numpy.sum(OmBas[at_inds==iat][:,at_inds==jat])
 
         return state['Om'], state['OmAt']
 
+    def compute_OmAt_mat(self):
+        """
+        Compute the full matrix including off-diagonal OmAt elements.
+        This is only supported for Lowdin orthogonalization.
+        """
+        print "Computation of off-diagonal Omega matrices ..."
+
+        if not self.ioptions.get('Om_formula') == 2:
+            raise error_handler.MsgError('Only Om_formula==2 supported for full OmAt matrix')
+
+        nstate = len(self.state_list)
+        bf_blocks = self.mos.bf_blocks()
+
+        self.Om_mat = numpy.zeros([nstate, nstate], float)
+        self.Om_At_mats = [[numpy.zeros([self.mos.num_at, self.mos.num_at]) for i in range(nstate)] for j in range(nstate)]
+        for i, istate in enumerate(self.state_list):
+            self.Om_mat[i, i] = istate['Om']
+            self.Om_At_mats[i][i] = istate['OmAt']
+            for j in range(i+1, nstate):
+                jstate = self.state_list[j]
+                #if ('mult' in istate and 'mult' in jstate) and (istate['mult'] != jstate['mult']): continue
+                OmBasIJ = istate['SDSh'] * jstate['SDSh']
+                self.Om_mat[i, j] = numpy.sum(OmBasIJ)
+                self.Om_mat[j, i] = self.Om_mat[i, j]
+
+                for iat, ist, ien in bf_blocks:
+                    for jat, jst, jen in bf_blocks:
+                        self.Om_At_mats[i][j][iat, jat] = numpy.sum(OmBasIJ[ist:ien, jst:jen])
+                        self.Om_At_mats[j][i][iat, jat] = self.Om_At_mats[i][j][iat, jat]
 #---
 
     def compute_all_OmFrag(self):
@@ -347,6 +383,30 @@ class tden_ana(dens_ana_base.dens_ana_base):
                         state['OmFrag'][A, B] += state['OmAt'][Aatom-1, Batom-1]
 
         return state['Om'], state['OmFrag']
+#---
+    def compute_all_Ombar(self):
+        """
+        Computation of the deexcitation(?) Omega values.
+        """
+        for i, state in enumerate(self.state_list):
+            self.compute_Ombar(state)
+
+    def compute_Ombar(self, state):
+        if 'Ombar' in state:
+            return
+
+        try:
+            D  = state['tden']
+        except KeyError:
+            return
+
+        if D.shape[0] == D.shape[1]:
+            state['Ombar'] = numpy.sum(D * D.T)
+        elif D.shape[0] < D.shape[1]:
+            state['Ombar'] = numpy.sum(D[:,:D.shape[0]] * D[:,:D.shape[0]].T)
+        else:
+            raise error_handler.ElseError('>', 'D.shape')
+
 #---
 
     def compute_all_NTO(self):

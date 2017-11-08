@@ -1,4 +1,21 @@
+Download the newest TheoDORE release and tutorial.
+
 Release notes:
+- Lowdin orthogonalization for CT numbers
+- Improved algorithm for Omega matrix computation
+- Support for spin-orbit coupled states (ADF)
+
+TheoDORE 1.5.1
+- New interface for ADF (reading only the TAPE21 file)
+
+TheoDORE 1.5
+- Interface to Newton-X (plot_graph_nx.py)
+- Interface to dgrid for plotting (dgrid_prep.py)
+- Interface to gnuplot (plot_graph.py)
+- Interface to VMD for plotting (vmd_plots.py)
+- New script for transition density matrix overlap
+- Restart option for analyze_tden.py
+- Minor bug fixes
 
 TheoDORE 1.4
 - Population analysis of MOs

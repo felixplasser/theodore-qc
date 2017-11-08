@@ -1,0 +1,8 @@
+Test of TDDFT in ADF on the formaldehyde dimer.
+A random ordering of the atoms is chosen to make
+sure that the interface treats this correctly.
+
+There is one run with the old interface
+tden.in.4
+and two runs with the new interface
+tden.in.2adf  tden.in.4adf

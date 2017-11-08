@@ -1,0 +1,16 @@
+rtype='ricc2'
+rfile='ricc2.out'
+mo_file='molden.input'
+read_binary=False
+at_lists=[[1,2,3,4,5,6,7,19,20,21,22,23],[8,9,10,11,12,13,14,15,16,17,18,24]]
+eh_pop=0
+comp_ntos=True
+jmol_orbitals=True
+molden_orbitals=True
+alphabeta=False
+coor_file='coord'
+coor_format='tmol'
+prop_list=['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt', 'PRNTO', 'Z_HE', 'RMSeh']
+output_file='summ.txt'
+output_prec=(10, 6)
+mcfmt='% 10E'

@@ -1,5 +1,5 @@
 ================================================================================
-|                                 TheoDORE 1.3                                 |
+|                                TheoDORE 1.5.1                                |
 |         Theoretical Density, Orbital Relaxation and Exciton analysis         |
 |                                Felix Plasser                                 |
 --------------------------------------------------------------------------------
@@ -8,15 +8,14 @@
 |                                                                              |
 |   Transition density matrix analysis:                                        |
 |     F. Plasser and H. Lischka                                                |
-|     J. Chem. Theo. Comp. (2012), 8, 2777.                                    |
+|     J. Chem. Theory Comput. (2012), 8, 2777.                                 |
 |                                                                              |
 |   Transition and difference density matrix analysis:                         |
-|     F. Plasser, S. A. Baeppler, M. Wormit, A. Dreuw                          |
-|     J. Chem. Phys. (2014), 141, 024106;                                      |
-|     J. Chem. Phys. (2014), 141, 024107.                                      |
+|     F. Plasser, M. Wormit, A. Dreuw                                          |
+|     J. Chem. Phys. (2014), 141, 024106.                                      |
 |                                                                              |
 |   Program citation:                                                          |
-|     F. Plasser "TheoDORE 1.3: a package for theoretical density, orbital     |
+|     F. Plasser "TheoDORE 1.5.1: a package for theoretical density, orbital   |
 |     relaxation, and exciton analysis"; available from                        |
 |     http://theodore-qc.sourceforge.net                                       |
 --------------------------------------------------------------------------------
@@ -41,7 +40,7 @@ Number of MOs read in: 88
 Dimension: 44,44,...,44
 Number of basis functions parsed:  44
 MO-matrix not square: 44 x 88
-  Using the Moore-Penrose pseudo inverse instead.
+  Using the Moore-Penrose pseudo inverse.
  WARNING: the header may not be understood by Jmol:
  [MOLDEN FORMAT]
  This has to be changed to:
@@ -53,7 +52,7 @@ Number of MOs read in: 88
 Dimension: 44,44,...,44
 Number of basis functions parsed:  44
 MO-matrix not square: 44 x 88
-  Using the Moore-Penrose pseudo inverse instead.
+  Using the Moore-Penrose pseudo inverse.
  WARNING: the header may not be understood by Jmol:
  [MOLDEN FORMAT]
  This has to be changed to:
@@ -65,7 +64,7 @@ Number of MOs read in: 88
 Dimension: 44,44,...,44
 Number of basis functions parsed:  44
 MO-matrix not square: 44 x 88
-  Using the Moore-Penrose pseudo inverse instead.
+  Using the Moore-Penrose pseudo inverse.
 
 Reading structure from mo_file molcas.rasscf.molden
 Number of atoms: 8
@@ -209,10 +208,10 @@ MOLDEN.3
   2-6  : 0.9145
   2-8  : 0.9145
 
-state       dE(eV)     f         p
-----------------------------------
-MOLDEN.1     1.000     -         -
-MOLDEN.2     2.000     -  1.101174
-MOLDEN.3     3.000     -  1.101336
+state          dE(eV)       f         p
+----------------------------------------
+MOLDEN.1    1.000000         -         -
+MOLDEN.2    2.000000         -  1.101174
+MOLDEN.3    3.000000         -  1.101336
 
 Final output copied to sden_summ.txt.nos

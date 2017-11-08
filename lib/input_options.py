@@ -385,11 +385,13 @@ class dens_ana_options(read_options):
         self['alphabeta'] = False # use alpha/beta rather than neg./pos. to code for hole/electron?
         self['mcfmt']          = '% 10E' # format for molden coefficients
         self['output_prec']   = (7,3) # number of digits and decimal digits for output summary
+        self['print_sorted']  = True  # final output sorted by energies
         
         # tden analysis
         self['Om_formula'] = 1
         self['prop_list'] = []
-        self['print_OmFrag'] = True # print out the Omega matrix to a file
+        self['print_OmAt'] = False   # print the atomic Omega matrix to an .npy file and use for automatic restart
+        self['print_OmFrag'] = True # print out the fragment Omega matrix to an ASCII file
         self['eh_pop'] = 1 # print e/h populations: 1 - for fragments, 2 - also for atoms
         self['comp_ntos'] = True
 
@@ -398,6 +400,7 @@ class dens_ana_options(read_options):
         self['unpaired_ana'] = True
         self['AD_ana'] = True
         self['BO_ana'] = True
+        self['min_BO'] = 0.5 # minimal bond order to print
         self['mo_pop_type'] = -1
 
         # Additional information
@@ -407,6 +410,7 @@ class dens_ana_options(read_options):
         
         # atoms
         self['at_lists'] = None
+        self['frag_lists'] = None
         self['coor_file'] = None 
         self['coor_format'] = None
         

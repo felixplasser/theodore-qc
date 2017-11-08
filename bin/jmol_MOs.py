@@ -64,7 +64,7 @@ class mo_output_html(mo_output):
     def print_mos(self):
         for imo in self.moc.molist:
             el = '<img src="%s" "border="1" width="%i">'%(self.moc.mopath(imo), self.jopt['width'])
-            el += self.moc.mo_extra(imo,pref="<br> MO %i:"%imo)
+            el += self.moc.mo_extra(imo,pref="<br> MO %i:"%(imo+1))
             self.htable.add_el(el)
 
     def post(self, ofileh):
@@ -202,11 +202,16 @@ class jmol_options(input_options.write_options):
         if self['spec'] == 'sten':
             self.read_int('First orbital index to be plotted', 'st_ind', 1)
             self.read_int('Last orbital index to be plotted',  'en_ind', 10)
+            self['preprocess'] = False
         elif self['spec'] == 'frontier':
             self.read_int('Number of frontier orbitals',  'en_ind', 3)
+            self['preprocess'] = False
         elif self['spec'] == 'occ':
             self.read_float('Minimal absolute occupancy', 'occmin', 0.01)
             self.read_float('Maximal absolute occupancy', 'occmax', 1.99)
+            self.read_yn('Preprocess and merge the Molden files', 'preprocess', True)
+            if self['preprocess']:
+                self.read_yn('Interpret energies as occupations', 'eneocc', False)
         else:
             raise error_handler.ElseError(self['spec'], 'spec')
 
@@ -220,6 +225,24 @@ class jmol_options(input_options.write_options):
         self.read_int('Width of images in output html file', 'width', 400)
 
         self.read_yn('Run Jmol?', 'run_jmol', False)
+
+    def preprocess(self, mldfiles, out='merged.mld'):
+        f = open(out, 'w')
+        f.write('[Molden Format]\n')
+
+        mos = lib_mo.MO_set_molden(mldfiles[0])
+        mos.read()
+        for line in mos.header.split('\n')[1:]:
+            f.write(line+'\n')
+        f.write('[MO]\n')
+        f.write(mos.ret_coeffs(self['occmin'], self['occmax'], self['eneocc'], sym=mldfiles[0]))
+
+        for mldfile in mldfiles[1:]:
+            mos = lib_mo.MO_set_molden(mldfile)
+            mos.read()
+            f.write(mos.ret_coeffs(self['occmin'], self['occmax'], self['eneocc'], sym=mldfile))
+
+        f.close()
 
 def run():
     print 'jmol_MOs.py [<mldfile> [<mldfile2> ...]]\n'
@@ -239,6 +262,10 @@ def run():
 
     jopt = jmol_options('jmol.in')
     jopt.jmol_input()
+
+    if jopt['preprocess']:
+        jopt.preprocess(mldfiles)
+        mldfiles = ['merged.mld']
 
     jo = lib_file.wfile('%sjmol_orbitals.spt'%pref)
     ho = lib_file.htmlfile('%sorbitals.html'%pref)

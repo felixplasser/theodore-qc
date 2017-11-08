@@ -7,3 +7,4 @@ molden_orbitals=False
 prop_list=['Om', 'POS', 'PR', 'CT', 'COH', 'PRNTO', 'RMSeh']
 output_prec=(9,5)
 output_file='tden_summ_orca.txt'
+print_OmAt=False

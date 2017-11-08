@@ -9,3 +9,4 @@ coor_format='xyz'
 prop_list=['Om', 'POSi', 'POSf', 'PR', 'CT', 'MC', 'LC', 'MLCT', 'LMCT', 'LLCT', 'PRNTO', 'RMSeh']
 output_prec=(8,5)
 Om_formula=0
+print_OmAt=False

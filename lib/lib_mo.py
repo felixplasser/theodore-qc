@@ -2,7 +2,7 @@
 Handling and manipulation of MO-coefficients.
 """
 
-import error_handler, lib_file
+import error_handler, lib_file, units
 import numpy
 
 class MO_set:
@@ -21,6 +21,7 @@ class MO_set:
         self.S = None
         self.mo_mat = None
         self.inv_mo_mat = None
+        self.lowdin_mat = None
 
     def read(self, *args, **kwargs):
         """
@@ -52,8 +53,21 @@ class MO_set:
         else:
             if lvprt >= 1:
                 print 'MO-matrix not square: %i x %i'%(len(self.mo_mat),len(self.mo_mat[0]))
-                print '  Using the Moore-Penrose pseudo inverse instead.'
+                print '  Using the Moore-Penrose pseudo inverse.'
             self.inv_mo_mat = numpy.linalg.pinv(self.mo_mat)
+
+    def compute_lowdin_mat(self, lvprt=1):
+        print "Performing Lowdin orthogonalization"
+
+        (U, sqrlam, Vt) = numpy.linalg.svd(self.mo_mat)
+
+        if Vt.shape[0] == U.shape[1]:
+            self.lowdin_mat = numpy.dot(U, Vt)
+        elif Vt.shape[0] < U.shape[1]:
+            print '  MO-matrix not square: %i x %i'%(len(self.mo_mat),len(self.mo_mat[0]))
+            self.lowdin_mat = numpy.dot(U[:,:Vt.shape[0]], Vt)
+        else:
+            raise error_handler.ElseError('>', 'Lowdin ortho')
 
     def ret_mo_mat(self, trnsp=False, inv=False):
         """
@@ -168,6 +182,19 @@ class MO_set:
                 Dsub = D[:self.ret_num_mo()]
                 return numpy.dot(self.ret_mo_mat(trnsp, inv), Dsub)
 
+    def lowdin_trans(self, D):
+        """
+        MO-AO transformation and Lowdin orthogonalization by using
+           S^0.5 C = U V^T
+        """
+        DUTT = numpy.dot(D, self.lowdin_mat.T)
+        if self.lowdin_mat.shape[1] == DUTT.shape[0]:
+            return numpy.dot(self.lowdin_mat, DUTT)
+        elif self.lowdin_mat.shape[1] > DUTT.shape[0]:
+            return numpy.dot(self.lowdin_mat[:,:DUTT.shape[0]], DUTT)
+        else:
+            raise error_handler.ElseError('<', 'Lowdin trans')
+
     def export_MO(self, ens, occs, U, *args, **kwargs):
         """
         Exports NO, NDO etc. coefficients given in the MO basis.
@@ -191,6 +218,24 @@ class MO_set:
 
     def export_AO(self, *args, **kwargs):
         raise error_handler.PureVirtualError()
+
+    def bf_blocks(self):
+        """
+        Return a list with the start and end indices for basis functions on the different atoms.
+        [(iat, ist, ien), ...]
+        """
+        bf_blocks = []
+        iat_old = 0
+        ist = 0
+        for ibas in range(self.ret_num_bas()):
+            iat = self.basis_fcts[ibas].at_ind - 1
+            if iat != iat_old:
+                bf_blocks.append((iat_old, ist, ibas))
+                iat_old = iat
+                ist = ibas
+        bf_blocks.append((iat, ist, self.ret_num_bas()))
+
+        return bf_blocks
 
     def symsort(self, irrep_labels, sepov=True):
         """
@@ -266,6 +311,26 @@ class MO_set_molden(MO_set):
 
         mld.close()
 
+    def ret_coeffs(self, occmin=-1., occmax=100., eneocc=False, sym='X'):
+        outstr = ''
+
+        for imo in range(self.ret_num_mo()):
+            if eneocc:
+                occ = self.ens[imo]
+            else:
+                occ = self.occs[imo]
+            if abs(occ) < occmin: continue
+            if abs(occ) > occmax: continue
+
+            outstr += ' Sym= %s\n'%sym
+            outstr += ' Ene= %f\n'%self.ens[imo]
+            outstr += ' Spin= Alpha\n'
+            outstr += ' Occup= %f\n'%occ
+            for ibf, coeff in enumerate(self.mo_mat[:,imo]):
+                outstr += '%10i  % 10E\n'%(ibf+1, coeff)
+
+        return outstr
+
     def read(self, lvprt=1):
         """
         Read in MO coefficients from a molden File.
@@ -317,6 +382,8 @@ class MO_set_molden(MO_set):
                     print line,
                     print " This has to be changed to:"
                     print " [Molden Format]"
+
+                    line = '[Molden Format]'
 
             # what section are we in
             if '[' in line:
@@ -390,6 +457,13 @@ class MO_set_molden(MO_set):
 
         if len(mo_vecs[0])!=num_orb:
             raise error_handler.MsgError('Inconsistent number of basis functions!')
+
+        if len(mo_vecs[-1]) == 0:
+            lv = [len(mo_vec) for mo_vec in mo_vecs]
+            imax = lv.index(0)
+            print '*** WARNING: MO file contains MO vectors of zero length!'
+            print 'Using only the first %i entries'%imax
+            mo_vecs = mo_vecs[:imax]
 
         try:
            self.mo_mat = numpy.array(mo_vecs).transpose()
@@ -526,6 +600,121 @@ class MO_set_tddftb(MO_set):
         #print (mo_vecs[0])
         if len(mo_vecs[0])!=num_orb:
             raise error_handler.MsgError('Inconsistent number of basis functions!')
+
+class MO_set_adf(MO_set):
+    """
+    MO_set class for ADF.
+    Note that ADF uses STOs!
+    """
+    def read(self, lvprt=1):
+        """
+        Extract the MOs from the TAPE21 file.
+        Initial code written by S. Mai.
+        """
+        import kf
+
+        f=kf.kffile(self.file)
+        try:
+            self.num_at = int(f.read('Geometry','nr of atoms'))
+        except:
+            print("\n  ERROR: reading TAPE21 file (%s)!\n"%self.file)
+            raise
+
+        natomtype=int(f.read('Geometry','nr of atomtypes'))
+        atomorder=f.read('Geometry','atom order index')
+        atomindex=f.read('Geometry','fragment and atomtype index')
+        atcharge=f.read('Geometry', 'atomtype total charge')
+        nbptr=f.read('Basis','nbptr')
+        naos2=int(f.read('Basis','naos'))
+
+        # get number of basis functions per atomtype
+        nbasis={}
+        for iaty in range(natomtype):
+            nbasis[iaty]=nbptr[iaty+1]-nbptr[iaty]
+
+        if lvprt >= 2:
+            print 'Number of basis functions per atomtype:'
+            print(nbasis)
+
+        # get which atom is of which atomtype
+        atom_type={}
+        for iatom in range(self.num_at):
+            index=atomorder[iatom]-1
+            atom_type[iatom]=atomindex[index+self.num_at]-1
+
+        if lvprt >= 2:
+            print 'Mapping of atoms on atomtypes:'
+            print(atom_type)
+
+        # get number of basis functions
+        naos=0
+        for i in atom_type:
+            naos+=nbasis[atom_type[i]]
+        if lvprt >= 2:
+            print 'Total number of basis functions:', naos
+        assert naos==naos2, "wrong number of orbitals"
+
+        # map basis functions to atoms
+        for iatom in range(self.num_at):
+          index=atomorder[self.num_at+iatom]-1
+          nb=nbasis[atom_type[index]]
+          for iao in range(nb):
+            self.basis_fcts.append(basis_fct(index+1))
+
+        if lvprt >= 3:
+            print 'Basis functions:'
+            for bf in self.basis_fcts:
+                print bf
+
+        # get MO coefficients
+        NAO=int(f.read('Basis','naos'))
+        npart=f.read('A','npart')
+        NMO_A=int(f.read('A','nmo_A'))
+        mocoef_A=f.read('A','Eigen-Bas_A')
+
+        for i in range(len(npart)):
+          npart[i]-=1
+        self.mo_mat = numpy.zeros([NAO, NMO_A])
+        iao=0
+        imo=0
+        for i,el in enumerate(mocoef_A):
+          iao1=npart[iao]
+          self.mo_mat[iao1][imo]=el
+          iao+=1
+          if iao>=NAO:
+            iao=0
+            imo+=1
+
+        nelec = int(f.read('General','electrons'))
+        assert nelec%2==0, "Odd number of electrons not supported"
+        nocc = nelec / 2
+        nvirt = NMO_A - nocc
+        self.occs = nocc * [2.] + nvirt * [0.]
+
+        # read coordinates and elements
+        atom_Z=[int(atcharge[atom_type[i]]) for i in range(self.num_at)]
+        xyz = f.read('Geometry', 'xyz').reshape(self.num_at, 3) * units.length['A']
+
+        for iat in range(self.num_at):
+            self.at_dicts.append({'Z':atom_Z[iat], 'x':xyz[atomorder[iat]-1, 0], 'y':xyz[atomorder[iat]-1, 1], 'z':xyz[atomorder[iat]-1, 2]})
+
+## get AO overlap matrix
+## NOTE: Smat is only read from TAPE15 !
+## hence, if necessary, say "SAVE TAPE21 TAPE15" in input
+#if f2:
+#  NAO = f2.read('Basis','naos')
+#  Smat = f2.read('Matrices','Smat')
+#
+#  ao_ovl=[ [ 0. for i in range(NAO) ] for j in range(NAO) ]
+#  x=0
+#  y=0
+#  for el in Smat:
+#    ao_ovl[x][y]=el
+#    ao_ovl[y][x]=el
+#    x+=1
+#    if x>y:
+#      x=0
+#      y+=1
 
 class basis_fct:
     """
