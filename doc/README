@@ -4,6 +4,7 @@ Release notes:
 - Lowdin orthogonalization for CT numbers
 - Improved algorithm for Omega matrix computation
 - Support for spin-orbit coupled states (ADF)
+- DFTB+ interface (Ljiljana Stojanovic)
 
 TheoDORE 1.5.1
 - New interface for ADF (reading only the TAPE21 file)

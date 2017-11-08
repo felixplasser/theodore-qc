@@ -1093,6 +1093,7 @@ class file_parser_terachem(file_parser_base):
 class file_parser_tddftb(file_parser_base):
     """
     Read DFTB+ TDDFTB job.
+    Author: Ljiljana Stojanovic
     """
     def read(self, mos):
         state_list = []  # check if state_list is already allocated

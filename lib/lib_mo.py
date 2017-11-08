@@ -476,6 +476,7 @@ class MO_set_tddftb(MO_set):
     def read(self, lvprt=1):
         """
         Read in MO coefficients from eigenvec.out file.
+        Author: Ljiljana Stojanovic
         """
         MO = False
         mo_vecs = []

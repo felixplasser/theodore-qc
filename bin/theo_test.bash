@@ -13,7 +13,7 @@ if [ -z "$THEODIR" ]; then
    exit 1
 fi
 
-stddirs="pyrrole.qcadc hexatriene.colmrci fa2.ricc2 pv2p.escf pv2p.qctddft pyridine.ricc2 fa2.col fa2.rassi fa2.terachem tyrosine.ricc2-es2es"
+stddirs="pyrrole.qcadc hexatriene.colmrci fa2.ricc2 pv2p.escf pv2p.qctddft pyridine.ricc2 fa2.col fa2.rassi fa2.terachem tyrosine.ricc2-es2es biphenyl.tddftb"
 obdirs="ir_c3n3.qctddft"
 cclibdirs="fa2.cclib SnH4-ecp.firefly"
 adfdirs="fa2.adf"
@@ -43,7 +43,7 @@ do
     echo
     echo "Starting test $dir ..."
     sdir="$THEODIR/EXAMPLES/$dir"
-    
+
     rdir="$PDIR/RUN_THEO_TEST/$dir"
     if [ -d $rdir ]
     then
@@ -51,15 +51,15 @@ do
         echo "$rdir already exists! Please delete it or run in a different directory."
         exit 5
     fi
-    
+
     cp -r "$sdir/QC_FILES" $rdir
     cd $rdir
-    
+
     chk=0
     for ifile in `ls "$sdir/IN_FILES"`
     do
         cp $sdir/IN_FILES/$ifile .
-        
+
         dtype=`echo $ifile | cut -d '.' -f 1`
         atype=`echo $ifile | cut -d '.' -f 3`
         comm="analyze_$dtype.py -ifile $ifile"
@@ -70,10 +70,10 @@ do
         then
             echo "  ... failed!"
         fi
-        
+
         chk=$((chk+lchk))
     done
-    
+
     echo
     echo "Checking primary output files:"
     for rfile in `ls "$sdir/REF_FILES"`
@@ -82,7 +82,7 @@ do
         diff -w -I 'TheoDORE\|python-openbabel\|emulation\|wall time' "$sdir/REF_FILES/$rfile" $rfile
         chk=$((chk+$?))
     done
-    
+
     echo
     if [ -d $sdir/REF_FILES_SEC ]
     then
@@ -96,7 +96,7 @@ do
         done
     fi
 
-    echo    
+    echo
     echo " *** Test $dir finished (error code: $chk)."
     tchk=$((tchk+chk))
 done
