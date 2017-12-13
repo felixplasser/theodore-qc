@@ -1,17 +1,18 @@
 width=80
-    
+
 def print_header(*args, **kwargs):
     print(ret_header(*args, **kwargs))
-    
-def ret_header(title=None, ioptions=None, ver='1.5.1'):
+
+def ret_header(title=None, ioptions=None, ver='1.5.2'):
     hstr  = width*'=' + '\n'
-    
+
     hstr += addlinec("TheoDORE %s"%ver)
     hstr += addlinec("Theoretical Density, Orbital Relaxation and Exciton analysis")
-    hstr += addlinec("Felix Plasser")
-    
+    hstr += addlinec("Author: Felix Plasser")
+    hstr += addlinec("Contributions by: Ljiljana Stojanovic")
+
     hstr += width*'-' + '\n'
-    
+
     hstr += addlinec("References for the modules used")
     hstr += addlinec("(see also http://theodore-qc.sourceforge.net/literature.html)")
     hstr += addlinec()
@@ -38,10 +39,9 @@ def ret_header(title=None, ioptions=None, ver='1.5.1'):
     if not title==None:
         hstr += width*'-' + '\n'
         hstr += addlinec(title)
-        
-    
+
     hstr += width*'=' + '\n'
-    
+
     return hstr
 
 def addlinec(line=""):

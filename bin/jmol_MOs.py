@@ -77,7 +77,7 @@ class mo_output_tex(mo_output):
     tex file for visualizing the MOs created with jmol.
     """
     def pre(self):
-        self.ltable = lib_file.latextable(ncol=2)
+        self.ltable = lib_file.latextabular(ncol=2)
 
     def print_mos(self):
         moex = []
@@ -272,7 +272,7 @@ def run():
     lo = lib_file.latexfile('%sorbitals.tex'%pref)
 
     ho.pre('Orbitals')
-    lo.pre(None, graphicx=True)
+    lo.pre(None, graphicx=True, docclass='{standalone}')
 
     for mldfile in mldfiles:
         print 'Analyzing %s ...\n'%mldfile

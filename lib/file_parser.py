@@ -40,7 +40,7 @@ class file_parser_base:
             state[key] = float(sr_line.split()[ind])
 
             if not rfile is None:
-                line=rfile.next().replace(',','').replace(']','')
+                line=rfile.next().replace(',','').replace(']','').replace('[','')
                 words = line.split()
                 state['%sx'%key] = float(words[-3])
                 state['%sy'%key] = float(words[-2])
