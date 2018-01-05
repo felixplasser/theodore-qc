@@ -13,7 +13,7 @@ if [ -z "$THEODIR" ]; then
    exit 1
 fi
 
-stddirs="pyrrole.qcadc hexatriene.colmrci fa2.ricc2 pv2p.escf pv2p.qctddft pyridine.ricc2 fa2.col fa2.rassi fa2.terachem tyrosine.ricc2-es2es biphenyl.tddftb"
+stddirs="pyrrole.qcadc hexatriene.colmrci fa2.ricc2 pv2p.escf pv2p.qctddft pyridine.ricc2 fa2.col fa2.rassi fa2.rassi-libwfa fa2.terachem tyrosine.ricc2-es2es biphenyl.tddftb"
 obdirs="ir_c3n3.qctddft"
 cclibdirs="fa2.cclib SnH4-ecp.firefly"
 adfdirs="fa2.adf"
