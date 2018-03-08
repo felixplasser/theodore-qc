@@ -456,8 +456,8 @@ class tden_ana(dens_ana_base.dens_ana_base):
         for i, l in enumerate(lam):
             if l < minlam: break
 
-            jmolI = 'mo ['
-            jmolF = 'mo ['
+            jmolI = 'mo color blue red\nmo ['
+            jmolF = 'mo color orange green\nmo ['
 
             for occind in (-abs(Ut[i])**2.).argsort():
                 occ = Ut[i][occind]
