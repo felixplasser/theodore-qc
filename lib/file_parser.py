@@ -935,8 +935,10 @@ class file_parser_col_mrci(file_parser_col):
             if not 'trncils' in lfile: continue
 
             print "Reading %s ..."%lfile
-            state_list.append({})
-            self.read_trncils(state_list[-1], mos, 'LISTINGS/%s'%lfile)
+            state = {}
+            self.read_trncils(state, mos, 'LISTINGS/%s'%lfile)
+            if 'tden' in state:
+                state_list.append(state)
 
         return state_list
 
