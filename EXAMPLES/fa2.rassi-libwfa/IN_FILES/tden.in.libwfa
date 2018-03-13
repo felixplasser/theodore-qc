@@ -1,0 +1,14 @@
+rtype='rassi'
+rfile='molcas.log'
+read_libwfa=True
+coor_file='geom.xyz'
+coor_format='xyz'
+at_lists=[[1, 3, 5, 7], [2, 4, 6, 8]]
+eh_pop=1
+coor_file='geom.xyz'
+coor_format='xyz'
+prop_list=['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt', 'RMSeh', 'dexc', 'dH-E', 'sigH', 'sigE', 'COV', 'Corr', 'PRNTO']
+output_file='tden_summ.txt.libwfa'
+output_prec=(10, 6)
+mcfmt='% 10E'
+print_sorted=False

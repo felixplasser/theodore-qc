@@ -40,7 +40,7 @@ class file_parser_base:
             state[key] = float(sr_line.split()[ind])
 
             if not rfile is None:
-                line=rfile.next().replace(',','').replace(']','')
+                line=rfile.next().replace(',','').replace(']','').replace('[','')
                 words = line.split()
                 state['%sx'%key] = float(words[-3])
                 state['%sy'%key] = float(words[-2])
@@ -120,7 +120,9 @@ class file_parser_ricc2(file_parser_base):
 
         if self.ioptions.get('read_binary'):
                mos.symsort(self.ioptions['irrep_labels'])
-               self.ioptions['jmol_orbitals'] = False
+               if self.ioptions['jmol_orbitals']:
+                    print " \nWARNING: jmol_orbitals not possible with read_binary. Use molden_orbitals instead!"
+                    self.ioptions['jmol_orbitals'] = False
 
         return state_list
 
@@ -261,6 +263,28 @@ from the control file.""")
 
             elif 'real representations' in line:
                 self.ioptions['irrep_labels'] = line.split()[6:]
+
+            elif 'COSMO-ADC(2) energy differences' in line:
+                print '\nReading COSMO-ADC(2) energies ...'
+                for i in range(4): line = lines.next()
+
+                istate = 0
+                while True: # loop over information about this excitation
+                    line = lines.next()
+
+                    if '---' in line: continue
+                    if '===' in line: break
+
+                    words = line.replace('|','').split()
+                    irrep, mult, state_ind, exc_en = words[0], words[1], int(words[2]), float(words[-1])
+                    state = ret_list[istate]
+                    if state['irrep'] == irrep and state['mult'] == mult and state['state_ind'] == state_ind:
+                        state['exc_en'] = exc_en
+                    else:
+                        print('Data not matching:', state['irrep'], irrep, state['mult'], mult, state['state_ind'], state_ind)
+                        raise error_handler.MsgError('COSMO-ADC: data not matching')
+
+                    istate += 1
         return ret_list
 
 #---
@@ -499,13 +523,15 @@ class file_parser_libwfa(file_parser_base):
         self.parse_keys(state, self.excD, self.excT, line, rfile)
 
     def parse_keys(self, state, exc_diff, exc_1TDM, line, rfile=None):
-        self.parse_key(state, 'dip', line, 'Total dipole')
+        self.parse_key(state, 'mu', line, 'Total dipole')
         self.parse_key(state, 'r2', line, 'Total <r^2>')
         self.parse_key(state, 'nu', line, 'Number of unpaired electrons:', 2)
         self.parse_key(state, 'nunl', line, 'Number of unpaired electrons')
         self.parse_key(state, 'p', line, 'Number of detached / attached electrons')
         self.parse_key(state, 'Om_', line, 'Sum of SVs')
         self.parse_key(state, 'PRNTO', line, 'PR_NTO')
+        self.parse_key(state, 'PRD', line, 'PR_D', 6)
+        self.parse_key(state, 'PRA', line, 'PR_A')
         self.parse_key(state, '2P', line, 'Two-photon absorption cross-section')
         self.parse_key(state, 'S_HE', line, 'Entanglement entropy')
         self.parse_key(state, 'Z_HE', line, 'Nr of entangled states')
@@ -658,6 +684,7 @@ class file_parser_qctddft(file_parser_libwfa):
             elif 'Timing summary' in line:
                 tdread = False
             elif 'Excited State Analysis' in line:
+                tdread = False
                 libwfa = True
                 if len(state_list) == 0:
                     errstr = "No excitation energy parsed!"
@@ -908,8 +935,10 @@ class file_parser_col_mrci(file_parser_col):
             if not 'trncils' in lfile: continue
 
             print "Reading %s ..."%lfile
-            state_list.append({})
-            self.read_trncils(state_list[-1], mos, 'LISTINGS/%s'%lfile)
+            state = {}
+            self.read_trncils(state, mos, 'LISTINGS/%s'%lfile)
+            if 'tden' in state:
+                state_list.append(state)
 
         return state_list
 
@@ -1063,6 +1092,79 @@ class file_parser_terachem(file_parser_base):
 
         return state_list
 
+class file_parser_tddftb(file_parser_base):
+    """
+    Read DFTB+ TDDFTB job.
+    Author: Ljiljana Stojanovic
+    """
+    def read(self, mos):
+        state_list = []  # check if state_list is already allocated
+        occ = []
+        virt = []
+        words = []
+        Coeff = False
+        # read the order of iocc, avirt pairs from the SPX.DAT file. It corresponds to the order in which X+Y coeffs are written in XplusY.DAT file
+        spxfileh = open('SPX.DAT', 'r') # spxfile is SPX.DAT
+        for line in spxfileh:
+            words = line.split()
+            if len(words) == 6:
+               occ.append(int(words[3]))
+               virt.append(int(words[5]))
+        spxfileh.close()
+
+        words = []
+        rfileh = open('XplusY.DAT', 'r') # read X+Y coeffs from XplusY.DAT
+        k = 0
+        for line in rfileh:
+            words = line.split()
+            if 'S' in line:
+                 k += 1
+                 Coeff = True
+                 xply = []
+                 state_list.append({})
+                 state = state_list[-1]
+                 state['tden'] = self.init_den(mos, rect=True)
+            elif Coeff:
+               try:
+                 if words[1] != 'S':
+                     i = -1
+                     for x in range (0,len(words)):
+                         i += 1
+                         xply.append(float(words[i]))
+                 else: continue
+                 j = -1
+                 for x in range (0,len(xply)-1):
+                     j += 1
+                     iocc = occ[j]-1
+                     avirt = virt[j]-1
+                     state['tden'][iocc, avirt] = xply[j]
+               except:
+                 if len(words) == 3 and words[1]=='S': continue
+               state['tden']=state['tden']/numpy.linalg.norm(state['tden'])
+
+        rfileh.close()
+
+        excfile = open(self.ioptions['rfile'], 'r') # rfile is EXC.DAT
+        line = excfile.next()
+        line = excfile.next()
+        line = excfile.next()
+        line = excfile.next()
+        line = excfile.next()
+        state_ind = 0
+        for state in state_list:
+            line = excfile.next()
+            words = line.split()
+            if len(words) == 8:
+               state_ind += 1
+               state['state_ind'] = state_ind
+               state['name'] = str(state_ind) + 'A'
+               state['exc_en'] = float(words[0])
+               state['osc_str'] = float(words[1])
+
+        excfile.close()
+
+        return state_list
+
 class file_parser_adf(file_parser_base):
     """
     Read ADF TDDFT using the TAPE21 file.
@@ -1090,21 +1192,20 @@ class file_parser_adf(file_parser_base):
         assert nvirt == mos.ret_num_mo() - nocc
 
         try:
-            nsing = len(rfile.read('All excitations','All Sing-Sing excitations'))
+            self.nsing = len(rfile.read('All excitations','All Sing-Sing excitations'))
             excss = rfile.read('Excitations SS A', 'excenergies') * units.energy['eV']
             oscss = rfile.read('Excitations SS A', 'oscillator strengths')
         except TypeError:
-            nsing = 0
+            self.nsing = 0
         try:
-            ntrip = len(rfile.read('All excitations','All Sing-Trip excitations'))
+            self.ntrip = len(rfile.read('All excitations','All Sing-Trip excitations'))
             excst = rfile.read('Excitations ST A', 'excenergies') * units.energy['eV']
         except TypeError:
-            ntrip = 0
+            self.ntrip = 0
 
-
-        state_list = [{} for istate in range(nsing+ntrip)]
+        state_list = [{} for istate in range(self.nsing+self.ntrip)]
         istate = 0
-        for ising in range(nsing):
+        for ising in range(self.nsing):
             state = state_list[istate]
 
             state['state_ind'] = ising + 1
@@ -1127,7 +1228,7 @@ class file_parser_adf(file_parser_base):
                     if val*val > 0.1:
                         print("(%i -> %i) % .4f"%(i+1,j+1,val))
 
-        for itrip in range(ntrip):
+        for itrip in range(self.ntrip):
             state = state_list[istate]
 
             state['state_ind'] = itrip + 1
@@ -1136,7 +1237,7 @@ class file_parser_adf(file_parser_base):
             state['name'] = '%i(%i)A'%(state['state_ind'], state['mult'])
 
             state['tden'] = self.init_den(mos, rect=True)
-            eigen = rfile.read('Excitations ST A','eigenvector %s'%(istate+1 - nsing))
+            eigen = rfile.read('Excitations ST A','eigenvector %s'%(istate+1 - self.nsing))
             state['tden'][:,nocc:nmo] = eigen.reshape(nocc, nvirt)
             istate += 1
 
@@ -1365,8 +1466,8 @@ class file_parser_rassi(file_parser_libwfa):
                 words = line.split()
                 typ = words[-1][1:-1]
                 (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile("%s_ctnum_atomic.om"%typ)
-                if abs(exctmp * units.energy['eV'] - state['exc_en']) > 1.e-4:
-                    print " WARNING: inconsistent energies for %s"%typ
+                if abs(exctmp * units.energy['eV'] - state['exc_en']) > 1.e-3:
+                    print " WARNING: inconsistent energies for %s: %.5f/%.5f - skipping."%(typ, exctmp * units.energy['eV'], state['exc_en'])
                 else:
                     state['Om'] = om_at.sum()
                     state['OmAt'] = om_at
@@ -1442,4 +1543,3 @@ class file_parser_rassi(file_parser_libwfa):
             raise error_handler.MsgError('Parsing of RASSI output')
         if not sden:
             dens *= 2**(-.5)
-

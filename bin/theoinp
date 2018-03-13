@@ -3,7 +3,7 @@
 Input generation for TheoDORE runs.
 """
 
-import theo_header, input_options, lib_struc
+import theo_header, input_options, lib_struc, error_handler
 import os
 
 class write_options_theo(input_options.write_options):
@@ -27,6 +27,8 @@ class write_options_theo(input_options.write_options):
                 rdef = 'escf'
         elif os.path.exists('TAPE21'):
             rdef = 'adf'
+        elif os.path.exists('EXC.DAT'):
+            rdef = 'tddftb'
 
         self.choose_list(
             'Type of job',
@@ -42,8 +44,9 @@ class write_options_theo(input_options.write_options):
             ('ricc2', 'Turbomole ricc2'),
             ('escf', 'Turbomole escf'),
             ('terachem', 'Terachem (TDDFT)'),
+            ('cclib', 'Use external cclib library: Gaussian, ORCA, GAMESS, ...'),
             ('adf', 'ADF (TDDFT)'),
-            ('cclib', 'Use external cclib library: Gaussian, ORCA, GAMESS, ...')
+            ('tddftb', 'DFTB+ - TDDFTB')
         ], rdef)
 
         # set defaults
@@ -109,6 +112,11 @@ class write_options_theo(input_options.write_options):
             self['mo_file'] = None
             self['coor_file'] = ''
             self['coor_format'] = ''
+        elif self['rtype'] == 'tddftb':
+            self['rfile'] = 'EXC.DAT'
+            self['mo_file'] = 'eigenvec.out'
+            self['coor_file'] = 'geom.xyz'
+            self['coor_format'] = 'xyz'
         else:
             self['rfile'] = ''
             self['mo_file'] = ''
@@ -122,6 +130,9 @@ class write_options_theo(input_options.write_options):
         # switch for libwfa
         if self['rtype'] in ['qctddft']:
             if self.read_yn('Did you run "state_analysis=True"?', 'read_libwfa', False):
+                self['mo_file'] = None
+        if self['rtype'] in ['rassi']:
+            if self.read_yn('Did you use &WFA?', 'read_libwfa', True):
                 self['mo_file'] = None
 
         # switch for TDA
@@ -161,14 +172,15 @@ class write_options_theo(input_options.write_options):
     def make_at_lists(self):
         print "Fragment definition for CT nubmer analysis"
         aexpl = ['Manual input', 'Automatic generation by fragment (using python-openbabel)', \
+                'Automatic generation for transition metal complexes (using python-openbabel)', \
                 'Automatic generation by element (using python-openbabel)', 'Leave empty and fill out later']
         ichoice = self.ret_choose_list('Mode for specifying molecular fragments (at_lists):', aexpl)
 
         if ichoice==1:
             self['at_lists'] = self.read_at_lists()
-        elif ichoice==2 or ichoice == 3:
+        elif ichoice in [2,3,4]:
             self['at_lists'] = self.file_at_lists(ichoice)
-        elif ichoice==4:
+        elif ichoice==5:
             self['at_lists'] = [[]]
             self.ostr += 'at_lists=\n'
             return
@@ -198,12 +210,23 @@ class write_options_theo(input_options.write_options):
         if mode == 2:
             return struc.ret_partition()
         elif mode == 3:
+            rstr = self.ret_str('Input the index of the transition metal atom (or indices of the corresponding fragment)')
+            inp_list = [int(iat) for iat in rstr.replace(',', ' ').split()]
+            return struc.ret_partition(inp_lists=[inp_list])
+        elif mode == 4:
             return struc.ret_el_partition()
         else:
             raise error_handler.ElseError('mode', mode)
 
     def coor_file(self):
+        tmp = self['coor_file']
         self.read_str('Coordinate file', 'coor_file', self['coor_file'], True)
+        if self['coor_file'] != tmp:
+            try:
+                tstruc = lib_struc.structure()
+                self['coor_format'] = tstruc.guess_file_type(self['coor_file'])
+            except error_handler.MsgError:
+                pass
         self.read_str('Format of coordinate file', 'coor_format', self['coor_format'])
 
     def set_Om_desc(self):
@@ -239,9 +262,12 @@ class write_options_theo(input_options.write_options):
         if self.ret_yn('Perform natural transition orbital (NTO) analysis?', True):
             self.ostr += 'comp_ntos=True\n'
             self['prop_list'] += ['PRNTO', 'Z_HE']
-            if not self['rtype'] in ['adf']:
-                self.read_yn('NTOs as Jmol script?', 'jmol_orbitals', True)
-                self.read_yn('NTOs in Molden format', 'molden_orbitals', False)
+            if not self['rtype'] in ['adf', 'tddftb']:
+                if self['rtype'] == 'ricc2' and self['read_binary'] == True:
+                    self.read_yn('NTOs in Molden format', 'molden_orbitals', True)
+                else:
+                    self.read_yn('NTOs as Jmol script?', 'jmol_orbitals', True)
+                    self.read_yn('NTOs in Molden format', 'molden_orbitals', False)
                 if self['molden_orbitals']:
                     self.read_yn('Use alpha/beta rather then negative/positive to code for hole/particle orbitals?', 'alphabeta', False)
                 self.read_yn('NTOs in Cube file format', 'cube_files', False)
@@ -317,6 +343,7 @@ class write_options_theo(input_options.write_options):
             op = self.ret_str('Output precision, enter as: (<digits>, <dec. digits>)', '(7,3)')
             self.write_option('output_prec', eval(op))
             self.read_str('Format for molden coefficients', 'mcfmt', '% 10E')
+            self.read_yn('Print-out sorted by energies?', 'print_sorted', True)
 
     def get_rassi_list(self):
         print """
@@ -378,7 +405,7 @@ def run_theoinp():
     # Program specific input
     if wopt['rtype'] in ['colmrci']:
         wopt.get_ncore()
-    elif wopt['rtype'] in ['rassi']:
+    elif wopt['rtype'] in ['rassi'] and not wopt['read_libwfa']:
         wopt.get_rassi_list()
 
     wopt.output_options()

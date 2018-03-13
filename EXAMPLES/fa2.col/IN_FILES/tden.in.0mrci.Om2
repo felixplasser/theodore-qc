@@ -1,0 +1,17 @@
+rtype='colmrci'
+mo_file='MOLDEN/molden_mo_mc.sp'
+coor_file='geom.xyz'
+coor_format='xyz'
+at_lists=[[1, 3, 5, 7], [2, 4, 6, 8]]
+comp_ntos=True
+jmol_orbitals=False
+molden_orbitals=False
+coor_file='geom.xyz'
+coor_format='xyz'
+ncore={'a"': 2, "a'": 2}
+prop_list=['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt', 'PRNTO', 'RMSeh']
+output_file='tden_summ.txt.mrci.Om2'
+mcfmt='% 10E'
+output_prec=(10, 6)
+eh_pop=2
+Om_formula=2

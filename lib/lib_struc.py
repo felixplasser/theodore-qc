@@ -36,7 +36,7 @@ class structure:
         Read in the structure from a file.
         """
         self.file_path = file_path
-        self.file_type = file_type if file_type != None else self.guess_file_type(file_path, file_type)
+        self.file_type = file_type if file_type != None else self.guess_file_type(file_path)
         self.mol = openbabel.OBMol()
 
         if self.file_type in self.new_types:
@@ -48,7 +48,7 @@ class structure:
             if not obconversion.ReadFile(self.mol, file_path):
                 raise error_handler.MsgError("Error reading coordinate file %s"%file_path)
 
-    def guess_file_type(self, file_path, file_type, lvprt=1):
+    def guess_file_type(self, file_path, lvprt=1):
         file_name = file_path.split('/')[-1]
         if file_name == 'geom':
             return 'col'
@@ -172,15 +172,15 @@ class structure:
         [{'Z':, 'x':, 'y':, 'z':}, ...]
         """
         self.mol = openbabel.OBMol()
-        
+
         for iat in xrange(len(at_dicts)):
             obatom = openbabel.OBAtom()
             obatom.SetAtomicNum(at_dicts[iat]['Z'])
             coords = (at_dicts[iat]['x'], at_dicts[iat]['y'], at_dicts[iat]['z'])
             obatom.SetVector(*coords)
-            
+
             self.mol.AddAtom(obatom)
-            
+
     def ret_vector(self):
         " All the coordinates in one vector "
         vec_list = []
@@ -325,15 +325,21 @@ class structure:
 
         return numpy.array(mass_list, float)
 
-    def ret_partition(self,cutBonds=[], lvprt=1):
+    def ret_partition(self,cutBonds=[], lvprt=1, inp_lists=[]):
         """
         Return a partition according to different non-bonded molecules.
         cutBonds is a list of tuples for bonds to cut. The order does not matter
         e.g. cutBonds=[(3,4),(7,8)]
+        If inp_lists are specified, these are copied into at_lists as they are and only
+        the remaining atoms are distributed.
         """
-        at_lists = []
+        at_lists = inp_lists
         chk_list = []
         remaining_atoms = [self.mol.NumAtoms()-i for i in xrange(self.mol.NumAtoms())]
+
+        for inp_list in inp_lists:
+            for iat in inp_list:
+                del remaining_atoms[remaining_atoms.index(iat)]
 
         while(len(remaining_atoms)>0): # do the loop as long as there are still atoms which are not in at_lists
             if len(chk_list) > 0:
@@ -376,7 +382,7 @@ class structure:
         at_lists = []
         for Z, at_list in tmp_dict.iteritems():
             at_lists.append(at_list)
-        
+
         if lvprt >= 1:
             print "\n*** Fragment composition ***"
             for i, at_list in enumerate(at_lists):
@@ -411,7 +417,7 @@ class structure:
         """
         Write the structure file.
         """
-        ftype = file_type if file_type != None else self.guess_file_type(file_path, file_type)
+        ftype = file_type if file_type != None else self.guess_file_type(file_path)
         if ftype in self.new_types:
             self.make_coord_new(file_path, ftype)
         else:

@@ -21,12 +21,19 @@ class dens_ana_base:
         """
         Read MOs from a separate file, which is given in Molden format.
         """
-        self.mos = lib_mo.MO_set_molden(file=self.ioptions.get('mo_file'))
+        rtype = self.ioptions.get('rtype')
+        if rtype=='tddftb':
+           self.mos = lib_mo.MO_set_tddftb(file=self.ioptions.get('mo_file'))
+        else:  
+           self.mos = lib_mo.MO_set_molden(file=self.ioptions.get('mo_file'))
         self.mos.read(lvprt=lvprt)
         self.read2_mos(lvprt)
 
     def read2_mos(self, lvprt=1):
-        self.mos.compute_inverse()
+        if self.ioptions['Om_formula'] <= 1:
+            self.mos.compute_inverse()
+        elif self.ioptions['Om_formula'] == 2:
+            self.mos.compute_lowdin_mat()
         self.num_mo  = self.mos.ret_num_mo()
         self.num_bas = self.mos.ret_num_bas()
 
@@ -66,6 +73,8 @@ class dens_ana_base:
             # deactivate print out that is not possible because of the use of STOs
             self.ioptions['jmol_orbitals'] = False
             self.ioptions['molden_orbitals'] = False
+        elif rtype=='tddftb':
+            self.state_list = file_parser.file_parser_tddftb(self.ioptions).read(self.mos)
         elif rtype == 'nos':
             self.state_list = file_parser.file_parser_nos(self.ioptions).read(self.mos)
         elif rtype in ['cclib', 'gamess', 'orca']:
@@ -173,7 +182,7 @@ class dens_ana_base:
 
             prt_list.append([state['exc_en'], vstr])
 
-        prt_list.sort()
+        if self.ioptions['print_sorted']: prt_list.sort() 
 
         ostr  = hstr + "\n"
         ostr += len(hstr) * '-' + "-\n"

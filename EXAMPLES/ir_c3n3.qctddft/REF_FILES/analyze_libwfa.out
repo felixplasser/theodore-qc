@@ -1,7 +1,8 @@
 ================================================================================
-|                                TheoDORE 1.5.1                                |
+|                                TheoDORE 1.5.2                                |
 |         Theoretical Density, Orbital Relaxation and Exciton analysis         |
-|                                Felix Plasser                                 |
+|                            Author: Felix Plasser                             |
+|                    Contributions by: Ljiljana Stojanovic                     |
 --------------------------------------------------------------------------------
 |                       References for the modules used                        |
 |        (see also http://theodore-qc.sourceforge.net/literature.html)         |
@@ -23,7 +24,7 @@
 |     Phys. Chem. Chem. Phys. (2016), 18, 2548.                                |
 |                                                                              |
 |   Program citation:                                                          |
-|     F. Plasser "TheoDORE 1.5.1: a package for theoretical density, orbital   |
+|     F. Plasser "TheoDORE 1.5.2: a package for theoretical density, orbital   |
 |     relaxation, and exciton analysis"; available from                        |
 |     http://theodore-qc.sourceforge.net                                       |
 --------------------------------------------------------------------------------

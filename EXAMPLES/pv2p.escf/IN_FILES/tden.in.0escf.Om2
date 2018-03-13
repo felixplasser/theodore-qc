@@ -1,0 +1,12 @@
+rtype='escf'
+rfile='escf.out'
+mo_file='molden.input'
+at_lists= [[1, 2, 6, 33, 5, 31, 4, 23, 3, 29, 27, 7, 24], [8, 9, 25, 10, 14, 13, 30, 12, 32, 11, 15, 34, 26, 28], [16, 17, 35, 18, 22, 21, 40, 39, 20, 19, 38, 37, 36]]
+comp_ntos=True
+jmol_orbitals=True
+coor_file='coord'
+coor_format = 'tmol'
+prop_list=['Om', 'POS', 'PR', 'PRh', 'CT', 'COH', 'COHh', 'PRNTO', 'RMSeh']
+output_prec=(8,4)
+Om_formula=2
+output_file='tden_summ.Om2.txt'
