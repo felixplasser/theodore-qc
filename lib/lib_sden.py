@@ -147,9 +147,9 @@ class sden_ana(dens_ana_base.dens_ana_base):
             if self.ioptions['molden_orbitals']:
                 self.export_NDOs_molden(state, ad, W, minad=self.ioptions['min_occ'])
 
-            if self.ioptions.get('cube_files'):
-		print "Calculating NTOs as cube files with orbkit."
-		oi = orbkit_interface.ok()
+            if self.ioptions.get('cube_orbitals'):
+                print "Calculating NTOs as cube files with orbkit."
+                oi = orbkit_interface.ok()
                 oi.cube_file_creator(state, ad, W, self.mos, minlam=self.ioptions['min_occ'])
 
             if self.ioptions.get('pop_ana'):

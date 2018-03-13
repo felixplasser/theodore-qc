@@ -426,7 +426,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
             if self.ioptions['molden_orbitals']:
                 self.export_NTOs_molden(state, U, lam, Vt, minlam=self.ioptions['min_occ'])
 
-            if self.ioptions.get('cube_files'):
+            if self.ioptions.get('cube_orbitals'):
                 lib_orbkit = orbkit_interface.lib_orbkit()
                 cbfid = lib_orbkit.cube_file_creator(state, U, lam, Vt, self.mos,minlam=self.ioptions['min_occ'],numproc=self.ioptions.get('numproc'))
                 cube_ids.append(cbfid)
