@@ -284,13 +284,13 @@ class write_options_theo(input_options.write_options):
 
     def BO_ana(self):
         self.read_yn('Mayer bond order and valence analysis?', 'BO_ana', True)
-        
+
     def comp_rho0n(self):
         self.read_yn('Calculation of transition densities between ground state and excited states', 'comp_rho0n', False)
         if self['comp_rho0n']:
             self.read_yn('Create VMD Network for transition densities', 'vmd_rho0n', False)
-	    if self['vmd_rho0n']:
-	        self.read_float('Isosurface value for VMD network', 'vmd_rho0n_iv', 0.01)
+        if self['vmd_rho0n']:
+            self.read_float('Isosurface value for VMD network', 'vmd_rho0n_iv', 0.01)
 
     def ddm_parse(self):
         if self['read_libwfa']:
