@@ -2,13 +2,9 @@
 Analysis routines for transition density matrices.
 """
 
-import dens_ana_base, Om_descriptors, lib_mo, error_handler, pop_ana
+import dens_ana_base, Om_descriptors, lib_mo, error_handler, pop_ana, orbkit_interface
 import numpy
 import os
-try:
-    import orbkit_interface
-except ImportError:
-    print(" *** Warning: orbkit not found. No extended plotting capabilities. ***")
 
 numpy.set_printoptions(precision=6, suppress=True)
 
