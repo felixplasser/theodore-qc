@@ -146,12 +146,25 @@ class sden_ana(dens_ana_base.dens_ana_base):
             
             if self.ioptions['molden_orbitals']:
                 self.export_NDOs_molden(state, ad, W, minad=self.ioptions['min_occ'])
+
+            if self.ioptions.get('cube_files'):
+		print "Calculating NTOs as cube files with orbkit."
+		oi = orbkit_interface.ok()
+                oi.cube_file_creator(state, ad, W, self.mos, minlam=self.ioptions['min_occ'])
             
             if self.ioptions.get('pop_ana'):    
                 self.set_AD(state, ad, W)
             
         if jmol_orbs:
             jmolNDO.post()
+
+    def compute_a_d_dens(self):
+        if len(self.state_list) == 0: return
+        if not 'tden' in self.state_list[0]: return
+        oi = orbkit_interface.ok()
+        for state in self.state_list:
+            (U, lam, Vt) = self.ret_NTO(state)  	
+            oi.compute_p_h_dens(state, U, lam, Vt, self.mos, minlam=self.ioptions['min_occ'])
         
     def ret_NDO(self, state, ref_state):
         dD = state['sden'] - ref_state['sden']

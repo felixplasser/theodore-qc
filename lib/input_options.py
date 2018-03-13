@@ -381,6 +381,7 @@ class dens_ana_options(read_options):
         self['output_file']   = "ana_summ.txt"
         self['jmol_orbitals'] = True  # output orbitals in jmol format?
         self['molden_orbitals'] = False  # output orbitals in molden format?
+        self['cube_files'] = False  # output orbitals as cube files?
         self['min_occ'] = 0.05 # Minimal occupation for orbital print out
         self['alphabeta'] = False # use alpha/beta rather than neg./pos. to code for hole/electron?
         self['mcfmt']          = '% 10E' # format for molden coefficients
@@ -393,6 +394,16 @@ class dens_ana_options(read_options):
         self['print_OmFrag'] = True # print out the fragment Omega matrix to an ASCII file
         self['eh_pop'] = 1 # print e/h populations: 1 - for fragments, 2 - also for atoms
         self['comp_ntos'] = True
+        self['vmd_ntos'] = False
+        self['vmd_ntos_iv'] = 0.01
+        self['comp_p_h_dens'] = False
+        self['vmd_ph_dens'] = False
+        self['vmd_ph_dens_iv'] = 0.01
+        self['comp_rho0n'] = False
+        self['vmd_rho0n'] = False
+        self['vmd_rho0n_iv'] = 0.01
+        self['numproc'] = 0.01
+
 
         # sden analysis
         self['pop_ana'] = True
