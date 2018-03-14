@@ -1,7 +1,9 @@
 """
 This is an interface to the orbkit, an external post-processing toolbox.
 https://orbkit.github.io/
-Download and install orbkit if you want to use the functions.
+orbkit should be part of this distribution. Otherwise,
+download and install orbkit if you want to use the functions.
+Author: Gunter Hermann
 """
 
 import dens_ana_base
@@ -63,10 +65,14 @@ class lib_orbkit:
         qc.mo_spec = []
         mo_mat = mos.mo_mat.T
         for i in range(len(mo_mat)):
+            try:
+                symtmp = mos.syms[i]
+            except IndexError:
+                symtmp = 'X'
             qc.mo_spec.append({'coeffs': mo_mat[i],
                                 'energy': mos.ens[i],
                                 'occ_num': mos.occs[i],
-                                'sym': mos.syms[i],
+                                'sym': symtmp,
                                 'spin': 'Alpha'
                               })
         return qc

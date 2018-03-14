@@ -105,7 +105,7 @@ def add_cclib(ioptions):
 
     if rtype in ['cclib', 'gamess', 'orca']:
         rstr += addlinec()
-        rstr += addlinel("cclib for structure parsing:", 3)
+        rstr += addlinel("cclib for structure parsing (http://cclib.github.io):", 3)
         rstr += addlinel("N. M. O'Boyle, A. L. Tenderholt, K. M. Langner")
         rstr += addlinel("J. Comput. Chem. (2008), 29, 839.")
 
@@ -120,7 +120,7 @@ def add_orbkit(ioptions):
     rstr = ''
     if ok_use:
         rstr += addlinec()
-        rstr += addlinel("orbkit for orbital/density plotting:", 3)
+        rstr += addlinel("orbkit for orbital/density plotting (http://orbkit.github.io):", 3)
         rstr += addlinel("G. Hermann, V. Pohl, J. C. Tremblay, B. Paulus, H.-C. Hege, A. Schild")
         rstr += addlinel("J. Comput. Chem. (2016), 37, 1511.")
 

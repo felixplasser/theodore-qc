@@ -64,6 +64,8 @@ class structure:
             raise error_handler.MsgError('File format cannot be detected for %s'%file_name)
         else:
             ret_type = fparts[-1]
+            if ret_type == 'cb':
+                ret_type = 'cube'
             if lvprt>=1:
                 print "Detected file type: %s"%ret_type
             return ret_type
