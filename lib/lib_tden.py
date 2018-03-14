@@ -2,7 +2,7 @@
 Analysis routines for transition density matrices.
 """
 
-import dens_ana_base, Om_descriptors, lib_mo, error_handler, pop_ana
+import dens_ana_base, Om_descriptors, lib_mo, error_handler, pop_ana, orbkit_interface
 import numpy
 import os
 
@@ -417,7 +417,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         if jmol_orbs:
             jmolNTO = lib_mo.jmol_MOs("nto")
             jmolNTO.pre(ofile=self.ioptions.get('mo_file', strict=False))
-
+        cube_ids = []
         for state in self.state_list:
             (U, lam, Vt) = self.ret_NTO(state)
             if jmol_orbs:
@@ -426,8 +426,47 @@ class tden_ana(dens_ana_base.dens_ana_base):
             if self.ioptions['molden_orbitals']:
                 self.export_NTOs_molden(state, U, lam, Vt, minlam=self.ioptions['min_occ'])
 
+            if self.ioptions.get('cube_orbitals'):
+                lib_orbkit = orbkit_interface.lib_orbkit()
+                cbfid = lib_orbkit.cube_file_creator(state, U, lam, Vt, self.mos,minlam=self.ioptions['min_occ'],numproc=self.ioptions.get('numproc'))
+                cube_ids.append(cbfid)
+
+        if self.ioptions.get('vmd_ntos'):
+            print("VMD network for NTOs")
+            lib_orbkit.vmd_network_creator(filename='NTOs',cube_ids=numpy.hstack(cube_ids),isovalue=self.ioptions.get('vmd_ntos_iv'))
+
         if jmol_orbs:
             jmolNTO.post()
+
+    def compute_p_h_dens(self):
+        """
+        Computation of electron/hole densities.
+        """
+        if len(self.state_list) == 0: return
+        if not 'tden' in self.state_list[0]: return
+
+        lib_orbkit = orbkit_interface.lib_orbkit()
+        cube_ids = []
+        for state in self.state_list:
+            (U, lam, Vt) = self.ret_NTO(state)
+            cbfid = lib_orbkit.compute_p_h_dens(state, U, lam, Vt, self.mos, minlam=self.ioptions['min_occ'],numproc=self.ioptions.get('numproc'))
+            cube_ids.append(cbfid)
+     	if self.ioptions.get('vmd_ph_dens'):
+            print("VMD network for particle/hole densities")
+    	    lib_orbkit.vmd_network_creator(filename='p_h_dens',cube_ids=numpy.hstack(cube_ids),isovalue=self.ioptions.get('vmd_ph_dens_iv'))
+
+    def compute_rho_0_n(self):
+        """
+        Computation of transition densities.
+        """
+        if len(self.state_list) == 0: return
+        if not 'tden' in self.state_list[0]: return
+
+        lib_orbkit = orbkit_interface.lib_orbkit()
+        cube_ids = lib_orbkit.compute_rho_0_n(self.state_list,self.mos,numproc=self.ioptions.get('numproc'))
+        if self.ioptions.get('vmd_rho0n'):
+            print("VMD network for transition densities")
+            lib_orbkit.vmd_network_creator(filename='rho0n',cube_ids=numpy.hstack(cube_ids),isovalue=self.ioptions.get('vmd_rho0n_iv'))
 
     def ret_NTO(self, state):
         if not 'tden' in state: return None, None, None

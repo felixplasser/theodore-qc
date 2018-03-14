@@ -270,6 +270,16 @@ class write_options_theo(input_options.write_options):
                     self.read_yn('NTOs in Molden format', 'molden_orbitals', False)
                 if self['molden_orbitals']:
                     self.read_yn('Use alpha/beta rather then negative/positive to code for hole/particle orbitals?', 'alphabeta', False)
+                self.read_yn('NTOs in Cube file format (requires orbkit)', 'cube_orbitals', False)
+                if self['cube_orbitals']:
+                    self.read_yn('Create VMD Network for NTOs', 'vmd_ntos', False)
+                    if self['vmd_ntos']:
+                        self.read_float('Isosurface value for VMD network', 'vmd_ntos_iv', 0.01)
+                self.read_yn('Calculation of Particle/Hole density (requires orbkit)?', 'comp_p_h_dens', False)
+                if self['comp_p_h_dens']:
+                    self.read_yn('Create VMD Network for NTOs', 'vmd_ph_dens', False)
+                    if self['vmd_ph_dens']:
+                        self.read_float('Isosurface value for VMD network', 'vmd_ph_dens_iv', 0.01)
         else:
             self.ostr += 'comp_ntos=False\n'
 
@@ -300,6 +310,13 @@ class write_options_theo(input_options.write_options):
 
     def BO_ana(self):
         self.read_yn('Mayer bond order and valence analysis?', 'BO_ana', True)
+
+    def comp_rho0n(self):
+        self.read_yn('Calculation of transition densities between ground state and excited states (requires orbkit)', 'comp_rho0n', False)
+        if self['comp_rho0n']:
+            self.read_yn('Create VMD Network for transition densities', 'vmd_rho0n', False)
+        if self['vmd_rho0n']:
+            self.read_float('Isosurface value for VMD network', 'vmd_rho0n_iv', 0.01)
 
     def ddm_parse(self):
         if self['read_libwfa']:
@@ -366,6 +383,9 @@ def run_theoinp():
                 wopt.set_eh_pop()
 
             wopt.nto_ana()
+            wopt.comp_rho0n()
+            if wopt['comp_rho0n'] or wopt['cube_orbitals'] or wopt['comp_p_h_dens']:
+                wopt.read_int('Number of CPUs for orbkit calculations','numproc', 4)
 
             if wopt.ret_yn('Perform exciton analysis?', True):
                 wopt.exciton_ana()

@@ -1,5 +1,7 @@
 Download the newest TheoDORE release and tutorial.
 
+- Interface to orbkit for extended orbital/density plotting capabilities
+
 TheoDORE 1.6
 - Lowdin orthogonalization for CT numbers
 - Improved algorithm for Omega matrix computation

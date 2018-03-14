@@ -26,6 +26,9 @@ class vmd_options(input_options.write_options):
             self['width'] = 400
 
     def write_lfile(self, pltfiles):
+        """
+        File for loading data.
+        """
         lf = open(self['lfile'], 'w')
         lf.write("""material change opacity Glass3 0.150000
 material change diffuse Glass3 0.10000
@@ -62,13 +65,18 @@ mol modcolor 3 0 ColorID 0
 mol modcolor 4 0 ColorID 1
 """%(self['iso2'], self['iso2']))
 
+        struc = lib_struc.structure()
         for pltf in pltfiles:
-            lf.write("mol addfile %s\n"%pltf)
+            ftyp = struc.guess_file_type(pltf)
+            lf.write("mol addfile %s type %s\n"%(pltf,ftyp))
 
         lf.close()
         print "File %s written."%lf.name
 
     def write_pfile(self, pltfiles):
+        """
+        File used for plotting.
+        """
         pf = open(self['pfile'], 'w')
         for iplt, pltf in enumerate(pltfiles):
             pf.write("mol modstyle 1 0 Isosurface  %.5f %i 0 0 1 1\n"%(self['iso1'], iplt))
@@ -82,6 +90,9 @@ mol modcolor 4 0 ColorID 1
         print "File %s written."%pf.name
 
     def write_cfile(self, pltfiles):
+        """
+        File for file conversion.
+        """
         cf = open(self['cfile'], 'w')
 
         cf.write('#!/bin/bash\n')
@@ -93,6 +104,9 @@ mol modcolor 4 0 ColorID 1
         print "File %s written."%cf.name
 
     def write_hfile(self, pltfiles):
+        """
+        HTML File.
+        """
         ho = lib_file.htmlfile(self['hfile'])
         ho.pre('VMD plots')
 
@@ -124,8 +138,12 @@ def run():
 
     print "Converting coordinate file ..."
     struc = lib_struc.structure()
-    struc.read_file(file_path=pltfiles[0], file_type=None)
-    struc.make_coord_file(file_path='coord.xyz',file_type='xyz',lvprt=1)
+    try:
+        struc.read_file(file_path=pltfiles[0], file_type=None)
+        struc.make_coord_file(file_path='coord.xyz',file_type='xyz',lvprt=1)
+    except:
+        print "*** WARNING: The coordinate file coord.xyz could not be created. ***"
+        print   "    Please create this file yourself.\n\n"
 
     print """
 Files created. Now do the following:

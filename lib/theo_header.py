@@ -9,7 +9,7 @@ def ret_header(title=None, ioptions=None, ver='1.7'):
     hstr += addlinec("TheoDORE %s"%ver)
     hstr += addlinec("Theoretical Density, Orbital Relaxation and Exciton analysis")
     hstr += addlinec("Author: Felix Plasser")
-    hstr += addlinec("Contributions by: Ljiljana Stojanovic")
+    hstr += addlinec("Contributions by: Ljiljana Stojanovic, Gunter Hermann")
 
     hstr += width*'-' + '\n'
 
@@ -29,6 +29,7 @@ def ret_header(title=None, ioptions=None, ver='1.7'):
     hstr += add_exciton(ioptions)
     hstr += add_entanglement(ioptions)
     hstr += add_cclib(ioptions)
+    hstr += add_orbkit(ioptions)
 
     hstr += addlinec()
     hstr += addlinel("Program citation:", 3)
@@ -74,7 +75,7 @@ def add_exciton(ioptions):
         rstr += addlinec()
         rstr += addlinel("Statistical analysis of excitations:", 3)
         rstr += addlinel("F. Plasser, B. Thomitzni, S. A. Baeppler et al.")
-        rstr += addlinel("J. Comp. Chem. (2015), 36, 1609.")
+        rstr += addlinel("J. Comput. Chem. (2015), 36, 1609.")
 
     return rstr
 
@@ -104,8 +105,23 @@ def add_cclib(ioptions):
 
     if rtype in ['cclib', 'gamess', 'orca']:
         rstr += addlinec()
-        rstr += addlinel("cclib for structure parsing:", 3)
+        rstr += addlinel("cclib for structure parsing (http://cclib.github.io):", 3)
         rstr += addlinel("N. M. O'Boyle, A. L. Tenderholt, K. M. Langner")
-        rstr += addlinel("J. Comp. Chem. (2008), 29, 839.")
+        rstr += addlinel("J. Comput. Chem. (2008), 29, 839.")
+
+    return rstr
+
+def add_orbkit(ioptions):
+    try:
+        ok_use = ioptions['cube_orbitals'] or ioptions['comp_p_h_dens'] or ioptions['comp_rho0n']
+    except TypeError:
+        return ''
+
+    rstr = ''
+    if ok_use:
+        rstr += addlinec()
+        rstr += addlinel("orbkit for orbital/density plotting (http://orbkit.github.io):", 3)
+        rstr += addlinel("G. Hermann, V. Pohl, J. C. Tremblay, B. Paulus, H.-C. Hege, A. Schild")
+        rstr += addlinel("J. Comput. Chem. (2016), 37, 1511.")
 
     return rstr
