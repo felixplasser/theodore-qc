@@ -1,4 +1,5 @@
 *.pyc
 lib/cclib
+lib/orbkit
 DOXYGEN
 *.komodoproject
