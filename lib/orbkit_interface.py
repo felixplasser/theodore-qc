@@ -5,10 +5,10 @@ Download and install orbkit if you want to use the functions.
 """
 
 orbkit_avail = True
-#try:
-import orbkit
-#except ImportError:
-#    orbkit_avail = False
+try:
+    import orbkit
+except ImportError:
+    orbkit_avail = False
 
 if orbkit_avail:
     from orbkit_full import lib_orbkit
