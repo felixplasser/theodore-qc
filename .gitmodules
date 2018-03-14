@@ -1,3 +1,6 @@
 [submodule "external/cclib"]
 	path = external/cclib
 	url = git@github.com:felixplasser/cclib.git
+[submodule "external/orbkit"]
+	path = external/orbkit
+	url = https://github.com/felixplasser/orbkit.git

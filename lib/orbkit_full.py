@@ -1,8 +1,7 @@
 """
 This is an interface to the orbkit, an external post-processing toolbox.
 https://orbkit.github.io/
-orbkit should be part of this distribution. Otherwise,
-download and install orbkit if you want to use the functions.
+Download and install orbkit if you want to use the functions.
 Author: Gunter Hermann
 """
 

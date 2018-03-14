@@ -1,15 +1,14 @@
 """
 This is an interface to the orbkit, an external post-processing toolbox.
 https://orbkit.github.io/
-orbkit should be part of this distribution. Otherwise,
-download and install orbkit if you want to use the functions.
+Download and install orbkit if you want to use the functions.
 """
 
 orbkit_avail = True
-try:
-    import orbkit
-except ImportError:
-    orbkit_avail = False
+#try:
+import orbkit
+#except ImportError:
+#    orbkit_avail = False
 
 if orbkit_avail:
     from orbkit_full import lib_orbkit
@@ -19,7 +18,7 @@ else:
         This is a fake class just to make sure that all the calls are defined.
         """
         def __init__(self):
-            print("\n WARNING: orbkit not available plotting not possible as specified.\n\n")
+            print("\n*** WARNING: orbkit not available! ***\n    Plotting not possible as specified.\n")
         def orbkit_geo_ao_conversion(self,mos):
             pass
         def orbkit_nto_conversion(self,U,lam,Vt,mos,qc,minlam=1e-3):

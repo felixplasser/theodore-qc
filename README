@@ -11,6 +11,6 @@ Citation for cclib:
    N. M. O'Boyle, A. L. Tenderholt, K. M. Langner, J. Comput. Chem. (2008), 29, 839.
 
 TheoDORE uses ORBKIT (http://orbkit.github.io/) for visualization of orbitals and densities.
-ORBKIT is distributed under an LGPL license. The source code can be found at external/orbkit.tgz .
+ORBKIT is distributed under an LGPL license. Install orbkit if you want to use this functionality.
 Citation for ORBKIT:
    G. Hermann, V. Pohl, J. C. Tremblay, B. Paulus, H.-C. Hege, A. Schild, J. Comput. Chem. (2016), 37, 1511.  
