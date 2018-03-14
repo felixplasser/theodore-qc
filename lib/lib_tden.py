@@ -284,7 +284,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
 
         elif formula == 2:
             SDSh = self.mos.lowdin_trans(D)
-            if fullmat:
+            if fullmat or self.ioptions['comp_cond_p_h_dens']:
                 state['SDSh'] = SDSh
 
         if   formula == 0:
@@ -383,6 +383,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
                         state['OmFrag'][A, B] += state['OmAt'][Aatom-1, Batom-1]
 
         return state['Om'], state['OmFrag']
+
 #---
     def compute_all_Ombar(self):
         """
@@ -438,36 +439,6 @@ class tden_ana(dens_ana_base.dens_ana_base):
         if jmol_orbs:
             jmolNTO.post()
 
-    def compute_p_h_dens(self):
-        """
-        Computation of electron/hole densities.
-        """
-        if len(self.state_list) == 0: return
-        if not 'tden' in self.state_list[0]: return
-
-        lib_orbkit = orbkit_interface.lib_orbkit()
-        cube_ids = []
-        for state in self.state_list:
-            (U, lam, Vt) = self.ret_NTO(state)
-            cbfid = lib_orbkit.compute_p_h_dens(state, U, lam, Vt, self.mos, minlam=self.ioptions['min_occ'],numproc=self.ioptions.get('numproc'))
-            cube_ids.append(cbfid)
-     	if self.ioptions.get('vmd_ph_dens'):
-            print("VMD network for particle/hole densities")
-    	    lib_orbkit.vmd_network_creator(filename='p_h_dens',cube_ids=numpy.hstack(cube_ids),isovalue=self.ioptions.get('vmd_ph_dens_iv'))
-
-    def compute_rho_0_n(self):
-        """
-        Computation of transition densities.
-        """
-        if len(self.state_list) == 0: return
-        if not 'tden' in self.state_list[0]: return
-
-        lib_orbkit = orbkit_interface.lib_orbkit()
-        cube_ids = lib_orbkit.compute_rho_0_n(self.state_list,self.mos,numproc=self.ioptions.get('numproc'))
-        if self.ioptions.get('vmd_rho0n'):
-            print("VMD network for transition densities")
-            lib_orbkit.vmd_network_creator(filename='rho0n',cube_ids=numpy.hstack(cube_ids),isovalue=self.ioptions.get('vmd_rho0n_iv'))
-
     def ret_NTO(self, state):
         if not 'tden' in state: return None, None, None
 
@@ -522,6 +493,69 @@ class tden_ana(dens_ana_base.dens_ana_base):
         mld_name = 'nto_%s.mld'%state['name'].replace('(', '-').replace(')', '-')
         self.mos.export_NTO(lam, U, Vt, mld_name,
                            cfmt=self.ioptions['mcfmt'], occmin=minlam, alphabeta=self.ioptions['alphabeta'])
+
+#---
+    def compute_p_h_dens(self):
+        """
+        Computation of electron/hole densities.
+        """
+        # This could be joined with the primary NTO computation but it would
+        #   not save much time anyway, since the cube file generation is the
+        #   dominant step.
+        if len(self.state_list) == 0: return
+        if not 'tden' in self.state_list[0]: return
+
+        lib_orbkit = orbkit_interface.lib_orbkit()
+        cube_ids = []
+        for state in self.state_list:
+            (U, lam, Vt) = self.ret_NTO(state)
+            cbfid = lib_orbkit.compute_p_h_dens(state, U, lam, Vt, self.mos, minlam=self.ioptions['min_occ'],numproc=self.ioptions.get('numproc'))
+            cube_ids.append(cbfid)
+     	if self.ioptions.get('vmd_ph_dens'):
+            print("VMD network for particle/hole densities")
+    	    lib_orbkit.vmd_network_creator(filename='p_h_dens',cube_ids=numpy.hstack(cube_ids),isovalue=self.ioptions.get('vmd_ph_dens_iv'))
+
+    def compute_cond_p_h_dens(self):
+        """
+        Computation of conditional electron/hole densities.
+        """
+        if len(self.state_list) == 0: return
+        if not 'tden' in self.state_list[0]: return
+
+        print "\n*** Computing conditional electron/hole densities... ***"
+        if not self.ioptions.get('Om_formula') == 2:
+            raise error_handler.MsgError('Only Om_formula==2 supported for conditional e/h densities.')
+
+        bf_blocks = self.mos.bf_blocks()
+        for state in self.state_list:
+            print "Cond. e/h densities for ", state['name']
+            D = state['SDSh']
+
+            for Aatoms in self.ioptions['at_lists']:
+                # Compute D.D^T but restrict the summation to terms coming
+                #   from the atoms defined in Aatoms
+                print Aatoms
+                DDt = numpy.zeros(D.shape, float)
+                for iat, ist, ien in bf_blocks:
+                    if iat+1 in Aatoms:
+                        DDt += numpy.dot(D[:,ist:ien], D[:,ist:ien].T)
+                print numpy.trace(DDt)
+
+                # TODO: as a next step this should be transformed back to the
+                #    original AO basis
+
+    def compute_rho_0_n(self):
+        """
+        Computation of transition densities.
+        """
+        if len(self.state_list) == 0: return
+        if not 'tden' in self.state_list[0]: return
+
+        lib_orbkit = orbkit_interface.lib_orbkit()
+        cube_ids = lib_orbkit.compute_rho_0_n(self.state_list,self.mos,numproc=self.ioptions.get('numproc'))
+        if self.ioptions.get('vmd_rho0n'):
+            print("VMD network for transition densities")
+            lib_orbkit.vmd_network_creator(filename='rho0n',cube_ids=numpy.hstack(cube_ids),isovalue=self.ioptions.get('vmd_rho0n_iv'))
 
 #---
 

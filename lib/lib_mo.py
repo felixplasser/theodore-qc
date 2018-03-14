@@ -57,15 +57,22 @@ class MO_set:
             self.inv_mo_mat = numpy.linalg.pinv(self.mo_mat)
 
     def compute_lowdin_mat(self, lvprt=1):
+        """
+        Compute the transformation matrix for Lowdin orthogonalization and
+           the matrix S^(-1/2) for backtransformation.
+        """
         print "Performing Lowdin orthogonalization"
 
         (U, sqrlam, Vt) = numpy.linalg.svd(self.mo_mat)
 
         if Vt.shape[0] == U.shape[1]:
             self.lowdin_mat = numpy.dot(U, Vt)
+            self.Sinv2 = numpy.dot(U*sqrlam, U.T)
         elif Vt.shape[0] < U.shape[1]:
+            Vts = Vt.shape[0]
             print '  MO-matrix not square: %i x %i'%(len(self.mo_mat),len(self.mo_mat[0]))
-            self.lowdin_mat = numpy.dot(U[:,:Vt.shape[0]], Vt)
+            self.lowdin_mat = numpy.dot(U[:,:Vts], Vt)
+            self.Sinv2 = numpy.dot(U[:,:Vts]*sqrlam, U.T[:Vts,:])
         else:
             raise error_handler.ElseError('>', 'Lowdin ortho')
 

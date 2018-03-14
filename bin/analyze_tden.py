@@ -15,9 +15,9 @@ def ihelp():
     print "  -ifile, -f [dens_ana.in]: name of the input file"
     exit(0)
 
-#--------------------------------------------------------------------------#        
+#--------------------------------------------------------------------------#
 # Parsing and computations
-#--------------------------------------------------------------------------# 
+#--------------------------------------------------------------------------#
 
 ifile = 'dens_ana.in'
 
@@ -35,13 +35,13 @@ if not os.path.exists(ifile):
     print 'Input file %s not found!'%ifile
     print 'Please create this file using theoinp or specify its location using -ifile\n'
     ihelp()
-    
+
 ioptions = input_options.tden_ana_options(ifile)
 theo_header.print_header('Transition density matrix analysis', ioptions=ioptions)
 
 tdena = lib_tden.tden_ana(ioptions)
 if 'mo_file' in ioptions: tdena.read_mos()
-    
+
 tdena.read_dens()
 
 if 'at_lists' in ioptions or ioptions['eh_pop'] >= 1:
@@ -50,10 +50,11 @@ if 'at_lists' in ioptions or ioptions['eh_pop'] >= 1:
 if 'at_lists' in ioptions:
     tdena.compute_all_OmFrag()
     if ioptions['print_OmFrag']: tdena.fprint_OmFrag()
-        
+
 if ioptions['comp_ntos']: tdena.compute_all_NTO()
 if ioptions['comp_p_h_dens']: tdena.compute_p_h_dens()
 if ioptions['comp_rho0n']: tdena.compute_rho_0_n()
+if ioptions['comp_cond_p_h_dens']: tdena.compute_cond_p_h_dens()
 
 if 'RMSeh' in ioptions.get('prop_list') or 'MAeh' in ioptions.get('prop_list') or 'Eb' in ioptions.get('prop_list'):
     exca = lib_exciton.exciton_analysis()
@@ -63,9 +64,9 @@ if 'RMSeh' in ioptions.get('prop_list') or 'MAeh' in ioptions.get('prop_list') o
 if 'Ombar' in ioptions['prop_list']:
     tdena.compute_all_Ombar()
 
-#--------------------------------------------------------------------------#        
+#--------------------------------------------------------------------------#
 # Print-out
-#--------------------------------------------------------------------------# 
+#--------------------------------------------------------------------------#
 
 tdena.print_all_eh_pop()
 

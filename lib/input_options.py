@@ -406,6 +406,7 @@ class dens_ana_options(read_options):
         self['vmd_rho0n'] = False
         self['vmd_rho0n_iv'] = 0.01
         self['numproc'] = 1
+        self['comp_cond_p_h_dens'] = False
 
         # sden analysis
         self['pop_ana'] = True
