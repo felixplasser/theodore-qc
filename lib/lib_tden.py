@@ -284,7 +284,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
 
         elif formula == 2:
             SDSh = self.mos.lowdin_trans(D)
-            if fullmat or self.ioptions['comp_cond_p_h_dens']:
+            if fullmat or self.ioptions['comp_dntos']:
                 state['SDSh'] = SDSh
 
         if   formula == 0:
@@ -459,9 +459,9 @@ class tden_ana(dens_ana_base.dens_ana_base):
 
         return U, lam, Vt
 
-    def export_NTOs_jmol(self, state, jmolNTO, U, lam, Vt, mincoeff=0.2, minlam=0.05):
+    def export_NTOs_jmol(self, state, jmolNTO, U, lam, Vt, mincoeff=0.2, minlam=0.05, pref='NTO', post=''):
         Ut = numpy.transpose(U)
-        sname = state['name'].replace('(', '-').replace(')', '-')
+        sname = pref + state['name'].replace('(', '-').replace(')', '-') + post
         jmolNTO.next_set(sname)
         for i, l in enumerate(lam):
             if l < minlam: break
@@ -482,15 +482,15 @@ class tden_ana(dens_ana_base.dens_ana_base):
                 jmolF += ' %.3f %i'%(virt,virtind+1)
 
             jmolI += ']\n'
-            jmolNTO.add_mo(jmolI, "NTO%s_%io"%(sname,i+1), l)
+            jmolNTO.add_mo(jmolI, "%s_%io"%(sname,i+1), l)
             jmolF += ']\n'
-            jmolNTO.add_mo(jmolF, "NTO%s_%iv"%(sname,i+1), l)
+            jmolNTO.add_mo(jmolF, "%s_%iv"%(sname,i+1), l)
 
-    def export_NTOs_molden(self, state, U, lam, Vt, mincoeff=0.2, minlam=0.01):
+    def export_NTOs_molden(self, state, U, lam, Vt, mincoeff=0.2, minlam=0.01, pref='nto', post=''):
         """
         Export the NTOs to a molden file.
         """
-        mld_name = 'nto_%s.mld'%state['name'].replace('(', '-').replace(')', '-')
+        mld_name = '%s_%s%s.mld'%(pref,state['name'].replace('(', '-').replace(')', '-'),post)
         self.mos.export_NTO(lam, U, Vt, mld_name,
                            cfmt=self.ioptions['mcfmt'], occmin=minlam, alphabeta=self.ioptions['alphabeta'])
 
@@ -515,42 +515,91 @@ class tden_ana(dens_ana_base.dens_ana_base):
             print("VMD network for particle/hole densities")
     	    lib_orbkit.vmd_network_creator(filename='p_h_dens',cube_ids=numpy.hstack(cube_ids),isovalue=self.ioptions.get('vmd_ph_dens_iv'))
 
-    def compute_cond_p_h_dens(self):
+    def compute_all_DNTO(self):
         """
-        Computation of conditional electron/hole densities.
+        Computation of domain NTOs and conditional electron/hole densities.
         """
         if len(self.state_list) == 0: return
         if not 'tden' in self.state_list[0]: return
 
-        print "\n*** Computing conditional electron/hole densities... ***"
+        print "\n*** Computing domain NTOs ... ***"
         if not self.ioptions.get('Om_formula') == 2:
             raise error_handler.MsgError('Only Om_formula==2 supported for conditional e/h densities.')
 
+        jmol_orbs = self.ioptions['jmol_orbitals']
+        if jmol_orbs:
+            jmh = lib_mo.jmol_MOs("dnto_hole")
+            jmh.pre(ofile=self.ioptions.get('mo_file', strict=False))
+            jme = lib_mo.jmol_MOs("dnto_elec")
+            jme.pre(ofile=self.ioptions.get('mo_file', strict=False))
+        dnto_dens = self.ioptions['comp_dnto_dens']
+        if dnto_dens > 0:
+            lib_orbkit = orbkit_interface.lib_orbkit()
+            cube_ids = []
+
         for state in self.state_list:
-            print "Cond. e/h densities for ", state['name']
+            print "DNTOs for ", state['name']
 
             for A, Aatoms in enumerate(self.ioptions['at_lists']):
-                self.cond_p_h_dens_A(state, A, Aatoms)
+                export_opts={'minlam':self.ioptions['min_occ'], 'pref':"DNTO_"}
 
-    def cond_p_h_dens_A(self, state, A, Aatoms):
-        # Compute D.D^T but restrict the summation to terms coming
-        #   from the atoms defined in Aatoms
-        # TODO: Maybe this could be rephrased as an SVD?
+                ### conditional hole density ###
+                (U, lam, Vt) = self.ret_DNTO_h(state, Aatoms)
+                export_opts['post'] = "_hole-F%02i"%(A+1)
+                if jmol_orbs:
+                    self.export_NTOs_jmol(state, jmh, U, lam, Vt, **export_opts)
+                if self.ioptions['molden_orbitals']:
+                    self.export_NTOs_molden(state, U, lam, Vt, **export_opts)
+                if dnto_dens == 1 or dnto_dens == 3:
+                    cbfid = lib_orbkit.compute_p_h_dens(state, U, lam, Vt, self.mos,
+                        numproc=self.ioptions['numproc'], **export_opts)
+                    cube_ids.append(cbfid)
+
+                ### conditional electron density ###
+                (U, lam, Vt) = self.ret_DNTO_e(state, Aatoms)
+                export_opts['post'] = "_elec-F%02i"%(A+1)
+                if jmol_orbs:
+                    self.export_NTOs_jmol(state, jme, U, lam, Vt, **export_opts)
+                if self.ioptions['molden_orbitals']:
+                    self.export_NTOs_molden(state, U, lam, Vt, **export_opts)
+                if dnto_dens >= 2:
+                    cbfid = lib_orbkit.compute_p_h_dens(state, U, lam, Vt, self.mos,
+                        numproc=self.ioptions['numproc'], **export_opts)
+                    cube_ids.append(cbfid)
+
+        if jmol_orbs:
+            jmh.post()
+            jme.post()
+
+    def ret_DNTO_h(self, state, Aatoms):
+        # TODO: Operate only on the non-zero blocks
+        # Compute an SVD for the density matrix with hole
+        #   coordinates restricted to fragment A
         D = state['SDSh']
-        print Aatoms
-        DDt = numpy.zeros(D.shape, float)
+        DA = numpy.zeros(D.shape, float)
         for iat, ist, ien in self.mos.bf_blocks():
             if iat+1 in Aatoms:
-                DDt += numpy.dot(D[:,ist:ien], D[:,ist:ien].T)
-        print numpy.trace(DDt)
+                DA[ist:ien,:] = D[ist:ien,:]
 
-        (om,T) = numpy.linalg.eigh(DDt)
+        (U, sqrlam, Vt) = numpy.linalg.svd(self.mos.lowdin_trans(DA, True))
+        lam = sqrlam * sqrlam
 
-        # TODO: This has to be transformed to the MO basis!!
-        if self.ioptions['molden_orbitals']:
-            label = 'CHO_%s_%02i.mld'%(state['name'].replace('(', '-').replace(')', '-'),A+1)
-            self.export_p_h_obs_molden(label, om, T)
+        return U, lam, Vt
 
+    def ret_DNTO_e(self, state, Aatoms):
+        # TODO: Operate only on the non-zero blocks
+        # Compute an SVD for the density matrix with electron
+        #   coordinates restricted to fragment A
+        D = state['SDSh']
+        DA = numpy.zeros(D.shape, float)
+        for iat, ist, ien in self.mos.bf_blocks():
+            if iat+1 in Aatoms:
+                DA[:,ist:ien] = D[:,ist:ien]
+
+        (U, sqrlam, Vt) = numpy.linalg.svd(self.mos.lowdin_trans(DA, True))
+        lam = sqrlam * sqrlam
+
+        return U, lam, Vt
 
     def export_p_h_obs_molden(self, label, om, T, occmin=0.1):
         self.mos.export_MO(om, om, T, label,

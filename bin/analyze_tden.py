@@ -51,10 +51,10 @@ if 'at_lists' in ioptions:
     tdena.compute_all_OmFrag()
     if ioptions['print_OmFrag']: tdena.fprint_OmFrag()
 
-if ioptions['comp_ntos']: tdena.compute_all_NTO()
+if ioptions['comp_ntos']:  tdena.compute_all_NTO()
+if ioptions['comp_dntos']: tdena.compute_all_DNTO()
 if ioptions['comp_p_h_dens']: tdena.compute_p_h_dens()
 if ioptions['comp_rho0n']: tdena.compute_rho_0_n()
-if ioptions['comp_cond_p_h_dens']: tdena.compute_cond_p_h_dens()
 
 if 'RMSeh' in ioptions.get('prop_list') or 'MAeh' in ioptions.get('prop_list') or 'Eb' in ioptions.get('prop_list'):
     exca = lib_exciton.exciton_analysis()
