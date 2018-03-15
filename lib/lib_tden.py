@@ -526,23 +526,37 @@ class tden_ana(dens_ana_base.dens_ana_base):
         if not self.ioptions.get('Om_formula') == 2:
             raise error_handler.MsgError('Only Om_formula==2 supported for conditional e/h densities.')
 
-        bf_blocks = self.mos.bf_blocks()
         for state in self.state_list:
             print "Cond. e/h densities for ", state['name']
-            D = state['SDSh']
 
-            for Aatoms in self.ioptions['at_lists']:
-                # Compute D.D^T but restrict the summation to terms coming
-                #   from the atoms defined in Aatoms
-                print Aatoms
-                DDt = numpy.zeros(D.shape, float)
-                for iat, ist, ien in bf_blocks:
-                    if iat+1 in Aatoms:
-                        DDt += numpy.dot(D[:,ist:ien], D[:,ist:ien].T)
-                print numpy.trace(DDt)
+            for A, Aatoms in enumerate(self.ioptions['at_lists']):
+                self.cond_p_h_dens_A(state, A, Aatoms)
 
-                # TODO: as a next step this should be transformed back to the
-                #    original AO basis
+    def cond_p_h_dens_A(self, state, A, Aatoms):
+        # Compute D.D^T but restrict the summation to terms coming
+        #   from the atoms defined in Aatoms
+        # TODO: Maybe this could be rephrased as an SVD?
+        D = state['SDSh']
+        print Aatoms
+        DDt = numpy.zeros(D.shape, float)
+        for iat, ist, ien in self.mos.bf_blocks():
+            if iat+1 in Aatoms:
+                DDt += numpy.dot(D[:,ist:ien], D[:,ist:ien].T)
+        print numpy.trace(DDt)
+
+        (om,T) = numpy.linalg.eigh(DDt)
+
+        # TODO: This has to be transformed to the MO basis!!
+        if self.ioptions['molden_orbitals']:
+            label = 'CHO_%s_%02i.mld'%(state['name'].replace('(', '-').replace(')', '-'),A+1)
+            self.export_p_h_obs_molden(label, om, T)
+
+
+    def export_p_h_obs_molden(self, label, om, T, occmin=0.1):
+        self.mos.export_MO(om, om, T, label,
+           cfmt=self.ioptions['mcfmt'], occmin=self.ioptions['min_occ'])
+
+    #def export_p_h_orbs_jmol(self, state, jmol_ph)
 
     def compute_rho_0_n(self):
         """
