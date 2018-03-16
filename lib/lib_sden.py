@@ -159,6 +159,8 @@ class sden_ana(dens_ana_base.dens_ana_base):
             jmolNDO.post()
 
     def compute_a_d_dens(self):
+        # TODO: This should use NDOs
+        raise error_handler.MsgError("I do not think this is correct (Felix)")
         if len(self.state_list) == 0: return
         if not 'tden' in self.state_list[0]: return
         oi = orbkit_interface.ok()

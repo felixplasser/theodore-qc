@@ -69,9 +69,8 @@ do
         if [ "$lchk" -ne 0 ]
         then
             echo "  ... failed!"
+            chk=$((chk+1))
         fi
-
-        chk=$((chk+lchk))
     done
 
     echo

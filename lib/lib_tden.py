@@ -488,9 +488,9 @@ class tden_ana(dens_ana_base.dens_ana_base):
 
         return U, lam, Vt
 
-    def export_NTOs_jmol(self, state, jmolNTO, U, lam, Vt, mincoeff=0.2, minlam=0.05):
+    def export_NTOs_jmol(self, state, jmolNTO, U, lam, Vt, mincoeff=0.2, minlam=0.05, pref='NTO', post=''):
         Ut = numpy.transpose(U)
-        sname = state['name'].replace('(', '-').replace(')', '-')
+        sname = pref + state['name'].replace('(', '-').replace(')', '-') + post
         jmolNTO.next_set(sname)
         for i, l in enumerate(lam):
             if l < minlam: break
@@ -511,15 +511,15 @@ class tden_ana(dens_ana_base.dens_ana_base):
                 jmolF += ' %.3f %i'%(virt,virtind+1)
 
             jmolI += ']\n'
-            jmolNTO.add_mo(jmolI, "NTO%s_%io"%(sname,i+1), l)
+            jmolNTO.add_mo(jmolI, "%s_%io"%(sname,i+1), l)
             jmolF += ']\n'
-            jmolNTO.add_mo(jmolF, "NTO%s_%iv"%(sname,i+1), l)
+            jmolNTO.add_mo(jmolF, "%s_%iv"%(sname,i+1), l)
 
-    def export_NTOs_molden(self, state, U, lam, Vt, mincoeff=0.2, minlam=0.01):
+    def export_NTOs_molden(self, state, U, lam, Vt, mincoeff=0.2, minlam=0.01, pref='nto', post=''):
         """
         Export the NTOs to a molden file.
         """
-        mld_name = 'nto_%s.mld'%state['name'].replace('(', '-').replace(')', '-')
+        mld_name = '%s_%s%s.mld'%(pref,state['name'].replace('(', '-').replace(')', '-'),post)
         self.mos.export_NTO(lam, U, Vt, mld_name,
                            cfmt=self.ioptions['mcfmt'], occmin=minlam, alphabeta=self.ioptions['alphabeta'])
 
