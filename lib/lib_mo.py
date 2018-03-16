@@ -57,15 +57,22 @@ class MO_set:
             self.inv_mo_mat = numpy.linalg.pinv(self.mo_mat)
 
     def compute_lowdin_mat(self, lvprt=1):
+        """
+        Compute the transformation matrix for Lowdin orthogonalization.
+        """
         print "Performing Lowdin orthogonalization"
 
         (U, sqrlam, Vt) = numpy.linalg.svd(self.mo_mat)
 
         if Vt.shape[0] == U.shape[1]:
             self.lowdin_mat = numpy.dot(U, Vt)
+            # The matrix S^(-1/2) for backtransformation
+            #self.Sinv2 = numpy.dot(U*sqrlam, U.T)
         elif Vt.shape[0] < U.shape[1]:
+            Vts = Vt.shape[0]
             print '  MO-matrix not square: %i x %i'%(len(self.mo_mat),len(self.mo_mat[0]))
-            self.lowdin_mat = numpy.dot(U[:,:Vt.shape[0]], Vt)
+            self.lowdin_mat = numpy.dot(U[:,:Vts], Vt)
+            #self.Sinv2 = numpy.dot(U[:,:Vts]*sqrlam, U.T[:Vts,:])
         else:
             raise error_handler.ElseError('>', 'Lowdin ortho')
 
@@ -164,8 +171,8 @@ class MO_set:
         elif self.ret_num_mo() > len(D):
             if not trnsp and not inv:
                 # take only the occ. subblock
-                Csub = self.mo_mat.transpose()[:len(D)]
-                return numpy.dot(Csub.transpose(), D)
+                Csub = self.mo_mat[:,:len(D)]
+                return numpy.dot(Csub, D)
             elif trnsp and inv:
                 # take only the occ. subblock
                 Csub = self.inv_mo_mat[:len(D)]
@@ -182,16 +189,23 @@ class MO_set:
                 Dsub = D[:self.ret_num_mo()]
                 return numpy.dot(self.ret_mo_mat(trnsp, inv), Dsub)
 
-    def lowdin_trans(self, D):
+    def lowdin_trans(self, D, reverse=False):
         """
         MO-AO transformation and Lowdin orthogonalization by using
            S^0.5 C = U V^T
         """
-        DUTT = numpy.dot(D, self.lowdin_mat.T)
-        if self.lowdin_mat.shape[1] == DUTT.shape[0]:
-            return numpy.dot(self.lowdin_mat, DUTT)
-        elif self.lowdin_mat.shape[1] > DUTT.shape[0]:
-            return numpy.dot(self.lowdin_mat[:,:DUTT.shape[0]], DUTT)
+        if not reverse:
+            Lmat = self.lowdin_mat
+            Rmat = self.lowdin_mat.T
+        else:
+            Lmat = self.lowdin_mat.T
+            Rmat = self.lowdin_mat
+
+        DUTT = numpy.dot(D, Rmat)
+        if Lmat.shape[1] == DUTT.shape[0]:
+            return numpy.dot(Lmat, DUTT)
+        elif Lmat.shape[1] > DUTT.shape[0]:
+            return numpy.dot(Lmat[:,:DUTT.shape[0]], DUTT)
         else:
             raise error_handler.ElseError('<', 'Lowdin trans')
 
@@ -757,7 +771,7 @@ class jmol_MOs:
         imfile = "%s_%.2f.png"%(name,abs(val))
 
         self.jmfile.write(jmolstr)
-        self.jmfile.write('write image png "%s"\n'%imfile)
+        self.jmfile.write('write image pngt "%s"\n'%imfile)
 
         if self.imo%2==0: self.htmlfile.write("<tr>\n")
         self.htmlfile.write("<td>")

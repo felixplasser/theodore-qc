@@ -15,7 +15,6 @@ class options:
     def __getitem__(self, option):
         return self.get(option, strict=True)
 
-
     def get(self, option, strict=True):
         """
         Return the value of an option.

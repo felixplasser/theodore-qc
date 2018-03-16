@@ -41,13 +41,11 @@ class lib_orbkit:
 
         # MO conversion
         qc.mo_spec = []
-        Csub = mos.mo_mat.transpose()[:len(U)]
-        U_mat_t =  numpy.dot(Csub.transpose(), U)
-        U_mat_t = (U_mat_t).transpose()
-        V_mat_t = numpy.dot(Vt,mos.mo_mat.transpose())
+        U_mat_t = mos.CdotD(U).T
+        V_mat_t = mos.MdotC(Vt)
         UV_t = [iU for iU in reversed(U_mat_t)] + [iV for iV in V_mat_t]
         lam2 = [-vlam for vlam in reversed(lam)] + [vlam for vlam in lam] + [0.] * (len(Vt) - len(lam))
-        LUMO = (numpy.array(mos.occs) > 0).sum()
+        LUMO = len(lam) #(numpy.array(mos.occs) > 0).sum()
         for i in range(len(lam2)):
             if abs(lam2[i]) > minlam:
                 qc.mo_spec.append({'coeffs': UV_t[i],
@@ -90,9 +88,10 @@ class lib_orbkit:
 
         return molist
 
-    def compute_p_h_dens(self,state, U, lam, Vt, mos, minlam=1e-3,numproc=4):
+    def compute_p_h_dens(self,state, U, lam, Vt, mos, minlam=1e-3,numproc=4,pref='',post=''):
 
-        print("Calculating particle/hole density with orbkit for state %s" % (state['name']))
+        lab = state['name'].replace('(', '-').replace(')', '-') + post
+        print("Calculating particle/hole density with orbkit for %s" % lab)
 
         # Data conversion from TheoDORE to orbkit
         qc = self.orbkit_geo_ao_conversion(mos)
@@ -108,14 +107,14 @@ class lib_orbkit:
             if 'p' in qc.mo_spec[i]['sym']:
                 rho_p += abs(qc.mo_spec[i]['energy'])*molist[i]*molist[i]
             else:
-                rho_h += abs(qc.mo_spec[i]['energy'])*molist[i]*molist[i]
+                rho_h -= abs(qc.mo_spec[i]['energy'])*molist[i]*molist[i]
 
         # Reshape particle and hole density and write cube-files
         cube_ids = []
-        fid = 'rho_p_%s'% state['name'].replace('(', '-').replace(')', '-')
+        fid = '%srho_p_%s'%(pref, lab)
         cube_ids.append(fid)
         output.cube_creator(rho_p,fid,qc.geo_info,qc.geo_spec)
-        fid = 'rho_h_%s' % state['name'].replace('(', '-').replace(')', '-')
+        fid = '%srho_h_%s'%(pref, lab)
         output.cube_creator(rho_h,fid,qc.geo_info,qc.geo_spec)
         cube_ids.append(fid)
 

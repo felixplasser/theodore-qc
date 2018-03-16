@@ -231,8 +231,11 @@ class write_options_theo(input_options.write_options):
 
     def set_Om_desc(self):
         """
-        Set the list of Omega descriptors to be computed.
+        Set the list of Omega descriptors to be computed and set the formula.
         """
+        self.read_int('Formula for Omega matrix computation\n\
+   0 - simple, 1 - Mulliken, 2 - Lowdin', 'Om_formula', 2)
+
         Olist = ['Standard set', 'Transition metal complex', 'None']
 
         ichoice = self.ret_choose_list('Omega descriptors to be computed:', Olist, 1)
@@ -384,8 +387,11 @@ def run_theoinp():
 
             wopt.nto_ana()
             wopt.comp_rho0n()
-            if wopt['comp_rho0n'] or wopt['cube_orbitals'] or wopt['comp_p_h_dens']:
-                wopt.read_int('Number of CPUs for orbkit calculations','numproc', 4)
+            try:
+                if wopt['comp_rho0n'] or wopt['cube_orbitals'] or wopt['comp_p_h_dens']:
+                    wopt.read_int('Number of CPUs for orbkit calculations','numproc', 4)
+            except error_handler.MsgError:
+                pass
 
             if wopt.ret_yn('Perform exciton analysis?', True):
                 wopt.exciton_ana()

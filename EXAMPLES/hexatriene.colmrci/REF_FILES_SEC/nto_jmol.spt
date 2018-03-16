@@ -5,25 +5,35 @@ background white
 mo fill
 mo cutoff 0.04
 
+mo color blue red
 mo [ -0.977 89 -0.212 90]
-write image png "NTOI1.1-2_1o_0.21.png"
+write image pngt "NTOI1.1-2_1o_0.21.png"
+mo color orange green
 mo [ -0.983 90]
-write image png "NTOI1.1-2_1v_0.21.png"
+write image pngt "NTOI1.1-2_1v_0.21.png"
+mo color blue red
 mo [ -0.977 78 -0.202 77]
-write image png "NTOI1.1-2_2o_0.16.png"
+write image pngt "NTOI1.1-2_2o_0.16.png"
+mo color orange green
 mo [ 0.963 79 0.264 78]
-write image png "NTOI1.1-2_2v_0.16.png"
+write image pngt "NTOI1.1-2_2v_0.16.png"
 
-mo [ -0.997 78]
-write image png "NTOI2.1-1_1o_0.83.png"
-mo [ 0.997 90]
-write image png "NTOI2.1-1_1v_0.83.png"
+mo color blue red
+mo [ 0.997 78]
+write image pngt "NTOI2.1-1_1o_0.83.png"
+mo color orange green
+mo [ -0.997 90]
+write image pngt "NTOI2.1-1_1v_0.83.png"
 
+mo color blue red
 mo [ 0.962 77 -0.252 78]
-write image png "NTOI2.1-2_1o_0.26.png"
+write image pngt "NTOI2.1-2_1o_0.26.png"
+mo color orange green
 mo [ 0.975 90 0.211 91]
-write image png "NTOI2.1-2_1v_0.26.png"
+write image pngt "NTOI2.1-2_1v_0.26.png"
+mo color blue red
 mo [ -0.964 78 -0.259 77]
-write image png "NTOI2.1-2_2o_0.16.png"
+write image pngt "NTOI2.1-2_2o_0.16.png"
+mo color orange green
 mo [ 0.967 91 -0.201 90]
-write image png "NTOI2.1-2_2v_0.16.png"
+write image pngt "NTOI2.1-2_2v_0.16.png"
