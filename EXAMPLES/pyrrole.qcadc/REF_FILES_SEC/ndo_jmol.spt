@@ -6,117 +6,117 @@ mo fill
 mo cutoff 0.04
 
 mo [ -0.997 17]
-write image png "detach_triplet_0_1_no_1_0.54.png"
+write image pngt "detach_triplet_0_1_no_1_0.54.png"
 mo [ -0.998 18]
-write image png "detach_triplet_0_1_no_2_0.39.png"
+write image pngt "detach_triplet_0_1_no_2_0.39.png"
 mo [ -0.993 20]
-write image png "attach_triplet_0_1_no_1_0.54.png"
+write image pngt "attach_triplet_0_1_no_1_0.54.png"
 mo [ -0.989 23]
-write image png "attach_triplet_0_1_no_2_0.40.png"
+write image pngt "attach_triplet_0_1_no_2_0.40.png"
 
 mo [ -0.998 17]
-write image png "detach_singlet_0_1_no_1_0.59.png"
+write image pngt "detach_singlet_0_1_no_1_0.59.png"
 mo [ 1.000 18]
-write image png "detach_singlet_0_1_no_2_0.37.png"
+write image pngt "detach_singlet_0_1_no_2_0.37.png"
 mo [ -0.994 20]
-write image png "attach_singlet_0_1_no_1_0.59.png"
+write image pngt "attach_singlet_0_1_no_1_0.59.png"
 mo [ -0.994 23]
-write image png "attach_singlet_0_1_no_2_0.38.png"
+write image pngt "attach_singlet_0_1_no_2_0.38.png"
 
 mo [ 1.000 18]
-write image png "detach_triplet_1_1_no_1_0.94.png"
+write image pngt "detach_triplet_1_1_no_1_0.94.png"
 mo [ 0.712 17 -0.629 20 -0.215 38]
-write image png "detach_triplet_1_1_no_2_0.09.png"
+write image pngt "detach_triplet_1_1_no_2_0.09.png"
 mo [ 0.683 13 -0.393 37 0.330 27 0.259 10 -0.250 29 0.236 22 0.207 31]
-write image png "detach_triplet_1_1_no_3_0.07.png"
+write image pngt "detach_triplet_1_1_no_3_0.07.png"
 mo [ -0.512 12 -0.456 33 -0.442 9 0.274 16 -0.238 36 0.232 24 0.206 26]
-write image png "detach_triplet_1_1_no_4_0.06.png"
+write image pngt "detach_triplet_1_1_no_4_0.06.png"
 mo [ -0.461 15 0.443 10 -0.393 22 -0.329 29 0.293 31 -0.257 8 -0.243 13 -0.220 34]
-write image png "detach_triplet_1_1_no_5_0.05.png"
+write image pngt "detach_triplet_1_1_no_5_0.05.png"
 mo [ -0.990 19]
-write image png "attach_triplet_1_1_no_1_0.97.png"
+write image pngt "attach_triplet_1_1_no_1_0.97.png"
 mo [ 0.652 13 -0.395 22 0.390 37 -0.375 27]
-write image png "attach_triplet_1_1_no_2_0.07.png"
+write image pngt "attach_triplet_1_1_no_2_0.07.png"
 mo [ -0.648 17 -0.635 20 0.237 57 -0.228 14]
-write image png "attach_triplet_1_1_no_3_0.07.png"
+write image pngt "attach_triplet_1_1_no_3_0.07.png"
 mo [ -0.478 12 0.478 33 -0.401 9 0.257 36 0.250 16 -0.240 24 -0.227 26 0.203 21]
-write image png "attach_triplet_1_1_no_4_0.07.png"
+write image pngt "attach_triplet_1_1_no_4_0.07.png"
 mo [ -0.454 10 0.437 15 -0.402 29 -0.387 22 0.325 31 0.260 8]
-write image png "attach_triplet_1_1_no_5_0.06.png"
+write image pngt "attach_triplet_1_1_no_5_0.06.png"
 
 mo [ -1.000 18]
-write image png "detach_singlet_1_1_no_1_0.94.png"
+write image pngt "detach_singlet_1_1_no_1_0.94.png"
 mo [ -0.706 17 0.631 20 0.208 38]
-write image png "detach_singlet_1_1_no_2_0.09.png"
+write image pngt "detach_singlet_1_1_no_2_0.09.png"
 mo [ -0.662 13 0.388 37 -0.332 27 -0.292 10 0.260 29 -0.236 31 -0.211 22]
-write image png "detach_singlet_1_1_no_3_0.07.png"
+write image pngt "detach_singlet_1_1_no_3_0.07.png"
 mo [ 0.515 12 0.455 33 0.445 9 -0.261 16 0.248 36 -0.216 24 -0.201 26]
-write image png "detach_singlet_1_1_no_4_0.07.png"
+write image pngt "detach_singlet_1_1_no_4_0.07.png"
 mo [ 0.461 15 -0.420 10 0.419 22 0.314 29 0.286 13 -0.270 31 0.252 8 0.219 34]
-write image png "detach_singlet_1_1_no_5_0.06.png"
+write image pngt "detach_singlet_1_1_no_5_0.06.png"
 mo [ 0.992 19]
-write image png "attach_singlet_1_1_no_1_0.97.png"
+write image pngt "attach_singlet_1_1_no_1_0.97.png"
 mo [ -0.647 17 -0.641 20 0.231 57 -0.230 14]
-write image png "attach_singlet_1_1_no_2_0.07.png"
+write image pngt "attach_singlet_1_1_no_2_0.07.png"
 mo [ -0.644 13 -0.401 37 0.382 27 0.342 22 -0.201 29 0.200 31]
-write image png "attach_singlet_1_1_no_3_0.07.png"
+write image pngt "attach_singlet_1_1_no_3_0.07.png"
 mo [ -0.479 33 0.476 12 0.406 9 -0.265 36 -0.241 16 0.227 24 0.224 26 -0.212 30]
-write image png "attach_singlet_1_1_no_4_0.07.png"
+write image pngt "attach_singlet_1_1_no_4_0.07.png"
 mo [ -0.440 15 0.435 10 0.430 22 0.383 29 -0.304 31 -0.259 8]
-write image png "attach_singlet_1_1_no_5_0.06.png"
+write image pngt "attach_singlet_1_1_no_5_0.06.png"
 
 mo [ -0.998 18]
-write image png "detach_singlet_2_1_no_1_0.87.png"
+write image pngt "detach_singlet_2_1_no_1_0.87.png"
 mo [ 0.997 20]
-write image png "attach_singlet_2_1_no_1_0.87.png"
+write image pngt "attach_singlet_2_1_no_1_0.87.png"
 mo [ 0.991 23]
-write image png "attach_singlet_2_1_no_2_0.06.png"
+write image pngt "attach_singlet_2_1_no_2_0.06.png"
 
 mo [ -0.984 17]
-write image png "detach_triplet_3_1_no_1_0.93.png"
+write image pngt "detach_triplet_3_1_no_1_0.93.png"
 mo [ 0.588 12 0.358 9 -0.351 26 0.327 33 0.263 41 0.204 36 -0.203 45]
-write image png "detach_triplet_3_1_no_2_0.07.png"
+write image pngt "detach_triplet_3_1_no_2_0.07.png"
 mo [ 0.748 18 -0.574 23 0.285 35]
-write image png "detach_triplet_3_1_no_3_0.07.png"
+write image pngt "detach_triplet_3_1_no_3_0.07.png"
 mo [ 0.981 19]
-write image png "attach_triplet_3_1_no_1_0.97.png"
+write image pngt "attach_triplet_3_1_no_1_0.97.png"
 mo [ -0.536 12 -0.369 26 0.341 33 -0.306 9 0.290 41 0.286 21 0.213 36 -0.208 45]
-write image png "attach_triplet_3_1_no_2_0.08.png"
+write image pngt "attach_triplet_3_1_no_2_0.08.png"
 mo [ 0.663 18 0.639 23 -0.334 35]
-write image png "attach_triplet_3_1_no_3_0.05.png"
+write image pngt "attach_triplet_3_1_no_3_0.05.png"
 
 mo [ 1.000 18]
-write image png "detach_triplet_1_2_no_1_0.92.png"
+write image pngt "detach_triplet_1_2_no_1_0.92.png"
 mo [ 0.771 17 -0.528 20 -0.257 38]
-write image png "detach_triplet_1_2_no_2_0.07.png"
+write image pngt "detach_triplet_1_2_no_2_0.07.png"
 mo [ 0.693 13 0.362 22 0.362 27 -0.319 37 0.247 15]
-write image png "detach_triplet_1_2_no_3_0.06.png"
+write image pngt "detach_triplet_1_2_no_3_0.06.png"
 mo [ -0.561 11 -0.423 19 -0.324 12 -0.297 30 -0.274 36 -0.255 9 -0.220 16]
-write image png "detach_triplet_1_2_no_4_0.05.png"
+write image pngt "detach_triplet_1_2_no_4_0.05.png"
 mo [ -0.913 21 0.356 24]
-write image png "attach_triplet_1_2_no_1_0.95.png"
+write image pngt "attach_triplet_1_2_no_1_0.95.png"
 mo [ 0.577 22 -0.508 13 -0.391 15 0.283 27 0.224 34 -0.213 37]
-write image png "attach_triplet_1_2_no_2_0.06.png"
+write image pngt "attach_triplet_1_2_no_2_0.06.png"
 mo [ -0.504 19 0.489 11 0.353 9 -0.305 33 -0.288 30 0.286 12 -0.254 36]
-write image png "attach_triplet_1_2_no_3_0.06.png"
+write image pngt "attach_triplet_1_2_no_3_0.06.png"
 mo [ 0.596 16 -0.455 24 0.377 33 -0.234 9 0.230 11]
-write image png "attach_triplet_1_2_no_4_0.05.png"
+write image pngt "attach_triplet_1_2_no_4_0.05.png"
 mo [ -0.391 10 -0.383 37 -0.383 13 -0.368 29 0.338 31 0.338 15 0.218 8 0.200 27]
-write image png "attach_triplet_1_2_no_5_0.05.png"
+write image pngt "attach_triplet_1_2_no_5_0.05.png"
 
 mo [ 1.000 18]
-write image png "detach_singlet_1_2_no_1_0.93.png"
+write image pngt "detach_singlet_1_2_no_1_0.93.png"
 mo [ 0.779 17 -0.382 20 -0.298 38]
-write image png "detach_singlet_1_2_no_2_0.06.png"
+write image pngt "detach_singlet_1_2_no_2_0.06.png"
 mo [ 0.662 13 0.395 22 0.331 15 0.328 27 -0.262 37 0.215 34]
-write image png "detach_singlet_1_2_no_3_0.06.png"
+write image pngt "detach_singlet_1_2_no_3_0.06.png"
 mo [ 0.579 11 0.427 19 0.297 16 0.273 12 0.265 36 0.260 24 0.236 30 0.205 44]
-write image png "detach_singlet_1_2_no_4_0.05.png"
+write image pngt "detach_singlet_1_2_no_4_0.05.png"
 mo [ 0.968 21 -0.209 24]
-write image png "attach_singlet_1_2_no_1_0.95.png"
+write image pngt "attach_singlet_1_2_no_1_0.95.png"
 mo [ -0.579 22 0.462 13 0.441 15 -0.279 27 -0.233 34 -0.220 42]
-write image png "attach_singlet_1_2_no_2_0.07.png"
+write image pngt "attach_singlet_1_2_no_2_0.07.png"
 mo [ -0.486 19 0.423 9 0.398 11 -0.369 33 -0.277 16 -0.244 30 0.241 24]
-write image png "attach_singlet_1_2_no_3_0.06.png"
+write image pngt "attach_singlet_1_2_no_3_0.06.png"
 mo [ 0.505 16 -0.493 24 0.393 11 -0.242 19 -0.237 36 -0.225 41 0.201 12]
-write image png "attach_singlet_1_2_no_4_0.05.png"
+write image pngt "attach_singlet_1_2_no_4_0.05.png"

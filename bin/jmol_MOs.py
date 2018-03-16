@@ -267,7 +267,7 @@ def run():
         jopt.preprocess(mldfiles)
         mldfiles = ['merged.mld']
 
-    jo = lib_file.wfile('%sjmol_orbitals.spt'%pref)
+    jo = lib_file.wfile('jmol_orbitals.spt')
     ho = lib_file.htmlfile('%sorbitals.html'%pref)
     lo = lib_file.latexfile('%sorbitals.tex'%pref)
 
