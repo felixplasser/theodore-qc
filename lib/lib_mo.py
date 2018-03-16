@@ -771,7 +771,7 @@ class jmol_MOs:
         imfile = "%s_%.2f.png"%(name,abs(val))
 
         self.jmfile.write(jmolstr)
-        self.jmfile.write('write image png "%s"\n'%imfile)
+        self.jmfile.write('write image pngt "%s"\n'%imfile)
 
         if self.imo%2==0: self.htmlfile.write("<tr>\n")
         self.htmlfile.write("<td>")

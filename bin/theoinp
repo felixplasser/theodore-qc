@@ -231,8 +231,11 @@ class write_options_theo(input_options.write_options):
 
     def set_Om_desc(self):
         """
-        Set the list of Omega descriptors to be computed.
+        Set the list of Omega descriptors to be computed and set the formula.
         """
+        self.read_int('Formula for Omega matrix computation\n\
+   0 - simple, 1 - Mulliken, 2 - Lowdin', 'Om_formula', 2)
+
         Olist = ['Standard set', 'Transition metal complex', 'None']
 
         ichoice = self.ret_choose_list('Omega descriptors to be computed:', Olist, 1)
@@ -259,8 +262,9 @@ class write_options_theo(input_options.write_options):
     def nto_ana(self):
         if self['read_libwfa']: return
 
-        if self.ret_yn('Perform natural transition orbital (NTO) analysis?', True):
-            self.ostr += 'comp_ntos=True\n'
+        self.read_yn('Perform natural transition orbital (NTO) analysis?', 'comp_ntos', True)
+        self.read_yn('Perform analysis of domain NTOs?', 'comp_dntos', False)
+        if self['comp_ntos'] or self['comp_dntos']:
             self['prop_list'] += ['PRNTO', 'Z_HE']
             if not self['rtype'] in ['adf', 'tddftb']:
                 if self['rtype'] == 'ricc2' and self['read_binary'] == True:
@@ -270,18 +274,19 @@ class write_options_theo(input_options.write_options):
                     self.read_yn('NTOs in Molden format', 'molden_orbitals', False)
                 if self['molden_orbitals']:
                     self.read_yn('Use alpha/beta rather then negative/positive to code for hole/particle orbitals?', 'alphabeta', False)
-                self.read_yn('NTOs in Cube file format (requires orbkit)', 'cube_orbitals', False)
-                if self['cube_orbitals']:
-                    self.read_yn('Create VMD Network for NTOs', 'vmd_ntos', False)
-                    if self['vmd_ntos']:
-                        self.read_float('Isosurface value for VMD network', 'vmd_ntos_iv', 0.01)
-                self.read_yn('Calculation of Particle/Hole density (requires orbkit)?', 'comp_p_h_dens', False)
-                if self['comp_p_h_dens']:
-                    self.read_yn('Create VMD Network for NTOs', 'vmd_ph_dens', False)
-                    if self['vmd_ph_dens']:
-                        self.read_float('Isosurface value for VMD network', 'vmd_ph_dens_iv', 0.01)
-        else:
-            self.ostr += 'comp_ntos=False\n'
+                if self['comp_ntos']:
+                    self.read_yn('NTOs in Cube file format (requires orbkit)', 'cube_orbitals', False)
+                    if self['cube_orbitals']:
+                        self.read_yn('Create VMD Network for NTOs', 'vmd_ntos', False)
+                        if self['vmd_ntos']:
+                            self.read_float('Isosurface value for VMD network', 'vmd_ntos_iv', 0.01)
+                    self.read_yn('Calculation of particle/hole density (requires orbkit)?', 'comp_p_h_dens', False)
+                    if self['comp_p_h_dens']:
+                        self.read_yn('Create VMD Network for particle/hole density', 'vmd_ph_dens', False)
+                        if self['vmd_ph_dens']:
+                            self.read_float('Isosurface value for VMD network', 'vmd_ph_dens_iv', 0.01)
+                if self['comp_dntos']:
+                    self.read_int('Compute DNTO densities as cube files?\n 0 - no, 1 - hole, 2 - electron, 3 - both', 'comp_dnto_dens', 0)
 
     def exciton_ana(self):
         if self.ret_yn('Compute approximate exciton size?', True):
@@ -315,8 +320,8 @@ class write_options_theo(input_options.write_options):
         self.read_yn('Calculation of transition densities between ground state and excited states (requires orbkit)', 'comp_rho0n', False)
         if self['comp_rho0n']:
             self.read_yn('Create VMD Network for transition densities', 'vmd_rho0n', False)
-        if self['vmd_rho0n']:
-            self.read_float('Isosurface value for VMD network', 'vmd_rho0n_iv', 0.01)
+            if self['vmd_rho0n']:
+                self.read_float('Isosurface value for VMD network', 'vmd_rho0n_iv', 0.01)
 
     def ddm_parse(self):
         if self['read_libwfa']:
@@ -384,8 +389,11 @@ def run_theoinp():
 
             wopt.nto_ana()
             wopt.comp_rho0n()
-            if wopt['comp_rho0n'] or wopt['cube_orbitals'] or wopt['comp_p_h_dens']:
-                wopt.read_int('Number of CPUs for orbkit calculations','numproc', 4)
+            try:
+                if wopt['comp_rho0n'] or wopt['cube_orbitals'] or wopt['comp_p_h_dens']:
+                    wopt.read_int('Number of CPUs for orbkit calculations','numproc', 4)
+            except error_handler.MsgError:
+                pass
 
             if wopt.ret_yn('Perform exciton analysis?', True):
                 wopt.exciton_ana()

@@ -7,25 +7,52 @@ import error_handler, theo_header, input_options, lib_struc, lib_file
 
 class vmd_options(input_options.write_options):
     def vmd_input(self):
-        self.read_int('How many isovalues (1 or 2)?', 'niso', 2)
-        self.read_float('First isovalue', 'iso1', 0.003)
-        if self['niso'] >= 2:
-            self.read_float('Second isovalue', 'iso2', self['iso1']/3.)
+        self.read_yn('Use special DNTO mode?', 'dnto', False)
+        if self['dnto']:
+            self['niso'] = 2
+            self.read_float('Isovalue for conditional density', 'iso1', 0.003)
+            self.read_str('VMD Material for conditional density', 'mat1', 'AOShiny')
+            self.read_float('Isovalue for probe density', 'iso2', self['iso1'])
+            self.read_str('VMD Material for probe density', 'mat2', 'Glass1')
+        else:
+            self.read_int('How many isovalues (1 or 2)?', 'niso', 2)
+            self.read_float('First isovalue', 'iso1', 0.003)
+            self.read_str('VMD Material for first density', 'mat1', 'AOShiny')
+            if self['niso'] >= 2:
+                self.read_float('Second isovalue', 'iso2', self['iso1']/3.)
+                self.read_str('VMD Material for second density', 'mat2', 'Glass3')
 
-        if self.ret_yn('Adjust detailed options?', False):
+        self.read_int('Width of images in output html file', 'width', 400)
+        self.read_int('Number of columns in the output html file', 'ncol', 4)
+        if self.ret_yn('Adjust file names?', False):
             self.read_str('Name of the file used to load data into VMD', 'lfile', 'load_all.vmd')
             self.read_str('Name of the file used to plot in VMD', 'pfile', 'plot_all.vmd')
             self.read_str('Name of the file used to call GIMP convert', 'cfile', 'convert.bash')
             self.read_str('Name of the HTML file with the plots', 'hfile', 'vmd_plots.html')
-            self.read_int('Width of images in output html file', 'width', 400)
         else:
             self['lfile'] = 'load_all.vmd'
             self['pfile'] = 'plot_all.vmd'
             self['cfile'] = 'convert.bash'
             self['hfile'] = 'vmd_plots.html'
-            self['width'] = 400
 
-    def write_lfile(self, pltfiles):
+    def mod_pltfiles(self, pltfiles):
+        """
+        Separate plotfiles for DNTO mode.
+        """
+        hfiles = []
+        auxhfiles = []
+        efiles = []
+        auxefiles = []
+        for pltf in pltfiles:
+            if 'rho_p' in pltf and 'hole' in pltf:
+                hfiles.append(pltf)
+                auxhfiles.append(pltf.replace('rho_p', 'rho_h'))
+            if 'rho_h' in pltf and 'elec' in pltf:
+                efiles.append(pltf)
+                auxefiles.append(pltf.replace('rho_h', 'rho_p'))
+        return hfiles + efiles, auxhfiles + auxefiles
+
+    def write_lfile(self, pltfiles, auxfiles=[]):
         """
         File for loading data.
         """
@@ -38,35 +65,38 @@ display rendermode GLSL
 display depthcue off
 color Display Background white
 menu graphics on
-material change diffuse Ghost 0.000000
-material change ambient Ghost 0.300000
-material change opacity Ghost 0.100000
-material change shininess Ghost 0.000000
 mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
 """)
+# material change diffuse Ghost 0.000000
+# material change ambient Ghost 0.300000
+# material change opacity Ghost 0.100000
+# material change shininess Ghost 0.000000
         lf.write("""mol addrep 0
 mol addrep 0
-mol modmaterial 1 0 AOShiny
-mol modmaterial 2 0 AOShiny
+mol modmaterial 1 0 %s
+mol modmaterial 2 0 %s
 mol modstyle 1 0 Isosurface  %.5f 0 0 0 1 1
 mol modstyle 2 0 Isosurface -%.5f 0 0 0 1 1
 mol modcolor 1 0 ColorID 0
 mol modcolor 2 0 ColorID 1
-"""%(self['iso1'], self['iso1']))
+"""%(self['mat1'], self['mat1'], self['iso1'], self['iso1']))
 
         if self['niso'] >= 2:
             lf.write("""mol addrep 0
 mol addrep 0
-mol modmaterial 3 0 Glass3
-mol modmaterial 4 0 Glass3
+mol modmaterial 3 0 %s
+mol modmaterial 4 0 %s
 mol modstyle 3 0 Isosurface  %.5f 0 0 0 1 1
 mol modstyle 4 0 Isosurface -%.5f 0 0 0 1 1
 mol modcolor 3 0 ColorID 0
 mol modcolor 4 0 ColorID 1
-"""%(self['iso2'], self['iso2']))
+"""%(self['mat2'], self['mat2'], self['iso2'], self['iso2']))
 
         struc = lib_struc.structure()
         for pltf in pltfiles:
+            ftyp = struc.guess_file_type(pltf)
+            lf.write("mol addfile %s type %s\n"%(pltf,ftyp))
+        for pltf in auxfiles:
             ftyp = struc.guess_file_type(pltf)
             lf.write("mol addfile %s type %s\n"%(pltf,ftyp))
 
@@ -81,7 +111,10 @@ mol modcolor 4 0 ColorID 1
         for iplt, pltf in enumerate(pltfiles):
             pf.write("mol modstyle 1 0 Isosurface  %.5f %i 0 0 1 1\n"%(self['iso1'], iplt))
             pf.write("mol modstyle 2 0 Isosurface -%.5f %i 0 0 1 1\n"%(self['iso1'], iplt))
-            if self['niso'] >= 2:
+            if self['dnto']:
+                pf.write("mol modstyle 3 0 Isosurface  %.5f %i 0 0 1 1\n"%(self['iso2'], iplt + len(pltfiles)))
+                pf.write("mol modstyle 4 0 Isosurface -%.5f %i 0 0 1 1\n"%(self['iso2'], iplt + len(pltfiles)))
+            elif self['niso'] >= 2:
                 pf.write("mol modstyle 3 0 Isosurface  %.5f %i 0 0 1 1\n"%(self['iso2'], iplt))
                 pf.write("mol modstyle 4 0 Isosurface -%.5f %i 0 0 1 1\n"%(self['iso2'], iplt))
             pf.write("render TachyonInternal %s.tga\n"%pltf)
@@ -110,7 +143,7 @@ mol modcolor 4 0 ColorID 1
         ho = lib_file.htmlfile(self['hfile'])
         ho.pre('VMD plots')
 
-        ht = lib_file.htmltable(ncol=4)
+        ht = lib_file.htmltable(ncol=self['ncol'])
         for pltf in pltfiles:
             el = '<img src="%s.png" "border="1" width="%i">'%(pltf, self['width'])
             el += '<br> %s'%pltf
@@ -128,10 +161,17 @@ def run():
 
     if len(pltfiles) == 0:
         raise error_handler.MsgError('No file specified')
+    else:
+        print '%i Files analyzed:'%len(pltfiles),
+        for pltf in pltfiles: print pltf,
+        print
 
     vopt = vmd_options('vmd.in')
     vopt.vmd_input()
-    vopt.write_lfile(pltfiles)
+    if vopt['dnto']:
+        pltfiles, auxfiles = vopt.mod_pltfiles(pltfiles)
+
+    vopt.write_lfile(pltfiles, auxfiles)
     vopt.write_pfile(pltfiles)
     vopt.write_cfile(pltfiles)
     vopt.write_hfile(pltfiles)

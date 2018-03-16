@@ -551,8 +551,8 @@ class tden_ana(dens_ana_base.dens_ana_base):
                 if self.ioptions['molden_orbitals']:
                     self.export_NTOs_molden(state, U, lam, Vt, **export_opts)
                 if dnto_dens == 1 or dnto_dens == 3:
-                    cbfid = lib_orbkit.compute_p_h_dens(state, U, lam, Vt, self.mos,
-                        numproc=self.ioptions['numproc'], **export_opts)
+                    cbfid = lib_orbkit.compute_p_h_dens(state, U, lam/sum(lam), Vt,
+                        self.mos, numproc=self.ioptions['numproc'], **export_opts)
                     cube_ids.append(cbfid)
 
                 ### conditional electron density ###
@@ -563,8 +563,8 @@ class tden_ana(dens_ana_base.dens_ana_base):
                 if self.ioptions['molden_orbitals']:
                     self.export_NTOs_molden(state, U, lam, Vt, **export_opts)
                 if dnto_dens >= 2:
-                    cbfid = lib_orbkit.compute_p_h_dens(state, U, lam, Vt, self.mos,
-                        numproc=self.ioptions['numproc'], **export_opts)
+                    cbfid = lib_orbkit.compute_p_h_dens(state, U, lam/sum(lam), Vt,
+                        self.mos, numproc=self.ioptions['numproc'], **export_opts)
                     cube_ids.append(cbfid)
 
         if jmol_orbs:
