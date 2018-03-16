@@ -6,23 +6,23 @@ mo fill
 mo cutoff 0.04
 
 mo [ 1.000 16]
-write image png "detach_MOLDEN.2_1_0.54.png"
+write image pngt "detach_MOLDEN.2_1_0.54.png"
 mo [ 1.000 15]
-write image png "detach_MOLDEN.2_2_0.46.png"
+write image pngt "detach_MOLDEN.2_2_0.46.png"
 mo [ -0.931 14 -0.366 18]
-write image png "detach_MOLDEN.2_3_0.06.png"
+write image pngt "detach_MOLDEN.2_3_0.06.png"
 mo [ 0.946 17 -0.323 13]
-write image png "attach_MOLDEN.2_1_0.60.png"
+write image pngt "attach_MOLDEN.2_1_0.60.png"
 mo [ -0.931 18 0.366 14]
-write image png "attach_MOLDEN.2_2_0.50.png"
+write image pngt "attach_MOLDEN.2_2_0.50.png"
 
 mo [ -1.000 15]
-write image png "detach_MOLDEN.3_1_0.54.png"
+write image pngt "detach_MOLDEN.3_1_0.54.png"
 mo [ -1.000 16]
-write image png "detach_MOLDEN.3_2_0.46.png"
+write image pngt "detach_MOLDEN.3_2_0.46.png"
 mo [ 0.932 14 0.363 18]
-write image png "detach_MOLDEN.3_3_0.06.png"
+write image pngt "detach_MOLDEN.3_3_0.06.png"
 mo [ 0.945 17 -0.326 13]
-write image png "attach_MOLDEN.3_1_0.59.png"
+write image pngt "attach_MOLDEN.3_1_0.59.png"
 mo [ -0.932 18 0.363 14]
-write image png "attach_MOLDEN.3_2_0.51.png"
+write image pngt "attach_MOLDEN.3_2_0.51.png"
