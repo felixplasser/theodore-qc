@@ -318,8 +318,8 @@ class write_options_theo(input_options.write_options):
         self.read_yn('Calculation of transition densities between ground state and excited states (requires orbkit)', 'comp_rho0n', False)
         if self['comp_rho0n']:
             self.read_yn('Create VMD Network for transition densities', 'vmd_rho0n', False)
-        if self['vmd_rho0n']:
-            self.read_float('Isosurface value for VMD network', 'vmd_rho0n_iv', 0.01)
+            if self['vmd_rho0n']:
+                self.read_float('Isosurface value for VMD network', 'vmd_rho0n_iv', 0.01)
 
     def ddm_parse(self):
         if self['read_libwfa']:
