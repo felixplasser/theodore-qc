@@ -24,7 +24,7 @@ class dens_ana_base:
         rtype = self.ioptions.get('rtype')
         if rtype=='tddftb':
            self.mos = lib_mo.MO_set_tddftb(file=self.ioptions.get('mo_file'))
-        else:  
+        else:
            self.mos = lib_mo.MO_set_molden(file=self.ioptions.get('mo_file'))
         self.mos.read(lvprt=lvprt)
         self.read2_mos(lvprt)
@@ -101,6 +101,8 @@ class dens_ana_base:
             raise error_handler.ElseError(rtype, 'rtype')
 
         self.extra_info()
+        if not self.ioptions['ana_states'] == []:
+            self.state_list = self.select_states(self.ioptions['ana_states'], self.state_list)
 
     def extra_info(self, lvprt=1):
         for state in self.state_list:
@@ -130,6 +132,16 @@ class dens_ana_base:
             num_at = self.struc.ret_num_at()
             print "Number of atoms: %i"%num_at
             print "Composition: %s\n"%self.struc.ret_at_list_composition(range(1, num_at+1))
+
+    def select_states(self, ana_states, state_list):
+        """
+        Analyze only the states given in 'ana_states'
+        """
+        ret_list = []
+        for anas in ana_states:
+            ret_list.append(state_list[anas-1])
+
+        return ret_list
 
 #--------------------------------------------------------------------------#
 # Output
@@ -182,7 +194,7 @@ class dens_ana_base:
 
             prt_list.append([state['exc_en'], vstr])
 
-        if self.ioptions['print_sorted']: prt_list.sort() 
+        if self.ioptions['print_sorted']: prt_list.sort()
 
         ostr  = hstr + "\n"
         ostr += len(hstr) * '-' + "-\n"

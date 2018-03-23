@@ -541,6 +541,9 @@ class tden_ana(dens_ana_base.dens_ana_base):
             print "DNTOs for ", state['name']
 
             for A, Aatoms in enumerate(self.ioptions['at_lists']):
+                if not self.ioptions['dnto_frags'] == []:
+                    if not (A+1) in self.ioptions['dnto_frags']:
+                        continue
                 export_opts={'minlam':self.ioptions['min_occ'], 'pref':"DNTO_"}
 
                 ### conditional hole density ###
