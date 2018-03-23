@@ -11,8 +11,9 @@ def ihelp():
     print " tden_OV.py <dir1> <dir2> [<AO_OV>]"
     print " Command line options:"
     print "  -h, -H, -help: print this help"
-    print "  -ifile, -f [dens_ana.in]: name of the input file"
-    print "  -ifile2, -f2 [dens_ana.in]: name of input file for the second computation"
+    print "  -ifile, -f [tden_OV.in]: name of the input file"
+    print "  -ifile2, -f2 [tden_OV.in]: name of input file for the second computation"
+#    print "  -m: ignore multiplicities"
     exit(0)
 
 ifile = 'tden_OV.in'
@@ -110,11 +111,11 @@ for state1 in tdena1.state_list:
     SDS1 = numpy.dot(SMO[:mdim,:mdim], DS1)
     #print SDS1.shape
     for state2 in tdena2.state_list:
-        if (not 'mult' in state1 or not 'mult' in state2) or (state1['mult'] == state2['mult']):
+        #if (not 'mult' in state1 or not 'mult' in state2) or (state1['mult'] == state2['mult']):
             tden2 = state2['tden']
             #print tden2.shape
             OV = sum((SDS1 * tden2).flatten())
             print " % .8f"%OV,
-        else:
-            print " % .1f       "%0.,
+        #else:
+            #print " % .1f       "%0.,
     print

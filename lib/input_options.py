@@ -375,6 +375,7 @@ class dens_ana_options(read_options):
         self['ignore_irreps'] = [] # ignore irreps in the MO file
         self['min_bf'] = () # minimal contribution of a basis function type in the MO file, e.g. (2, 0.5)
         self['rd_ene'] = False # interpret energies as occupations in the NO files
+        self['ana_states'] = [] # Analyze only a set of states (list starts with 1)
 
         # Output options
         self['output_file']   = "ana_summ.txt"

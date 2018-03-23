@@ -1421,10 +1421,19 @@ class file_parser_rassi(file_parser_libwfa):
             except:
                 break
 
-            if 'Total energies (spin-free)' in line:
+            # if 'Total energies (spin-free)' in line:
+            #     words = rfile.next().split()
+            #     while(len(words) > 0):
+            #         energies.append(float(words[-1]))
+            #         words = rfile.next().split()
+
+            if 'SPIN-FREE ENERGIES' in line:
+                rfile.next()
+                rfile.next()
+                rfile.next()
                 words = rfile.next().split()
                 while(len(words) > 0):
-                    energies.append(float(words[-1]))
+                    energies.append(float(words[1]))
                     words = rfile.next().split()
 
             elif '++ Dipole transition strengths' in line:
