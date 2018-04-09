@@ -20,8 +20,9 @@ class mo_output:
         self.print_mos()
         self.post(ofileh)
 
-    def mopath(self, mo):
-        return "MO_%s.png"%mo
+    def mopath(self, mo, of='png'):
+        if of == 'pngt': of = 'png'
+        return "MO_%s.%s"%(mo,of)
 
     def pre(self):
         raise error_handler.PureVirtualError()
@@ -52,7 +53,7 @@ class mo_output_jmol(mo_output):
     def print_mos(self):
         for imo in self.moc.molist:
             self.outstr += "mo %s\n"%self.moc.moname(imo)
-            self.outstr += "write image png \"%s\"\n"%(self.moc.mopath(imo))
+            self.outstr += "write image %s \"%s\"\n"%(self.jopt['oformat'], self.moc.mopath(imo, self.jopt['oformat']))
 
 class mo_output_html(mo_output):
     """
@@ -63,7 +64,7 @@ class mo_output_html(mo_output):
 
     def print_mos(self):
         for imo in self.moc.molist:
-            el = '<img src="%s" "border="1" width="%i">'%(self.moc.mopath(imo), self.jopt['width'])
+            el = '<img src="%s" "border="1" width="%i">'%(self.moc.mopath(imo, self.jopt['oformat']), self.jopt['width'])
             el += self.moc.mo_extra(imo,pref="<br> MO %i:"%(imo+1))
             self.htable.add_el(el)
 
@@ -82,7 +83,7 @@ class mo_output_tex(mo_output):
     def print_mos(self):
         moex = []
         for imo in self.moc.molist:
-            el = "\\incMO{%s}"%(self.moc.mopath(imo))
+            el = "\\incMO{%s}"%(self.moc.mopath(imo, self.jopt['oformat']))
             moex += [self.moc.mo_extra(imo)]
             lastcol = self.ltable.add_el(el)
             if lastcol:
@@ -94,6 +95,9 @@ class mo_output_tex(mo_output):
         ofileh.write(self.ltable.ret_table())
 
 class mocoll:
+    """
+    MO output for start and end indices.
+    """
     def __init__(self, st_ind, en_ind, mldfile=""):
         self.mldfile = mldfile
 
@@ -109,8 +113,9 @@ class mocoll:
     def moname(self, imo):
         return str(imo+1)
 
-    def mopath(self, imo):
-        return "%sMO_%s.png"%(self.ret_label(),self.moname(imo))
+    def mopath(self, imo, of='png'):
+        if of == 'pngt': of = 'png'
+        return "%sMO_%s.%s"%(self.ret_label(),self.moname(imo),of)
 
     def mo_extra(self, imo, pref="", postf=""):
         if self.mldfile=="":
@@ -222,6 +227,7 @@ class jmol_options(input_options.write_options):
             self.read_float('Rotation around the y-axis', 'rot_y', 0.)
             self.read_float('Rotation around the z-axis', 'rot_z', 0.)
 
+        self.read_str('Format of the output files (png, pngt, ...)', 'oformat', 'png')
         self.read_int('Width of images in output html file', 'width', 400)
 
         self.read_yn('Run Jmol?', 'run_jmol', False)
