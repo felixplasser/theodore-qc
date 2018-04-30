@@ -185,9 +185,8 @@ In the case of read_binary=True, do not delete the line
 from the control file.""")
 
         # write the collected data into the correct block of the 1TDM
-        for iocc in xrange(nfrzc, nocc):
-            for ivirt in xrange(nocc, num_mo):
-                state['tden'][iocc, ivirt] = struct.unpack('d', CCfile.read(8))[0]
+        coeff = struct.unpack(nentry*'d', CCfile.read(nentry*8))
+        state['tden'][nfrzc:nocc, nocc:num_mo] = numpy.reshape(coeff, [nact, nvirt])
 
         lbytes = struct.unpack('4s', CCfile.read(4))
         if lvprt >= 2:
