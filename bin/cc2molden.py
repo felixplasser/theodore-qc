@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
 """
 Convert a log-file to Molden format with the help of cclib.
 """

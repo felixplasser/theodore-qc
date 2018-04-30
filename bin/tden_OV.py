@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
 """
 Compute the overlap between transition density matrices.
 """

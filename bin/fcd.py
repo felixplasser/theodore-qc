@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
 """
 Perform a fragment charge difference analysis, following
   A. A. Voityuk, N. Roesch J. Chem. Phys. 2002, 117, 5607.

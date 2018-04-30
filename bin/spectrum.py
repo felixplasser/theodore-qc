@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
 """
 Create a convoluted spectrum from the oscillator strengths.
 """

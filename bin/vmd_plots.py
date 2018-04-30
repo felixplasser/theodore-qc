@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
 """
 Automatic plotting of densities or MOs with vmd.
 """

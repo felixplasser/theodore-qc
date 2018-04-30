@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
 """
 Automatic plotting of MOs with jmol.
 """
@@ -52,6 +52,11 @@ class mo_output_jmol(mo_output):
 
     def print_mos(self):
         for imo in self.moc.molist:
+            if self.jopt['ccode']:
+                if self.moc.is_occ(imo):
+                    self.outstr += "mo color %s\n"%self.jopt['chole']
+                else:
+                    self.outstr += "mo color %s\n"%self.jopt['celec']
             self.outstr += "mo %s\n"%self.moc.moname(imo)
             self.outstr += "write image %s \"%s\"\n"%(self.jopt['oformat'], self.moc.mopath(imo, self.jopt['oformat']))
 
@@ -97,6 +102,7 @@ class mo_output_tex(mo_output):
 class mocoll:
     """
     MO output for start and end indices.
+    Also base class for other options.
     """
     def __init__(self, st_ind, en_ind, mldfile=""):
         self.mldfile = mldfile
@@ -109,9 +115,16 @@ class mocoll:
             maxmo = 10000
 
         self.molist = range(st_ind-1, min(en_ind, maxmo))
+        self.virtlist = []
 
     def moname(self, imo):
         return str(imo+1)
+
+    def is_occ(self, imo):
+        """
+        Return True if the MO is occupied, and False if not.
+        """
+        return True
 
     def mopath(self, imo, of='png'):
         if of == 'pngt': of = 'png'
@@ -155,6 +168,9 @@ class mocollf(mocoll):
         else:
             return "lumo+%i"%(imo/2)
 
+    def is_occ(self, imo):
+        return imo%2==0
+
     def mo_extra(self, imo, pref="", postf=""):
         if self.mldfile=="":
             return ""
@@ -175,7 +191,8 @@ class mocoll_occ(mocoll):
     """
     Specify occupation threshold.
     """
-    def __init__(self, occmin=0.01, occmax=2.0, mldfile=""):
+    def __init__(self, occmin=0.01, occmax=2.0, mldfile="", eneocc=False):
+        self.eneocc = eneocc
         if mldfile == "":
             raise error_handler.MsgError("mldfile has to be specified for occupation screening!")
 
@@ -184,9 +201,20 @@ class mocoll_occ(mocoll):
         self.moset.read(lvprt=0)
 
         self.molist = []
-        for imo, occ in enumerate(self.moset.occs):
+        if eneocc:
+            loccs = self.moset.ens
+        else:
+            loccs = self.moset.occs
+        for imo, occ in enumerate(loccs):
             if occmin <= abs(occ) <= occmax:
                 self.molist.append(imo)
+
+    def is_occ(self, imo):
+        if self.eneocc:
+            occnum = self.moset.ens[imo]
+        else:
+            occnum = self.moset.occs[imo]
+        return occnum < 0
 
 class jmol_options(input_options.write_options):
     def jmol_input(self):
@@ -215,8 +243,7 @@ class jmol_options(input_options.write_options):
             self.read_float('Minimal absolute occupancy', 'occmin', 0.01)
             self.read_float('Maximal absolute occupancy', 'occmax', 1.99)
             self.read_yn('Preprocess and merge the Molden files', 'preprocess', True)
-            if self['preprocess']:
-                self.read_yn('Interpret energies as occupations', 'eneocc', False)
+            self.read_yn('Interpret energies as occupations (use for Q-Chem)', 'eneocc', False)
         else:
             raise error_handler.ElseError(self['spec'], 'spec')
 
@@ -227,6 +254,10 @@ class jmol_options(input_options.write_options):
             self.read_float('Rotation around the y-axis', 'rot_y', 0.)
             self.read_float('Rotation around the z-axis', 'rot_z', 0.)
 
+        self.read_yn('Color code for hole / electron orbitals', 'ccode', True)
+        if self['ccode']:
+            self.read_str('Hole (occupied) orbitals', 'chole', 'blue red')
+            self.read_str('Electron (virtual) orbitals', 'celec', 'orange green')
         self.read_str('Format of the output files (png, pngt, ...)', 'oformat', 'png')
         self.read_int('Width of images in output html file', 'width', 400)
 
@@ -287,7 +318,7 @@ def run():
         elif jopt['spec'] == 'frontier':
             moc = mocollf(jopt['en_ind'], mldfile)
         elif jopt['spec'] == 'occ':
-            moc = mocoll_occ(jopt['occmin'], jopt['occmax'], mldfile)
+            moc = mocoll_occ(jopt['occmin'], jopt['occmax'], mldfile, jopt['eneocc'])
         else:
             raise error_handler.ElseError(self['spec'], 'spec')
 
