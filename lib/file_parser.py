@@ -36,7 +36,7 @@ class file_parser_base:
         If rfile is given, then the next line is searched for x,y,z components.
         """
         if search_string in line:
-            sr_line = line.strip(search_string).replace(',','')
+            sr_line = line.strip(search_string).replace(',','').replace(']','')
             state[key] = float(sr_line.split()[ind])
 
             if not rfile is None:
@@ -524,6 +524,12 @@ class file_parser_libwfa(file_parser_base):
 
     def parse_keys(self, state, exc_diff, exc_1TDM, line, rfile=None):
         self.parse_key(state, 'mu', line, 'Total dipole')
+        self.parse_key(state, 'mux', line, 'Dip. moment [a.u.]', -3)
+        self.parse_key(state, 'muy', line, 'Dip. moment [a.u.]', -2)
+        self.parse_key(state, 'muz', line, 'Dip. moment [a.u.]', -1)
+        self.parse_key(state, 'Tmux', line, 'Trans. dip. moment [a.u.]', -3)
+        self.parse_key(state, 'Tmuy', line, 'Trans. dip. moment [a.u.]', -2)
+        self.parse_key(state, 'Tmuz', line, 'Trans. dip. moment [a.u.]', -1)
         self.parse_key(state, 'r2', line, 'Total <r^2>')
         self.parse_key(state, 'nu', line, 'Number of unpaired electrons:', 2)
         self.parse_key(state, 'nunl', line, 'Number of unpaired electrons')
