@@ -95,6 +95,11 @@ class file_parser_cclib(file_parser.file_parser_base):
 
                 if coeff*coeff > 0.05:
                     print(" (%i->%i), coeff=% .4f"%(iocc+1, ivirt+1, coeff))
+                elif numpy.isnan(coeff):
+                    print(" ERROR: (%i->%i), coeff=% .4f"%(iocc+1, ivirt+1, coeff))
+                    if self.prog == 'ORCA':
+                        print("For ORCA/RPA jobs, please set read_binary=True\n")
+                    raise error_handler.MsgError("Not-a-number encountered")
 
     def tden_adf(self, state_list, mos, rect_dens):
         print("\n   WARNING: using deprecated old ADF interface!\n")

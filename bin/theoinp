@@ -44,7 +44,8 @@ class write_options_theo(input_options.write_options):
             ('ricc2', 'Turbomole ricc2'),
             ('escf', 'Turbomole escf'),
             ('terachem', 'Terachem (TDDFT)'),
-            ('cclib', 'Use external cclib library: Gaussian, ORCA, GAMESS, ...'),
+            ('cclib', 'Use external cclib library: Gaussian, GAMESS, ...'),
+            ('orca', 'ORCA TDDFT (using cclib)'),
             ('adf', 'ADF (TDDFT)'),
             ('tddftb', 'DFTB+ - TDDFTB')
         ], rdef)
@@ -102,13 +103,18 @@ class write_options_theo(input_options.write_options):
             self['mo_file'] = 'inpfile.molden'
             self['coor_file'] = ''
             self['coor_format'] = ''
-        elif self['rtype'] == 'adf':
-            self['rfile'] = 'TAPE21'
+        elif self['rtype'] == 'cclib':
+            self['rfile'] = ''
             self['mo_file'] = None
             self['coor_file'] = ''
             self['coor_format'] = ''
-        elif self['rtype'] == 'cclib':
-            self['rfile'] = ''
+        elif self['rtype'] == 'orca':
+            self['rfile'] = 'orca.out'
+            self['mo_file'] = None
+            self['coor_file'] = ''
+            self['coor_format'] = ''
+        elif self['rtype'] == 'adf':
+            self['rfile'] = 'TAPE21'
             self['mo_file'] = None
             self['coor_file'] = ''
             self['coor_format'] = ''
@@ -139,13 +145,6 @@ class write_options_theo(input_options.write_options):
         if self['rtype'] in ['qctddft']:
             self.read_yn('Read TDA rather than full TDDFT results?', 'TDA', False)
 
-    def choose_mo_file(self):
-        if not self.has_key('mo_file'): return
-
-        mo_str = 'MO file (Molden format)\
-                      \n -> This file should ideally contain a square invertible coefficient matrix'
-        self.read_str(mo_str, 'mo_file', self['mo_file'], True)
-
         if self['rtype'] == 'ricc2':
             self.read_yn('Read binary CCRE0 files?', 'read_binary', False)
             if not self['read_binary']:
@@ -153,6 +152,15 @@ class write_options_theo(input_options.write_options):
                 print " *** Warning: without read_binary you have to delete the line"
                 print "       implicit core=   x virt=    x"
                 print "     from the control file before running tm2molden."
+        elif self['rtype'] == 'orca':
+            self.read_yn('Read the binary orca.cis file?', 'read_binary', True)
+
+    def choose_mo_file(self):
+        if not self.has_key('mo_file'): return
+
+        mo_str = 'MO file (Molden format)\
+                      \n -> This file should ideally contain a square invertible coefficient matrix'
+        self.read_str(mo_str, 'mo_file', self['mo_file'], True)
 
         if self['rtype'] == 'nos':
             nodir = self.ret_str('Directory with the NO files:', '.', True)
