@@ -2,6 +2,7 @@
 version 1.0
 author: Felix Plasser
 Library containing unit conversion factors. Magnitudes correspond to 1 atomic unit, arranged in dictionaries.
+For example, 'eV':27.2113961 can be understood as 27.211 eV/au
 """
 
 energy={'au':1.0,
