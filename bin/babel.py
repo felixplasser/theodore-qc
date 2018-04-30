@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 #import argparse - only available in version 2.7
 import sys
@@ -31,7 +31,7 @@ else:
     ntxyz -- velocity (Tinker format)
   additionally all formats from openbabel are included
     type 'babel -H' for a complete list"""
-    
+
     print '\nTwo or four arguments required.'
     sys.exit()
 
