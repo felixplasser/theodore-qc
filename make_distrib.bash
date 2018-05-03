@@ -39,7 +39,8 @@ mkdir $TDIR/lib
 cp lib/*.py $TDIR/lib
 
 # cclib as used by TheoDORE
-cp -r external/cclib/src/cclib $TDIR/lib
+rm -v external/cclib/cclib/*.pyc external/cclib/cclib/*/*.pyc
+cp -r external/cclib/cclib $TDIR/lib
 # also copy the source because of LGPL
 mkdir $TDIR/external
 cd $SDIR/external
