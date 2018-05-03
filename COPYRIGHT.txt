@@ -1,6 +1,6 @@
-TheoDORE 1.0
+TheoDORE 1.x
 
-Copyright 2014 Felix Plasser
+Copyright 2018 Felix Plasser
 
 This package is free software governed by the terms of the GNU
 General Public License 3.0 as published by the Free Software

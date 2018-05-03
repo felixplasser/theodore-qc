@@ -3,13 +3,13 @@ width=80
 def print_header(*args, **kwargs):
     print(ret_header(*args, **kwargs))
 
-def ret_header(title=None, ioptions=None, ver='1.7'):
+def ret_header(title=None, ioptions=None, ver='1.7.1'):
     hstr  = width*'=' + '\n'
 
     hstr += addlinec("TheoDORE %s"%ver)
     hstr += addlinec("Theoretical Density, Orbital Relaxation and Exciton analysis")
     hstr += addlinec("Author: Felix Plasser")
-    hstr += addlinec("Contributions by: Ljiljana Stojanovic, Gunter Hermann")
+    hstr += addlinec("Contributions by: Ljiljana Stojanovic, Gunter Hermann, Sebastian Mai")
 
     hstr += width*'-' + '\n'
 
