@@ -192,7 +192,7 @@ from the control file.""")
         if lvprt >= 2:
             print '   Last four bytes:', lbytes
         if not CCfile.read(1) == '':
-            raise error_hanlder.MSGError('parsing file %s'%CCfilen)
+            raise error_handler.MsgError('parsing file %s'%CCfilen)
 
         if lvprt >= 3:
             print 'parsed tden:'
