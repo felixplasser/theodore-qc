@@ -56,10 +56,13 @@ class decomp_options(input_options.write_options):
 
     def decomp_input(self):
         
-        self.read_float('Relative width of the bars', 'barwidth', 0.5)
+        self.read_float('Relative width of the bars', 'barwidth', 0.75)
         self.read_int('Resolution (dpi) for plotting', 'plot_dpi', 200)
         self.read_int('Font size', 'fsize', 5)
         self.read_str("Format of output graphics files", "output_format", "png", autocomp=False)
+        self.labels = []
+        for iF in range(self.numF):
+            self.labels.append(self.ret_str("Label for fragment %i"%(iF+1), 'F%i'%(iF+1)))
             
     def plot(self):       
         matplotlib.rc('font', size=self['fsize'])
@@ -75,19 +78,21 @@ class decomp_options(input_options.write_options):
         #print hpops
         #print epops
         
-        pylab.figure(figsize=[0.5 * len(self.state_list),3])
+        pylab.figure(figsize=[0.5 * len(self.state_list)+1,3])
 
         barkwargs = {'width':self['barwidth']}
 
         ebottom = numpy.zeros(len(self.state_list))
         hbottom = numpy.zeros(len(self.state_list))
         for iF in range(self.numF):
-            pylab.bar(ind, epops[:, iF], bottom=ebottom, color=self['colors'][iF], label='F%i'%(iF+1), **barkwargs)
+            pylab.bar(ind, epops[:, iF], bottom=ebottom, color=self['colors'][iF], label=self.labels[iF], **barkwargs)
             ebottom += epops[:, iF]
 
             pylab.bar(ind, hpops[:, iF], bottom=hbottom, color=self['colors'][iF], **barkwargs)
             hbottom += hpops[:, iF]
 
+        pylab.xlabel('Excited states')
+        pylab.ylabel('  Hole   <---> Electron')
         pylab.plot([ind[0]-0.5, ind[-1]+0.5+self['barwidth']], [0.,0.], 'k-')
 
         pylab.legend()
