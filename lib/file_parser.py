@@ -30,13 +30,16 @@ class file_parser_base:
             nvirt = num_mo - nocc
             return numpy.zeros([nocc, num_mo])
 
-    def parse_key(self, state, key, line, search_string, ind=-1, rfile=None):
+    def parse_key(self, state, key, line, search_string, ind=-1, rfile=None, not_string=None):
         """
         Find search_string in the specified line and set it as state[key].
         If rfile is given, then the next line is searched for x,y,z components.
         """
         if search_string in line:
-            sr_line = line.strip(search_string).replace(',','').replace(']','')
+            if not not_string is None:
+                if not_string in line: return
+
+            sr_line = line.strip(search_string).replace(',','').replace(']','').replace('[','')
             state[key] = float(sr_line.split()[ind])
 
             if not rfile is None:
@@ -529,6 +532,9 @@ class file_parser_libwfa(file_parser_base):
         self.parse_key(state, 'Tmux', line, 'Trans. dip. moment [a.u.]', -3)
         self.parse_key(state, 'Tmuy', line, 'Trans. dip. moment [a.u.]', -2)
         self.parse_key(state, 'Tmuz', line, 'Trans. dip. moment [a.u.]', -1)
+        self.parse_key(state, 'r2x', line, '<r^2>', -3, not_string='Total')
+        self.parse_key(state, 'r2y', line, '<r^2>', -2, not_string='Total')
+        self.parse_key(state, 'r2z', line, '<r^2>', -1, not_string='Total')
         self.parse_key(state, 'r2', line, 'Total <r^2>')
         self.parse_key(state, 'nu', line, 'Number of unpaired electrons:', 2)
         self.parse_key(state, 'nunl', line, 'Number of unpaired electrons')
@@ -537,7 +543,7 @@ class file_parser_libwfa(file_parser_base):
         self.parse_key(state, 'PRNTO', line, 'PR_NTO')
         self.parse_key(state, 'PRD', line, 'PR_D', 6)
         self.parse_key(state, 'PRA', line, 'PR_A')
-        self.parse_key(state, '2P', line, 'Two-photon absorption cross-section')
+        self.parse_key(state, '2P', line, 'Two-photon absorption cross-section [a.u.]')
         self.parse_key(state, 'S_HE', line, 'Entanglement entropy')
         self.parse_key(state, 'Z_HE', line, 'Nr of entangled states')
         self.parse_key(state, 'mu', line, 'Dipole moment [D]', rfile=rfile)
@@ -605,7 +611,7 @@ class file_parser_qcadc(file_parser_libwfa):
                 if not 'exc_en' in state_list[-1]:
                     state_list[-1]['exc_en'] = exc_chk
 
-                if abs(exc_chk - state_list[-1]['exc_en']) > 1.e-4:
+                if abs(exc_chk - state_list[-1]['exc_en']) > exc_chk * 1.e-4:
                     print exc_chk, state_list[-1]['exc_en']
                     raise error_handler.MsgError("Excitation energies do not match")
 
@@ -622,6 +628,19 @@ class file_parser_qcadc(file_parser_libwfa):
 
             if len(state_list) > 0:
                 self.parse_keys(state_list[-1], exc_diff, exc_1TDM, line)
+
+        # Post-processing
+        for state in state_list:
+            # 2P cross-section pre-factor in GM
+            if '2P' in state:
+                state['GM'] = state['2P']/30 * numpy.pi**3 * units.constants['c0']**(-2) *\
+                  (state['exc_en'] / units.energy['eV'])**2 * units.tpa['GM']
+                state['2P'] *= .000001
+            # Quadrupole moment in kilo-Buckingham
+            if 'r2x' in state:
+                state['Qxx'] = (3 * state['r2x'] - state['r2']) * units.dipole['D'] * units.length['A'] * .001
+                state['Qyy'] = (3 * state['r2y'] - state['r2']) * units.dipole['D'] * units.length['A'] * .001
+                state['Qzz'] = (3 * state['r2z'] - state['r2']) * units.dipole['D'] * units.length['A'] * .001
 
         return state_list
 
