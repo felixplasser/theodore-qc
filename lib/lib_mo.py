@@ -29,6 +29,15 @@ class MO_set:
         """
         raise error_handler.PureVirtualError()
 
+    def comp_inv_lowdin(self, Om_formula, lvprt=1):
+        """
+        Compute either the inverse or Lowdin matrix depending on Om_formula.
+        """
+        if Om_formula <= 1:
+            self.compute_inverse(lvprt)
+        elif Om_formula == 2:
+            self.compute_lowdin_mat(lvprt)
+
     def compute_inverse(self, lvprt=1):
         """
         Compute the inverse of the MO matrix.
@@ -251,7 +260,7 @@ class MO_set:
 
         return bf_blocks
 
-    def symsort(self, irrep_labels, sepov=True):
+    def symsort(self, irrep_labels, Om_formula, sepov=True):
         """
         Sort MOs by symmetry (in case they are sorted by energy).
         This is more of a hack than a clean and stable routine...
@@ -291,7 +300,7 @@ class MO_set:
         assert(jmo==self.ret_num_mo()-1)
 
         self.mo_mat = numpy.dot(self.mo_mat, T.transpose())
-        self.compute_inverse()
+        self.comp_inv_lowdin(Om_formula)
 
 class MO_set_molden(MO_set):
     def export_AO(self, ens, occs, Ct, fname='out.mld', cfmt='% 10E', occmin=-1, alphabeta=False):
@@ -471,6 +480,7 @@ class MO_set_molden(MO_set):
 
         if len(mo_vecs[0])!=num_orb:
             raise error_handler.MsgError('Inconsistent number of basis functions!')
+            #print 'WARNING: Inconsistent number of basis functions!'
 
         if len(mo_vecs[-1]) == 0:
             lv = [len(mo_vec) for mo_vec in mo_vecs]

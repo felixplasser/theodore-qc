@@ -30,10 +30,7 @@ class dens_ana_base:
         self.read2_mos(lvprt)
 
     def read2_mos(self, lvprt=1):
-        if self.ioptions['Om_formula'] <= 1:
-            self.mos.compute_inverse()
-        elif self.ioptions['Om_formula'] == 2:
-            self.mos.compute_lowdin_mat()
+        self.mos.comp_inv_lowdin(self.ioptions['Om_formula'], lvprt)
         self.num_mo  = self.mos.ret_num_mo()
         self.num_bas = self.mos.ret_num_bas()
 
@@ -128,10 +125,25 @@ class dens_ana_base:
         else:
             self.struc = None
 
-        if lvprt >= 1 and not self.struc==None:
-            num_at = self.struc.ret_num_at()
-            print "Number of atoms: %i"%num_at
-            print "Composition: %s\n"%self.struc.ret_at_list_composition(range(1, num_at+1))
+        if not self.struc == None:
+            nquad  = self.struc.ret_nuc_multipole(2)
+            nquadt = nquad[0] + nquad[1] + nquad[2]
+            for state in self.state_list:
+                # Quadrupole moment in Buckingham = Debye-Ang
+                if 'r2x' in state:
+                    # Traceless
+                    # state['Qxx'] = (3 * (-state['r2x'] + nquad[0]) + state['r2'] - nquadt) * units.dipole['D'] * units.length['A']
+                    # state['Qyy'] = (3 * (-state['r2y'] + nquad[1]) + state['r2'] - nquadt) * units.dipole['D'] * units.length['A']
+                    # state['Qzz'] = (3 * (-state['r2z'] + nquad[2]) + state['r2'] - nquadt) * units.dipole['D'] * units.length['A']
+                    # Not traceless
+                   state['Qxx'] = (-state['r2x'] + nquad[0]) * units.dipole['D'] * units.length['A']
+                   state['Qyy'] = (-state['r2y'] + nquad[1]) * units.dipole['D'] * units.length['A']
+                   state['Qzz'] = (-state['r2z'] + nquad[2]) * units.dipole['D'] * units.length['A']
+
+            if lvprt >= 1:
+                num_at = self.struc.ret_num_at()
+                print "Number of atoms: %i"%num_at
+                print "Composition: %s\n"%self.struc.ret_at_list_composition(range(1, num_at+1))
 
     def select_states(self, ana_states, state_list):
         """
