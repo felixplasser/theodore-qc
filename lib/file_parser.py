@@ -122,7 +122,7 @@ class file_parser_ricc2(file_parser_base):
                 self.set_tden_conf(state, mos)
 
         if self.ioptions.get('read_binary'):
-               mos.symsort(self.ioptions['irrep_labels'])
+               mos.symsort(self.ioptions['irrep_labels'], self.ioptions['Om_formula'])
                if self.ioptions['jmol_orbitals']:
                     print " \nWARNING: jmol_orbitals not possible with read_binary. Use molden_orbitals instead!"
                     self.ioptions['jmol_orbitals'] = False
@@ -605,6 +605,11 @@ class file_parser_qcadc(file_parser_libwfa):
                 state_list[-1]['Om']   = om_at.sum()
                 state_list[-1]['OmAt'] = om_at
 
+            elif 'MP(2) Summary' in line:
+                state_list.append({})
+                state_list[-1]['name'] = 'gr-st'
+                state_list[-1]['exc_en'] = 0.
+
             elif ' Excitation energy:' in line:
                 exc_chk = float(words[2])
 
@@ -630,17 +635,15 @@ class file_parser_qcadc(file_parser_libwfa):
                 self.parse_keys(state_list[-1], exc_diff, exc_1TDM, line)
 
         # Post-processing
+        # Pre-factor for 2P cross-section
+        pre2P = numpy.pi**3 * units.constants['c0']**(-2) * units.tpa['GM']
+        # This is numerically the same as [JCP, 146, 174102]:
+        #   numpy.pi**3 / u.c0 * u.cm**5 / 2.9979E10 * 10**50
         for state in state_list:
             # 2P cross-section pre-factor in GM
             if '2P' in state:
-                state['GM'] = state['2P']/30 * numpy.pi**3 * units.constants['c0']**(-2) *\
-                  (state['exc_en'] / units.energy['eV'])**2 * units.tpa['GM']
+                state['GM'] = pre2P * state['2P']/30 * (state['exc_en'] / units.energy['eV'])
                 state['2P'] *= .000001
-            # Quadrupole moment in kilo-Buckingham
-            if 'r2x' in state:
-                state['Qxx'] = (3 * state['r2x'] - state['r2']) * units.dipole['D'] * units.length['A'] * .001
-                state['Qyy'] = (3 * state['r2y'] - state['r2']) * units.dipole['D'] * units.length['A'] * .001
-                state['Qzz'] = (3 * state['r2z'] - state['r2']) * units.dipole['D'] * units.length['A'] * .001
 
         return state_list
 
