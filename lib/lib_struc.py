@@ -415,6 +415,21 @@ class structure:
 
         return ret_str
 
+    def ret_nuc_multipole(self, power):
+        """
+        Return a nuclear multipolemoment.
+        """
+        mom = numpy.array([0., 0., 0.])
+
+        for i in xrange(self.mol.NumAtoms()):
+            atom = self.mol.GetAtom(i+1)
+            Z = atom.GetAtomicNum()
+            pos = numpy.array([atom.x(), atom.y(), atom.z()]) / units.length['A']
+
+            mom += Z * pos**power
+
+        return mom
+
     def make_coord_file(self, file_path, file_type=None, lvprt=0):
         """
         Write the structure file.
