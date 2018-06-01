@@ -5,7 +5,7 @@ Download and install orbkit if you want to use the functions.
 Author: Gunter Hermann
 """
 
-import dens_ana_base
+import dens_ana_base, error_handler
 import numpy,tempfile
 
 # Import orbkit modules
@@ -25,8 +25,13 @@ class lib_orbkit:
         self.slice_length = 1e4
 
     def orbkit_geo_ao_conversion(self,mos):
+        """
+        Read header with molden writer from orbkit
+        """
+        if mos.header == '':
+            raise error_handler.MsgError('Empty header for Molden file.\n\
+            orbkit cannot be used.')
 
-        # Read geader with molden writer from orbkit
         tmp = tempfile.NamedTemporaryFile()
 
         # Open the file for writing.
