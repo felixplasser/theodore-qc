@@ -5,9 +5,11 @@ This is a wrapper to python-openbabel.
 
 import os, shutil, locale
 import numpy
+obabel_avail = True
 try:
     import openbabel
 except ImportError:
+    obabel_avail = False
     print " *** Warning: python-openbabel not found! ***"
     print " Using emulation program with limited capabilities ..."
     import OB_repl as openbabel

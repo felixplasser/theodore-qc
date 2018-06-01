@@ -3,7 +3,7 @@
 Input generation for TheoDORE runs.
 """
 
-import theo_header, input_options, lib_struc, error_handler
+import theo_header, input_options, lib_struc, error_handler, orbkit_interface
 import os
 
 class write_options_theo(input_options.write_options):
@@ -273,14 +273,16 @@ class write_options_theo(input_options.write_options):
         if self.ret_yn('Perform natural transition orbital (NTO) analysis?', True):
             self.ostr += 'comp_ntos=True\n'
             self['prop_list'] += ['PRNTO', 'Z_HE']
-            if not self['rtype'] in ['adf', 'tddftb']:
-                if self['rtype'] == 'ricc2' and self['read_binary'] == True:
-                    self.read_yn('NTOs in Molden format', 'molden_orbitals', True)
-                else:
-                    self.read_yn('NTOs as Jmol script?', 'jmol_orbitals', True)
-                    self.read_yn('NTOs in Molden format', 'molden_orbitals', False)
-                if self['molden_orbitals']:
-                    self.read_yn('Use alpha/beta rather then negative/positive to code for hole/particle orbitals?', 'alphabeta', False)
+            if self['rtype'] in ['adf', 'tddftb']:
+                return
+            if self['rtype'] == 'ricc2' and self['read_binary'] == True:
+                self.read_yn('NTOs in Molden format', 'molden_orbitals', True)
+            else:
+                self.read_yn('NTOs as Jmol script?', 'jmol_orbitals', True)
+                self.read_yn('NTOs in Molden format', 'molden_orbitals', False)
+            if self['molden_orbitals']:
+                self.read_yn('Use alpha/beta rather then negative/positive to code for hole/particle orbitals?', 'alphabeta', False)
+            if orbkit_interface.orbkit_avail:
                 self.read_yn('NTOs in Cube file format (requires orbkit)', 'cube_orbitals', False)
                 if self['cube_orbitals']:
                     self.read_yn('Create VMD Network for NTOs', 'vmd_ntos', False)
@@ -323,6 +325,10 @@ class write_options_theo(input_options.write_options):
         self.read_yn('Mayer bond order and valence analysis?', 'BO_ana', True)
 
     def comp_rho0n(self):
+        if not orbkit_interface.orbkit_avail:
+            return
+        if self['rtype'] in ['adf', 'tddftb']:
+            return
         self.read_yn('Calculation of transition densities between ground state and excited states (requires orbkit)', 'comp_rho0n', False)
         if self['comp_rho0n']:
             self.read_yn('Create VMD Network for transition densities', 'vmd_rho0n', False)

@@ -2,6 +2,7 @@ Download the newest TheoDORE release and tutorial.
 
 - Automatic fragment generation (analyze_correlations.py) by Sebastian Mai
 - Fix for ricc2 with symmetry + read_binary + Om_formula=2
+- Improved orbkit interface
 
 TheoDORE 1.7.1
 - ORCA: read binary file
