@@ -39,6 +39,7 @@ mkdir $TDIR/lib
 cp lib/*.py $TDIR/lib
 
 # cclib as used by TheoDORE
+echo "Removing cclib binary files"
 rm -v external/cclib/cclib/*.pyc external/cclib/cclib/*/*.pyc
 cp -r external/cclib/cclib $TDIR/lib
 # also copy the source because of LGPL

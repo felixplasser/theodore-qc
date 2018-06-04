@@ -34,7 +34,6 @@ class vmd_options(input_options.write_options):
 material change diffuse Glass3 0.10000
 axes location Off
 display projection Orthographic
-display rendermode GLSL
 display depthcue off
 color Display Background white
 menu graphics on

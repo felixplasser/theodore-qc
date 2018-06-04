@@ -609,6 +609,7 @@ class file_parser_qcadc(file_parser_libwfa):
                 state_list.append({})
                 state_list[-1]['name'] = 'gr-st'
                 state_list[-1]['exc_en'] = 0.
+                state_list[-1]['state_ind'] = 0
 
             elif ' Excitation energy:' in line:
                 exc_chk = float(words[2])
