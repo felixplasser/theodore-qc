@@ -3,6 +3,7 @@
 Plot arrows for dipole and quadrupole moments.
 """
 
+import numpy
 import theo_header, units, lib_file, input_options, error_handler
 
 class mom_options(input_options.write_options):
@@ -10,17 +11,27 @@ class mom_options(input_options.write_options):
         self.read_yn('Plot dipole moments', 'do_dip', True)
         if self['do_dip']:
             self.read_float('Scale factor for dipole moments', 'dip_scale', 2.0)
-            self.read_float('Radius for dipole moments', 'dip_rad', 0.4)
-        self.read_yn('Plot quadrupole moments', 'do_quad', True)
+            self.read_float('Radius for dipole moments', 'dip_rad', 0.2)
+        self.read_yn('Plot (diagonal) quadrupole moments', 'do_quad', True)
         if self['do_quad']:
-            self.read_float('Scale factor for dipole moments', 'quad_scale', 1.0)
+            self.read_float('Scale factor for quadrupole moments', 'quad_scale', 1.0)
             self.read_float('Radius for quadrupole moments', 'quad_rad', 0.2)
+
+        self.read_yn('Plot transition dipole moments', 'do_tdip', True)
+        if self['do_tdip']:
+            self.read_float('Scale factor for transition dipole moments', 'tdip_scale', 4.0)
+            self.read_float('Radius for transition dipole moments', 'tdip_rad', 0.2)
+        self.read_yn('Plot 2-photon moments', 'do_2P', True)
+        if self['do_2P']:
+            self.read_float('Scale factor for 2P moments', '2P_scale', 1.0)
+            self.read_float('Radius for 2P moments', '2P_rad', 0.2)        
 
     def write_afile(self, filen='arrows.vmd'):
         """
         File for write arrows for the different states.
         """
         af = open(filen, 'w')
+        self.af = af
         af.write(\
 """axes location Off
 display projection Orthographic
@@ -33,7 +44,6 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
         sfile = lib_file.summ_file(self['ana_file'])
         ddict = sfile.ret_ddict()
         dfac = self['dip_scale']  * units.length['A']
-        qfac = self['quad_scale'] * units.length['A']
         for state in sfile.ret_state_labels():
             sdict = ddict[state]
 
@@ -45,73 +55,142 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
                 else:
                     af.write('draw color green\n')
                     af.write('draw cylinder ')
-                    self.vmd_coors(-.5 * dfac, .4 * dfac, sdict['mux'], sdict['muy'], sdict['muz'], af)
+                    self.vmd_coors(-.5 * dfac, .4 * dfac, sdict['mux'], sdict['muy'], sdict['muz'])
                     af.write('radius % .3f\n'%self['dip_rad'])
 
                     af.write('draw cone ')
-                    self.vmd_coors( .4 * dfac, .6 * dfac, sdict['mux'], sdict['muy'], sdict['muz'], af)
+                    self.vmd_coors( .4 * dfac, .6 * dfac, sdict['mux'], sdict['muy'], sdict['muz'])
                     af.write('radius % .3f\n'%(2*self['dip_rad']))
-
             if self['do_quad']:
-                if not 'Qxx' in sdict:
-                    print " *** No quadrupole info found for state %s"%state
-                else:
-                    tQxx = 2 * sdict['Qxx'] - sdict['Qyy'] - sdict['Qzz']
-                    tQyy = 2 * sdict['Qyy'] - sdict['Qxx'] - sdict['Qzz']
-                    tQzz = 2 * sdict['Qzz'] - sdict['Qyy'] - sdict['Qxx']
-                    
-                    if self.vmd_color(tQxx, af):
-                        pQ = abs(tQxx)**.5 * units.length['A']
-                        af.write('draw cylinder ')
-                        self.vmd_coors(-.4 * dfac, .4 * dfac, pQ, 0., 0., af)
-                        af.write('radius % .3f\n'%self['quad_rad'])
-                        af.write('draw cone ')
-                        self.vmd_coors(.4 * dfac, .6 * dfac, pQ, 0., 0., af)
-                        af.write('radius % .3f\n'%(2*self['quad_rad']))
-                        af.write('draw cone ')
-                        self.vmd_coors(-.4 * dfac, -.6 * dfac, pQ, 0., 0., af)
-                        af.write('radius % .3f\n'%(2*self['quad_rad']))
-                    if self.vmd_color(tQyy, af):
-                        pQ = abs(tQyy)**.5 * units.length['A']
-                        af.write('draw cylinder ')
-                        self.vmd_coors(-.4 * dfac, .4 * dfac, 0., pQ, 0., af)
-                        af.write('radius % .3f\n'%self['quad_rad'])
-                        af.write('draw cone ')
-                        self.vmd_coors(.4 * dfac, .6 * dfac, 0., pQ, 0., af)
-                        af.write('radius % .3f\n'%(2*self['quad_rad']))
-                        af.write('draw cone ')
-                        self.vmd_coors(-.4 * dfac, -.6 * dfac, 0., pQ, 0., af)
-                        af.write('radius % .3f\n'%(2*self['quad_rad']))
-                    if self.vmd_color(tQzz, af):
-                        pQ = abs(tQzz)**.5 * units.length['A']
-                        af.write('draw cylinder ')
-                        self.vmd_coors(-.4 * dfac, .4 * dfac, 0., 0., pQ, af)
-                        af.write('radius % .3f\n'%self['quad_rad'])
-                        af.write('draw cone ')
-                        self.vmd_coors(.4 * dfac, .6 * dfac, 0., 0., pQ, af)
-                        af.write('radius % .3f\n'%(2*self['quad_rad']))
-                        af.write('draw cone ')
-                        self.vmd_coors(-.4 * dfac, -.6 * dfac, 0., 0., pQ, af)
-                        af.write('radius % .3f\n'%(2*self['quad_rad']))                        
+                self.plot_quad(sdict)
 
             af.write('render TachyonInternal state_%s.tga\n\n'%state)
+
+            # Transition dipole and 2P moments
+            af.write('draw delete all\n')
+            if self['do_tdip']:
+                if not 'Tmux' in sdict:
+                    print " *** No transition dipole info found for state %s"%state
+                else:
+                    af.write('draw color green\n')
+                    af.write('draw cylinder ')
+                    self.vmd_coors(-.5 * dfac, .4 * dfac, sdict['Tmux'], sdict['Tmuy'], sdict['Tmuz'])
+                    af.write('radius % .3f\n'%self['tdip_rad'])
+
+                    af.write('draw cone ')
+                    self.vmd_coors( .4 * dfac, .6 * dfac, sdict['Tmux'], sdict['Tmuy'], sdict['Tmuz'])
+                    af.write('radius % .3f\n'%(2*self['tdip_rad']))          
+            if self['do_2P']:
+                self.plot_2P(sdict)
+
+            af.write('render TachyonInternal trans_%s.tga\n\n'%state)
 
         af.close()
         print "File %s written."%af.name
 
-    def vmd_coors(self, fac1, fac2, x, y, z, af):
-        af.write('{% .3f % .3f % .3f} '%(fac1 * x, fac1 * y, fac1 * z))
-        af.write('{% .3f % .3f % .3f} '%(fac2 * x, fac2 * y, fac2 * z))
+    def plot_quad(self, sdict):
+        if not 'Qxx' in sdict:
+            return
 
-    def vmd_color(self, val, af, eps=1.e-3):
+        tQxx = 2 * sdict['Qxx'] - sdict['Qyy'] - sdict['Qzz']
+        tQyy = 2 * sdict['Qyy'] - sdict['Qxx'] - sdict['Qzz']
+        tQzz = 2 * sdict['Qzz'] - sdict['Qyy'] - sdict['Qxx']
+        
+        af = self.af
+        qfac = self['quad_scale'] * units.length['A']
+        if self.vmd_color(tQxx):
+            pQ = abs(tQxx)**.5
+            af.write('draw cylinder ')
+            self.vmd_coors(-.4 * qfac, .4 * qfac, pQ, 0., 0.)
+            af.write('radius % .3f\n'%self['quad_rad'])
+            af.write('draw cone ')
+            self.vmd_coors(.4 * qfac, .6 * qfac, pQ, 0., 0.)
+            af.write('radius % .3f\n'%(2*self['quad_rad']))
+            af.write('draw cone ')
+            self.vmd_coors(-.4 * qfac, -.6 * qfac, pQ, 0., 0.)
+            af.write('radius % .3f\n'%(2*self['quad_rad']))
+        if self.vmd_color(tQyy):
+            pQ = abs(tQyy)**.5
+            af.write('draw cylinder ')
+            self.vmd_coors(-.4 * qfac, .4 * qfac, 0., pQ, 0.)
+            af.write('radius % .3f\n'%self['quad_rad'])
+            af.write('draw cone ')
+            self.vmd_coors(.4 * qfac, .6 * qfac, 0., pQ, 0.)
+            af.write('radius % .3f\n'%(2*self['quad_rad']))
+            af.write('draw cone ')
+            self.vmd_coors(-.4 * qfac, -.6 * qfac, 0., pQ, 0.)
+            af.write('radius % .3f\n'%(2*self['quad_rad']))
+        if self.vmd_color(tQzz):
+            pQ = abs(tQzz)**.5
+            af.write('draw cylinder ')
+            self.vmd_coors(-.4 * qfac, .4 * qfac, 0., 0., pQ)
+            af.write('radius % .3f\n'%self['quad_rad'])
+            af.write('draw cone ')
+            self.vmd_coors(.4 * qfac, .6 * qfac, 0., 0., pQ)
+            af.write('radius % .3f\n'%(2*self['quad_rad']))
+            af.write('draw cone ')
+            self.vmd_coors(-.4 * qfac, -.6 * qfac, 0., 0., pQ)
+            af.write('radius % .3f\n'%(2*self['quad_rad']))          
+
+    def plot_2P(self, sdict):
+        if not '2Pxx' in sdict:
+            return
+    
+        TPmat = numpy.zeros([3,3], float)
+        TPmat[0,:] = sdict['2Pxx'], sdict['2Pxy'], sdict['2Pxz']
+        TPmat[1,:] = sdict['2Pyx'], sdict['2Pyy'], sdict['2Pyz']
+        TPmat[2,:] = sdict['2Pzx'], sdict['2Pzy'], sdict['2Pzz']
+        
+        TPstrength = 0.
+        for mu in range(3):
+            for nu in range(3):
+                TPstrength += TPmat[mu,mu]*TPmat[nu,nu] + TPmat[mu,nu]*TPmat[mu,nu] + TPmat[mu,nu]*TPmat[nu,mu]
+        TPstrength *= 0.000002
+        #TPstrength /= 15.
+        print '30*TPA strength [M a.u.]: % .5f'%TPstrength
+        
+        (Sdiag, coor) = numpy.linalg.eigh(TPmat)
+        print Sdiag
+        for mu in range(3):
+            if self.vmd_color(Sdiag[mu], eps=1.):
+                fac = self['2P_scale'] * units.length['A'] * abs(Sdiag[mu])**.5
+                self.plot_quad_comp(fac, coor[0, mu], coor[1, mu], coor[2, mu], self['2P_rad'])
+
+        #self.af.write('draw color black\ndraw sphere {0 0 0} radius % .3f\n'%self['2P_rad'])
+
+    def plot_quad_comp(self, fac, x, y, z, rad):
+        ifac = 0.5 * fac
+        self.af.write('draw cylinder ')
+        self.vmd_coors(-ifac, ifac, x, y, z)
+        self.af.write('radius % .3f\n'%rad)
+        
+        self.af.write('draw sphere ')
+        self.af.write('{% .3f % .3f % .3f} '%(ifac * x, ifac * y, ifac * z))
+        self.af.write('radius % .3f\n'%(2*rad))
+
+        self.af.write('draw sphere ')
+        self.af.write('{% .3f % .3f % .3f} '%(-ifac * x, -ifac * y, -ifac * z))
+        self.af.write('radius % .3f\n'%(2*rad))
+        # self.af.write('draw cone ')
+        # self.vmd_coors( .4 * fac,  .6 * fac, coor[0, mu], coor[1, mu], coor[2, mu])
+        # self.af.write('radius % .3f\n'%(2*self['2P_rad']))
+        # self.af.write('draw cone ')
+        # self.vmd_coors(-.4 * fac, -.6 * fac, coor[0, mu], coor[1, mu], coor[2, mu])
+        # self.af.write('radius % .3f\n'%(2*self['2P_rad']))        
+
+    def vmd_coors(self, fac1, fac2, x, y, z):
+        self.af.write('{% .3f % .3f % .3f} '%(fac1 * x, fac1 * y, fac1 * z))
+        self.af.write('{% .3f % .3f % .3f} '%(fac2 * x, fac2 * y, fac2 * z))
+
+    def vmd_color(self, val, eps=1.e-3):
         if abs(val) < eps:
             return False
         elif val > 0.0:
-            af.write('draw color blue\n')
+            self.af.write('draw color blue\n')
             return True
         else:
-            af.write('draw color red\n')
-            return True            
+            self.af.write('draw color red\n')
+            return True     
 
 if __name__=='__main__':
     import sys
