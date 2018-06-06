@@ -205,7 +205,7 @@ class write_options(options):
 
         return val
 
-    def read_float(self, title, key, default=1.):
+    def read_float(self, title, key, default=1.111):
         """
         Read a float from input.
         """
@@ -215,12 +215,12 @@ class write_options(options):
 
         self.write_option(key, val)
 
-    def ret_float(self, title, default=1.):
+    def ret_float(self, title, default=1.111):
         print
         print title
 
         inpstr = 'Choice: '
-        if not default==1.: inpstr += '[%f] '%default
+        if not default==1.111: inpstr += '[%f] '%default
 
         sval = raw_input(inpstr)
         if sval=='':

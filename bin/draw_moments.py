@@ -15,16 +15,16 @@ class mom_options(input_options.write_options):
         self.read_yn('Plot (diagonal) quadrupole moments', 'do_quad', True)
         if self['do_quad']:
             self.read_float('Scale factor for quadrupole moments', 'quad_scale', 1.0)
-            self.read_float('Radius for quadrupole moments', 'quad_rad', 0.2)
+            self.read_float('Radius for quadrupole moments', 'quad_rad', 0.1)
 
         self.read_yn('Plot transition dipole moments', 'do_tdip', True)
         if self['do_tdip']:
-            self.read_float('Scale factor for transition dipole moments', 'tdip_scale', 4.0)
+            self.read_float('Scale factor for transition dipole moments', 'tdip_scale', 6.0)
             self.read_float('Radius for transition dipole moments', 'tdip_rad', 0.2)
         self.read_yn('Plot 2-photon moments', 'do_2P', True)
         if self['do_2P']:
             self.read_float('Scale factor for 2P moments', '2P_scale', 1.0)
-            self.read_float('Radius for 2P moments', '2P_rad', 0.2)        
+            self.read_float('Radius for 2P moments', '2P_rad', 0.1)
 
     def write_afile(self, filen='arrows.vmd'):
         """
@@ -97,40 +97,15 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
         tQzz = 2 * sdict['Qzz'] - sdict['Qyy'] - sdict['Qxx']
         
         af = self.af
-        qfac = self['quad_scale'] * units.length['A']
         if self.vmd_color(tQxx):
-            pQ = abs(tQxx)**.5
-            af.write('draw cylinder ')
-            self.vmd_coors(-.4 * qfac, .4 * qfac, pQ, 0., 0.)
-            af.write('radius % .3f\n'%self['quad_rad'])
-            af.write('draw cone ')
-            self.vmd_coors(.4 * qfac, .6 * qfac, pQ, 0., 0.)
-            af.write('radius % .3f\n'%(2*self['quad_rad']))
-            af.write('draw cone ')
-            self.vmd_coors(-.4 * qfac, -.6 * qfac, pQ, 0., 0.)
-            af.write('radius % .3f\n'%(2*self['quad_rad']))
+            fac = self['quad_scale'] * units.length['A'] * abs(tQxx)**.5
+            self.plot_quad_comp(fac, 1., 0., 0., self['quad_rad'])
         if self.vmd_color(tQyy):
-            pQ = abs(tQyy)**.5
-            af.write('draw cylinder ')
-            self.vmd_coors(-.4 * qfac, .4 * qfac, 0., pQ, 0.)
-            af.write('radius % .3f\n'%self['quad_rad'])
-            af.write('draw cone ')
-            self.vmd_coors(.4 * qfac, .6 * qfac, 0., pQ, 0.)
-            af.write('radius % .3f\n'%(2*self['quad_rad']))
-            af.write('draw cone ')
-            self.vmd_coors(-.4 * qfac, -.6 * qfac, 0., pQ, 0.)
-            af.write('radius % .3f\n'%(2*self['quad_rad']))
+            fac = self['quad_scale'] * units.length['A'] * abs(tQyy)**.5
+            self.plot_quad_comp(fac, 0., 1., 0., self['quad_rad'])
         if self.vmd_color(tQzz):
-            pQ = abs(tQzz)**.5
-            af.write('draw cylinder ')
-            self.vmd_coors(-.4 * qfac, .4 * qfac, 0., 0., pQ)
-            af.write('radius % .3f\n'%self['quad_rad'])
-            af.write('draw cone ')
-            self.vmd_coors(.4 * qfac, .6 * qfac, 0., 0., pQ)
-            af.write('radius % .3f\n'%(2*self['quad_rad']))
-            af.write('draw cone ')
-            self.vmd_coors(-.4 * qfac, -.6 * qfac, 0., 0., pQ)
-            af.write('radius % .3f\n'%(2*self['quad_rad']))          
+            fac = self['quad_scale'] * units.length['A'] * abs(tQzz)**.5
+            self.plot_quad_comp(fac, 0., 0., 1., self['quad_rad'])
 
     def plot_2P(self, sdict):
         if not '2Pxx' in sdict:
@@ -141,13 +116,8 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
         TPmat[1,:] = sdict['2Pyx'], sdict['2Pyy'], sdict['2Pyz']
         TPmat[2,:] = sdict['2Pzx'], sdict['2Pzy'], sdict['2Pzz']
         
-        TPstrength = 0.
-        for mu in range(3):
-            for nu in range(3):
-                TPstrength += TPmat[mu,mu]*TPmat[nu,nu] + TPmat[mu,nu]*TPmat[mu,nu] + TPmat[mu,nu]*TPmat[nu,mu]
-        TPstrength *= 0.000002
-        #TPstrength /= 15.
-        print '30*TPA strength [M a.u.]: % .5f'%TPstrength
+        TPstrength = numpy.trace(TPmat)**2 + numpy.sum(TPmat*TPmat) + numpy.sum(TPmat*TPmat.T)
+        print '30*TPA strength [M a.u.]: % .5f'%(TPstrength*0.000002)
         
         (Sdiag, coor) = numpy.linalg.eigh(TPmat)
         print Sdiag
@@ -166,11 +136,11 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
         
         self.af.write('draw sphere ')
         self.af.write('{% .3f % .3f % .3f} '%(ifac * x, ifac * y, ifac * z))
-        self.af.write('radius % .3f\n'%(2*rad))
+        self.af.write('radius % .3f\n'%(3*rad))
 
         self.af.write('draw sphere ')
         self.af.write('{% .3f % .3f % .3f} '%(-ifac * x, -ifac * y, -ifac * z))
-        self.af.write('radius % .3f\n'%(2*rad))
+        self.af.write('radius % .3f\n'%(3*rad))
         # self.af.write('draw cone ')
         # self.vmd_coors( .4 * fac,  .6 * fac, coor[0, mu], coor[1, mu], coor[2, mu])
         # self.af.write('radius % .3f\n'%(2*self['2P_rad']))
