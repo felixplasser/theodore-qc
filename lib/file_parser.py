@@ -30,21 +30,40 @@ class file_parser_base:
             nvirt = num_mo - nocc
             return numpy.zeros([nocc, num_mo])
 
-    def parse_key(self, state, key, line, search_string, ind=-1, rfile=None):
+    def parse_key(self, state, key, line, search_string, ind=-1, rfile=None, rmatrix=False, not_string=None):
         """
         Find search_string in the specified line and set it as state[key].
         If rfile is given, then the next line is searched for x,y,z components.
+        If rmatrix==True, then a tensor is read from the next three lines.
         """
         if search_string in line:
-            sr_line = line.strip(search_string).replace(',','')
+            if not not_string is None:
+                if not_string in line: return
+
+            sr_line = line.strip(search_string).replace(',','').replace(']','').replace('[','')
             state[key] = float(sr_line.split()[ind])
 
             if not rfile is None:
-                line=rfile.next().replace(',','').replace(']','').replace('[','')
-                words = line.split()
-                state['%sx'%key] = float(words[-3])
-                state['%sy'%key] = float(words[-2])
-                state['%sz'%key] = float(words[-1])
+                if rmatrix:
+                    line = rfile.next()
+                    words=rfile.next().replace(',','').replace(']','').replace('[','').replace('|','').split()
+                    state['%sxx'%key] = float(words[-3])
+                    state['%sxy'%key] = float(words[-2])
+                    state['%sxz'%key] = float(words[-1])                    
+                    words=rfile.next().replace(',','').replace(']','').replace('[','').replace('|','').split()
+                    state['%syx'%key] = float(words[-3])
+                    state['%syy'%key] = float(words[-2])
+                    state['%syz'%key] = float(words[-1])                    
+                    words=rfile.next().replace(',','').replace(']','').replace('[','').replace('|','').split()
+                    state['%szx'%key] = float(words[-3])
+                    state['%szy'%key] = float(words[-2])
+                    state['%szz'%key] = float(words[-1])                    
+                else:
+                    line=rfile.next().replace(',','').replace(']','').replace('[','')
+                    words = line.split()
+                    state['%sx'%key] = float(words[-3])
+                    state['%sy'%key] = float(words[-2])
+                    state['%sz'%key] = float(words[-1])
 
     def delete_chars(self, line, delete):
         """
@@ -119,7 +138,7 @@ class file_parser_ricc2(file_parser_base):
                 self.set_tden_conf(state, mos)
 
         if self.ioptions.get('read_binary'):
-               mos.symsort(self.ioptions['irrep_labels'])
+               mos.symsort(self.ioptions['irrep_labels'], self.ioptions['Om_formula'])
                if self.ioptions['jmol_orbitals']:
                     print " \nWARNING: jmol_orbitals not possible with read_binary. Use molden_orbitals instead!"
                     self.ioptions['jmol_orbitals'] = False
@@ -185,15 +204,14 @@ In the case of read_binary=True, do not delete the line
 from the control file.""")
 
         # write the collected data into the correct block of the 1TDM
-        for iocc in xrange(nfrzc, nocc):
-            for ivirt in xrange(nocc, num_mo):
-                state['tden'][iocc, ivirt] = struct.unpack('d', CCfile.read(8))[0]
+        coeff = struct.unpack(nentry*'d', CCfile.read(nentry*8))
+        state['tden'][nfrzc:nocc, nocc:num_mo] = numpy.reshape(coeff, [nact, nvirt])
 
         lbytes = struct.unpack('4s', CCfile.read(4))
         if lvprt >= 2:
             print '   Last four bytes:', lbytes
         if not CCfile.read(1) == '':
-            raise error_hanlder.MSGError('parsing file %s'%CCfilen)
+            raise error_handler.MsgError('parsing file %s'%CCfilen)
 
         if lvprt >= 3:
             print 'parsed tden:'
@@ -524,6 +542,15 @@ class file_parser_libwfa(file_parser_base):
 
     def parse_keys(self, state, exc_diff, exc_1TDM, line, rfile=None):
         self.parse_key(state, 'mu', line, 'Total dipole')
+        self.parse_key(state, 'mux', line, 'Dip. moment [a.u.]', -3)
+        self.parse_key(state, 'muy', line, 'Dip. moment [a.u.]', -2)
+        self.parse_key(state, 'muz', line, 'Dip. moment [a.u.]', -1)
+        self.parse_key(state, 'Tmux', line, 'Trans. dip. moment [a.u.]', -3)
+        self.parse_key(state, 'Tmuy', line, 'Trans. dip. moment [a.u.]', -2)
+        self.parse_key(state, 'Tmuz', line, 'Trans. dip. moment [a.u.]', -1)
+        self.parse_key(state, 'r2x', line, '<r^2>', -3, not_string='Total')
+        self.parse_key(state, 'r2y', line, '<r^2>', -2, not_string='Total')
+        self.parse_key(state, 'r2z', line, '<r^2>', -1, not_string='Total')
         self.parse_key(state, 'r2', line, 'Total <r^2>')
         self.parse_key(state, 'nu', line, 'Number of unpaired electrons:', 2)
         self.parse_key(state, 'nunl', line, 'Number of unpaired electrons')
@@ -532,7 +559,7 @@ class file_parser_libwfa(file_parser_base):
         self.parse_key(state, 'PRNTO', line, 'PR_NTO')
         self.parse_key(state, 'PRD', line, 'PR_D', 6)
         self.parse_key(state, 'PRA', line, 'PR_A')
-        self.parse_key(state, '2P', line, 'Two-photon absorption cross-section')
+        self.parse_key(state, '2P', line, 'Two-photon absorption cross-section [a.u.]', rfile=rfile, rmatrix=True)
         self.parse_key(state, 'S_HE', line, 'Entanglement entropy')
         self.parse_key(state, 'Z_HE', line, 'Nr of entangled states')
         self.parse_key(state, 'mu', line, 'Dipole moment [D]', rfile=rfile)
@@ -563,7 +590,8 @@ class file_parser_qcadc(file_parser_libwfa):
         exc_diff = False
         exc_1TDM = False
         self.irrep_labels = None
-        for line in open(self.ioptions.get('rfile')):
+        rf = open(self.ioptions.get('rfile'), 'r')
+        for line in rf:
             words = line.split()
             if 'Irreducible representations in point group:' in line:
                 self.irrep_labels = line.lstrip('Irreducible representations in point group:').split()
@@ -594,13 +622,19 @@ class file_parser_qcadc(file_parser_libwfa):
                 state_list[-1]['Om']   = om_at.sum()
                 state_list[-1]['OmAt'] = om_at
 
+            elif 'MP(2) Summary' in line:
+                state_list.append({})
+                state_list[-1]['name'] = 'gr-st'
+                state_list[-1]['exc_en'] = 0.
+                state_list[-1]['state_ind'] = 0
+
             elif ' Excitation energy:' in line:
                 exc_chk = float(words[2])
 
                 if not 'exc_en' in state_list[-1]:
                     state_list[-1]['exc_en'] = exc_chk
 
-                if abs(exc_chk - state_list[-1]['exc_en']) > 1.e-4:
+                if abs(exc_chk - state_list[-1]['exc_en']) > exc_chk * 1.e-4:
                     print exc_chk, state_list[-1]['exc_en']
                     raise error_handler.MsgError("Excitation energies do not match")
 
@@ -616,7 +650,20 @@ class file_parser_qcadc(file_parser_libwfa):
                 break
 
             if len(state_list) > 0:
-                self.parse_keys(state_list[-1], exc_diff, exc_1TDM, line)
+                self.parse_keys(state_list[-1], exc_diff, exc_1TDM, line, rf)
+
+        rf.close()
+
+        # Post-processing
+        # Pre-factor for 2P cross-section
+        pre2P = numpy.pi**3 * units.constants['c0']**(-2) * units.tpa['GM']
+        # This is numerically the same as [JCP, 146, 174102]:
+        #   numpy.pi**3 / u.c0 * u.cm**5 / 2.9979E10 * 10**50
+        for state in state_list:
+            # 2P cross-section pre-factor in GM
+            if '2P' in state:
+                state['GM'] = pre2P * state['2P']/30 * (state['exc_en'] / units.energy['eV'])
+                state['2P'] *= .000001
 
         return state_list
 

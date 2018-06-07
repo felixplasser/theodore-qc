@@ -1,0 +1,15 @@
+rtype='ricc2'
+rfile='ricc2.out'
+mo_file='molden.nofr'
+at_lists=[[1],[5,6,10,11],[2,3,7,8],[4,9]]
+Om_formula=2
+comp_ntos=True
+jmol_orbitals=False
+molden_orbitals=False
+coor_file='coord'
+coor_format='tmol'
+prop_list=['Om', 'POS', 'POSi', 'POSf', 'PR', 'PRi', 'PRf', 'CT', 'COH', 'CTnt', 'PRNTO', 'RMSeh']
+output_prec=(9,5)
+output_file='tden_summ_bin2.txt'
+read_binary=True
+print_OmAt=False

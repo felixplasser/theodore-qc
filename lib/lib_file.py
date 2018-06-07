@@ -220,21 +220,27 @@ class summ_file:
         f.next()
 
         while True:
+            try:
+                line = f.next()
+            except StopIteration:
+                break
+
+            words = line.split()
+            state_label = words[0]
+            if state_label in self.ddict:
+                errmsg  = "State %s already present.\n"%state_label
+                errmsg += "  Please, do not combine tden_summ.txt files here."
+                raise error_handler.MsgError(errmsg)
+            self.ddict[state_label] = {}
+            pdict = self.ddict[state_label]
+            self.state_labels.append(state_label)
+
+            pdict['state'] = state_label
+            for i, prop in enumerate(self.header[1:]):
                 try:
-                    line = f.next()
-                except StopIteration:
-                    break
-
-                words = line.split()
-                self.ddict[words[0]] = {}
-                pdict = self.ddict[words[0]]
-                self.state_labels.append(words[0])
-
-                for i, prop in enumerate(self.header[1:]):
-                    try:
-                        pdict[prop] = float(words[i+1])
-                    except ValueError:
-                        pass
+                    pdict[prop] = float(words[i+1])
+                except ValueError:
+                    pass
 
         f.close()
 

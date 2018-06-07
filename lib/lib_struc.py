@@ -5,9 +5,11 @@ This is a wrapper to python-openbabel.
 
 import os, shutil, locale
 import numpy
+obabel_avail = True
 try:
     import openbabel
 except ImportError:
+    obabel_avail = False
     print " *** Warning: python-openbabel not found! ***"
     print " Using emulation program with limited capabilities ..."
     import OB_repl as openbabel
@@ -414,6 +416,21 @@ class structure:
             ret_str += '%s '%symb if numel==1 else '%s%i '%(symb, numel)
 
         return ret_str
+
+    def ret_nuc_multipole(self, power):
+        """
+        Return a nuclear multipolemoment.
+        """
+        mom = numpy.array([0., 0., 0.])
+
+        for i in xrange(self.mol.NumAtoms()):
+            atom = self.mol.GetAtom(i+1)
+            Z = atom.GetAtomicNum()
+            pos = numpy.array([atom.x(), atom.y(), atom.z()]) / units.length['A']
+
+            mom += Z * pos**power
+
+        return mom
 
     def make_coord_file(self, file_path, file_type=None, lvprt=0):
         """

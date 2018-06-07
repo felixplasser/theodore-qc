@@ -1,9 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
 """
 Input generation for TheoDORE runs.
 """
 
-import theo_header, input_options, lib_struc, error_handler
+import theo_header, input_options, lib_struc, error_handler, orbkit_interface
 import os
 
 class write_options_theo(input_options.write_options):
@@ -44,7 +44,8 @@ class write_options_theo(input_options.write_options):
             ('ricc2', 'Turbomole ricc2'),
             ('escf', 'Turbomole escf'),
             ('terachem', 'Terachem (TDDFT)'),
-            ('cclib', 'Use external cclib library: Gaussian, ORCA, GAMESS, ...'),
+            ('cclib', 'Use external cclib library: Gaussian, GAMESS, ...'),
+            ('orca', 'ORCA TDDFT (using cclib)'),
             ('adf', 'ADF (TDDFT)'),
             ('tddftb', 'DFTB+ - TDDFTB')
         ], rdef)
@@ -102,13 +103,18 @@ class write_options_theo(input_options.write_options):
             self['mo_file'] = 'inpfile.molden'
             self['coor_file'] = ''
             self['coor_format'] = ''
-        elif self['rtype'] == 'adf':
-            self['rfile'] = 'TAPE21'
+        elif self['rtype'] == 'cclib':
+            self['rfile'] = ''
             self['mo_file'] = None
             self['coor_file'] = ''
             self['coor_format'] = ''
-        elif self['rtype'] == 'cclib':
-            self['rfile'] = ''
+        elif self['rtype'] == 'orca':
+            self['rfile'] = 'orca.out'
+            self['mo_file'] = None
+            self['coor_file'] = ''
+            self['coor_format'] = ''
+        elif self['rtype'] == 'adf':
+            self['rfile'] = 'TAPE21'
             self['mo_file'] = None
             self['coor_file'] = ''
             self['coor_format'] = ''
@@ -139,13 +145,6 @@ class write_options_theo(input_options.write_options):
         if self['rtype'] in ['qctddft']:
             self.read_yn('Read TDA rather than full TDDFT results?', 'TDA', False)
 
-    def choose_mo_file(self):
-        if not self.has_key('mo_file'): return
-
-        mo_str = 'MO file (Molden format)\
-                      \n -> This file should ideally contain a square invertible coefficient matrix'
-        self.read_str(mo_str, 'mo_file', self['mo_file'], True)
-
         if self['rtype'] == 'ricc2':
             self.read_yn('Read binary CCRE0 files?', 'read_binary', False)
             if not self['read_binary']:
@@ -153,6 +152,15 @@ class write_options_theo(input_options.write_options):
                 print " *** Warning: without read_binary you have to delete the line"
                 print "       implicit core=   x virt=    x"
                 print "     from the control file before running tm2molden."
+        elif self['rtype'] == 'orca':
+            self.read_yn('Read the binary orca.cis file?', 'read_binary', True)
+
+    def choose_mo_file(self):
+        if not self.has_key('mo_file'): return
+
+        mo_str = 'MO file (Molden format)\
+                      \n -> This file should ideally contain a square invertible coefficient matrix'
+        self.read_str(mo_str, 'mo_file', self['mo_file'], True)
 
         if self['rtype'] == 'nos':
             nodir = self.ret_str('Directory with the NO files:', '.', True)
@@ -266,27 +274,30 @@ class write_options_theo(input_options.write_options):
         self.read_yn('Perform analysis of domain NTOs?', 'comp_dntos', False)
         if self['comp_ntos'] or self['comp_dntos']:
             self['prop_list'] += ['PRNTO', 'Z_HE']
-            if not self['rtype'] in ['adf', 'tddftb']:
-                if self['rtype'] == 'ricc2' and self['read_binary'] == True:
-                    self.read_yn('NTOs in Molden format', 'molden_orbitals', True)
-                else:
-                    self.read_yn('NTOs as Jmol script?', 'jmol_orbitals', True)
-                    self.read_yn('NTOs in Molden format', 'molden_orbitals', False)
-                if self['molden_orbitals']:
-                    self.read_yn('Use alpha/beta rather then negative/positive to code for hole/particle orbitals?', 'alphabeta', False)
-                if self['comp_ntos']:
-                    self.read_yn('NTOs in Cube file format (requires orbkit)', 'cube_orbitals', False)
-                    if self['cube_orbitals']:
-                        self.read_yn('Create VMD Network for NTOs', 'vmd_ntos', False)
-                        if self['vmd_ntos']:
-                            self.read_float('Isosurface value for VMD network', 'vmd_ntos_iv', 0.01)
-                    self.read_yn('Calculation of particle/hole density (requires orbkit)?', 'comp_p_h_dens', False)
-                    if self['comp_p_h_dens']:
-                        self.read_yn('Create VMD Network for particle/hole density', 'vmd_ph_dens', False)
-                        if self['vmd_ph_dens']:
-                            self.read_float('Isosurface value for VMD network', 'vmd_ph_dens_iv', 0.01)
+            if self['rtype'] in ['adf', 'tddftb']:
+                return
+            if self['rtype'] == 'ricc2' and self['read_binary'] == True:
+                self.read_yn('NTOs in Molden format', 'molden_orbitals', True)
+            else:
+                self.read_yn('NTOs as Jmol script?', 'jmol_orbitals', True)
+                self.read_yn('NTOs in Molden format', 'molden_orbitals', False)
+            if self['molden_orbitals']:
+                self.read_yn('Use alpha/beta rather then negative/positive to code for hole/particle orbitals?', 'alphabeta', False)
+            if orbkit_interface.orbkit_avail:
+                self.read_yn('NTOs in Cube file format (requires orbkit)', 'cube_orbitals', False)
+                if self['cube_orbitals']:
+                    self.read_yn('Create VMD Network for NTOs', 'vmd_ntos', False)
+                    if self['vmd_ntos']:
+                        self.read_float('Isosurface value for VMD network', 'vmd_ntos_iv', 0.01)
+                self.read_yn('Calculation of Particle/Hole density (requires orbkit)?', 'comp_p_h_dens', False)
+                if self['comp_p_h_dens']:
+                    self.read_yn('Create VMD Network for NTOs', 'vmd_ph_dens', False)
+                    if self['vmd_ph_dens']:
+                        self.read_float('Isosurface value for VMD network', 'vmd_ph_dens_iv', 0.01)
                 if self['comp_dntos']:
                     self.read_int('Compute DNTO densities as cube files?\n 0 - no, 1 - hole, 2 - electron, 3 - both', 'comp_dnto_dens', 0)
+        else:
+            self.ostr += 'comp_ntos=False\n'
 
     def exciton_ana(self):
         if self.ret_yn('Compute approximate exciton size?', True):
@@ -317,6 +328,10 @@ class write_options_theo(input_options.write_options):
         self.read_yn('Mayer bond order and valence analysis?', 'BO_ana', True)
 
     def comp_rho0n(self):
+        if not orbkit_interface.orbkit_avail:
+            return
+        if self['rtype'] in ['adf', 'tddftb']:
+            return
         self.read_yn('Calculation of transition densities between ground state and excited states (requires orbkit)', 'comp_rho0n', False)
         if self['comp_rho0n']:
             self.read_yn('Create VMD Network for transition densities', 'vmd_rho0n', False)

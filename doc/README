@@ -1,5 +1,15 @@
 Download the newest TheoDORE release and tutorial.
 
+- Plot dipole and quadrupole moments (draw_moments.py)
+
+TheoDORE 1.7.2
+- Automatic fragment generation (analyze_correlations.py) by Sebastian Mai
+- Fix for ricc2 with symmetry + read_binary + Om_formula=2
+- Improved orbkit interface
+
+TheoDORE 1.7.1
+- ORCA: read binary file
+
 TheoDORE 1.7
 - Interface to orbkit for extended orbital/density plotting capabilities
 

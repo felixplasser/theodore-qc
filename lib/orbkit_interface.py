@@ -9,6 +9,8 @@ try:
     import orbkit
 except ImportError:
     orbkit_avail = False
+    print " *** Orbkit installation not found. ***"
+    print " Install orbkit for extended plotting capabilities.\n"
 
 if orbkit_avail:
     from orbkit_full import lib_orbkit

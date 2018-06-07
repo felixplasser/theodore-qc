@@ -1,0 +1,11 @@
+rtype='cclib'
+rfile='orca.out'
+at_lists=[[1, 3, 5, 7],[2, 4, 6, 8]]
+comp_ntos=True
+jmol_orbitals=False
+molden_orbitals=False
+prop_list=['Om', 'POS', 'PR', 'CT', 'COH', 'PRNTO', 'RMSeh']
+output_prec=(9,5)
+output_file='tden_summ_orca-bin.txt'
+print_OmAt=False
+read_binary=True
