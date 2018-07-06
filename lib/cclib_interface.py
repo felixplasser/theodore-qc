@@ -434,7 +434,7 @@ class MO_set_adf(lib_mo.MO_set_molden):
         raise error_handler.NIError
 
 class structure_cclib(lib_struc.structure):
-    def read_cclib(self, data, lvprt=1):
+    def read_cclib(self, data, ind=-1, lvprt=1):
         if lvprt>=1:
             print("Reading cclib structure with %i atoms."%data.natom)
 
@@ -443,7 +443,7 @@ class structure_cclib(lib_struc.structure):
         for iat in xrange(data.natom):
             obatom = openbabel.OBAtom()
             obatom.SetAtomicNum(int(data.atomnos[iat]))
-            coords = data.atomcoords[-1][iat]
+            coords = data.atomcoords[ind][iat]
             obatom.SetVector(*coords)
 
             self.mol.AddAtom(obatom)

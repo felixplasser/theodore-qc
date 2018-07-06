@@ -659,7 +659,7 @@ class file_parser_qcadc(file_parser_libwfa):
         pre2P = 2 * numpy.pi**3 * units.constants['c0']**(-2) * units.tpa['GM']
         #print "pre2P, GM: ", pre2P, units.tpa['GM']
         # This is numerically the same as [JCP, 146, 174102]:
-        #   numpy.pi**3 / u.c0 * u.cm**5 / 2.9979E10 * 10**50
+        #   2 * numpy.pi**3 / u.c0 * u.cm**5 / 2.9979E10 * 10**50
         for state in state_list:
             # 2P cross-section pre-factor in GM
             if '2P' in state:

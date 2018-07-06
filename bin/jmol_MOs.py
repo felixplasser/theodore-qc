@@ -2,7 +2,6 @@
 """
 Automatic plotting of MOs with jmol.
 """
-# TODO: input options
 
 import lib_mo, error_handler, lib_file, theo_header, input_options
 
