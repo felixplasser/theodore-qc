@@ -43,7 +43,7 @@ class file_parser_fchk(file_parser.file_parser_base):
                 tden_ao = 2**.5 * numpy.reshape(map(float, tmplist), [num_bas,num_bas])
                 # The tden is transformed back to the MO basis to comply with the
                 #   remaining TheoDORE infrastructure
-                temp = mos.CdotD(tden_ao, trnsp=False, inv=True)
+                temp = mos.CdotD(tden_ao.T, trnsp=False, inv=True)
                 state['tden'] = mos.MdotC(temp, trnsp=True, inv=True)
       
         rfileh.close()
