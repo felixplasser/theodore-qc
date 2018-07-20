@@ -1,6 +1,9 @@
 Download the newest TheoDORE release and tutorial.
 
 - Plot dipole and quadrupole moments (draw_moments.py)
+- Plot vibrations in Jmol (jmol_vibs.py)
+- Simple script for analyzing geometry optimiziations (cc_opt.py)
+- Support for fchk files from Q-Chem
 
 TheoDORE 1.7.2
 - Automatic fragment generation (analyze_correlations.py) by Sebastian Mai

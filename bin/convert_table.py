@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 """
-Convert the output data to a table in latex or html format.
+Convert the TheoDORE output data to a table in latex or html format.
 """
 
 import theo_header, input_options, lib_file, error_handler
