@@ -1,0 +1,113 @@
+================================================================================
+|                                TheoDORE 1.7.2                                |
+|         Theoretical Density, Orbital Relaxation and Exciton analysis         |
+|                            Author: Felix Plasser                             |
+|     Contributions by: Ljiljana Stojanovic, Gunter Hermann, Sebastian Mai     |
+--------------------------------------------------------------------------------
+|                       References for the modules used                        |
+|        (see also http://theodore-qc.sourceforge.net/literature.html)         |
+|                                                                              |
+|   Transition density matrix analysis:                                        |
+|     F. Plasser and H. Lischka                                                |
+|     J. Chem. Theory Comput. (2012), 8, 2777.                                 |
+|                                                                              |
+|   Transition and difference density matrix analysis:                         |
+|     F. Plasser, M. Wormit, A. Dreuw                                          |
+|     J. Chem. Phys. (2014), 141, 024106.                                      |
+|                                                                              |
+|   Exciton analysis:                                                          |
+|     S. A. Baeppler, F. Plasser, M. Wormit, A. Dreuw                          |
+|     Phys. Rev. A (2014), 90, 052521.                                         |
+|                                                                              |
+|   Approximate RMSeh/dexc formula:                                            |
+|     S. A. Mewes, J.-M. Mewes, A. Dreuw, F. Plasser                           |
+|     Phys. Chem. Chem. Phys. (2016), 18, 2548.                                |
+|                                                                              |
+|   Electron-hole entanglement:                                                |
+|     F. Plasser                                                               |
+|     J. Chem. Phys. (2016), 144, 194107.                                      |
+|                                                                              |
+|   Program citation:                                                          |
+|     F. Plasser "TheoDORE 1.7.2: a package for theoretical density, orbital   |
+|     relaxation, and exciton analysis"; available from                        |
+|     http://theodore-qc.sourceforge.net                                       |
+--------------------------------------------------------------------------------
+|                      Transition density matrix analysis                      |
+================================================================================
+
+
+MO file qchem.mld parsed.
+Number of atoms: 18
+Number of MOs read in: 106
+Dimension: 106,106,...,106
+Number of basis functions parsed:  106
+ ... inverting C
+Reached end of file qchem.fchk
+
+Reading structure from coor_file qchem.mld
+Number of atoms: 18
+Composition: C10 H8 
+
+Computation of Omega matrix ...
+Computation of Omega matrix ...
+Computation of Omega matrix ...
+Computation of Omega matrix ...
+
+*** Electron/hole population analysis ***
+
+Decomposition over fragments
+S_B3u_1
+-------------------------------------------------------
+       Fragment        h+        e-       sum      diff
+-------------------------------------------------------
+            C6    0.61451   0.60946   1.22397   0.00506
+         C2 H4    0.19452   0.19705   0.39157  -0.00253
+         C2 H4    0.19452   0.19705   0.39157  -0.00253
+-------------------------------------------------------
+                  1.00356   1.00356   2.00711  -0.00000
+-------------------------------------------------------
+
+S_B3u_2
+-------------------------------------------------------
+       Fragment        h+        e-       sum      diff
+-------------------------------------------------------
+            C6    0.61235   0.60278   1.21513   0.00957
+         C2 H4    0.20280   0.20759   0.41039  -0.00479
+         C2 H4    0.20280   0.20759   0.41039  -0.00479
+-------------------------------------------------------
+                  1.01795   1.01795   2.03591   0.00000
+-------------------------------------------------------
+
+T_B3u_1
+-------------------------------------------------------
+       Fragment        h+        e-       sum      diff
+-------------------------------------------------------
+            C6    0.56382   0.56358   1.12740   0.00023
+         C2 H4    0.21960   0.21972   0.43931  -0.00012
+         C2 H4    0.21960   0.21972   0.43931  -0.00012
+-------------------------------------------------------
+                  1.00301   1.00301   2.00603  -0.00000
+-------------------------------------------------------
+
+T_B3u_2
+-------------------------------------------------------
+       Fragment        h+        e-       sum      diff
+-------------------------------------------------------
+            C6    0.61424   0.61347   1.22771   0.00076
+         C2 H4    0.19525   0.19563   0.39088  -0.00038
+         C2 H4    0.19525   0.19563   0.39088  -0.00038
+-------------------------------------------------------
+                  1.00474   1.00474   2.00948   0.00000
+-------------------------------------------------------
+
+File ehFrag.txt with information about e/h populations written.
+
+state       dE(eV)    f     Om    POS     PR     CT    COH   CTnt  PRNTO   Z_HE  RMSeh
+---------------------------------------------------------------------------------------
+T_B3u_1     4.361      -  1.003  1.657  2.429  0.385  1.921  0.000  2.358  2.746  2.509
+T_B3u_2     5.176      -  1.005  1.584  2.227  0.512  2.041  0.001  2.134  2.352  2.516
+S_B3u_1     5.401  0.000  1.004  1.585  2.232  0.520  2.067  0.008  2.115  2.314  2.558
+S_B3u_2     7.360  1.724  1.018  1.605  2.286  0.500  2.216  0.014  2.314  3.047  2.746
+
+Final output copied to tden_summ.txt
+CPU time:  0.3 s, wall time: 0.3 s
