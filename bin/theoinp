@@ -16,6 +16,8 @@ class write_options_theo(input_options.write_options):
         rdef = ''
         if os.path.exists('qchem.out'):
             rdef = 'qcadc'
+        elif os.path.exists('qchem.fchk'):
+            rdef = 'fchk'
         elif os.path.exists('geom'):
             rdef = 'colmrci'
         elif os.path.exists('molcas.rasscf.molden'):
@@ -37,6 +39,7 @@ class write_options_theo(input_options.write_options):
             ('qcadc', 'Q-Chem ADC (libwfa output)'),
             ('libwfa', 'General libwfa output'),
             ('qctddft', 'Q-Chem TDDFT'),
+            ('fchk', 'Q-Chem fchk file'),
             ('colmcscf', 'Columbus MCSCF'),
             ('colmrci', 'Columbus MR-CI (tden analysis)'),
             ('rassi', 'Molcas RASSI'),
@@ -73,6 +76,11 @@ class write_options_theo(input_options.write_options):
             self['mo_file'] = 'qchem.mld'
             self['coor_file'] = 'qchem.out'
             self['coor_format'] = 'qcout'
+        elif self['rtype'] == 'fchk':
+            self['rfile'] = 'qchem.fchk'
+            self['mo_file'] = 'qchem.mld'
+            self['coor_file'] = 'qchem.mld'
+            self['coor_format'] = 'molden'
         elif self['rtype'] == 'colmrci' or self['rtype'] == 'colmcscf':
             self['rfile'] = None
             self['mo_file'] = 'MOLDEN/molden_mo_mc.sp'

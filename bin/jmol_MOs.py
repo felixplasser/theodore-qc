@@ -216,7 +216,7 @@ class mocoll_occ(mocoll):
         return occnum < 0
 
 class jmol_options(input_options.write_options):
-    def jmol_input(self):
+    def jmol_input(self, nfiles=1):
         self.read_float('Cutoff value', 'cutoff', 0.05)
 
         #print ""
@@ -241,7 +241,9 @@ class jmol_options(input_options.write_options):
         elif self['spec'] == 'occ':
             self.read_float('Minimal absolute occupancy', 'occmin', 0.01)
             self.read_float('Maximal absolute occupancy', 'occmax', 1.99)
-            self.read_yn('Preprocess and merge the Molden files', 'preprocess', True)
+
+            self.read_yn('Preprocess and merge the Molden files', 'preprocess', nfiles>1)
+
             self.read_yn('Interpret energies as occupations (use for Q-Chem)', 'eneocc', False)
         else:
             raise error_handler.ElseError(self['spec'], 'spec')

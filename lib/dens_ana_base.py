@@ -1,4 +1,4 @@
-import file_parser, lib_mo, error_handler, cclib_interface, units, lib_struc
+import file_parser, lib_mo, error_handler, cclib_interface, fchk_parser, units, lib_struc
 import numpy
 
 class dens_ana_base:
@@ -51,6 +51,8 @@ class dens_ana_base:
             self.state_list = file_parser.file_parser_qcadc(self.ioptions).read()
         elif rtype=='qctddft':
             self.state_list = file_parser.file_parser_qctddft(self.ioptions).read(self.mos)
+        elif rtype=='fchk':
+            self.state_list = fchk_parser.file_parser_fchk(self.ioptions).read(self.mos)
         elif rtype in ['mcscf', 'colmcscf']:
             self.state_list = file_parser.file_parser_col_mcscf(self.ioptions).read(self.mos)
         elif rtype in ['mrci', 'colmrci']:
