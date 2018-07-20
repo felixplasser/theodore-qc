@@ -200,7 +200,7 @@ class dens_ana_base:
             vstr  = '%-10s'%state['name'][-10:]
             vstr += oformat%state['exc_en']
             try:
-                vstr += (oformat%state['osc_str']).replace('-1.000','     -')
+                vstr += (oformat%state['osc_str']).replace(oformat%(-1.),'%*s'%(width, '-'))
             except KeyError:
                 vstr += '%*s'%(width, '-')
 
