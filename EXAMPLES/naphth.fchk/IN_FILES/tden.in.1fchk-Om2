@@ -1,0 +1,17 @@
+rtype='fchk'
+rfile='qchem.fchk'
+mo_file='qchem.mld'
+at_lists=[[1, 2, 3, 4, 5, 6], [7, 8, 9, 10, 11, 12], [13, 14, 15, 16, 17, 18]]
+Om_formula=2
+eh_pop=0
+comp_ntos=True
+jmol_orbitals=False
+molden_orbitals=False
+cube_orbitals=False
+comp_p_h_dens=False
+comp_rho0n=False
+coor_file='qchem.mld'
+coor_format='molden'
+prop_list=['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt', 'PRNTO', 'Z_HE', 'RMSeh']
+output_prec=(10,6)
+output_file='tden_summ_1fchk-Om2.txt'
