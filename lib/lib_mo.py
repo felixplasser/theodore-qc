@@ -89,6 +89,9 @@ class MO_set:
         """
         Return the MO matrix, possibly transposed and/or inverted.
         """
+        if inv and self.inv_mo_mat is None:
+            self.compute_inverse()
+
         if not trnsp and not inv:
             return self.mo_mat
         elif trnsp and not inv:
