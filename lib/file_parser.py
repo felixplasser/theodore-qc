@@ -40,26 +40,26 @@ class file_parser_base:
             if not not_string is None:
                 if not_string in line: return
 
-            sr_line = line.strip(search_string).replace(',','').replace(']','').replace('[','')
+            sr_line = line.strip(search_string).translate(None, ',[]|')
             state[key] = float(sr_line.split()[ind])
 
             if not rfile is None:
                 if rmatrix:
                     line = rfile.next()
-                    words=rfile.next().replace(',','').replace(']','').replace('[','').replace('|','').split()
+                    words=rfile.next().translate(None, ',[]|').split()
                     state['%sxx'%key] = float(words[-3])
                     state['%sxy'%key] = float(words[-2])
                     state['%sxz'%key] = float(words[-1])                    
-                    words=rfile.next().replace(',','').replace(']','').replace('[','').replace('|','').split()
+                    words=rfile.next().translate(None, ',[]|').split()
                     state['%syx'%key] = float(words[-3])
                     state['%syy'%key] = float(words[-2])
                     state['%syz'%key] = float(words[-1])                    
-                    words=rfile.next().replace(',','').replace(']','').replace('[','').replace('|','').split()
+                    words=rfile.next().translate(None, ',[]|').split()
                     state['%szx'%key] = float(words[-3])
                     state['%szy'%key] = float(words[-2])
                     state['%szz'%key] = float(words[-1])                    
                 else:
-                    line=rfile.next().replace(',','').replace(']','').replace('[','')
+                    line=rfile.next().translate(None, ',[]|')
                     words = line.split()
                     state['%sx'%key] = float(words[-3])
                     state['%sy'%key] = float(words[-2])
@@ -223,6 +223,7 @@ from the control file.""")
         """
         ret_list = []
         curr_osc = 0 # running index for oscillator strengths
+        section  = '' # which section of the file
         lines = open(rfile,'r')
         while True: # loop over all lines
           try:
@@ -279,6 +280,12 @@ from the control file.""")
                     print "   This is ok if you are computing state-to-state properties.\n"
                 curr_osc+=1
 
+            elif curr_osc < len(ret_list):
+                state = ret_list[curr_osc]
+                self.parse_key(state, 'Tmux', line, 'xdiplen', 1)
+                self.parse_key(state, 'Tmuy', line, 'ydiplen', 1)
+                self.parse_key(state, 'Tmuz', line, 'zdiplen', 1)
+
             elif 'real representations' in line:
                 self.ioptions['irrep_labels'] = line.split()[6:]
 
@@ -303,6 +310,7 @@ from the control file.""")
                         raise error_handler.MsgError('COSMO-ADC: data not matching')
 
                     istate += 1
+
         return ret_list
 
 #---

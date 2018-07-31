@@ -43,13 +43,13 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
 
         sfile = lib_file.summ_file(self['ana_file'])
         ddict = sfile.ret_ddict()
-        dfac = self['dip_scale']  * units.length['A']
         for state in sfile.ret_state_labels():
             sdict = ddict[state]
 
             # Dipole and quadrupole moments
             af.write('draw delete all\n')
             if self['do_dip']:
+                dfac = self['dip_scale']  * units.length['A']
                 if not 'mux' in sdict:
                     print " *** No dipole info found for state %s"%state
                 else:
@@ -69,16 +69,17 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
             # Transition dipole and 2P moments
             af.write('draw delete all\n')
             if self['do_tdip']:
+                tdfac = self['tdip_scale']  * units.length['A']
                 if not 'Tmux' in sdict:
                     print " *** No transition dipole info found for state %s"%state
                 else:
                     af.write('draw color green\n')
                     af.write('draw cylinder ')
-                    self.vmd_coors(-.5 * dfac, .4 * dfac, sdict['Tmux'], sdict['Tmuy'], sdict['Tmuz'])
+                    self.vmd_coors(-.5 * tdfac, .4 * tdfac, sdict['Tmux'], sdict['Tmuy'], sdict['Tmuz'])
                     af.write('radius % .3f\n'%self['tdip_rad'])
 
                     af.write('draw cone ')
-                    self.vmd_coors( .4 * dfac, .6 * dfac, sdict['Tmux'], sdict['Tmuy'], sdict['Tmuz'])
+                    self.vmd_coors( .4 * tdfac, .6 * tdfac, sdict['Tmux'], sdict['Tmuy'], sdict['Tmuz'])
                     af.write('radius % .3f\n'%(2*self['tdip_rad']))          
             if self['do_2P']:
                 self.plot_2P(sdict)
