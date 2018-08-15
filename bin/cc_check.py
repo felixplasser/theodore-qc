@@ -21,7 +21,7 @@ ioptions['rtype'] = 'cclib'
 ioptions['rfile'] = logfile
 
 ccparser = cclib_interface.file_parser_cclib(ioptions)
-errcode = ccparser.check()
+errcode = ccparser.check(lvprt=1)
 
 if errcode <= 1:
     print("\n %s can be parsed by using rtype='cclib' in dens_ana.in."%logfile)

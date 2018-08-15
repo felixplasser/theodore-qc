@@ -272,6 +272,8 @@ class file_parser_cclib(file_parser.file_parser_base):
 
             if lvprt >= 1:
                 print('%15s ... %s'%(attr, chk))
+            if chk and lvprt >= 2:
+                print getattr(self.data, attr)
 
         if lvprt >= 1:
             print("\nOptional attributes:")
@@ -281,6 +283,8 @@ class file_parser_cclib(file_parser.file_parser_base):
 
             if lvprt >= 1:
                 print('%15s ... %s'%(attr, chk))
+            if chk and lvprt >= 2:
+                print getattr(self.data, attr)
 
         if lvprt >= 1:
             print("\nAttributes for structure parsing and creation of Molden file:")
@@ -291,6 +295,8 @@ class file_parser_cclib(file_parser.file_parser_base):
 
             if lvprt >= 1:
                 print('%15s ... %s'%(attr, chk))
+            if chk and lvprt >= 2:
+                print getattr(self.data, attr)
 
         return errcode
 
