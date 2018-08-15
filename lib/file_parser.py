@@ -673,6 +673,8 @@ class file_parser_qcadc(file_parser_libwfa):
             if '2P' in state:
                 state['GM'] = pre2P * state['2P']/30 * (state['exc_en'] / units.energy['eV'])
                 state['2P'] *= .000001
+            if 'Tmux' in state:
+                state['Tmu'] = (state['Tmux']**2 + state['Tmuy']**2 + state['Tmuz']**2)**.5
 
         return state_list
 
