@@ -1,11 +1,9 @@
 """
 Support for parsing fchk files.
-Currently, this uses an auxiliary Molden file, since the Molden file has the same ordering
-of the basis functions.
-Later, it should create its own Molden file.
+A Molden file can be produced, as well, for further processing.
 """
 
-import error_handler, file_parser, units, lib_mo
+import error_handler, file_parser, units, lib_mo, lib_struc
 import numpy
 
 class file_parser_fchk(file_parser.file_parser_base):
@@ -78,12 +76,13 @@ class file_parser_fchk(file_parser.file_parser_base):
 
         return tmplist
 
-class MO_set_fchk(lib_mo.MO_set):
+class MO_set_fchk(lib_mo.MO_set_molden):
     """
     Parse MO-related information from the fchk file.
     Not finished yet.
     """
     def read(self):
+        print 'Reading MOs from fchk file %s'%self.file
         self.rfileh = open(self.file, 'r')
         while True: # loop over all lines
             try:
@@ -92,27 +91,28 @@ class MO_set_fchk(lib_mo.MO_set):
                 print "Reached end of file %s"%self.rfileh.name
                 break
 
-            if 'Atomic numbers' in line:
+            if 'Number of alpha electrons' in line:
+                nocc = int(line.split()[-1])
+            elif 'Atomic numbers' in line:
                 atnos = self.fchk_list(line)
             elif 'Current cartesian coordinates' in line:
                 coors = self.fchk_list(line)
                 self.set_at_dicts(atnos, coors)
-
             elif 'Number of basis functions' in line:
                 num_bas = int(line.split()[-1])
 
             elif 'Shell types' in line:
                 shtypes = map(int, self.fchk_list(line))
             elif 'Number of primitives per shell' in line:
-                noprim = self.fchk_list(line)
+                noprim = map(int, self.fchk_list(line))
             elif 'Shell to atom map' in line:
                 shmap = map(int, self.fchk_list(line))
-                self.set_bf_info(shtypes, shmap)
-
             elif 'Primitive exponents' in line:
-                prims = self.fchk_list(line)
+                prims = map(float, self.fchk_list(line))
             elif 'Contraction coefficients' in line:
-                contr = self.fchk_list(line)
+                contr = map(float, self.fchk_list(line))
+                self.set_bf_info(shtypes, noprim, shmap, prims, contr)
+
             elif 'Overlap Matrix' in line:
                 refdim = num_bas * (num_bas + 1) / 2
                 tmplist = self.fchk_list(line, refdim)
@@ -132,9 +132,18 @@ class MO_set_fchk(lib_mo.MO_set):
                 #dim = int(line.split()[-1])
                 tmplist = self.fchk_list(line)
                 self.mo_mat = numpy.reshape(map(float, tmplist), [num_bas,num_bas]).T
+                self.occs = nocc * [2] + (self.ret_num_mo() - nocc) * [0]
+            elif 'Alpha Orbital Energies' in line:
+                self.ens = map(float, self.fchk_list(line))
 
             elif 'Beta MO coefficients' in line:
                 raise error_handler.MsgError('Unrestricted calculations not supported')
+
+    def write_molden_file(self, fname='out.mld', cfmt='% 10E', occmin=-1):
+        """
+        Write a file in Molden format.
+        """
+        self.export_AO(self.ens, self.occs, self.mo_mat.transpose(), fname, cfmt, occmin)
 
     def fchk_list(self, line, refdim=None):
         words = line.split()
@@ -155,11 +164,33 @@ class MO_set_fchk(lib_mo.MO_set):
             'y':float(coors[3*iat+1])*units.length['A'],
             'z':float(coors[3*iat+2])*units.length['A']})
 
-    def set_bf_info(self, shtypes, shmap):
-        num_bas={0:1, -1:3, 1:3, -2:5, 2:6, -3:7, 3:10, -4:9, 4:15}
-        llab = ['s','p','d','f','g']
+        self.header = "[Molden Format]\n"
 
+        self.header+= "[Atoms] Angs\n"
+        for iat, at in enumerate(self.at_dicts):
+            atno = at['Z']
+            (x, y, z) = (at['x'], at['y'], at['z'])
+            self.header+= "%3s %5i %3i %12.6f %12.6f %12.6f\n"%\
+                (lib_struc.Z_symbol_dict[atno], iat+1, atno, x, y, z)
+
+    def set_bf_info(self, shtypes, noprim, shmap, prims, contr):
+        num_bas={0:1, -1:3, 1:3, -2:5, 2:6, -3:7, 3:10, -4:9, 4:15}
+        llab = ['S','P','D','F','G']
+        self.header+= "[GTO]"
+
+        iatl = -1
+        iprim = 0
         for ish, shtype in enumerate(shtypes):
             iat = shmap[ish]
+            lab = llab[abs(shtype)]
             for ibas in range(num_bas[shtype]):
-                self.basis_fcts.append(lib_mo.basis_fct(iat, llab[abs(shtype)]))
+                self.basis_fcts.append(lib_mo.basis_fct(iat, lab))
+
+            if iat != iatl:
+                iatl = iat
+                self.header+="\n%i  0\n"%iat
+            np = noprim[ish]
+            self.header+= "%3s %5i 1.00\n"%(lab, np)
+            for ip in range(np):
+                self.header+= "%18.10E %18.10E\n"%(prims[iprim], contr[iprim])
+                iprim += 1
