@@ -45,10 +45,10 @@ class MO_set:
         """
 
         # Preferably, the overlap matrix should be used to avoid explicit inversion
-        if type(self.S) is numpy.ndarray:
+        if not self.S is None:
             if lvprt >= 1:
                 print " ... inverse computed as: C^T.S"
-            self.inv_mo_mat = numpy.dot(self.mo_mat.transpose(), self.S)
+            self.inv_mo_mat = numpy.dot(self.mo_mat.T, self.S)
         elif len(self.mo_mat) == len(self.mo_mat[0]):
             if lvprt >= 1:
                 print " ... inverting C"
