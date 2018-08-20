@@ -44,10 +44,10 @@ class vmd_options(input_options.write_options):
         efiles = []
         auxefiles = []
         for pltf in pltfiles:
-            if 'rho_p' in pltf and 'hole' in pltf:
+            if 'rho_p' in pltf and not 'elec' in pltf:
                 hfiles.append(pltf)
                 auxhfiles.append(pltf.replace('rho_p', 'rho_h'))
-            if 'rho_h' in pltf and 'elec' in pltf:
+            elif 'rho_h' in pltf and not 'hole' in pltf:
                 efiles.append(pltf)
                 auxefiles.append(pltf.replace('rho_h', 'rho_p'))
         return hfiles + efiles, auxhfiles + auxefiles
@@ -167,6 +167,7 @@ def run():
 
     vopt = vmd_options('vmd.in')
     vopt.vmd_input()
+    auxfiles = []
     if vopt['dnto']:
         pltfiles, auxfiles = vopt.mod_pltfiles(pltfiles)
 
