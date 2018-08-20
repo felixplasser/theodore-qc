@@ -554,7 +554,8 @@ class tden_ana(dens_ana_base.dens_ana_base):
                 if self.ioptions['molden_orbitals']:
                     self.export_NTOs_molden(state, U, lam, Vt, **export_opts)
                 if dnto_dens == 1 or dnto_dens == 3:
-                    cbfid = lib_orbkit.compute_p_h_dens(state, U, lam/sum(lam), Vt,
+                    N = 1/sum(lam) if self.ioptions['normalize_dnto_dens'] else 1.
+                    cbfid = lib_orbkit.compute_p_h_dens(state, U, N * lam, Vt,
                         self.mos, numproc=self.ioptions['numproc'], **export_opts)
                     cube_ids.append(cbfid)
 
@@ -566,7 +567,8 @@ class tden_ana(dens_ana_base.dens_ana_base):
                 if self.ioptions['molden_orbitals']:
                     self.export_NTOs_molden(state, U, lam, Vt, **export_opts)
                 if dnto_dens >= 2:
-                    cbfid = lib_orbkit.compute_p_h_dens(state, U, lam/sum(lam), Vt,
+                    N = 1/sum(lam) if self.ioptions['normalize_dnto_dens'] else 1.
+                    cbfid = lib_orbkit.compute_p_h_dens(state, U, N * lam, Vt,
                         self.mos, numproc=self.ioptions['numproc'], **export_opts)
                     cube_ids.append(cbfid)
 
@@ -575,9 +577,9 @@ class tden_ana(dens_ana_base.dens_ana_base):
             jme.post()
 
     def ret_DNTO_h(self, state, Aatoms):
-        # TODO: Operate only on the non-zero blocks
         # Compute an SVD for the density matrix with hole
         #   coordinates restricted to fragment A
+        # TODO: Operate only on the non-zero blocks
         D = state['SDSh']
         DA = numpy.zeros(D.shape, float)
         for iat, ist, ien in self.mos.bf_blocks():
@@ -590,9 +592,9 @@ class tden_ana(dens_ana_base.dens_ana_base):
         return U, lam, Vt
 
     def ret_DNTO_e(self, state, Aatoms):
-        # TODO: Operate only on the non-zero blocks
         # Compute an SVD for the density matrix with electron
         #   coordinates restricted to fragment A
+        # TODO: Operate only on the non-zero blocks
         D = state['SDSh']
         DA = numpy.zeros(D.shape, float)
         for iat, ist, ien in self.mos.bf_blocks():
