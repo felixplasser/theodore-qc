@@ -9,7 +9,7 @@ class MO_set:
     """
     Main class that contains orbital information.
     """
-    def __init__(self, file):
+    def __init__(self, file, read=False):
         self.file = file
 
         self.header = '' # header info for print-out
@@ -22,6 +22,9 @@ class MO_set:
         self.mo_mat = None
         self.inv_mo_mat = None
         self.lowdin_mat = None
+
+        if read:
+            self.read()
 
     def read(self, *args, **kwargs):
         """
