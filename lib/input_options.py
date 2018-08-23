@@ -418,6 +418,8 @@ class dens_ana_options(read_options):
         self['numproc'] = 1
         self['comp_dnto_dens'] = 0 # compute cube files for DNTO densities
             # 0 - none, 1 - only hole, 2 - only electron, 3 - both
+        self['fchk_dnto_dens'] = 0  # Print densities to the fchk file
+            # 0 - none, 1 - only hole, 2 - only electron, 3 - both
         self['normalize_dnto_dens'] = False # Normalize the DNTO densities
             # for each fragment
 

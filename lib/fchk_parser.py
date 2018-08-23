@@ -16,6 +16,8 @@ class file_parser_fchk(file_parser.file_parser_base):
 
         num_bas = mos.ret_num_bas()
 
+        dummy_en = 1.
+
         self.rfileh = open(self.ioptions['rfile'], 'r')
         while True: # loop over all lines
             try:
@@ -31,8 +33,13 @@ class file_parser_fchk(file_parser.file_parser_base):
                 words = line.split()
 
                 state['name']    = words[0].replace('singlet','S').replace('triplet','T')
-                state['exc_en']  = float(words[1]) * units.energy['eV']
-                state['osc_str'] = float(words[2])
+                try:
+                    state['exc_en'] = float(words[1]) * units.energy['eV']
+                    state['osc_str'] = float(words[2])
+                except ValueError:
+                    state['exc_en'] = dummy_en
+                    dummy_en += 1.
+                    state['osc_str'] = -1.
                 dim = int(words[-1])
 
                 refdim = num_bas * num_bas
@@ -43,11 +50,6 @@ class file_parser_fchk(file_parser.file_parser_base):
                 temp = mos.CdotD(tden_ao.T, trnsp=False, inv=True)
                 state['tden'] = 2**(-.5) * mos.MdotC(temp, trnsp=True, inv=True)
 
-                # print 'DSSD   :', numpy.sum(numpy.dot(tden_ao.T,S)*numpy.dot(S,tden_ao.T))
-                # print 'tden_ao:', numpy.sum(tden_ao**2)
-                # print 'tden   :', numpy.sum(state['tden']**2)
-                # print
-
             elif 'State Density' in line or 'SCF Density' in line:
                 print line.strip()
                 refdim = num_bas * (num_bas + 1) / 2
@@ -56,10 +58,14 @@ class file_parser_fchk(file_parser.file_parser_base):
                 temp = numpy.zeros([num_bas, num_bas], float)
                 temp[numpy.tril_indices(num_bas)] = tmplist
                 sden = numpy.triu(temp.T, 1) + temp
-                # print sden
 
                 print 'DS:   ', numpy.sum(sden * mos.S)
-                print
+
+            # Skip unnecessary arrays
+            elif 'N=' in line:
+                dim = int(line.split()[-1])
+                for i in range(dim/5-1):
+                    self.rfileh.next()
 
         self.rfileh.close()
 
@@ -79,7 +85,6 @@ class file_parser_fchk(file_parser.file_parser_base):
 class MO_set_fchk(lib_mo.MO_set_molden):
     """
     Parse MO-related information from the fchk file.
-    Not finished yet.
     """
     def read(self):
         print 'Reading MOs from fchk file %s'%self.file
@@ -121,13 +126,6 @@ class MO_set_fchk(lib_mo.MO_set_molden):
                 temp[numpy.tril_indices(num_bas)] = tmplist
                 self.S = numpy.triu(temp.T, 1) + temp
 
-                # print 'S'
-                # print mos.S
-
-                # temp = mos.CdotD(mos.S, trnsp=True, inv=False)
-                # CSC = mos.MdotC(temp, trnsp=False, inv=False)
-                # assert numpy.sum((CSC - numpy.eye(num_bas))**2) < 1.e-8, 'Inconsistent overlap matrix'
-
             elif 'Alpha MO coefficients' in line:
                 #dim = int(line.split()[-1])
                 tmplist = self.fchk_list(line)
@@ -138,6 +136,14 @@ class MO_set_fchk(lib_mo.MO_set_molden):
 
             elif 'Beta MO coefficients' in line:
                 raise error_handler.MsgError('Unrestricted calculations not supported')
+
+            # Skip unnecessary arrays
+            elif 'N=' in line:
+                dim = int(line.split()[-1])
+                for i in range(dim/5-1):
+                    self.rfileh.next()
+
+        self.rfileh.close()
 
     def write_molden_file(self, fname='out.mld', cfmt='% 10E', occmin=-1):
         """
@@ -174,6 +180,10 @@ class MO_set_fchk(lib_mo.MO_set_molden):
                 (lib_struc.Z_symbol_dict[atno], iat+1, atno, x, y, z)
 
     def set_bf_info(self, shtypes, noprim, shmap, prims, contr):
+        """
+        Read information about basis functions and prepare header of Molden file.
+        """
+        d5, f7, g9 = False, False, False
         num_bas={0:1, -1:3, 1:3, -2:5, 2:6, -3:7, 3:10, -4:9, 4:15}
         llab = ['S','P','D','F','G']
         self.header+= "[GTO]"
@@ -186,6 +196,13 @@ class MO_set_fchk(lib_mo.MO_set_molden):
             for ibas in range(num_bas[shtype]):
                 self.basis_fcts.append(lib_mo.basis_fct(iat, lab))
 
+            if shtype == -2:
+                d5 = True
+            elif shtype == -3:
+                f7 = True
+            elif shtype == -4:
+                g9 = True
+
             if iat != iatl:
                 iatl = iat
                 self.header+="\n%i  0\n"%iat
@@ -194,3 +211,37 @@ class MO_set_fchk(lib_mo.MO_set_molden):
             for ip in range(np):
                 self.header+= "%18.10E %18.10E\n"%(prims[iprim], contr[iprim])
                 iprim += 1
+
+        self.header+= "\n"
+        if d5:
+            self.header+= "[5D]\n"
+        if f7:
+            self.header+= "[7F]\n"
+        if g9:
+            self.header+= "[9G]\n"
+
+class fchk_export:
+    """
+    Class for exporting data to the fchk file.
+    """
+    def __init__(self, ifile, ofile='theo.fchk'):
+        self.ofile = ofile
+        with open(self.ofile, 'w') as f:
+            f.writelines(open(ifile, 'r').readlines())
+
+    def dump_data(self, label, data, dtype='R'):
+        print 'Writing %s to %s ...'%(label, self.ofile)
+        with open(self.ofile, 'a') as f:
+            f.write('{0:<42s} R   N=  {1:>10d}'.format(label,len(data)))
+            for id,d in enumerate(data):
+                if id % 5 == 0:
+                    f.write('\n')
+                f.write('% 16.8E'%d)
+            f.write('\n')
+
+    def dump_LTmat(self, label, mat):
+        """
+        Dump the lower triangular part of a symmetric matrix to the fchk file.
+        """
+        N = mat.shape[0]
+        self.dump_data(label, mat[numpy.tril_indices(N)])

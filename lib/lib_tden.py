@@ -2,7 +2,7 @@
 Analysis routines for transition density matrices.
 """
 
-import dens_ana_base, Om_descriptors, lib_mo, error_handler, pop_ana, orbkit_interface
+import dens_ana_base, Om_descriptors, lib_mo, error_handler, pop_ana, orbkit_interface, fchk_parser
 import numpy
 import os
 
@@ -532,10 +532,20 @@ class tden_ana(dens_ana_base.dens_ana_base):
             jmh.pre(ofile=self.ioptions.get('mo_file', strict=False))
             jme = lib_mo.jmol_MOs("dnto_elec")
             jme.pre(ofile=self.ioptions.get('mo_file', strict=False))
+
         dnto_dens = self.ioptions['comp_dnto_dens']
         if dnto_dens > 0:
             lib_orbkit = orbkit_interface.lib_orbkit()
             cube_ids = []
+
+        fchk_dens = self.ioptions['fchk_dnto_dens']
+        print ' *** fchk_dens ***'
+        if fchk_dens > 0:
+            nb = self.mos.ret_num_bas()
+            DNTO_denss = [numpy.zeros([nb, nb], float), numpy.zeros([nb, nb], float)]
+            fex = fchk_parser.fchk_export(self.ioptions['rfile'])
+        else:
+            DNTO_denss = None
 
         for state in self.state_list:
             print "DNTOs for ", state['name']
@@ -544,39 +554,55 @@ class tden_ana(dens_ana_base.dens_ana_base):
                 if not self.ioptions['dnto_frags'] == []:
                     if not (A+1) in self.ioptions['dnto_frags']:
                         continue
-                export_opts={'minlam':self.ioptions['min_occ'], 'pref':"DNTO_"}
+                #export_opts={'minlam':self.ioptions['min_occ'], 'pref':"DNTO_"}
+                export_opts={}
 
                 ### conditional hole density ###
-                (U, lam, Vt) = self.ret_DNTO_h(state, Aatoms)
+                (U, lam, Vt) = self.ret_DNTO_h(state, Aatoms, DNTO_denss)
                 export_opts['post'] = "_hole-F%02i"%(A+1)
                 if jmol_orbs:
                     self.export_NTOs_jmol(state, jmh, U, lam, Vt, **export_opts)
                 if self.ioptions['molden_orbitals']:
                     self.export_NTOs_molden(state, U, lam, Vt, **export_opts)
+                if fchk_dens == 1 or fchk_dens == 3:
+                    fex.dump_LTmat('%s hole-F%02i Hole Density'%(state['name'], A+1), DNTO_denss[0])
+                    fex.dump_LTmat('%s hole-F%02i Electron Density'%(state['name'], A+1), DNTO_denss[1])
                 if dnto_dens == 1 or dnto_dens == 3:
-                    N = 1/sum(lam) if self.ioptions['normalize_dnto_dens'] else 1.
-                    cbfid = lib_orbkit.compute_p_h_dens(state, U, N * lam, Vt,
-                        self.mos, numproc=self.ioptions['numproc'], **export_opts)
-                    cube_ids.append(cbfid)
+                    if sum(lam) < self.ioptions['min_occ']:
+                        print "Norm = %.2f < min_occ. Skipping %s ..."%(sum(lam), export_opts['post'])
+                    else:
+                        N = 1/sum(lam) if self.ioptions['normalize_dnto_dens'] else 1.
+                        cbfid = lib_orbkit.compute_p_h_dens(state, U, N * lam, Vt,
+                            self.mos, numproc=self.ioptions['numproc'], **export_opts)
+                        cube_ids.append(cbfid)
 
                 ### conditional electron density ###
-                (U, lam, Vt) = self.ret_DNTO_e(state, Aatoms)
+                (U, lam, Vt) = self.ret_DNTO_e(state, Aatoms, DNTO_denss)
                 export_opts['post'] = "_elec-F%02i"%(A+1)
                 if jmol_orbs:
                     self.export_NTOs_jmol(state, jme, U, lam, Vt, **export_opts)
                 if self.ioptions['molden_orbitals']:
                     self.export_NTOs_molden(state, U, lam, Vt, **export_opts)
+                if fchk_dens >= 2:
+                    fex.dump_LTmat('%s elec-F%02i Hole Density'%(state['name'], A+1), DNTO_denss[0])
+                    fex.dump_LTmat('%s elec-F%02i Electron Density'%(state['name'], A+1), DNTO_denss[1])
                 if dnto_dens >= 2:
-                    N = 1/sum(lam) if self.ioptions['normalize_dnto_dens'] else 1.
-                    cbfid = lib_orbkit.compute_p_h_dens(state, U, N * lam, Vt,
-                        self.mos, numproc=self.ioptions['numproc'], **export_opts)
-                    cube_ids.append(cbfid)
+                    # if sum(lam) < self.ioptions['min_occ']:
+                    #     print "Norm = %.2f < min_occ. Skipping %s ..."%(sum(lam), export_opts['post'])
+                    # else:
+                        N = 1/sum(lam) if self.ioptions['normalize_dnto_dens'] else 1.
+                        try:
+                            cbfid = lib_orbkit.compute_p_h_dens(state, U, N * lam, Vt,
+                            self.mos, numproc=self.ioptions['numproc'], **export_opts)
+                            cube_ids.append(cbfid)
+                        except:
+                            print "... failed."
 
         if jmol_orbs:
             jmh.post()
             jme.post()
 
-    def ret_DNTO_h(self, state, Aatoms):
+    def ret_DNTO_h(self, state, Aatoms, DNTO_denss=None):
         # Compute an SVD for the density matrix with hole
         #   coordinates restricted to fragment A
         # TODO: Operate only on the non-zero blocks
@@ -589,9 +615,13 @@ class tden_ana(dens_ana_base.dens_ana_base):
         (U, sqrlam, Vt) = numpy.linalg.svd(self.mos.lowdin_trans(DA, True))
         lam = sqrlam * sqrlam
 
+        if not DNTO_denss is None:
+            DNTO_denss[0] = self.mos.lowdin_AO_trans(numpy.dot(DA, DA.T))
+            DNTO_denss[1] = self.mos.lowdin_AO_trans(numpy.dot(DA.T, DA))
+
         return U, lam, Vt
 
-    def ret_DNTO_e(self, state, Aatoms):
+    def ret_DNTO_e(self, state, Aatoms, DNTO_denss=None):
         # Compute an SVD for the density matrix with electron
         #   coordinates restricted to fragment A
         # TODO: Operate only on the non-zero blocks
@@ -603,6 +633,10 @@ class tden_ana(dens_ana_base.dens_ana_base):
 
         (U, sqrlam, Vt) = numpy.linalg.svd(self.mos.lowdin_trans(DA, True))
         lam = sqrlam * sqrlam
+
+        if not DNTO_denss is None:
+            DNTO_denss[0] = self.mos.lowdin_AO_trans(numpy.dot(DA, DA.T))
+            DNTO_denss[1] = self.mos.lowdin_AO_trans(numpy.dot(DA.T, DA))
 
         return U, lam, Vt
 
