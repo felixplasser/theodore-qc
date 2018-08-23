@@ -22,6 +22,7 @@ class MO_set:
         self.mo_mat = None
         self.inv_mo_mat = None
         self.lowdin_mat = None
+        self.Sinv2 = None # S^(-1/2)
 
         if read:
             self.read()
@@ -79,12 +80,12 @@ class MO_set:
         if Vt.shape[0] == U.shape[1]:
             self.lowdin_mat = numpy.dot(U, Vt)
             # The matrix S^(-1/2) for backtransformation
-            #self.Sinv2 = numpy.dot(U*sqrlam, U.T)
+            self.Sinv2 = numpy.dot(U*sqrlam, U.T)
         elif Vt.shape[0] < U.shape[1]:
             Vts = Vt.shape[0]
             print '  MO-matrix not square: %i x %i'%(len(self.mo_mat),len(self.mo_mat[0]))
             self.lowdin_mat = numpy.dot(U[:,:Vts], Vt)
-            #self.Sinv2 = numpy.dot(U[:,:Vts]*sqrlam, U.T[:Vts,:])
+            self.Sinv2 = numpy.dot(U[:,:Vts]*sqrlam, U.T[:Vts,:])
         else:
             raise error_handler.ElseError('>', 'Lowdin ortho')
 
@@ -223,6 +224,17 @@ class MO_set:
             return numpy.dot(Lmat[:,:DUTT.shape[0]], DUTT)
         else:
             raise error_handler.ElseError('<', 'Lowdin trans')
+
+    def lowdin_AO_trans(self, D):
+        """
+        Transformation from Lowdin basis to normal AO basis using
+          DAO = S^(-0.5) DLow S^(-0.5) and
+          S^(-0.5) = C (U V^T)^T
+        """
+        #if self.Sinv2 is None:
+        #    self.Sinv2 = self.CdotD(self.lowdin_mat.T)
+
+        return numpy.dot(self.Sinv2, numpy.dot(D, self.Sinv2))
 
     def export_MO(self, ens, occs, U, *args, **kwargs):
         """
