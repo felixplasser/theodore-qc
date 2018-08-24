@@ -133,6 +133,7 @@ class MO_set_fchk(lib_mo.MO_set_molden):
                 self.occs = nocc * [2] + (self.ret_num_mo() - nocc) * [0]
             elif 'Alpha Orbital Energies' in line:
                 self.ens = map(float, self.fchk_list(line))
+                self.syms = ['X' for en in self.ens]
 
             elif 'Beta MO coefficients' in line:
                 raise error_handler.MsgError('Unrestricted calculations not supported')
