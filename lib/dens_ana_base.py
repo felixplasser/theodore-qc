@@ -54,8 +54,9 @@ class dens_ana_base:
         elif rtype=='fchk':
             self.mos = fchk_parser.MO_set_fchk(file=self.ioptions.get('rfile'), read=True)
             self.read2_mos()
-            self.mos.write_molden_file(fname='MOs.mld')
             self.state_list = fchk_parser.file_parser_fchk(self.ioptions).read(self.mos)
+            self.mos.write_molden_file(fname='MOs.mld')
+            self.ioptions['mo_file'] = 'MOs.mld'
         elif rtype in ['mcscf', 'colmcscf']:
             self.state_list = file_parser.file_parser_col_mcscf(self.ioptions).read(self.mos)
         elif rtype in ['mrci', 'colmrci']:

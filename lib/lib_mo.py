@@ -830,4 +830,5 @@ class jmol_MOs:
         self.htmlfile.write("</table>\n")
         self.htmlfile.post()
 
-        print "\nJmol input file %s.jmol and %s.html written"%(self.name, self.name)
+        print "\nJmol input file %s and %s written"%(self.jmfile.name, self.htmlfile.name)
+        print "   Run as: jmol -n %s"%self.jmfile.name

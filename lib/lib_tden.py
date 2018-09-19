@@ -539,7 +539,6 @@ class tden_ana(dens_ana_base.dens_ana_base):
             cube_ids = []
 
         fchk_dens = self.ioptions['fchk_dnto_dens']
-        print ' *** fchk_dens ***'
         if fchk_dens > 0:
             nb = self.mos.ret_num_bas()
             DNTO_denss = [numpy.zeros([nb, nb], float), numpy.zeros([nb, nb], float)]
@@ -555,7 +554,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
                     if not (A+1) in self.ioptions['dnto_frags']:
                         continue
                 #export_opts={'minlam':self.ioptions['min_occ'], 'pref':"DNTO_"}
-                export_opts={}
+                export_opts={'minlam':self.ioptions['min_occ']}
 
                 ### conditional hole density ###
                 (U, lam, Vt) = self.ret_DNTO_h(state, Aatoms, DNTO_denss)
