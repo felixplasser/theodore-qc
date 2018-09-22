@@ -195,7 +195,7 @@ class file_parser_cclib(file_parser.file_parser_base):
         nvec  =struct.unpack('i', CCfile.read(4))[0]
         print "Number of vectors:", nvec
         header=[ struct.unpack('i', CCfile.read(4))[0] for i in range(8) ]
-        #print header
+        print 'header:', header
 
         # header array contains:
         # [0] index of first alpha occ,  is equal to number of frozen alphas
@@ -208,15 +208,17 @@ class file_parser_cclib(file_parser.file_parser_base):
         # [7] index of last  beta  virt, for restricted equal to -1
 
         if any( [ header[i]!=-1 for i in range(4,8) ] ):
-            raise error_handler.MsgError("No support for nrestricted MOs")
+            raise error_handler.MsgError("No support for unrestricted MOs")
 
         nfrzc = header[0]
         nocc = header[1] + 1
         nact = nocc - nfrzc
-        nmo  = header[3] + 1
+        nmo = header[3] + 1
         nvir = nmo - header[2]
         lenci = nact*nvir
         print '  nmo: %i , nocc: %i , nact: %i , nvir: %i'%(nmo,nocc,nact,nvir)
+        if header[3] + 1 != mos.ret_num_mo():
+            raise error_handler.MsgError("Inconsistent number of MOs")
 
         # loop over states
         # for non-TDA order is: X+Y of 1, X-Y of 1, X+Y of 2, X-Y of 2, ...
@@ -225,9 +227,9 @@ class file_parser_cclib(file_parser.file_parser_base):
         for ivec in range(nvec):
             # header of each vector
             # contains 6 4-byte ints, then 1 8-byte double, then 8 byte unknown
-            nele,d1,mult,d2,iroot,d3 = struct.unpack('iiiiii', CCfile.read(24))
+            d0,d1,mult,d2,iroot,d3 = struct.unpack('iiiiii', CCfile.read(24))
             ene,d3 = struct.unpack('dd', CCfile.read(16))
-            print '  nele: %i , mult: %i , iroot: %i'%(nele,mult,iroot)
+            print '  mult: %i , iroot: %i'%(mult,iroot)
             #print d1,d2,d3
             #print '  Ene: %.4f, Osc: %.4f'%(ene*units.energy['eV'], osc)
             # -> energy does not look consistent
