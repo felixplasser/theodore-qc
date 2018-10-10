@@ -9,6 +9,7 @@ class Om_desc_coll:
     """
     def __init__(self, Om, OmFrag):
         self.descriptors = {}
+        self.OmFrag = OmFrag
         self.OmNorm = OmFrag / Om
         self.numFrag = len(OmFrag)
         
@@ -75,7 +76,7 @@ class Om_desc_coll:
                     sum (self.OmNorm[A,B] for B in xrange(self.numFrag))**2 \
                 for A in xrange(self.numFrag))
             
-        elif desc == 'PRf':
+        elif desc == 'PRf' or desc == 'EEDL':
             self.descriptors[desc] = \
                 1. / sum( \
                     sum (self.OmNorm[A,B] for A in xrange(self.numFrag))**2 \
@@ -107,7 +108,7 @@ class Om_desc_coll:
                     sum(self.OmNorm[A,B]**2. for B in xrange(self.numFrag)) \
                 for A in xrange(self.numFrag)) / self.ret_desc('PRh')
             
-        elif desc in ['MC', 'LC', 'MLCT', 'LMCT', 'LLCT']:
+        elif desc in ['MC', 'LC', 'MLCT', 'LMCT', 'LLCT', 'SIEL']:
             self.compute_trans_met()
             
         else:
@@ -127,12 +128,15 @@ class Om_desc_coll:
         self.descriptors['MLCT'] = 0.
         self.descriptors['LMCT'] = 0.
         self.descriptors['LLCT'] = 0.
-        
         for A in xrange(1, self.numFrag):
             self.descriptors['LC']   += self.OmNorm[A,A]
             self.descriptors['MLCT'] += self.OmNorm[0,A]
             self.descriptors['LMCT'] += self.OmNorm[A,0]
             for B in xrange(A+1, self.numFrag):
                 self.descriptors['LLCT'] += self.OmNorm[A,B] + self.OmNorm[B,A]
+                
+        #hpop = numpy.sum(OmFrag, 1)
+        epop = numpy.sum(self.OmFrag, 0)
+        self.descriptors['SIEL'] = -epop[1] + 0.5 * numpy.sum(epop[2:])
 
             
