@@ -1529,7 +1529,7 @@ class file_parser_rassi(file_parser_libwfa):
 
                 libwfa = True
 
-            elif 'RASSI analysis for transiton from state' in line:
+            elif 'RASSI analysis for transiton from state' in line or 'RASSI analysis for transition from state' in line: # typo fixed
                 words = line.split()
                 typ = words[-1][1:-1]
                 (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile("%s_ctnum_atomic.om"%typ)
