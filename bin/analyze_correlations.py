@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
 """
 Script for analyzing correlations in OmFrag files
+Author: Sebastian Mai
 """
 
 import theo_header, input_options, lib_file, error_handler, lib_struc
