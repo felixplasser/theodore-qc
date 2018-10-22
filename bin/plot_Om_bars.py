@@ -29,15 +29,21 @@ class Om_bar_options(input_options.write_options):
                 line = Ofile.next()
             except StopIteration:
                 break
-        
+
             words = line.split()
-        
+
             self.state_list.append({'name':words[0],
                 'Om':words[1],
                 'OmFrag':map(float, words[2:])})
         self.numSt = len(self.state_list)
 
     def Om_bar_input(self):
+        if self.numSt < 20:
+            defw = 7.
+        else:
+            defw = 15.
+        self.read_float("Width of the plot (cm)", 'width', defw)
+
         self.comps = []
         print "Please enter the different excitation components to be plotted"
         print "    - leave empty to finish"
@@ -59,10 +65,10 @@ class Om_bar_options(input_options.write_options):
                     break
                 je = self.ret_str("Electron index for pair %i"%jpair)
                 cols.append((int(jh)-1) * self.numF + (int(je)-1))
-            
+
             self.comps.append({'name':rstr, 'color':color, 'cols':cols})
         print self.comps
-            
+
     def Om_bar_data(self):
         """
         Create file with the data to be plotted.
@@ -75,7 +81,7 @@ class Om_bar_options(input_options.write_options):
             for comp in self.comps:
                 wt = sum(state['OmFrag'][icol] for icol in comp['cols'])
                 f.write(" %.6f"%wt)
-            f.write("\n")        
+            f.write("\n")
         f.close()
 
     def make_tex(self):
@@ -88,7 +94,7 @@ class Om_bar_options(input_options.write_options):
 """)
         lfile.write("xmin=0, xmax=%i,\n"%(self.numSt+1))
         lfile.write("ymin=-0.0, ymax=1, xtick pos=both,\n")
-        lfile.write("ybar stacked, bar width=%.3f cm]\n"%(15./self.numSt/1.2))
+        lfile.write("ybar stacked, bar width=%.3f cm]\n"%(self['width']/self.numSt/1.2))
 
         for icomp, comp in enumerate(self.comps):
             lfile.write("\\addplot[ybar, draw=none, fill=%s] table[x index=0, y index=%i] {Om_bar_data.txt};\n"%(comp['color'], icomp+1))
@@ -96,13 +102,14 @@ class Om_bar_options(input_options.write_options):
         lfile.write('\end{axis}\n')
 
         lfile.write('\end{tikzpicture}\n')
-        lfile.post()
+        lfile.post(lvprt=1)
+        print "  -> Create plots using: pdflatex %s"%lfile.name
 
     def pre(self):
         """
         Code for beginning of tex file.
         """
-        return """\documentclass[10pt]{article}
+        str = """\documentclass[10pt]{article}
 \usepackage{xcolor}
 
 % here comes the graphics package with a number of useful libraries
@@ -121,8 +128,9 @@ class Om_bar_options(input_options.write_options):
 % settings for the coordinate system
 \pgfplotsset{
 every linear axis/.append style={
-  width=15cm, height=2.0cm,        % size of the plot
-  scale only axis,                  % given size applies to axis, not to whole plot
+"""
+        str += 'width=%.3f cm, height=2.0cm,'%self['width']
+        str += """scale only axis,                  % given size applies to axis, not to whole plot
   axis on top,
 %
   yticklabel style={                %
@@ -143,6 +151,7 @@ every mark/.append style={very thin}
 \\begin{document}
 \\begin{tikzpicture}
 """
+        return str
 
 def run_plot():
     opt = Om_bar_options('plot.in')
