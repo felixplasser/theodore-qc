@@ -1,8 +1,7 @@
 #!/usr/bin/env python2
 """
-Script for plotting the Omega matrix.
+Script for plotting the Omega matrix as a pseudocolor matrix plot.
 """
-# TODO: variable output format
 
 import theo_header, input_options, lib_file, error_handler
 import numpy

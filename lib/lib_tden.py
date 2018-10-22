@@ -571,9 +571,12 @@ class tden_ana(dens_ana_base.dens_ana_base):
                         print "Norm = %.2f < min_occ. Skipping %s ..."%(sum(lam), export_opts['post'])
                     else:
                         N = 1/sum(lam) if self.ioptions['normalize_dnto_dens'] else 1.
-                        cbfid = lib_orbkit.compute_p_h_dens(state, U, N * lam, Vt,
+                        try:
+                            cbfid = lib_orbkit.compute_p_h_dens(state, U, N * lam, Vt,
                             self.mos, numproc=self.ioptions['numproc'], **export_opts)
-                        cube_ids.append(cbfid)
+                            cube_ids.append(cbfid)
+                        except:
+                            print "... failed."
 
                 ### conditional electron density ###
                 (U, lam, Vt) = self.ret_DNTO_e(state, Aatoms, DNTO_denss)
@@ -586,9 +589,9 @@ class tden_ana(dens_ana_base.dens_ana_base):
                     fex.dump_LTmat('%s elec-F%02i Hole Density'%(state['name'], A+1), DNTO_denss[0])
                     fex.dump_LTmat('%s elec-F%02i Electron Density'%(state['name'], A+1), DNTO_denss[1])
                 if dnto_dens >= 2:
-                    # if sum(lam) < self.ioptions['min_occ']:
-                    #     print "Norm = %.2f < min_occ. Skipping %s ..."%(sum(lam), export_opts['post'])
-                    # else:
+                    if sum(lam) < self.ioptions['min_occ']:
+                         print "Norm = %.2f < min_occ. Skipping %s ..."%(sum(lam), export_opts['post'])
+                    else:
                         N = 1/sum(lam) if self.ioptions['normalize_dnto_dens'] else 1.
                         try:
                             cbfid = lib_orbkit.compute_p_h_dens(state, U, N * lam, Vt,
