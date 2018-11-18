@@ -7,9 +7,9 @@ For example, 'eV':27.2113961 can be understood as 27.211 eV/au
 
 energy={'au':1.0,
         'eV':27.2113961,
-        'kJ/mol':2.625500E3,
+        'kJ/mol':2625.49963,
         'J':4.359744E-18,
-        'kcal/mol':627.51,
+        'kcal/mol':627.50947,
         'rcm':219474.631,
         'nm':45.5633515,
         'Hz':6.579684E15,

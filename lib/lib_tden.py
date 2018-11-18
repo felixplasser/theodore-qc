@@ -69,10 +69,16 @@ class tden_ana(dens_ana_base.dens_ana_base):
         """
         Print a file containing the Omega matrix.
         """
+        if self.ioptions['print_sorted']:
+            # Sort by excitation energy
+            iterlist = sorted(self.state_list, key=lambda state: state['exc_en'])
+        else:
+            iterlist = self.state_list
+
         omf = open(fname, 'w')
 
         omf.write("%i\n"%len(self.ioptions['at_lists']))
-        for state in self.state_list:
+        for state in iterlist:
             Om, OmFrag = self.ret_Om_OmFrag(state)
             if Om is None:
                 continue

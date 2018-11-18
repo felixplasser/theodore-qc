@@ -79,6 +79,7 @@ class Om_bar_options(input_options.write_options):
         """
         sf = lib_file.summ_file(self['tdenfile'])
         f = open('Om_bar_data.txt', 'w')
+        f.write("Header\n")
 
         ist = 1
         for state in self.state_list:
@@ -147,7 +148,7 @@ class Om_bar_options(input_options.write_options):
 every linear axis/.append style={
 """
         str += 'width=%.3f cm, height=2.0cm,'%self['width']
-        str += "xmin=1, xmax=%i,\n"%(self.numSt+1)
+        str += "xmin=0, xmax=%i,\n"%(self.numSt+1)
         str += """xtick={-10}, xticklabels={},
   scale only axis, axis on top,
   yticklabel style={
