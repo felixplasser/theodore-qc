@@ -198,7 +198,7 @@ class file_parser_cclib(file_parser.file_parser_base):
         nvec  =struct.unpack('i', CCfile.read(4))[0]
         print "Number of vectors:", nvec
         header=[ struct.unpack('i', CCfile.read(4))[0] for i in range(8) ]
-        print 'header:', header
+        #print 'header:', header
 
         # header array contains:
         # [0] index of first alpha occ,  is equal to number of frozen alphas
@@ -225,12 +225,16 @@ class file_parser_cclib(file_parser.file_parser_base):
 
         # loop over states
         # for non-TDA order is: X+Y of 1, X-Y of 1, X+Y of 2, X-Y of 2, ...
-        prevroot = -1
-        istate = 0
+        # triplets come after singlets, observe the multiplicity!
+        rootinfo=[]
+        istate = -1
+        iroot2 = -1
+        TDA=True
         for ivec in range(nvec):
             # header of each vector
             # contains 6 4-byte ints, then 1 8-byte double, then 8 byte unknown
             d0,d1,mult,d2,iroot,d3 = struct.unpack('iiiiii', CCfile.read(24))
+            rootinfo.append( (mult,iroot) )
             ene,d3 = struct.unpack('dd', CCfile.read(16))
             print '  mult: %i , iroot: %i'%(mult,iroot)
             #print d1,d2,d3
@@ -240,9 +244,21 @@ class file_parser_cclib(file_parser.file_parser_base):
             # then comes nact * nvirt 8-byte doubles with the coefficients
             coeff = struct.unpack(lenci*'d', CCfile.read(lenci*8))
 
-            if prevroot!=iroot:
+            if ivec==1 and (mult,iroot)==rootinfo[0]:
+              TDA=False
+
+            if ivec>=1 and mult!=rootinfo[-2][0]:
+              triplets=True
+              #istate=-1
+              iroot2=-1
+
+
+            if TDA or ivec%2==0:
+                istate+=1
+                iroot2+=1
+            #if prevroot!=iroot:
                 state = state_list[istate]
-                state['state_ind'] = iroot + 1
+                state['state_ind'] = iroot2 + 1
                 state['mult'] = mult
                 state['irrep'] = 'A'
                 state['name'] = '%i(%i)%s'%(state['state_ind'], state['mult'] ,state['irrep'])
@@ -251,15 +267,12 @@ class file_parser_cclib(file_parser.file_parser_base):
                 # -> does not work for all states
 
                 state['tden'][nfrzc:nocc, nocc:nmo] = numpy.reshape(coeff, [nact,nvir])
-                istate += 1
             else:
             # in this case, we have a non-TDA state!
             # and we need to compute (prevvector+currentvector)/2 = X vector
                 print 'Constructing X-vector of RPA state'
                 state['tden'][nfrzc:nocc, nocc:nmo] += numpy.reshape(coeff, [nact,nvir])
                 state['tden'][nfrzc:nocc, nocc:nmo] *= .5
-
-            prevroot=iroot
 
     def check(self, lvprt=1):
         """

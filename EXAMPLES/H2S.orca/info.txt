@@ -1,0 +1,2 @@
+ORCA read binary with singlets and triplets
+Test created by S. Mai

@@ -1,0 +1,20 @@
+!  sto-3g  bp86  nousesym  
+
+
+%output
+Print[ P_Overlap ] 1
+Print[ P_MOs ] 1
+end
+
+%tddft
+  tda false
+  triplets true
+  nroots 2
+end
+
+* xyz 0 1
+C          0.00000        1.05800       -0.00000
+H          0.92500        1.63000       -0.00000
+H         -0.92500        1.63000        0.00000
+S          0.00000       -0.60100        0.00000
+*
