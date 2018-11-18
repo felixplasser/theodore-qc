@@ -638,9 +638,13 @@ class MO_set_adf(MO_set):
         Extract the MOs from the TAPE21 file.
         Initial code written by S. Mai.
         """
-        import kf
+        try:
+            from scm.plams import KFFile
+        except ImportError:
+            from kf import kffile as KFFile
 
-        f=kf.kffile(self.file)
+        f = KFFile(self.file)
+
         try:
             self.num_at = int(f.read('Geometry','nr of atoms'))
         except:

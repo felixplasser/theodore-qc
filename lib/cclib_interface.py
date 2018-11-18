@@ -103,10 +103,13 @@ class file_parser_cclib(file_parser.file_parser_base):
 
     def tden_adf(self, state_list, mos, rect_dens):
         print("\n   WARNING: using deprecated old ADF interface!\n")
-        import kf
+        try:
+            from scm.plams import KFFile
+        except ImportError:
+            from kf import kffile as KFFile
 
         print("Opening file TAPE21 ...")
-        rfile = kf.kffile('TAPE21')
+        rfile = KFFile('TAPE21')
 
         try:
             nmo = int(rfile.read('A','nmo_A'))
@@ -400,10 +403,13 @@ class MO_set_adf(lib_mo.MO_set_molden):
         Read MOs from TAPE21 file.
         """
         print("\n   Using new ADF interface\n")
-        import kf
+        try:
+            from scm.plams import KFFile
+        except ImportError:
+            from kf import kffile as KFFile
 
         print("Opening file TAPE21 ...")
-        rfile = kf.kffile('TAPE21')
+        rfile = KFFile('TAPE21')
 
         NAO = rfile.read('Basis','naos')
         NMO = rfile.read('A','nmo_A')

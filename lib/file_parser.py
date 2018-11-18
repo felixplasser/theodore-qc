@@ -46,18 +46,21 @@ class file_parser_base:
             if not rfile is None:
                 if rmatrix:
                     line = rfile.next()
-                    words=rfile.next().translate(None, ',[]|').split()
-                    state['%sxx'%key] = float(words[-3])
-                    state['%sxy'%key] = float(words[-2])
-                    state['%sxz'%key] = float(words[-1])                    
-                    words=rfile.next().translate(None, ',[]|').split()
-                    state['%syx'%key] = float(words[-3])
-                    state['%syy'%key] = float(words[-2])
-                    state['%syz'%key] = float(words[-1])                    
-                    words=rfile.next().translate(None, ',[]|').split()
-                    state['%szx'%key] = float(words[-3])
-                    state['%szy'%key] = float(words[-2])
-                    state['%szz'%key] = float(words[-1])                    
+                    try:
+                        words=rfile.next().translate(None, ',[]|').split()
+                        state['%sxx'%key] = float(words[-3])
+                        state['%sxy'%key] = float(words[-2])
+                        state['%sxz'%key] = float(words[-1])
+                        words=rfile.next().translate(None, ',[]|').split()
+                        state['%syx'%key] = float(words[-3])
+                        state['%syy'%key] = float(words[-2])
+                        state['%syz'%key] = float(words[-1])
+                        words=rfile.next().translate(None, ',[]|').split()
+                        state['%szx'%key] = float(words[-3])
+                        state['%szy'%key] = float(words[-2])
+                        state['%szz'%key] = float(words[-1])
+                    except:
+                        print ' Cannot parse matrix for %s of state %s'%(key, state['name'])
                 else:
                     line=rfile.next().translate(None, ',[]|')
                     words = line.split()
@@ -664,10 +667,10 @@ class file_parser_qcadc(file_parser_libwfa):
 
         # Post-processing
         # Pre-factor for 2P cross-section
-        pre2P = 2 * numpy.pi**3 * units.constants['c0']**(-2) * units.tpa['GM']
-        #print "pre2P, GM: ", pre2P, units.tpa['GM']
+        pre2P = numpy.pi**3 * units.constants['c0']**(-2) * units.tpa['GM']
+        print "pre2P, GM: ", pre2P, units.tpa['GM']
         # This is numerically the same as [JCP, 146, 174102]:
-        #   2 * numpy.pi**3 / u.c0 * u.cm**5 / 2.9979E10 * 10**50
+        #   numpy.pi**3 / u.c0 * u.cm**5 / 2.9979E10 * 10**50
         for state in state_list:
             # 2P cross-section pre-factor in GM
             if '2P' in state:
@@ -1228,9 +1231,12 @@ class file_parser_adf(file_parser_base):
     Read ADF TDDFT using the TAPE21 file.
     """
     def read(self, mos):
-        import kf
+        try:
+            from scm.plams import KFFile
+        except ImportError:
+            from kf import kffile as KFFile
 
-        rfile = kf.kffile(self.ioptions['rfile'])
+        rfile = KFFile(self.ioptions['rfile'])
         try:
             nmo = int(rfile.read('A','nmo_A'))
             nelec = int(rfile.read('General','electrons'))

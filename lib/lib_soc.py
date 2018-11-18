@@ -147,10 +147,13 @@ class file_parser_adf_soc(file_parser.file_parser_adf):
     Read ADF TDDFT SOC information from the TAPE21 file.
     """
     def read_soc(self, mos):
-        import kf
-        state_list = self.read(mos)
+        try:
+            from scm.plams import KFFile
+        except ImportError:
+            from kf import kffile as KFFile
+        rfile = KFFile(self.ioptions['rfile'])
 
-        rfile = kf.kffile(self.ioptions['rfile'])
+        state_list = self.read(mos)
 
         print "Reading spin-orbit information from ADF..."
         excs = rfile.read('Excitations SO A', 'excenergies') * units.energy['eV']
