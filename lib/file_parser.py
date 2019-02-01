@@ -1492,7 +1492,8 @@ class file_parser_rassi(file_parser_libwfa):
             #         words = rfile.next().split()
 
             if 'SPIN-FREE ENERGIES' in line:
-                rfile.next()
+                line = rfile.next()
+                if 'Shifted by' in line: rfile.next()
                 rfile.next()
                 rfile.next()
                 words = rfile.next().split()
@@ -1596,9 +1597,9 @@ class file_parser_rassi(file_parser_libwfa):
                 line = rfile.next()
                 trd1 = True
             elif trd1:
-                #print imo, line[:-1]
+                strl = len(line) / 5
                 for i in xrange(5):
-                    val = float(line[i*18:(i+1)*18].replace('D','E'))
+                    val = float(line[i*strl:(i+1)*strl].replace('D','E'))
                     dens[jmo, imo] = val
                     if 0.2 < abs(val) < 1.9999: print "(i,j)=(%2i,%2i), val=%6.3f"%(imo,jmo,val)
 
