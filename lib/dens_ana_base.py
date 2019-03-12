@@ -24,7 +24,7 @@ class dens_ana_base:
         rtype = self.ioptions.get('rtype')
         if rtype=='tddftb':
            self.mos = lib_mo.MO_set_tddftb(file=self.ioptions.get('mo_file'))
-        else:  
+        else:
            self.mos = lib_mo.MO_set_molden(file=self.ioptions.get('mo_file'))
         self.mos.read(lvprt=lvprt)
         self.read2_mos(lvprt)
@@ -208,7 +208,7 @@ class dens_ana_base:
 
             prt_list.append([state['exc_en'], vstr])
 
-        if self.ioptions['print_sorted']: prt_list.sort() 
+        if self.ioptions['print_sorted']: prt_list.sort()
 
         ostr  = hstr + "\n"
         ostr += len(hstr) * '-' + "-\n"

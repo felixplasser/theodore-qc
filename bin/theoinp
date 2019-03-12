@@ -278,8 +278,9 @@ class write_options_theo(input_options.write_options):
     def nto_ana(self):
         if self['read_libwfa']: return
 
-        if self.ret_yn('Perform natural transition orbital (NTO) analysis?', True):
-            self.ostr += 'comp_ntos=True\n'
+        self.read_yn('Perform natural transition orbital (NTO) analysis?', 'comp_ntos', True)
+        self.read_yn('Perform analysis of domain NTOs?', 'comp_dntos', False)
+        if self['comp_ntos'] or self['comp_dntos']:
             self['prop_list'] += ['PRNTO', 'Z_HE']
             if self['rtype'] in ['adf', 'tddftb']:
                 return
@@ -301,6 +302,8 @@ class write_options_theo(input_options.write_options):
                     self.read_yn('Create VMD Network for NTOs', 'vmd_ph_dens', False)
                     if self['vmd_ph_dens']:
                         self.read_float('Isosurface value for VMD network', 'vmd_ph_dens_iv', 0.01)
+                if self['comp_dntos']:
+                    self.read_int('Compute DNTO densities as cube files?\n 0 - no, 1 - hole, 2 - electron, 3 - both', 'comp_dnto_dens', 0)
         else:
             self.ostr += 'comp_ntos=False\n'
 
