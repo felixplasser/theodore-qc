@@ -3,7 +3,7 @@
 Script for parsing libwfa output.
 """
 
-import theo_header, dens_ana_base, input_options
+import theo_header, dens_ana_base, input_options, error_handler
 import sys
 
 def ihelp():
@@ -50,6 +50,12 @@ theo_header.print_header('Parse libwfa output', ioptions=ioptions)
 
 dena = dens_ana_base.dens_ana_base(ioptions)
 #sdena.read_mos()
-dena.read_dens()
+
+try:
+    dena.read_dens()
+except error_handler.MsgError:
+    print 'Setting TDA=True ...'
+    ioptions['TDA'] = True
+    dena.read_dens()
 
 dena.print_summary()

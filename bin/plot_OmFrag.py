@@ -1,8 +1,7 @@
 #!/usr/bin/env python2
 """
-Script for plotting the Omega matrix.
+Script for plotting the Omega matrix as a pseudocolor matrix plot.
 """
-# TODO: variable output format
 
 import theo_header, input_options, lib_file, error_handler
 import numpy
@@ -139,27 +138,30 @@ class OmFrag_options(input_options.write_options):
             pname = 'pcolor_%s.%s'%(state['name'], self['output_format'])
             print "Writing %s ..."%pname
             pylab.savefig(pname, dpi=self['plot_dpi'])
+            pylab.close()
 
             tel  = '<img src="%s", border="1" width="200">\n'%pname
             tel += '<br>%s'%state['name']
             htable.add_el(tel)
 
         # create a plot with the e/h axes and optionally the scale
-        pylab.figure(figsize=(2,2))
+        pylab.figure(figsize=(3,2))
+        matplotlib.rc('font', size=14)
         ax = pylab.axes()
         ax.arrow(0.15, 0.15, 0.5, 0., head_width=0.05, head_length=0.1, fc='k', ec='k')
-        ax.text(0.20, 0.05, 'hole')
+        ax.text(0.20, 0.03, 'hole')
         ax.arrow(0.15, 0.15, 0., 0.5, head_width=0.05, head_length=0.1, fc='k', ec='k')
-        ax.text(0.02, 0.20, 'electron', rotation='vertical')
+        ax.text(0.02, 0.55, 'electron', rotation='vertical')
 
+        pylab.axis('off')
         if self['sscale']:
+            pylab.savefig('axes_no.%s'%self['output_format'], dpi=self['plot_dpi'])
 #            pylab.figure(figsize=(2,2))
 
             pylab.pcolor(numpy.zeros([1, 1]), cmap=pylab.get_cmap(name=self['cmap']), vmin=0., vmax=self['vmax'])
 
             pylab.colorbar()
 
-        pylab.axis('off')
         pylab.savefig('axes.%s'%self['output_format'], dpi=self['plot_dpi'])
 
         tel  = '<img src="axes.%s", border="1" width="200">\n'%self['output_format']

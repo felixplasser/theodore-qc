@@ -14,10 +14,10 @@ class write_options_theo(input_options.write_options):
 
     def choose_rtype(self):
         rdef = ''
-        if os.path.exists('qchem.out'):
-            rdef = 'qcadc'
-        elif os.path.exists('qchem.fchk'):
+        if os.path.exists('qchem.fchk'):
             rdef = 'fchk'
+        elif os.path.exists('qchem.out'):
+            rdef = 'qcadc'
         elif os.path.exists('geom'):
             rdef = 'colmrci'
         elif os.path.exists('molcas.rasscf.molden'):
@@ -78,9 +78,9 @@ class write_options_theo(input_options.write_options):
             self['coor_format'] = 'qcout'
         elif self['rtype'] == 'fchk':
             self['rfile'] = 'qchem.fchk'
-            self['mo_file'] = 'qchem.mld'
-            self['coor_file'] = 'qchem.mld'
-            self['coor_format'] = 'molden'
+            self['mo_file'] = None
+            self['coor_file'] = 'qchem.out'
+            self['coor_format'] = 'qcout'
         elif self['rtype'] == 'colmrci' or self['rtype'] == 'colmcscf':
             self['rfile'] = None
             self['mo_file'] = 'MOLDEN/molden_mo_mc.sp'
@@ -249,7 +249,8 @@ class write_options_theo(input_options.write_options):
         """
         Set the list of Omega descriptors to be computed and set the formula.
         """
-        self.read_int('Formula for Omega matrix computation\n\
+        if not self['read_libwfa']:
+            self.read_int('Formula for Omega matrix computation\n\
    0 - simple, 1 - Mulliken, 2 - Lowdin', 'Om_formula', 2)
 
         Olist = ['Standard set', 'Transition metal complex', 'None']
@@ -278,8 +279,9 @@ class write_options_theo(input_options.write_options):
     def nto_ana(self):
         if self['read_libwfa']: return
 
-        if self.ret_yn('Perform natural transition orbital (NTO) analysis?', True):
-            self.ostr += 'comp_ntos=True\n'
+        self.read_yn('Perform natural transition orbital (NTO) analysis?', 'comp_ntos', True)
+        self.read_yn('Perform analysis of domain NTOs?', 'comp_dntos', False)
+        if self['comp_ntos'] or self['comp_dntos']:
             self['prop_list'] += ['PRNTO', 'Z_HE']
             if self['rtype'] in ['adf', 'tddftb']:
                 return
@@ -298,9 +300,13 @@ class write_options_theo(input_options.write_options):
                         self.read_float('Isosurface value for VMD network', 'vmd_ntos_iv', 0.01)
                 self.read_yn('Calculation of Particle/Hole density (requires orbkit)?', 'comp_p_h_dens', False)
                 if self['comp_p_h_dens']:
-                    self.read_yn('Create VMD Network for NTOs', 'vmd_ph_dens', False)
+                    self.read_yn('Create VMD Network for p/h densities', 'vmd_ph_dens', False)
                     if self['vmd_ph_dens']:
                         self.read_float('Isosurface value for VMD network', 'vmd_ph_dens_iv', 0.01)
+                if self['comp_dntos']:
+                    self.read_int('Compute DNTO densities as cube files?\n 0 - no, 1 - hole, 2 - electron, 3 - both', 'comp_dnto_dens', 0)
+                    if self['rtype'] == 'fchk':
+                        self.read_int('Write DNTO densities to fchk file\n 0 - no, 1 - hole, 2 - electron, 3 - both', 'fchk_dnto_dens', 0)
         else:
             self.ostr += 'comp_ntos=False\n'
 
@@ -337,6 +343,9 @@ class write_options_theo(input_options.write_options):
             return
         if self['rtype'] in ['adf', 'tddftb']:
             return
+        if self['read_libwfa'] == True:
+            return
+
         self.read_yn('Calculation of transition densities between ground state and excited states (requires orbkit)', 'comp_rho0n', False)
         if self['comp_rho0n']:
             self.read_yn('Create VMD Network for transition densities', 'vmd_rho0n', False)
