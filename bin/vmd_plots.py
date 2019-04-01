@@ -33,7 +33,7 @@ class vmd_options(input_options.write_options):
                     self.read_float('Volume integral for second density', 'iso2', 0.9)
                 self.read_str('VMD Material for second density', 'mat2', 'Glass3')
             else:
-                self['iso2'] = self['iso1']/3.
+                self['iso2'] = 100.
 
         self.read_int('Width of images in output html file', 'width', 400)
         self.read_int('Number of columns in the output html file', 'ncol', 4)
@@ -127,15 +127,17 @@ mol modcolor 4 0 ColorID 1
         pf = open(self['pfile'], 'w')
         for iplt, pltf in enumerate(pltfiles):
             if self['do_vol']:
-                iso1, iso2 = lib_util.cube_file(pltf).ret_isovals([self['iso1'], self['iso2']])
+                isovals = lib_util.cube_file(pltf).ret_isovals([self['iso1'], self['iso2']], lvprt=1)
+                iso1 = isovals[0]
             pf.write("mol modstyle 1 0 Isosurface  %.5f %i 0 0 1 1\n"%(iso1, iplt))
             pf.write("mol modstyle 2 0 Isosurface -%.5f %i 0 0 1 1\n"%(iso1, iplt))
             if self['dnto']:
                 if self['do_vol']:
-                    iso2 = lib_util.cube_file(auxfiles[iplt]).ret_isovals([self['iso2']])[0]
+                    iso2 = lib_util.cube_file(auxfiles[iplt]).ret_isovals([self['iso2']], lvprt=1)[0]
                 pf.write("mol modstyle 3 0 Isosurface  %.5f %i 0 0 1 1\n"%(iso2, iplt + len(pltfiles)))
                 pf.write("mol modstyle 4 0 Isosurface -%.5f %i 0 0 1 1\n"%(iso2, iplt + len(pltfiles)))
             elif self['niso'] >= 2:
+                iso2 = isovals[1]
                 pf.write("mol modstyle 3 0 Isosurface  %.5f %i 0 0 1 1\n"%(iso2, iplt))
                 pf.write("mol modstyle 4 0 Isosurface -%.5f %i 0 0 1 1\n"%(iso2, iplt))
             pf.write("render TachyonInternal %s.tga\n"%pltf)
@@ -151,7 +153,7 @@ mol modcolor 4 0 ColorID 1
 
         cf.write('#!/bin/bash\n')
         for pltf in pltfiles:
-            cf.write("convert %s.tga %s.png\n"%(pltf, pltf))
+            cf.write("convert %s.tga %s.png && "%(pltf, pltf))
             cf.write("rm %s.tga\n"%pltf)
 
         cf.close()

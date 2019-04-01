@@ -64,7 +64,7 @@ class cube_file:
             if ps > thres:
                 retvals.append(val)
                 if lvprt >= 1:
-                    print "%.6f %.4f %.6f"%(val, frac[ifrac], ps/self.abss)
+                    print "isoval: %.6f at %.4f (%.6f)"%(val, frac[ifrac], ps/self.abss)
                 ifrac += 1
                 try:
                     thres = frac[ifrac] * self.abss
