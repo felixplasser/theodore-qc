@@ -1,9 +1,9 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """
 Use cclib and openbabel to analyze a geometry optimization.
 """
 
-import theo_header, cclib_interface, input_options, error_handler, units
+from theodore import theo_header, cclib_interface, input_options, error_handler, units
 import openbabel
 import sys
 
@@ -28,32 +28,32 @@ f = open('opt.xyz', 'w')
 try:
     scfens = ccparser.data.scfenergies
 except AttributeError:
-    print ' WARNING: No SCF energies found. Quitting ...'
+    print(' WARNING: No SCF energies found. Quitting ...')
     sys.exit()
 
 try:
     etens = ccparser.data.etenergies
     et = True
-    print ' +++ Found excitation energies +++'
+    print(' +++ Found excitation energies +++')
 except AttributeError:
     etens = []
     et = False
 
-print '\n%21s'%'SCF energies (a.u.)',
-if et: print '%15s'%'Exc. (a.u.)'
-else:  print
+print('\n%21s'%'SCF energies (a.u.)', end=' ')
+if et: print('%15s'%'Exc. (a.u.)')
+else:  print()
 
 for i,scfen in enumerate(scfens):
     en_au = scfen/units.energy['eV']
-    print '%5i:% 15.7f'%(i,en_au),
+    print('%5i:% 15.7f'%(i,en_au), end=' ')
     if et:
         try:
             en_au += etens[i]/units.energy['rcm']
-            print '% 15.7f'%(en_au)
+            print('% 15.7f'%(en_au))
         except IndexError:
-            print
+            print()
     else:
-        print
+        print()
 
     try:
         struc.read_cclib(ccparser.data, ind=i,lvprt=0)
@@ -67,11 +67,11 @@ for i,scfen in enumerate(scfens):
             f.write(line + '\n')
 
 f.close()
-print "Geometries written to %s"%f.name
+print("Geometries written to %s"%f.name)
 
 try:
     optdone = ccparser.data.optdone
 except AttributeError:
     optdone = False
 if optdone:
-    print "\n *** Geometry optimization converged ***"
+    print("\n *** Geometry optimization converged ***")

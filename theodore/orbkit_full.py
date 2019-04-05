@@ -5,7 +5,7 @@ Download and install orbkit if you want to use the functions.
 Author: Gunter Hermann
 """
 
-import dens_ana_base, error_handler
+from . import dens_ana_base, error_handler
 import numpy,tempfile
 
 # Import orbkit modules
@@ -96,7 +96,7 @@ class lib_orbkit:
     def compute_p_h_dens(self,state, U, lam, Vt, mos, minlam=1e-3,numproc=4,pref='',post=''):
 
         lab = state['name'].replace('(', '-').replace(')', '-') + post
-        print("Calculating particle/hole density with orbkit for %s" % lab)
+        print(("Calculating particle/hole density with orbkit for %s" % lab))
 
         # Data conversion from TheoDORE to orbkit
         qc = self.orbkit_geo_ao_conversion(mos)
@@ -138,7 +138,7 @@ class lib_orbkit:
         cube_fids = []
         for i in range(len(state_list)):
             sing = [[],[]]
-            print("Transition density between ground state and excited state %s" % (state_list[i]['name']))
+            print(("Transition density between ground state and excited state %s" % (state_list[i]['name'])))
             for j in range(state_list[i]['tden'].shape[0]):
                 for k in range(state_list[i]['tden'].shape[1]):
                   if abs(state_list[i]['tden'][j,k]) >= 1e-8:
@@ -153,7 +153,7 @@ class lib_orbkit:
 
     def cube_file_creator(self,state, U, lam, Vt, mos, minlam=1e-3, numproc=4):
 
-        print("Calculating NTOs as cube files with orbkit for state %s" % (state['name']))
+        print(("Calculating NTOs as cube files with orbkit for state %s" % (state['name'])))
 
         # Data conversion from TheoDORE to orbkit
         qc = self.orbkit_geo_ao_conversion(mos)

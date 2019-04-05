@@ -1,18 +1,18 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 import os, sys
 import numpy
-import theo_header, lib_mo, error_handler
+from theodore import theo_header, lib_mo, error_handler
 
 theo_header.print_header('Extract molden files')
 
-print"""\
+print("""\
 usage: Extract the hole/particle components out of a molden file
 syntax: extract_molden.py <mo_file1> [<mo_file2> ...]
 options: -ene          - interpret energies as occupations
          -thresh=0.001 - threshold for print-out
          -alphabeta    - use alpha/beta labels for hole/electron
-"""
+""")
 
 class extract_mld:
     def __init__(self, thresh=0.001, rd_ene=False, decompose=True):
@@ -23,7 +23,7 @@ class extract_mld:
         self.stdir = os.getcwd()
 
     def extract(self, mo_file):
-        print "Extracting %s ..."%mo_file
+        print("Extracting %s ..."%mo_file)
         os.chdir(self.stdir)
 
         mos = lib_mo.MO_set_molden(file=mo_file)
@@ -74,7 +74,7 @@ class extract_mld:
         Ct = numpy.array(mat_list)
 
         mos.export_AO(ens, occs, Ct, fname=outfile, occmin=self.thresh)
-        print "  ... %s written, containing %i orbitals."%(outfile, len(ens))
+        print("  ... %s written, containing %i orbitals."%(outfile, len(ens)))
 
     def alphabeta(self, mos):
         """
@@ -103,7 +103,7 @@ class extract_mld:
         Ct = numpy.array(mat_list)
 
         mos.export_AO(ens, occs, Ct, fname=outfile, occmin=self.thresh, alphabeta=True)
-        print "  ... %s written, containing %i orbitals."%(outfile, len(ens))
+        print("  ... %s written, containing %i orbitals."%(outfile, len(ens)))
 
 if __name__=='__main__':
     extr = extract_mld()

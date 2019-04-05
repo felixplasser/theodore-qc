@@ -1,10 +1,10 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """
 Create a convoluted spectrum from the oscillator strengths.
 """
 
 import math, numpy
-import theo_header, units, lib_file, input_options, error_handler
+from theodore import theo_header, units, lib_file, input_options, error_handler
 
 do_plots = True
 try:
@@ -12,7 +12,7 @@ try:
     matplotlib.use('Agg')
     import pylab
 except:
-    print "pylab/matplotlib not installed - plotting not possible"
+    print("pylab/matplotlib not installed - plotting not possible")
     do_plots = False
 
 class spec_options(input_options.write_options):
@@ -42,7 +42,7 @@ class spec_options(input_options.write_options):
             words = rstr.split()
             self['rlist'].append((words[0], words[1], words[2]))
 
-        print
+        print()
 
     def make_spec(self, lvprt=2):
         for filen in self['ana_files']:
@@ -73,7 +73,7 @@ class spec_options(input_options.write_options):
                     ntake += 1
 
             if lvprt >= 2:
-                print "Considering %3i out of %3i states from %s"%(ntake, n, filen)
+                print("Considering %3i out of %3i states from %s"%(ntake, n, filen))
 
         if lvprt >= 1:
             self.spec.info()
@@ -131,18 +131,18 @@ class spectrum:
                 self.spec[i]+=self.f.ev(A,x0,self.en[i])
 
     def info(self):
-        print "\nSpectrum costructed from %i states with non-vanishing osc. strength"%len(self.sticks)
+        print("\nSpectrum costructed from %i states with non-vanishing osc. strength"%len(self.sticks))
 
     def normalize(self):
         smax = max(self.spec)
-        print 'Normalizing the spectrum...'
-        print 'Maximum: % .5f'%smax
+        print('Normalizing the spectrum...')
+        print('Maximum: % .5f'%smax)
         for i, sp in enumerate(self.spec):
             self.spec[i] = sp / smax
 
         smax = max(self.dos)
-        print 'Normalizing the DOS ...'
-        print 'Maximum: % .5f'%smax
+        print('Normalizing the DOS ...')
+        print('Maximum: % .5f'%smax)
         for i, sp in enumerate(self.dos):
             self.dos[i] = sp / smax
 
@@ -198,13 +198,13 @@ class spectrum:
         pylab.savefig(pname)
 
         if lvprt >= 1:
-            print "Spectrum file %s created."%pname
+            print("Spectrum file %s created."%pname)
 
 if __name__ == '__main__':
     import sys
 
     theo_header.print_header('Create a convoluted spectrum')
-    print 'spectrum.py <tden_summ1> [<tden_summ2> ...]'
+    print('spectrum.py <tden_summ1> [<tden_summ2> ...]')
 
     if len(sys.argv) < 2:
         raise error_handler.MsgError('Enter at least one argument')

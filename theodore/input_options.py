@@ -2,7 +2,7 @@
 Utilities for reading and writing options from/to an input file.
 """
 
-import error_handler
+from . import error_handler
 
 class options:
     """
@@ -62,24 +62,24 @@ class options:
         maxen = max(sum_list)
 
         if prt_lvl >= 1:
-            print '\nChecking whether the at_lists definition is valid ...'
+            print('\nChecking whether the at_lists definition is valid ...')
             if prt_lvl >= 2:
-                print 'at_lists=', at_lists
-            print '  %i lists with individual numbers of entries:'%(num_lists)
-            print lens
+                print('at_lists=', at_lists)
+            print('  %i lists with individual numbers of entries:'%(num_lists))
+            print(lens)
 
-            print '  %i total entries, with maximal value %i'%(numen,maxen)
+            print('  %i total entries, with maximal value %i'%(numen,maxen))
 
-        for i in xrange(1,maxen+1):
+        for i in range(1,maxen+1):
             ci = sum_list.count(i)
             if ci!=1:
-                print ' WARNING: value %i present %i times in at_lists!'%(i,ci)
+                print(' WARNING: value %i present %i times in at_lists!'%(i,ci))
 
     def copy(self, coptions):
         """
         Copy information from a different options instance.
         """
-        for key, val in coptions.opt_dict.iteritems():
+        for key, val in coptions.opt_dict.items():
             self[key] = val
 
 class read_options(options):
@@ -101,8 +101,8 @@ class read_options(options):
         Check if the instance was properly initialized (the file was read).
         """
         if self.init > 0:
-            print "\n ERROR: Input file %s not found!"%self.ifile
-            print "  Please create this file using theoinp"
+            print("\n ERROR: Input file %s not found!"%self.ifile)
+            print("  Please create this file using theoinp")
             exit(0)
 
     def set_defaults(self):
@@ -132,9 +132,9 @@ class read_options(options):
             if len(line.strip()) == 0: continue
 
             if len(words) != 2:
-                print " ERROR: in file %s\n   line cannot be parsed:"%self.ifile
-                print len(line)
-                print line
+                print(" ERROR: in file %s\n   line cannot be parsed:"%self.ifile)
+                print(len(line))
+                print(line)
                 exit(6)
 
             key = words[0].strip()
@@ -188,8 +188,8 @@ class write_options(options):
         #   it should only be imported here
         import readline
 
-        print
-        print title
+        print()
+        print(title)
 
         acstr = ' (autocomplete enabled)' if autocomp else ''
         inpstr = 'Choice%s: '%acstr
@@ -198,7 +198,7 @@ class write_options(options):
         if autocomp:
             readline.set_completer_delims(' \t\n;')
             readline.parse_and_bind("tab: complete")    # activate autocomplete
-        val = raw_input(inpstr)
+        val = input(inpstr)
         readline.parse_and_bind("tab: ")            # deactivate autocomplete
 
         if val=='': val = default
@@ -216,13 +216,13 @@ class write_options(options):
         self.write_option(key, val)
 
     def ret_float(self, title, default=1.111):
-        print
-        print title
+        print()
+        print(title)
 
         inpstr = 'Choice: '
         if not default==1.111: inpstr += '[%f] '%default
 
-        sval = raw_input(inpstr)
+        sval = input(inpstr)
         if sval=='':
             val = default
         else:
@@ -241,8 +241,8 @@ class write_options(options):
         self.write_option(key, val)
 
     def ret_int(self, title, idef=-1):
-        print
-        print title
+        print()
+        print(title)
 
         return self.inp_int(idef)
 
@@ -254,10 +254,10 @@ class write_options(options):
         retval = idef
         while True:
             try:
-                retval = int(raw_input(inpstr))
+                retval = int(input(inpstr))
             except:
                 if retval==-1:
-                    print "Please enter an integer number!"
+                    print("Please enter an integer number!")
             if retval!=-1: break
 
         return retval
@@ -278,8 +278,8 @@ class write_options(options):
         """
         Ask a yes/no question and return True or False.
         """
-        print
-        print question
+        print()
+        print(question)
 
         inpstr = 'Choice (y/n): '
         if default:
@@ -287,7 +287,7 @@ class write_options(options):
         else:
             inpstr += '[n] '
 
-        answer = raw_input(inpstr)
+        answer = input(inpstr)
 
         if default:
             return not 'n' in answer.lower()
@@ -316,8 +316,8 @@ class write_options(options):
         """
         Choose an option from a list containing explanations and return the answer.
         """
-        print
-        print title
+        print()
+        print(title)
 
         self.print_list(expl)
 
@@ -330,7 +330,7 @@ class write_options(options):
         iopt = 0
         for p in plist:
             iopt += 1
-            print "  [%2i] %s"%(iopt, p)
+            print("  [%2i] %s"%(iopt, p))
 
     def write_list(self, key, wlist, lformat="%i"):
         # write_option can be called directly
@@ -354,7 +354,7 @@ class write_options(options):
         fileh.write(self.ostr)
         fileh.close()
         if lvprt==1:
-            print 'Finished: File %s written.'%act_ifile
+            print('Finished: File %s written.'%act_ifile)
 
 class dens_ana_options(read_options):
     """

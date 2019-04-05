@@ -1,4 +1,4 @@
-import lib_struc, error_handler, units
+from . import lib_struc, error_handler, units
 import numpy
 
 class exciton_analysis:
@@ -25,10 +25,10 @@ class exciton_analysis:
         try:
             MS_dist = numpy.dot(OmAt.flatten(), self.distmat.flatten()**2.) / Om
         except:
-            print "\n Error when computing MS_dist!"
-            print " Please check the coordinate file."
-            print " OmAt: %i x %i"%(len(OmAt), len(OmAt[0]))
-            print " distmat: %i x %i"%(len(self.distmat), len(self.distmat[0]))
+            print("\n Error when computing MS_dist!")
+            print(" Please check the coordinate file.")
+            print(" OmAt: %i x %i"%(len(OmAt), len(OmAt[0])))
+            print(" distmat: %i x %i"%(len(self.distmat), len(self.distmat[0])))
             raise
         
         RMS_dist = numpy.sqrt(MS_dist)
@@ -55,7 +55,7 @@ class exciton_analysis:
         
         Eb_dist = self.distmat.flatten() / units.length['A']
         
-        for i in xrange(len(self.distmat)):
+        for i in range(len(self.distmat)):
             Eb_dist[i + i*len(self.distmat)] = Eb_diag
             
         Eb_au = numpy.dot(OmAt.flatten(), Eb_dist**-1.) / Om

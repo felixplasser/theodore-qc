@@ -1,10 +1,10 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """
 Script for plotting the Omega matrix.
 """
 # TODO: variable output format
 
-import theo_header, input_options, lib_file, error_handler
+from theodore import theo_header, input_options, lib_file, error_handler
 import numpy
 import os
 
@@ -13,7 +13,7 @@ try:
     matplotlib.use('Agg')
     import pylab
 except:
-    print "pylab/matplotlib not installed - plotting not possible"
+    print("pylab/matplotlib not installed - plotting not possible")
     raise
 
 class OmFrag_options(input_options.write_options):
@@ -32,13 +32,13 @@ class OmFrag_options(input_options.write_options):
         Read the OmFrag.txt file written by analyze_tden.py
         """
         Ofile = open(fname, 'r')
-        line = Ofile.next()
+        line = next(Ofile)
 
         numF = int(line)
 
         while True:
             try:
-                line = Ofile.next()
+                line = next(Ofile)
             except StopIteration:
                 break
 
@@ -126,8 +126,8 @@ class OmFrag_options(input_options.write_options):
                 pylab.axis('on')
                 if self['ticks']:
                     pylab.tick_params(which='both', length=0)
-                    pylab.xticks([x + 0.5 for x in xrange(len(plot_arr))], [x + 1 for x in xrange(len(plot_arr))])
-                    pylab.yticks([y + 0.5 for y in xrange(len(plot_arr))], [y + 1 for y in xrange(len(plot_arr))])
+                    pylab.xticks([x + 0.5 for x in range(len(plot_arr))], [x + 1 for x in range(len(plot_arr))])
+                    pylab.yticks([y + 0.5 for y in range(len(plot_arr))], [y + 1 for y in range(len(plot_arr))])
                 else:
                     pylab.xticks([])
                     pylab.yticks([])
@@ -137,7 +137,7 @@ class OmFrag_options(input_options.write_options):
             if self['cbar']: pylab.colorbar()
 
             pname = 'pcolor_%s.%s'%(state['name'], self['output_format'])
-            print "Writing %s ..."%pname
+            print("Writing %s ..."%pname)
             pylab.savefig(pname, dpi=self['plot_dpi'])
 
             tel  = '<img src="%s", border="1" width="200">\n'%pname
@@ -169,7 +169,7 @@ class OmFrag_options(input_options.write_options):
         hfile.write(htable.ret_table())
         hfile.post()
 
-        print " HTML file %s containing the electron-hole correlation plots written."%hfname
+        print(" HTML file %s containing the electron-hole correlation plots written."%hfname)
 
 def run_plot():
     Oopt = OmFrag_options('plot.in')

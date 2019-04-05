@@ -1,9 +1,9 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """
 Script for creating graphs from multiple directories, e.g. potential curves.
 """
 
-import theo_header, input_options, lib_plot, lib_file
+from theodore import theo_header, input_options, lib_plot, lib_file
 
 class write_plot_options_nx(lib_plot.write_plot_options):
     def plot_input(self):
@@ -33,7 +33,7 @@ class write_plot_options_nx(lib_plot.write_plot_options):
         f = open(self['ana_file'])
         while True:
             try:
-                line = f.next()
+                line = next(f)
             except StopIteration:
                 break
 
@@ -43,8 +43,8 @@ class write_plot_options_nx(lib_plot.write_plot_options):
 
                 header = line.split()
 
-                line = f.next() # ------
-                line = f.next()
+                line = next(f) # ------
+                line = next(f)
 
                 for istate in range(self['nstate']):
                     if 'Finished' in line: break
@@ -61,7 +61,7 @@ class write_plot_options_nx(lib_plot.write_plot_options):
                         except ValueError:
                             pass
                     pdict['ddE'] = pdict['dE(eV)'] - ddict[state_labels[0]]['dE(eV)']
-                    line = f.next()
+                    line = next(f)
 
             if 'FINISHING STEP' in line:
                 words = line.split()
@@ -93,8 +93,8 @@ class write_plot_options_nx(lib_plot.write_plot_options):
             matplotlib.use('Agg')
             import pylab
         except:
-            print "pylab/matplotlib not installed - plotting not possible"
-            print "exiting ..."
+            print("pylab/matplotlib not installed - plotting not possible")
+            print("exiting ...")
             return
 
         hfname = 'graphs.html'
@@ -114,7 +114,7 @@ class write_plot_options_nx(lib_plot.write_plot_options):
         for key in self.main_header[1:]:
             if key == 'fname': continue
 
-            print 'Plotting %s ...'%key
+            print('Plotting %s ...'%key)
             pylab.figure(figsize=(max(12,len(self.times)/100),6))
 
             for state in self['state_labels']:
@@ -124,11 +124,11 @@ class write_plot_options_nx(lib_plot.write_plot_options):
                     symb = '-'
 
                 ylist = []
-                for iana_dir in xrange(len(self['ana_dirs'])):
+                for iana_dir in range(len(self['ana_dirs'])):
                     try:
                         ylist.append(self.data[iana_dir][state][key])
                     except KeyError:
-                        print " ... not able to plot %s for %s."%(key, state)
+                        print(" ... not able to plot %s for %s."%(key, state))
                         break
                 else:
                     pylab.plot(self.times, ylist, symb)

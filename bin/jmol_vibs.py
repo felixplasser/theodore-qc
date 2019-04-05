@@ -1,10 +1,10 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """
 Automatic plotting of vibrations with jmol.
 """
 # Code adapted from jmol_MOs.py
 
-import error_handler, lib_file, theo_header, input_options
+from theodore import error_handler, lib_file, theo_header, input_options
 
 class jmol_vib_opts(input_options.write_options):
     def input(self):
@@ -95,7 +95,7 @@ class vibcoll:
     """
     def __init__(self, st_ind, en_ind, mldfile):
         self.mldfile = mldfile
-        self.viblist = range(st_ind, en_ind+1)
+        self.viblist = list(range(st_ind, en_ind+1))
 
     def vibname(self, ivib):
         return str(ivib)
@@ -108,7 +108,7 @@ if __name__=='__main__':
     import sys
 
     theo_header.print_header('Plotting of vibrations in Jmol')
-    print 'jmol_MOs.py <mldfile>\n'
+    print('jmol_MOs.py <mldfile>\n')
 
     vibfile = sys.argv[1]
     
@@ -132,8 +132,8 @@ if __name__=='__main__':
     jo.post(lvprt=1)
     if jopt['run_jmol']:
         import subprocess
-        print "Running jmol ..."
+        print("Running jmol ...")
 
         subprocess.call(["jmol", "-n", jo.name])
     else:
-        print "  -> Now simply run \"jmol -n %s\" to plot all the orbitals.\n"%jo
+        print("  -> Now simply run \"jmol -n %s\" to plot all the orbitals.\n"%jo)

@@ -2,7 +2,7 @@
 Library file with some routines for plotting graphs.
 """
 
-import input_options, error_handler, lib_file
+from . import input_options, error_handler, lib_file
 import os
 
 class write_plot_options(input_options.write_options):
@@ -17,12 +17,12 @@ class write_plot_options(input_options.write_options):
         """
         Read input from command line.
         """
-        print "This script allows to combine information from several TheoDORE runs into one graph."
-        print "   These jobs are assumed to be located in subdirectories of the current directory."
+        print("This script allows to combine information from several TheoDORE runs into one graph.")
+        print("   These jobs are assumed to be located in subdirectories of the current directory.")
 
         sdirs = sorted([dirn for dirn in os.listdir('.') if os.path.isdir(dirn)])
 
-        print "The following subdirectories were found:"
+        print("The following subdirectories were found:")
         self.print_list(sdirs)
         rstr = self.ret_str("Please enter the order in which they should appear, e.g. '1 2 4 3'")
         ilist = [int(idir) - 1 for idir in rstr.split()]
@@ -79,7 +79,7 @@ class write_plot_options(input_options.write_options):
             matplotlib.use('Agg')
             import pylab
         except:
-            print "pylab/matplotlib not installed - plotting not possible"
+            print("pylab/matplotlib not installed - plotting not possible")
             raise
 
         hfname = 'graphs.html'
@@ -99,25 +99,25 @@ class write_plot_options(input_options.write_options):
         for key in self.main_header[1:]:
             if key == 'fname': continue
 
-            print 'Plotting %s ...'%key
+            print('Plotting %s ...'%key)
             pylab.figure(figsize=(6,4))
 
             for i, state in enumerate(self['state_labels']):
                 ylist = []
-                for iana_dir in xrange(len(self['ana_dirs'])):
+                for iana_dir in range(len(self['ana_dirs'])):
                     try:
                         ylist.append(self.data[iana_dir][state][key])
                     except KeyError:
-                        print " ... not able to plot %s for %s."%(key, state)
+                        print(" ... not able to plot %s for %s."%(key, state))
                         break
                 else:
-                    pylab.plot(range(len(ylist)), ylist, self['symb'], label=self['leg_labels'][i])
+                    pylab.plot(list(range(len(ylist))), ylist, self['symb'], label=self['leg_labels'][i])
 
             pylab.title(key)
             pylab.ylabel(key)
 
             numx = len(self['ana_dirs'])
-            pylab.xticks(xrange(numx), self['ana_dirs'], rotation=30)
+            pylab.xticks(range(numx), self['ana_dirs'], rotation=30)
             #pylab.margins(0.20)
             pylab.subplots_adjust(bottom=0.15)
             pylab.xlim((-0.5, numx+1.5))
@@ -148,7 +148,7 @@ class write_plot_options(input_options.write_options):
             found_data = False
 
             fname = '%s.txt'%key
-            print 'Writing %s ...'%fname
+            print('Writing %s ...'%fname)
 
             wf = open(fname, 'w')
 
@@ -212,7 +212,7 @@ class write_plot_options(input_options.write_options):
             wf.write('}\n')
             wf.write('quit\n')
 
-        print("gnuplot script %s created."%fname)
+        print(("gnuplot script %s created."%fname))
 
 class read_plot_options(input_options.read_options):
     def set_defaults(self):

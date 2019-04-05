@@ -1,17 +1,17 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """
 Perform a fragment charge difference analysis, following
   A. A. Voityuk, N. Roesch J. Chem. Phys. 2002, 117, 5607.
 """
 
-import theo_header, input_options,  error_handler, lib_diab
+from theodore import theo_header, input_options,  error_handler, lib_diab
 import sys, os, numpy
 
 def ihelp():
-    print " analyze_tden.py"
-    print " Command line options:"
-    print "  -h, -H, -help: print this help"
-    print "  -ifile, -f [dens_ana.in]: name of the input file"
+    print(" analyze_tden.py")
+    print(" Command line options:")
+    print("  -h, -H, -help: print this help")
+    print("  -ifile, -f [dens_ana.in]: name of the input file")
     exit(0)
 
 if __name__ == '__main__':
@@ -30,8 +30,8 @@ if __name__ == '__main__':
             raise error_handler.ElseError(arg, 'command line option')
 
     if not os.path.exists(ifile):
-        print 'Input file %s not found!'%ifile
-        print 'Please create this file using theoinp or specify its location using -ifile\n'
+        print('Input file %s not found!'%ifile)
+        print('Please create this file using theoinp or specify its location using -ifile\n')
         ihelp()
 
     ioptions = input_options.fcd_ana_options(ifile)

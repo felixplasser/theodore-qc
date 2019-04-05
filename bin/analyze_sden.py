@@ -1,18 +1,18 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """
 Driver script for analyzing a set of NO files.
 """
 
-import theo_header, lib_sden, input_options
+from theodore import theo_header, lib_sden, input_options
 import os, sys
 
 theo_header.print_header('State density matrix analysis')
 
 def ihelp():
-    print " analyze_sden.py\n"
-    print " Command line options:"
-    print "  -h, -H, -help: print this help"
-    print "  -ifile, -f  [dens_ana.in]: name of the input file"
+    print(" analyze_sden.py\n")
+    print(" Command line options:")
+    print("  -h, -H, -help: print this help")
+    print("  -ifile, -f  [dens_ana.in]: name of the input file")
     exit(0)
 
 #--------------------------------------------------------------------------#        
@@ -30,8 +30,8 @@ while len(sys.argv)>0:
         ifile = sys.argv.pop(0)
 
 if not os.path.exists(ifile):
-    print 'Input file %s not found!'%ifile
-    print 'Please create this file using theoinp or specify its location using -ifile\n'
+    print('Input file %s not found!'%ifile)
+    print('Please create this file using theoinp or specify its location using -ifile\n')
     ihelp()
     
 ioptions = input_options.sden_ana_options(ifile)

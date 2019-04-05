@@ -1,4 +1,4 @@
-import error_handler, dens_ana_base, file_parser, pop_ana, units
+from . import error_handler, dens_ana_base, file_parser, pop_ana, units
 import numpy
 
 """
@@ -15,22 +15,22 @@ class diab_base(dens_ana_base.dens_ana_base):
         #O_ren = (O22 - O11) / (O11 + O22)
         etas  = 0.5 * numpy.arccos((O22-O11)/2.)
         
-        print "FCD analysis. Correct?"
+        print("FCD analysis. Correct?")
         
         if O12==None:
-            print '%15s%12s'%('', 'simplified')
-            print '%15s% 12.5f'%('Mixing angle', etas)
+            print('%15s%12s'%('', 'simplified'))
+            print('%15s% 12.5f'%('Mixing angle', etas))
             if not Ead==None:
                 coups = 0.5 * Ead * numpy.sin(2*etas)
-                print '%15s% 12.5f'%('Coupling', coups)
+                print('%15s% 12.5f'%('Coupling', coups))
         else:
             etaf = 0.5 * numpy.arctan2(2*O12, O22-O11)
-            print '%15s%12s%12s'%('', 'full', 'simplified')
-            print '%15s% 12.5f% 12.5f'%('Mixing angle', etaf, etas)
+            print('%15s%12s%12s'%('', 'full', 'simplified'))
+            print('%15s% 12.5f% 12.5f'%('Mixing angle', etaf, etas))
             if not Ead==None:
                 coups = 0.5 * Ead * numpy.sin(2*etas)
                 coupf = 0.5 * Ead * numpy.sin(2*etaf)
-                print '%15s% 12.5f% 12.5f'%('Coupling', coupf, coups)           
+                print('%15s% 12.5f% 12.5f'%('Coupling', coupf, coups))           
 
 class fcd_ana(diab_base):
     """
@@ -72,7 +72,7 @@ class fcd_ana(diab_base):
             pop_pr.add_pop('state 1', self.st1['pop'])
             pop_pr.add_pop('state 2', self.st2['pop'])
             if self.trans: pop_pr.add_pop('trans.',  self.trans['pop'])
-            print pop_pr.ret_table()
+            print(pop_pr.ret_table())
 
     def do_fcd(self):
         # two entries for the two fragments
@@ -96,7 +96,7 @@ class fcd_ana(diab_base):
         pop_pr.add_pop('state 1', qst1)
         pop_pr.add_pop('state 2', qst2)
         if self.trans: pop_pr.add_pop('trans.',  qtrans)
-        print pop_pr.ret_table_FCD(self.ioptions['at_lists'])
+        print(pop_pr.ret_table_FCD(self.ioptions['at_lists']))
 
         fcd1  = qst1[1] - qst1[0]
         fcd2  = qst2[1] - qst2[0]

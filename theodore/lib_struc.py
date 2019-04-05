@@ -10,17 +10,17 @@ try:
     import openbabel
 except ImportError:
     obabel_avail = False
-    print " *** Warning: python-openbabel not found! ***"
-    print " Using emulation program with limited capabilities ..."
-    import OB_repl as openbabel
-import units, error_handler
+    print(" *** Warning: python-openbabel not found! ***")
+    print(" Using emulation program with limited capabilities ...")
+    from . import OB_repl as openbabel
+from . import units, error_handler
 
 Z_symbol_dict = {1:'H',2:'He',
                  3:'Li',4:'Be',5:'B',6:'C',7:'N',8:'O',9:'F',10:'Ne',
                  11:'Na',12:'Mg',13:'Al',14:'Si',15:'P',16:'S',17:'Cl',18:'Ar',
                  26:'Fe',27:'Co',29:'Cu',34:'Se',35:'Br',44:'Ru',50:'Sn',53:'I',75:'Re',77:'Ir'}
 symbol_Z_dict = {}
-for key,val in Z_symbol_dict.iteritems():
+for key,val in Z_symbol_dict.items():
     symbol_Z_dict[val] = key
 Z_symbol_dict[99] = 'X'
 veloc_types = ['vtxyz','vnx'] # these are defined below
@@ -69,7 +69,7 @@ class structure:
             if ret_type == 'cb':
                 ret_type = 'cube'
             if lvprt>=1:
-                print "Detected file type: %s"%ret_type
+                print("Detected file type: %s"%ret_type)
             return ret_type
 
     def read_new_type(self):
@@ -120,7 +120,7 @@ class structure:
               self.mol.AddAtom(obatom)
               line = infile.readline()
         else:
-           print 'type %s not supported for input'%self.file_type
+           print('type %s not supported for input'%self.file_type)
            exit(1)
 
         infile.close()
@@ -140,7 +140,7 @@ class structure:
         """
         self.read_file(def_file_path, file_type) # like this because copying objects doesn't work
 
-        for i in xrange(self.mol.NumAtoms()):
+        for i in range(self.mol.NumAtoms()):
             atom = self.mol.GetAtom(i+1)
             atom.SetVector(vector[3*i], vector[3*i+1], vector[3*i+2])
         #print 'read_file_vector done'
@@ -177,7 +177,7 @@ class structure:
         """
         self.mol = openbabel.OBMol()
 
-        for iat in xrange(len(at_dicts)):
+        for iat in range(len(at_dicts)):
             obatom = openbabel.OBAtom()
             obatom.SetAtomicNum(at_dicts[iat]['Z'])
             coords = (at_dicts[iat]['x'], at_dicts[iat]['y'], at_dicts[iat]['z'])
@@ -188,7 +188,7 @@ class structure:
     def ret_vector(self):
         " All the coordinates in one vector "
         vec_list = []
-        for i in xrange(self.mol.NumAtoms()):
+        for i in range(self.mol.NumAtoms()):
             atom = self.mol.GetAtom(i+1)
             vec_list += [atom.x(), atom.y(), atom.z()]
 
@@ -245,8 +245,8 @@ class structure:
 
         ret_mat = numpy.zeros([num_at, num_at])
 
-        for iat in xrange(num_at):
-            for jat in xrange(iat+1, num_at):
+        for iat in range(num_at):
+            for jat in range(iat+1, num_at):
                 bij = self.ret_bond_length(iat+1, jat+1)
                 ret_mat[iat, jat] = bij
                 ret_mat[jat, iat] = bij
@@ -323,7 +323,7 @@ class structure:
         Returns a vector with the masses of the atoms (each repeated <rep> times) taken to the <power> power.
         """
         mass_list = []
-        for i in xrange(self.mol.NumAtoms()):
+        for i in range(self.mol.NumAtoms()):
             atom = self.mol.GetAtom(i+1)
             mass_list += rep * [atom.GetAtomicMass()**power]
 
@@ -339,7 +339,7 @@ class structure:
         """
         at_lists = inp_lists
         chk_list = []
-        remaining_atoms = [self.mol.NumAtoms()-i for i in xrange(self.mol.NumAtoms())]
+        remaining_atoms = [self.mol.NumAtoms()-i for i in range(self.mol.NumAtoms())]
 
         for inp_list in inp_lists:
             for iat in inp_list:
@@ -358,16 +358,16 @@ class structure:
                 bind = bonded.GetIdx()
                 if bind in remaining_atoms:
                     if  (curr_at,bind) in cutBonds or (bind,curr_at) in cutBonds:
-                        print 'cutting bond %i-%i'%(curr_at,bind)
+                        print('cutting bond %i-%i'%(curr_at,bind))
                     else:
                         del remaining_atoms[remaining_atoms.index(bind)]
                         chk_list.append(bind)
                         at_lists[-1].append(bind)
 
         if lvprt >= 1:
-            print "\n*** Fragment composition ***"
+            print("\n*** Fragment composition ***")
             for i, at_list in enumerate(at_lists):
-                print "  Fragment %i: %s"%(i+1, self.ret_at_list_composition(at_list))
+                print("  Fragment %i: %s"%(i+1, self.ret_at_list_composition(at_list)))
 
         return at_lists
 
@@ -376,7 +376,7 @@ class structure:
         Return a partition according to the element types.
         """
         tmp_dict = {}
-        for i in xrange(self.mol.NumAtoms()):
+        for i in range(self.mol.NumAtoms()):
             atom = self.mol.GetAtom(i+1)
             Z = atom.GetAtomicNum()
             if not Z in tmp_dict:
@@ -384,13 +384,13 @@ class structure:
             tmp_dict[Z].append(i+1)
 
         at_lists = []
-        for Z, at_list in tmp_dict.iteritems():
+        for Z, at_list in tmp_dict.items():
             at_lists.append(at_list)
 
         if lvprt >= 1:
-            print "\n*** Fragment composition ***"
+            print("\n*** Fragment composition ***")
             for i, at_list in enumerate(at_lists):
-                print "  Fragment %i: %s"%(i+1, self.ret_at_list_composition(at_list))
+                print("  Fragment %i: %s"%(i+1, self.ret_at_list_composition(at_list)))
 
         return at_lists
 
@@ -423,7 +423,7 @@ class structure:
         """
         mom = numpy.array([0., 0., 0.])
 
-        for i in xrange(self.mol.NumAtoms()):
+        for i in range(self.mol.NumAtoms()):
             atom = self.mol.GetAtom(i+1)
             Z = atom.GetAtomicNum()
             pos = numpy.array([atom.x(), atom.y(), atom.z()]) / units.length['A']
@@ -446,7 +446,7 @@ class structure:
             if not obconversion.WriteFile(self.mol, file_path):
                 raise error_handler.MsgError("Error writing coordinate file %s"%file_path)
         if lvprt >= 1:
-            print("Coordinate file %s written."%file_path)
+            print(("Coordinate file %s written."%file_path))
 
     def make_coord_new(self, file_path, file_type):
         """
@@ -457,7 +457,7 @@ class structure:
 
         if file_type == 'txyz2':
           outfile.write('%i from MSMT\n'%num_at)
-          for ind in xrange(1, num_at+1):
+          for ind in range(1, num_at+1):
             obatom = self.mol.GetAtom(ind)
             outstr  = ' %6i'%ind
             outstr += ' %4s'%self.tinker_symbs[ind-1]
@@ -468,7 +468,7 @@ class structure:
                 outstr += ' %6s'%extr
             outfile.write(outstr+'\n')
         elif file_type == 'col':
-          for ind in xrange(1, num_at+1):
+          for ind in range(1, num_at+1):
             obatom  = self.mol.GetAtom(ind)
             outstr  = '%2s'%Z_symbol_dict[obatom.GetAtomicNum()]
             outstr += ' %7.1f'%obatom.GetAtomicNum()
@@ -480,10 +480,10 @@ class structure:
             outstr += '% 14.8f'%obatom.GetExactMass()
             outfile.write(outstr+'\n')
         elif file_type == 'colr':
-          print 'colr specified - atoms will be ordered by type'
+          print('colr specified - atoms will be ordered by type')
           atnums=[]
           atstrs={}
-          for ind in xrange(1, num_at+1):
+          for ind in range(1, num_at+1):
             obatom  = self.mol.GetAtom(ind)
 
             outstr  = '%2s'%Z_symbol_dict[obatom.GetAtomicNum()]
@@ -542,7 +542,7 @@ class veloc:
 
               line = infile.readline()
         else:
-           print 'type %s not supported for input'%self.file_type
+           print('type %s not supported for input'%self.file_type)
            exit(1)
 
         infile.close()
@@ -564,7 +564,7 @@ class veloc:
             for at in self.veloc:
                 wfile.write(" % 14.9f % 14.9f % 14.9f\n"%(at[0],at[1],at[2]))
         else:
-           print 'type %s not supported for output'%file_type
+           print('type %s not supported for output'%file_type)
            exit(1)
 
         wfile.close()

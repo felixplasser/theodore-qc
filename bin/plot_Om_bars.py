@@ -1,11 +1,11 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """
 Script for plotting the Omega matrix as a bar plot.
 This creates a latex/pgfplots input file.
 Author: Felix Plasser, Sebastian Mai
 """
 
-import theo_header, input_options, lib_file, error_handler
+from theodore import theo_header, input_options, lib_file, error_handler
 import numpy
 import os
 
@@ -19,13 +19,13 @@ class Om_bar_options(input_options.write_options):
         """
         self.state_list = []
         Ofile = open(fname, 'r')
-        line = Ofile.next()
+        line = next(Ofile)
 
         self.numF = int(line)
 
         while True:
             try:
-                line = Ofile.next()
+                line = next(Ofile)
             except StopIteration:
                 break
 
@@ -33,7 +33,7 @@ class Om_bar_options(input_options.write_options):
 
             self.state_list.append({'name':words[0],
                 'Om':words[1],
-                'OmFrag':map(float, words[2:])})
+                'OmFrag':list(map(float, words[2:]))})
         self.numSt = len(self.state_list)
 
     def Om_bar_input(self):
@@ -46,24 +46,24 @@ class Om_bar_options(input_options.write_options):
         self.read_float("Width of the plot (cm)", 'width', defw)
 
         self.comps = []
-        print "Please enter the different excitation components to be plotted"
-        print "    - leave empty to finish"
+        print("Please enter the different excitation components to be plotted")
+        print("    - leave empty to finish")
         for icomp in range(1,1000):
             rstr = self.ret_str('Name of component %i'%icomp)
             if rstr == '':
-                print " ... component input finished."
+                print(" ... component input finished.")
                 break
 
             color = self.ret_str('Color for plotting')
 
-            print "\n *** Fragment pairs belonging to %s ***"%rstr
-            print "  Enter two indices between 1 and %i, separated by spaces"%self.numF
-            print "  Leave empty to finish"
+            print("\n *** Fragment pairs belonging to %s ***"%rstr)
+            print("  Enter two indices between 1 and %i, separated by spaces"%self.numF)
+            print("  Leave empty to finish")
             cols = [] # Columns in the OmFrag.txt file
             for jpair in range(1,1000):
                 ehstr = self.ret_str("Hole/electron indices for pair %i"%jpair)
                 if ehstr == '':
-                    print " ... switching to next component."
+                    print(" ... switching to next component.")
                     break
 
                 words = ehstr.split()
@@ -129,16 +129,16 @@ class Om_bar_options(input_options.write_options):
         # Finish
         lfile.write('\end{tikzpicture}\n')
         lfile.post(lvprt=1)
-        print "  -> Create plots using: pdflatex %s"%lfile.name
+        print("  -> Create plots using: pdflatex %s"%lfile.name)
 
     def pre(self):
         """
         Code for beginning of tex file.
         """
         str = """\documentclass{standalone}
-\usepackage{xcolor}
-\usepackage{tikz, pgfplots}
-\usetikzlibrary{calc, decorations, plotmarks, fit, positioning, shapes.geometric}
+\\usepackage{xcolor}
+\\usepackage{tikz, pgfplots}
+\\usetikzlibrary{calc, decorations, plotmarks, fit, positioning, shapes.geometric}
 \pgfplotsset{compat=1.4}
 
 % ===========================================================================

@@ -3,7 +3,7 @@ Module for population analysis.
 Currently only Mulliken style analysis is supported.
 """
 
-import error_handler, lib_struc
+from . import error_handler, lib_struc
 import numpy
 
 class pop_ana:
@@ -19,7 +19,7 @@ class pop_ana:
 
         mp = numpy.zeros(mos.num_at)
 
-        for ibas in xrange(mos.ret_num_bas()):
+        for ibas in range(mos.ret_num_bas()):
             iat = mos.basis_fcts[ibas].at_ind - 1
             mp[iat] += Deff[ibas, ibas]
 
@@ -85,7 +85,7 @@ class pop_printer:
         hstr, retstr = self.header('%6s'%'Atom')
 
         # main part
-        for iat in xrange(len(self.pops[0])):
+        for iat in range(len(self.pops[0])):
             if labels != []:
                 retstr += '%6s'%labels[iat]
             elif self.struc is None:
@@ -118,7 +118,7 @@ class pop_printer:
         hstr, retstr = self.header('%15s'%'Fragment')
 
         # main part
-        for i in xrange(len(self.pops[0])):
+        for i in range(len(self.pops[0])):
             if self.struc is None:
                 retstr += '%15i'%(i+1)
             else:
@@ -145,7 +145,7 @@ class pop_printer:
         hstr, retstr = self.header('%15s'%'Fragment')
 
         # main part
-        for i in xrange(len(self.pops[0])):
+        for i in range(len(self.pops[0])):
             if self.struc is None:
                 retstr += '%15i'%(i+1)
             else:
@@ -187,8 +187,8 @@ class pop_printer_mo(pop_printer):
             self.add_pop('MO %i'%(imo+1), mp)
 
             if (imo+1) % ncol == 0:
-                print self.ret_table(labels)
+                print(self.ret_table(labels))
                 self.clear()
 
         if (imo+1) % ncol != 0:
-            print self.ret_table(labels)
+            print(self.ret_table(labels))

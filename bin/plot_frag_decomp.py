@@ -1,9 +1,9 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """
 Script for plotting fragment decomposition.
 """
 
-import theo_header, input_options, error_handler
+from theodore import theo_header, input_options, error_handler
 import numpy
 
 try:
@@ -11,7 +11,7 @@ try:
     matplotlib.use('Agg')
     import pylab
 except:
-    print "pylab/matplotlib not installed - plotting not possible"
+    print("pylab/matplotlib not installed - plotting not possible")
     raise
 
 class decomp_options(input_options.write_options):
@@ -31,13 +31,13 @@ class decomp_options(input_options.write_options):
         Read the OmFrag.txt file written by analyze_tden.py
         """
         Ofile = open(fname, 'r')
-        line = Ofile.next()
+        line = next(Ofile)
         
         self.numF = int(line)
         
         while True:
             try:
-                line = Ofile.next()
+                line = next(Ofile)
             except StopIteration:
                 break
             
@@ -100,7 +100,7 @@ class decomp_options(input_options.write_options):
         
         fname = 'frag_decomp.%s'%self['output_format']
         pylab.savefig(fname, dpi=self['plot_dpi'])
-        print("File %s written."%fname)
+        print(("File %s written."%fname))
 
 def run_plot():
     opt = decomp_options('plot.in')        

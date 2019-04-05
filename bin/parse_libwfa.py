@@ -1,17 +1,17 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """
 Script for parsing libwfa output.
 """
 
-import theo_header, dens_ana_base, input_options
+from theodore import theo_header, dens_ana_base, input_options
 import sys
 
 def ihelp():
-    print " parse_libwfa.py <logfile> <type>\n"
-    print "  type: qcadc, qctddft, rassi\n"
-    print " Command line options:"
-    print "  -h, -H, -help: print this help"
-    print "  -ifile, -f [dens_ana.in]: name of the input file"
+    print(" parse_libwfa.py <logfile> <type>\n")
+    print("  type: qcadc, qctddft, rassi\n")
+    print(" Command line options:")
+    print("  -h, -H, -help: print this help")
+    print("  -ifile, -f [dens_ana.in]: name of the input file")
     exit(0)
 
 #--------------------------------------------------------------------------#        

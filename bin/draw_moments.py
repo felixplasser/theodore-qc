@@ -1,10 +1,10 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """
 Plot arrows for dipole and quadrupole moments.
 """
 
 import numpy
-import theo_header, units, lib_file, input_options, error_handler
+from theodore import theo_header, units, lib_file, input_options, error_handler
 
 class mom_options(input_options.write_options):
     def input(self):
@@ -51,7 +51,7 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
             if self['do_dip']:
                 dfac = self['dip_scale']  * units.length['A']
                 if not 'mux' in sdict:
-                    print " *** No dipole info found for state %s"%state
+                    print(" *** No dipole info found for state %s"%state)
                 else:
                     af.write('draw color green\n')
                     af.write('draw cylinder ')
@@ -71,7 +71,7 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
             if self['do_tdip']:
                 tdfac = self['tdip_scale']  * units.length['A']
                 if not 'Tmux' in sdict:
-                    print " *** No transition dipole info found for state %s"%state
+                    print(" *** No transition dipole info found for state %s"%state)
                 else:
                     af.write('draw color green\n')
                     af.write('draw cylinder ')
@@ -87,7 +87,7 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
             af.write('render TachyonInternal trans_%s.tga\n\n'%state)
 
         af.close()
-        print "File %s written."%af.name
+        print("File %s written."%af.name)
 
     def plot_quad(self, sdict):
         if not 'Qxx' in sdict:
@@ -118,10 +118,10 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
         TPmat[2,:] = sdict['2Pzx'], sdict['2Pzy'], sdict['2Pzz']
         
         TPstrength = numpy.trace(TPmat)**2 + numpy.sum(TPmat*TPmat) + numpy.sum(TPmat*TPmat.T)
-        print '30*TPA strength [M a.u.]: % .5f'%(TPstrength*0.000002)
+        print('30*TPA strength [M a.u.]: % .5f'%(TPstrength*0.000002))
         
         (Sdiag, coor) = numpy.linalg.eigh(TPmat)
-        print Sdiag
+        print(Sdiag)
         for mu in range(3):
             if self.vmd_color(Sdiag[mu], eps=1.):
                 fac = self['2P_scale'] * units.length['A'] * abs(Sdiag[mu])**.5
@@ -167,7 +167,7 @@ if __name__=='__main__':
     import sys
 
     theo_header.print_header('Plotting of dipole and quadrupole moments')
-    print 'draw_moments.py <tden_summ>'
+    print('draw_moments.py <tden_summ>')
     if len(sys.argv) < 2:
         raise error_handler.MsgError('Enter one argument')
 

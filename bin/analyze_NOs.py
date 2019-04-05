@@ -1,18 +1,18 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """
 Driver script for analyzing a set of NO files.
 """
 
-import theo_header, lib_sden, input_options
+from theodore import theo_header, lib_sden, input_options
 import sys
 
 theo_header.print_header('NO file analysis')
 
 def ihelp():
-    print " analyze_NOs.py <MO_file> [<NO_file_ref> <NO_file2> ...]\n"
-    print " Command line options:"
-    print "  -h, -H, -help: print this help"
-    print "  -ifile [dens_ana.in]: name of the input file"
+    print(" analyze_NOs.py <MO_file> [<NO_file_ref> <NO_file2> ...]\n")
+    print(" Command line options:")
+    print("  -h, -H, -help: print this help")
+    print("  -ifile [dens_ana.in]: name of the input file")
     exit(0)
 
 #--------------------------------------------------------------------------#        

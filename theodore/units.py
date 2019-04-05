@@ -49,23 +49,23 @@ def nm2eV(val):
     return eV2nm(val)
 
 def eVdiff(au1,au2):
-    print "%.5f eV"%((au2-au1)*energy['eV'])
+    print("%.5f eV"%((au2-au1)*energy['eV']))
 
 class converter:
     def __init__(self):
-        for att, val in energy.iteritems():
+        for att, val in energy.items():
             setattr(self, att, val)
-        for att, val in length.iteritems():
+        for att, val in length.items():
             setattr(self, att, val)
-        for att, val in time.iteritems():
+        for att, val in time.items():
             setattr(self, att, val)
-        for att, val in mass.iteritems():
+        for att, val in mass.items():
             setattr(self, att, val)
-        for att, val in dipole.iteritems():
+        for att, val in dipole.items():
             setattr(self, att, val)
-        for att, val in constants.iteritems():
+        for att, val in constants.items():
             setattr(self, att, val)
-        for att, val in tpa.iteritems():
+        for att, val in tpa.items():
             setattr(self, att, val)
 
 u = converter()

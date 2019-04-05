@@ -2,7 +2,7 @@
 Analysis routines for transition density matrices.
 """
 
-import dens_ana_base, Om_descriptors, lib_mo, error_handler, pop_ana, orbkit_interface
+from . import dens_ana_base, Om_descriptors, lib_mo, error_handler, pop_ana, orbkit_interface
 import numpy
 import os
 
@@ -30,8 +30,8 @@ class tden_ana(dens_ana_base.dens_ana_base):
         tden = state['tden']
         Om = numpy.dot(tden.flatten(), tden.flatten())
 
-        print "Omega = %10.7f"%Om
-        if lvprt>=2: print tden
+        print("Omega = %10.7f"%Om)
+        if lvprt>=2: print(tden)
 
 #---
 
@@ -46,8 +46,8 @@ class tden_ana(dens_ana_base.dens_ana_base):
     def print_OmAt(self, state, lvprt=2):
         Om, OmAt = self.ret_Om_OmAt(state)
 
-        print "Omega = %10.7f"%Om
-        if lvprt>=2: print OmAt
+        print("Omega = %10.7f"%Om)
+        if lvprt>=2: print(OmAt)
 
 #---
 
@@ -62,8 +62,8 @@ class tden_ana(dens_ana_base.dens_ana_base):
     def print_OmFrag(self, state, lvprt=2):
         Om, OmFrag = self.ret_Om_OmFrag(state)
 
-        print "Omega = %10.7f"%Om
-        if lvprt>=2: print OmFrag
+        print("Omega = %10.7f"%Om)
+        if lvprt>=2: print(OmFrag)
 
     def fprint_OmFrag(self, fname="OmFrag.txt"):
         """
@@ -103,8 +103,8 @@ class tden_ana(dens_ana_base.dens_ana_base):
             Om, OmFrag = self.ret_Om_OmFrag(state)
             state['Om_desc'] = Om_descriptors.Om_desc_coll(Om, OmFrag)
 
-        print self.ret_header_string(desc_list)
-        print state['Om_desc'].ret_val_string(desc_list)
+        print(self.ret_header_string(desc_list))
+        print(state['Om_desc'].ret_val_string(desc_list))
 
 #---
 
@@ -119,7 +119,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
     def print_exciton(self, state, lvprt=2):
         Om, OmAt = self.ret_Om_OmAt(state)
 
-        print "RMS e-h sep.: %8.6f Ang"%state['RMSeh']
+        print("RMS e-h sep.: %8.6f Ang"%state['RMSeh'])
 
 #---
 
@@ -129,7 +129,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         """
         if self.ioptions['eh_pop'] == 0: return
 
-        print "\n*** Electron/hole population analysis ***"
+        print("\n*** Electron/hole population analysis ***")
 
         if 'at_lists' in self.ioptions:
             title = 'Decomposition over fragments'
@@ -165,7 +165,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         pop_pr.add_pop('sum', hpop+epop)
         pop_pr.add_pop('diff', hpop-epop)
 
-        print pop_pr.ret_table_Frag(self.ioptions['at_lists'])
+        print(pop_pr.ret_table_Frag(self.ioptions['at_lists']))
 
     def fprint_ehFrag(self, fname="ehFrag.txt"):
         """
@@ -179,7 +179,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         ostr = self.ret_summ_table(eh_list)
 
         open(fname, 'w').write(ostr)
-        print "File %s with information about e/h populations written."%fname
+        print("File %s with information about e/h populations written."%fname)
 
     def print_eh_At(self, state, lvprt=2):
         Om, OmAt = self.ret_Om_OmAt(state)
@@ -193,7 +193,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         pop_pr.add_pop('sum', hpop+epop)
         pop_pr.add_pop('diff', hpop-epop)
 
-        print pop_pr.ret_table()
+        print(pop_pr.ret_table())
 
     def print_eh_Bas(self, state, lvprt=2):
         OmBas = state['OmBas']
@@ -207,7 +207,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         pop_pr.add_pop('sum', hpop+epop)
         pop_pr.add_pop('diff', hpop-epop)
 
-        print pop_pr.ret_table()
+        print(pop_pr.ret_table())
 
 #--------------------------------------------------------------------------#
 # Find data
@@ -240,7 +240,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         """
         if self.ioptions['print_OmAt'] and os.path.exists('OmAt.npy'):
             Omtmp = numpy.load('OmAt.npy')
-            print "Reading Omega matrix from OmAt.npy"
+            print("Reading Omega matrix from OmAt.npy")
             for i, state in enumerate(self.state_list):
                 state['Om']   = numpy.sum(Omtmp[i])
                 state['OmAt'] = Omtmp[i]
@@ -272,7 +272,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         except KeyError:
             return None, None
 
-        print "Computation of Omega matrix ..."
+        print("Computation of Omega matrix ...")
       # construction of intermediate matrices
         # S implicitly computed from C
 
@@ -331,7 +331,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         Compute the full matrix including off-diagonal OmAt elements.
         This is only supported for Lowdin orthogonalization.
         """
-        print "Computation of off-diagonal Omega matrices ..."
+        print("Computation of off-diagonal Omega matrices ...")
 
         if not self.ioptions.get('Om_formula') == 2:
             raise error_handler.MsgError('Only Om_formula==2 supported for full OmAt matrix')
@@ -361,8 +361,8 @@ class tden_ana(dens_ana_base.dens_ana_base):
         """
         Computation of Omega matrices and storage in memory.
         """
-        if not self.ioptions.has_key('at_lists'):
-            print '\n WARNING: at_lists not defined - not computing CT numbers!\n'
+        if 'at_lists' not in self.ioptions:
+            print('\n WARNING: at_lists not defined - not computing CT numbers!\n')
             return
 
         for state in self.state_list:
@@ -457,9 +457,9 @@ class tden_ana(dens_ana_base.dens_ana_base):
             (U, lam, Vt) = self.ret_NTO(state)
             cbfid = lib_orbkit.compute_p_h_dens(state, U, lam, Vt, self.mos, minlam=self.ioptions['min_occ'],numproc=self.ioptions.get('numproc'))
             cube_ids.append(cbfid)
-     	if self.ioptions.get('vmd_ph_dens'):
+        if self.ioptions.get('vmd_ph_dens'):
             print("VMD network for particle/hole densities")
-    	    lib_orbkit.vmd_network_creator(filename='p_h_dens',cube_ids=numpy.hstack(cube_ids),isovalue=self.ioptions.get('vmd_ph_dens_iv'))
+            lib_orbkit.vmd_network_creator(filename='p_h_dens',cube_ids=numpy.hstack(cube_ids),isovalue=self.ioptions.get('vmd_ph_dens_iv'))
 
     def compute_rho_0_n(self):
         """

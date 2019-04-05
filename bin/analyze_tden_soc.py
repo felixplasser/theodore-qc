@@ -1,19 +1,19 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """
 Driver script for transition density matrix analysis.
 """
 
-import theo_header, lib_soc, input_options, error_handler
+from theodore import theo_header, lib_soc, input_options, error_handler
 import os, sys, time
 
 (tc, tt) = (time.clock(), time.time())
 
 def ihelp():
-    print " analyze_tden_soc.py"
-    print " Command line options:"
-    print "  -h, -H, -help: print this help"
-    print "  -ifile, -f [dens_ana.in]: name of the input file"
-    print "  -s: analyze spin components"
+    print(" analyze_tden_soc.py")
+    print(" Command line options:")
+    print("  -h, -H, -help: print this help")
+    print("  -ifile, -f [dens_ana.in]: name of the input file")
+    print("  -s: analyze spin components")
     exit(0)
 
 #--------------------------------------------------------------------------#
@@ -36,8 +36,8 @@ while len(sys.argv)>0:
         raise error_handler.ElseError(arg, 'command line option')
 
 if not os.path.exists(ifile):
-    print 'Input file %s not found!'%ifile
-    print 'Please create this file using theoinp or specify its location using -ifile\n'
+    print('Input file %s not found!'%ifile)
+    print('Please create this file using theoinp or specify its location using -ifile\n')
     ihelp()
 
 ioptions = input_options.tden_ana_options(ifile)
@@ -59,4 +59,4 @@ tdena.print_info('soc')
 
 #print 'Finished at ' + time.asctime()
 
-print "CPU time: % .1f s, wall time: %.1f s"%(time.clock() - tc, time.time() - tt)
+print("CPU time: % .1f s, wall time: %.1f s"%(time.clock() - tc, time.time() - tt))

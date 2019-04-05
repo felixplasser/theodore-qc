@@ -45,27 +45,27 @@ class Om_desc_coll:
         if desc == 'POSi':
             self.descriptors[desc] = \
                 sum( \
-                    (A+1) * sum(self.OmNorm[A,B] for B in xrange(self.numFrag)) \
-                for A in xrange(self.numFrag))
+                    (A+1) * sum(self.OmNorm[A,B] for B in range(self.numFrag)) \
+                for A in range(self.numFrag))
                 
         elif desc == 'POSf':
             self.descriptors[desc] = \
                 sum( \
-                    (B+1) * sum(self.OmNorm[A,B] for A in xrange(self.numFrag)) \
-                for B in xrange(self.numFrag))
+                    (B+1) * sum(self.OmNorm[A,B] for A in range(self.numFrag)) \
+                for B in range(self.numFrag))
                 
         elif desc == 'POS':
             self.descriptors[desc] = \
                 0.5 * (self.ret_desc('POSi') + self.ret_desc('POSf'))
             
         elif desc == 'CT':
-            for A in xrange(self.numFrag):
-                for B in xrange(A+1, self.numFrag):
+            for A in range(self.numFrag):
+                for B in range(A+1, self.numFrag):
                     self.descriptors[desc] += self.OmNorm[A, B] + self.OmNorm[B, A]
 
         elif desc == 'CT2':
-            for A in xrange(self.numFrag):
-                for B in xrange(A+2, self.numFrag):
+            for A in range(self.numFrag):
+                for B in range(A+2, self.numFrag):
                     self.descriptors[desc] += self.OmNorm[A, B] + self.OmNorm[B, A]
                     
         elif desc == 'CTnt':
@@ -75,14 +75,14 @@ class Om_desc_coll:
         elif desc == 'PRi':
             self.descriptors[desc] = \
                 1. / sum( \
-                    sum (self.OmNorm[A,B] for B in xrange(self.numFrag))**2 \
-                for A in xrange(self.numFrag))
+                    sum (self.OmNorm[A,B] for B in range(self.numFrag))**2 \
+                for A in range(self.numFrag))
             
         elif desc == 'PRf' or desc == 'EEDL':
             self.descriptors[desc] = \
                 1. / sum( \
-                    sum (self.OmNorm[A,B] for A in xrange(self.numFrag))**2 \
-                for B in xrange(self.numFrag))
+                    sum (self.OmNorm[A,B] for A in range(self.numFrag))**2 \
+                for B in range(self.numFrag))
             
         elif desc == 'PR':
             self.descriptors[desc] = \
@@ -95,20 +95,20 @@ class Om_desc_coll:
         elif desc == 'DEL':
             self.descriptors[desc] = \
                 1. / sum( \
-                    sum ((self.OmNorm[A,B] + self.OmNorm[B,A])/2. for B in xrange(self.numFrag))**2 \
-                for A in xrange(self.numFrag))
+                    sum ((self.OmNorm[A,B] + self.OmNorm[B,A])/2. for B in range(self.numFrag))**2 \
+                for A in range(self.numFrag))
 
         elif desc == 'COH':
             self.descriptors[desc] = \
                 1. / sum( \
-                    sum(self.OmNorm[A,B]**2. for B in xrange(self.numFrag)) \
-                for A in xrange(self.numFrag)) / self.ret_desc('PR')
+                    sum(self.OmNorm[A,B]**2. for B in range(self.numFrag)) \
+                for A in range(self.numFrag)) / self.ret_desc('PR')
         
         elif desc == 'COHh':
             self.descriptors[desc] = \
                 1. / sum( \
-                    sum(self.OmNorm[A,B]**2. for B in xrange(self.numFrag)) \
-                for A in xrange(self.numFrag)) / self.ret_desc('PRh')
+                    sum(self.OmNorm[A,B]**2. for B in range(self.numFrag)) \
+                for A in range(self.numFrag)) / self.ret_desc('PRh')
             
         elif desc in ['MC', 'LC', 'MLCT', 'LMCT', 'LLCT', 'SIEL']:
             self.compute_trans_met()
@@ -130,11 +130,11 @@ class Om_desc_coll:
         self.descriptors['MLCT'] = 0.
         self.descriptors['LMCT'] = 0.
         self.descriptors['LLCT'] = 0.
-        for A in xrange(1, self.numFrag):
+        for A in range(1, self.numFrag):
             self.descriptors['LC']   += self.OmNorm[A,A]
             self.descriptors['MLCT'] += self.OmNorm[0,A]
             self.descriptors['LMCT'] += self.OmNorm[A,0]
-            for B in xrange(A+1, self.numFrag):
+            for B in range(A+1, self.numFrag):
                 self.descriptors['LLCT'] += self.OmNorm[A,B] + self.OmNorm[B,A]
                 
         #hpop = numpy.sum(OmFrag, 1)

@@ -3,7 +3,7 @@ Support for parsing fchk files.
 Currently, this uses an auxiliary Molden file. Later, it should create its own Molden file.
 """
 
-import error_handler, file_parser, units
+from . import error_handler, file_parser, units
 import numpy
 
 class file_parser_fchk(file_parser.file_parser_base):
@@ -17,9 +17,9 @@ class file_parser_fchk(file_parser.file_parser_base):
         rfileh = open(self.ioptions['rfile'], 'r')
         while True: # loop over all lines
             try:
-                line = rfileh.next()
+                line = next(rfileh)
             except StopIteration:
-                print "Reached end of file %s"%self.ioptions.get('rfile')
+                print("Reached end of file %s"%self.ioptions.get('rfile'))
                 break
         
             if 'Transition density matrix' in line:
@@ -34,13 +34,13 @@ class file_parser_fchk(file_parser.file_parser_base):
                 
                 num_bas = mos.ret_num_bas() # ***!!!!!!
                 if dim!=num_bas*num_bas:
-                    print '\n' + line
-                    print '%i != %i * %i'%(dim, num_bas, num_bas)
+                    print('\n' + line)
+                    print('%i != %i * %i'%(dim, num_bas, num_bas))
                     raise error_handler.MsgError('Inconsistent dimensions')
                 tmplist = []
                 while len(tmplist) < dim:
-                    tmplist += rfileh.next().split()
-                tden_ao = 2**.5 * numpy.reshape(map(float, tmplist), [num_bas,num_bas])
+                    tmplist += next(rfileh).split()
+                tden_ao = 2**.5 * numpy.reshape(list(map(float, tmplist)), [num_bas,num_bas])
                 # The tden is transformed back to the MO basis to comply with the
                 #   remaining TheoDORE infrastructure
                 temp = mos.CdotD(tden_ao.T, trnsp=False, inv=True)

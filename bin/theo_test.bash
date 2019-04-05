@@ -62,7 +62,7 @@ do
 
         dtype=`echo $ifile | cut -d '.' -f 1`
         atype=`echo $ifile | cut -d '.' -f 3`
-        comm="analyze_$dtype.py -ifile $ifile"
+        comm="python $THEODIR/bin/analyze_$dtype.py -ifile $ifile"
         echo $comm
         $comm > analyze_$atype.out
         lchk=$?

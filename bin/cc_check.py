@@ -1,9 +1,9 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """
 Check if a file can be read by cclib and if all the required information is available.
 """
 
-import theo_header, cclib_interface, input_options, error_handler
+from theodore import theo_header, cclib_interface, input_options, error_handler
 import sys
 
 theo_header.print_header('Check cclib')
@@ -24,10 +24,10 @@ ccparser = cclib_interface.file_parser_cclib(ioptions)
 errcode = ccparser.check(lvprt=1)
 
 if errcode <= 1:
-    print("\n %s can be parsed by using rtype='cclib' in dens_ana.in."%logfile)
+    print(("\n %s can be parsed by using rtype='cclib' in dens_ana.in."%logfile))
     if errcode == 0:
         print(" Conversion to Molden format also possible")
     else:
         print(" But conversion to Molden format is not possible")
 else:
-    print("\n %s cannot be parsed by cclib (errcode=%i)!"%(logfile, errcode))
+    print(("\n %s cannot be parsed by cclib (errcode=%i)!"%(logfile, errcode)))

@@ -1,9 +1,9 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """
 Automatic plotting of MOs with jmol.
 """
 
-import lib_mo, error_handler, lib_file, theo_header, input_options
+from theodore import lib_mo, error_handler, lib_file, theo_header, input_options
 
 class mo_output:
     """
@@ -113,7 +113,7 @@ class mocoll:
         else:
             maxmo = 10000
 
-        self.molist = range(st_ind-1, min(en_ind, maxmo))
+        self.molist = list(range(st_ind-1, min(en_ind, maxmo)))
         self.virtlist = []
 
     def moname(self, imo):
@@ -137,9 +137,9 @@ class mocoll:
             try:
                 ene, occ = self.moset.ret_eo(imo)
             except:
-                print "\n ERROR: imo = %i"%imo
-                print "ens:", self.moset.ens
-                print "occs:", self.moset.occs
+                print("\n ERROR: imo = %i"%imo)
+                print("ens:", self.moset.ens)
+                print("occs:", self.moset.occs)
                 raise
             return "%s %5s %.4f / %.4f %s"%(pref,sym,ene,occ,postf)
 
@@ -182,7 +182,7 @@ class mocollf(mocoll):
             try:
                 ene, occ = self.moset.ret_eo(imo2)
             except:
-                print "\n ERROR: imo2 = %i"%imo2
+                print("\n ERROR: imo2 = %i"%imo2)
                 raise
             return "%s %.3f / %.3f %s"%(pref,ene,occ,postf)
 
@@ -283,19 +283,19 @@ class jmol_options(input_options.write_options):
         f.close()
 
 def run():
-    print 'jmol_MOs.py [<mldfile> [<mldfile2> ...]]\n'
+    print('jmol_MOs.py [<mldfile> [<mldfile2> ...]]\n')
 
     mldfiles = sys.argv[1:]
 
     if len(mldfiles) == 0:
-        print "No file specified, generating generic script"
+        print("No file specified, generating generic script")
         mldfiles = ['']
         pref = ''
     elif len(mldfiles) == 1:
-        print "Analyzing the file:", mldfiles[0]
+        print("Analyzing the file:", mldfiles[0])
         pref = mldfiles[0] + '.'
     else:
-        print "Analyzing the files:", mldfiles
+        print("Analyzing the files:", mldfiles)
         pref = 'multi.'
 
     jopt = jmol_options('jmol.in')
@@ -313,7 +313,7 @@ def run():
     lo.pre(None, graphicx=True, docclass='{standalone}')
 
     for mldfile in mldfiles:
-        print 'Analyzing %s ...\n'%mldfile
+        print('Analyzing %s ...\n'%mldfile)
         if jopt['spec'] == 'sten':
             moc = mocoll(jopt['st_ind'], jopt['en_ind'], mldfile)
         elif jopt['spec'] == 'frontier':
@@ -333,21 +333,21 @@ def run():
         mol.output(lo)
 
     ho.post(lvprt=1)
-    print "  -> View in browser."
+    print("  -> View in browser.")
     lo.post(lvprt=1)
-    print "  -> Compile with pdflatex (or adjust first)."
+    print("  -> Compile with pdflatex (or adjust first).")
 
     jo.post(lvprt=1)
     if mldfiles == [""]:
-        print "  -> Open the Molden-file in jmol and execute the commands contained in this file."
+        print("  -> Open the Molden-file in jmol and execute the commands contained in this file.")
     else:
         if jopt['run_jmol']:
             import subprocess
-            print "Running jmol ..."
+            print("Running jmol ...")
 
             subprocess.call(["jmol", "-n", jo.name])
         else:
-            print "  -> Now simply run \"jmol -n %s\" to plot all the orbitals.\n"%jo
+            print("  -> Now simply run \"jmol -n %s\" to plot all the orbitals.\n"%jo)
 
 if __name__=='__main__':
     import sys

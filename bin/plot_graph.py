@@ -1,9 +1,9 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """
 Script for creating graphs from multiple directories, e.g. potential curves.
 """
 
-import theo_header, lib_plot
+from theodore import theo_header, lib_plot
         
 def run_plot():
     infilen = 'graph.in'

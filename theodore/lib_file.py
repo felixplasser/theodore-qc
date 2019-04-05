@@ -1,4 +1,4 @@
-import error_handler
+from . import error_handler
 
 """
 General file manipulation classes.
@@ -35,7 +35,7 @@ class wfile:
         self.f.close()
 
         if lvprt >= 1:
-            print "  File %s written."%self.name
+            print("  File %s written."%self.name)
 
     def post_extra(self):
         """
@@ -216,12 +216,12 @@ class summ_file:
 #            self.header = ''
 #            return
 
-        self.header = f.next().split()
-        f.next()
+        self.header = next(f).split()
+        next(f)
 
         while True:
             try:
-                line = f.next()
+                line = next(f)
             except StopIteration:
                 break
 

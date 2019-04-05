@@ -7,7 +7,7 @@ usage: OB_repl is intended as a replacement that supplies some of the functional
 """
 
 import sys
-import units
+from . import units
 
 Z_mass_dict = {1:1.008,6:12.011,7:14.007,8:16.,15:30.97,16:32.066,17:35.453,77:192.22}
 Z_exact_mass_dict = {1:1.00782504,6:12.,7:14.00307401,8:15.99491464,17:34.96885273,77:192.962917}
@@ -17,7 +17,7 @@ Z_symbol_dict = {1:'H',2:'He',
                  26:'Fe',27:'Co',29:'Cu',34:'Se',35:'Br',44:'Ru',50:'Sn',53:'I',75:'Re',77:'Ir'}
 
 symbol_Z_dict = {}
-for key,val in Z_symbol_dict.iteritems():
+for key,val in Z_symbol_dict.items():
     symbol_Z_dict[val] = key
 Z_symbol_dict[99] = 'X'
 
@@ -48,11 +48,11 @@ class OBConversion:
         elif self.in_format == 'tmol':
             self.read_tmol(mol, file)
         elif self.in_format == None:
-            print "Input format for %s not set!"%file
+            print("Input format for %s not set!"%file)
             sys.exit(14)
         else:
-            print "File format %s not supported for input!"%self.in_format
-            print "Install python-openbabel for complete support."
+            print("File format %s not supported for input!"%self.in_format)
+            print("Install python-openbabel for complete support.")
             sys.exit(15)
 
         return True
@@ -107,11 +107,11 @@ class OBConversion:
         elif self.out_format == 'tmol':
             self.write_tmol(mol,file)
         elif self.out_format == None:
-            print "Output format for %s not set!"%file
+            print("Output format for %s not set!"%file)
             sys.exit(14)
         else:
-            print "File format %s not supported for output!"%self.out_format
-            print "Install python-openbabel for complete support."
+            print("File format %s not supported for output!"%self.out_format)
+            print("Install python-openbabel for complete support.")
             sys.exit(15)
 
     def write_xyz(self,mol,file):
@@ -120,7 +120,7 @@ class OBConversion:
 
         outfile.write('%i\n\n'%num_at)
 
-        for ind in xrange(1, num_at+1):
+        for ind in range(1, num_at+1):
             obatom  = mol.GetAtom(ind)
             outstr  = '%2s'%Z_symbol_dict[obatom.GetAtomicNum()]
             outstr += '% 14.8f'%(obatom.x())
@@ -136,7 +136,7 @@ class OBConversion:
 
         outfile.write('$coord\n')
 
-        for ind in xrange(1, num_at+1):
+        for ind in range(1, num_at+1):
             obatom  = mol.GetAtom(ind)
 
             outstr  = '% 14.8f'%(obatom.x() / units.length['A'])
@@ -198,6 +198,6 @@ class OBAtom:
 
 class OBAtomAtomIter:
     def __init__(self, atom):
-        print "\n Functionality not supported!"
-        print "Install python-openbabel for complete support."
+        print("\n Functionality not supported!")
+        print("Install python-openbabel for complete support.")
         sys.exit(16)

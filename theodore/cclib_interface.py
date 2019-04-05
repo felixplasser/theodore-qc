@@ -6,13 +6,13 @@ Download and install cclib if you want to use the functions.
 
 import struct
 import numpy
-import file_parser, lib_mo, error_handler, units, lib_struc
+from . import file_parser, lib_mo, error_handler, units, lib_struc
 try:
     import openbabel
 except ImportError:
     print(" *** Warning: python-openbabel not found! ***")
     print(" Using emulation program with limited capabilities ...")
-    import OB_repl as openbabel
+    from . import OB_repl as openbabel
 
 class file_parser_cclib(file_parser.file_parser_base):
     def __init__(self, *args, **kwargs):
@@ -26,7 +26,7 @@ class file_parser_cclib(file_parser.file_parser_base):
         """
         try:
             import cclib.parser
-            print("Using cclib version %s"%cclib.__version__)
+            print(("Using cclib version %s"%cclib.__version__))
         except ImportError:
             print("\n ERROR: Did not find the external cclib package!")
             print("Please, download and install cclib to use this functionality.\n")
@@ -36,7 +36,7 @@ class file_parser_cclib(file_parser.file_parser_base):
         if cfile == None:
             raise error_handler.MsgError('File %s cannot be parsed by cclib!'%rfile)
         else:
-            print("Parsing %s ..."%str(cfile))
+            print(("Parsing %s ..."%str(cfile)))
 
         prog = str(cfile).split()[0]
 
@@ -51,7 +51,7 @@ class file_parser_cclib(file_parser.file_parser_base):
         try:
             core_orbs = sum(self.data.coreelectrons) / 2
             if core_orbs > 0:
-                print("\n WARNING: %i core orbitals detected"%core_orbs)
+                print(("\n WARNING: %i core orbitals detected"%core_orbs))
                 print(" Please check the results carefully!\n")
                 rect_dens = False
         except AttributeError:
@@ -74,7 +74,7 @@ class file_parser_cclib(file_parser.file_parser_base):
             if self.ioptions['read_binary']:
                 self.tden_orca(state_list, mos, rect_dens)
             else:
-                print 'Reading ORCA input from stdout (read_binary=False)'
+                print('Reading ORCA input from stdout (read_binary=False)')
                 self.tden_cclib(state_list, mos, rect_dens)
         else:
             self.tden_cclib(state_list, mos, rect_dens)
@@ -85,7 +85,7 @@ class file_parser_cclib(file_parser.file_parser_base):
         for ist, state in enumerate(state_list):
             state['state_ind'] = ist + 1
             state['name'] = '%i%s'%(state['state_ind'],state['irrep'])
-            print("\n" + state['name'])
+            print(("\n" + state['name']))
 
             state['tden'] = self.init_den(mos, rect=rect_dens)
             for conf in self.data.etsecs[ist]:
@@ -94,9 +94,9 @@ class file_parser_cclib(file_parser.file_parser_base):
                 state['tden'][iocc, ivirt] = coeff
 
                 if coeff*coeff > 0.05:
-                    print(" (%i->%i), coeff=% .4f"%(iocc+1, ivirt+1, coeff))
+                    print((" (%i->%i), coeff=% .4f"%(iocc+1, ivirt+1, coeff)))
                 elif numpy.isnan(coeff):
-                    print(" ERROR: (%i->%i), coeff=% .4f"%(iocc+1, ivirt+1, coeff))
+                    print((" ERROR: (%i->%i), coeff=% .4f"%(iocc+1, ivirt+1, coeff)))
                     if self.prog == 'ORCA':
                         print("For ORCA/RPA jobs, please set read_binary=True\n")
                     raise error_handler.MsgError("Not-a-number encountered")
@@ -121,7 +121,7 @@ class file_parser_cclib(file_parser.file_parser_base):
 
         group = rfile.read('Geometry','grouplabel')[0]
         if not group in ['NOSYM', 'C1', 'c1']:
-            print("grouplabel: " + group)
+            print(("grouplabel: " + group))
             raise error_handler.MsgError('No support for symmetry')
 
         nocc = nelec / 2
@@ -154,13 +154,13 @@ class file_parser_cclib(file_parser.file_parser_base):
             istate += 1
 
             # print-out
-            print(state['name'])
+            print((state['name']))
             tden = state['tden']
             for i in range(len(tden)):
                 for j in range(len(tden[0])):
                     val = tden[i, j]
                     if val*val > 0.1:
-                        print("(%i -> %i) % .4f"%(i+1,j+1,val))
+                        print(("(%i -> %i) % .4f"%(i+1,j+1,val)))
 
         for itrip in range(ntrip):
             state = state_list[istate]
@@ -175,13 +175,13 @@ class file_parser_cclib(file_parser.file_parser_base):
             istate += 1
 
             # print-out
-            print(state['name'])
+            print((state['name']))
             tden = state['tden']
             for i in range(len(tden)):
                 for j in range(len(tden[0])):
                     val = tden[i, j]
                     if val*val > 0.1:
-                        print("(%i -> %i) % .4f"%(i+1,j+1,val))
+                        print(("(%i -> %i) % .4f"%(i+1,j+1,val)))
 
         rfile.close()
 
@@ -190,13 +190,13 @@ class file_parser_cclib(file_parser.file_parser_base):
         Read binary CI vector file from ORCA.
         Authors: S. Mai, F. Plasser
         """
-        print "Reading CI vectors from binary ORCA file %s"%filen
+        print("Reading CI vectors from binary ORCA file %s"%filen)
 
         CCfile=open(filen,'rb')
         # header
         # consists of 9 4-byte integers, the first 5 of which give useful info
         nvec  =struct.unpack('i', CCfile.read(4))[0]
-        print "Number of vectors:", nvec
+        print("Number of vectors:", nvec)
         header=[ struct.unpack('i', CCfile.read(4))[0] for i in range(8) ]
         #print 'header:', header
 
@@ -219,7 +219,7 @@ class file_parser_cclib(file_parser.file_parser_base):
         nmo = header[3] + 1
         nvir = nmo - header[2]
         lenci = nact*nvir
-        print '  nmo: %i , nocc: %i , nact: %i , nvir: %i'%(nmo,nocc,nact,nvir)
+        print('  nmo: %i , nocc: %i , nact: %i , nvir: %i'%(nmo,nocc,nact,nvir))
         if header[3] + 1 != mos.ret_num_mo():
             raise error_handler.MsgError("Inconsistent number of MOs")
 
@@ -236,7 +236,7 @@ class file_parser_cclib(file_parser.file_parser_base):
             d0,d1,mult,d2,iroot,d3 = struct.unpack('iiiiii', CCfile.read(24))
             rootinfo.append( (mult,iroot) )
             ene,d3 = struct.unpack('dd', CCfile.read(16))
-            print '  mult: %i , iroot: %i'%(mult,iroot)
+            print('  mult: %i , iroot: %i'%(mult,iroot))
             #print d1,d2,d3
             #print '  Ene: %.4f, Osc: %.4f'%(ene*units.energy['eV'], osc)
             # -> energy does not look consistent
@@ -270,7 +270,7 @@ class file_parser_cclib(file_parser.file_parser_base):
             else:
             # in this case, we have a non-TDA state!
             # and we need to compute (prevvector+currentvector)/2 = X vector
-                print 'Constructing X-vector of RPA state'
+                print('Constructing X-vector of RPA state')
                 state['tden'][nfrzc:nocc, nocc:nmo] += numpy.reshape(coeff, [nact,nvir])
                 state['tden'][nfrzc:nocc, nocc:nmo] *= .5
 
@@ -281,7 +281,7 @@ class file_parser_cclib(file_parser.file_parser_base):
         errcode = 0
 
         if lvprt >= 1:
-            print("\nChecking if the logfile %s can be parsed by cclib ..."%self.ioptions['rfile'])
+            print(("\nChecking if the logfile %s can be parsed by cclib ..."%self.ioptions['rfile']))
             print("\nEssential attributes:")
 
         for attr in ['mocoeffs', 'atombasis', 'natom', 'homos', 'moenergies', 'etenergies', 'etsyms', 'etsecs']:
@@ -289,9 +289,9 @@ class file_parser_cclib(file_parser.file_parser_base):
             if not chk: errcode = 2
 
             if lvprt >= 1:
-                print('%15s ... %s'%(attr, chk))
+                print(('%15s ... %s'%(attr, chk)))
             if chk and lvprt >= 2:
-                print getattr(self.data, attr)
+                print(getattr(self.data, attr))
 
         if lvprt >= 1:
             print("\nOptional attributes:")
@@ -300,9 +300,9 @@ class file_parser_cclib(file_parser.file_parser_base):
             chk = hasattr(self.data, attr)
 
             if lvprt >= 1:
-                print('%15s ... %s'%(attr, chk))
+                print(('%15s ... %s'%(attr, chk)))
             if chk and lvprt >= 2:
-                print getattr(self.data, attr)
+                print(getattr(self.data, attr))
 
         if lvprt >= 1:
             print("\nAttributes for structure parsing and creation of Molden file:")
@@ -312,9 +312,9 @@ class file_parser_cclib(file_parser.file_parser_base):
             if not chk: errcode = max(1, errcode)
 
             if lvprt >= 1:
-                print('%15s ... %s'%(attr, chk))
+                print(('%15s ... %s'%(attr, chk)))
             if chk and lvprt >= 2:
-                print getattr(self.data, attr)
+                print(getattr(self.data, attr))
 
         return errcode
 
@@ -345,7 +345,7 @@ class MO_set_cclib(lib_mo.MO_set_molden):
         """
         self.mo_mat = data.mocoeffs[0].transpose()
         if lvprt >= 1:
-            print("MO-matrix read from cclib, dimension: %i x %i"%(len(self.mo_mat), len(self.mo_mat[0])))
+            print(("MO-matrix read from cclib, dimension: %i x %i"%(len(self.mo_mat), len(self.mo_mat[0]))))
 
         self.num_at = data.natom
 
@@ -389,7 +389,7 @@ class MO_set_cclib(lib_mo.MO_set_molden):
         self.header = "[Molden Format]\n"
 
         self.header+= "[Atoms] Angs\n"
-        for iat in xrange(self.num_at):
+        for iat in range(self.num_at):
             atno = self.atomnos[iat]
             (x, y, z) = self.coords[iat]
             self.header+= "%3s %5i %3i %12.6f %12.6f %12.6f\n"%\
@@ -429,7 +429,7 @@ class MO_set_adf(lib_mo.MO_set_molden):
 
         self.mo_mat = rfile.read('A','Eigen-Bas_A').reshape(NAO, NMO)
         if lvprt >= 1:
-            print("MO-matrix read from TAPE21, dimension: " + str(self.mo_mat.shape))
+            print(("MO-matrix read from TAPE21, dimension: " + str(self.mo_mat.shape)))
 
         self.num_at = data.natom
 
@@ -439,8 +439,8 @@ class MO_set_adf(lib_mo.MO_set_molden):
 
         npart = rfile.read("A","npart")
 
-        print npart
-        print data.atombasis
+        print(npart)
+        print(data.atombasis)
 
         # assign basis functions to atoms
         # This can be found at
@@ -450,7 +450,7 @@ class MO_set_adf(lib_mo.MO_set_molden):
         maxbas = -1
         for iat, baslist in enumerate(data.atombasis):
             maxbas = max([maxbas] + baslist)
-            print baslist
+            print(baslist)
             for ibas in baslist:
                 self.basis_fcts[ibas].set(iat + 1)
 
@@ -463,11 +463,11 @@ class MO_set_adf(lib_mo.MO_set_molden):
 class structure_cclib(lib_struc.structure):
     def read_cclib(self, data, ind=-1, lvprt=1):
         if lvprt>=1:
-            print("Reading cclib structure with %i atoms."%data.natom)
+            print(("Reading cclib structure with %i atoms."%data.natom))
 
         self.mol = openbabel.OBMol()
 
-        for iat in xrange(data.natom):
+        for iat in range(data.natom):
             obatom = openbabel.OBAtom()
             obatom.SetAtomicNum(int(data.atomnos[iat]))
             coords = data.atomcoords[ind][iat]

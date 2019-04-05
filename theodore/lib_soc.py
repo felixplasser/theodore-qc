@@ -2,7 +2,7 @@
 Routines related to spin-orbit coupling are collected here.
 """
 
-import lib_tden, file_parser, lib_mo, lib_struc, units, error_handler, lib_exciton
+from . import lib_tden, file_parser, lib_mo, lib_struc, units, error_handler, lib_exciton
 import numpy
 import copy
 
@@ -37,7 +37,7 @@ class tden_ana_soc(lib_tden.tden_ana):
         """
         Transform the data to the spin-orbit coupled representation
         """
-        print "Transforming the Omega matrices to the diagonal representation"
+        print("Transforming the Omega matrices to the diagonal representation")
         nsing = len(self.state_list_soc[1]['coeffS'])
         nat = self.mos.num_at
         s2  = numpy.sqrt(.5)
@@ -125,10 +125,10 @@ class tden_ana_soc(lib_tden.tden_ana):
         else:
             raise error_handler.ElseError(pre, 'pre')
 
-        print
-        print "====================================================="
-        print header
-        print "====================================================="
+        print()
+        print("=====================================================")
+        print(header)
+        print("=====================================================")
 
         self.ioptions['output_file'] = '%s_tden_summ.txt'%pre
         if 'at_lists' in self.ioptions:
@@ -155,7 +155,7 @@ class file_parser_adf_soc(file_parser.file_parser_adf):
 
         state_list = self.read(mos)
 
-        print "Reading spin-orbit information from ADF..."
+        print("Reading spin-orbit information from ADF...")
         excs = rfile.read('Excitations SO A', 'excenergies') * units.energy['eV']
         oscs = rfile.read('Excitations SO A', 'oscillator strengths')
         nstate = len(excs)
@@ -188,7 +188,7 @@ class file_parser_adf_soc(file_parser.file_parser_adf):
 
         numpy.savetxt('U.txt', (numpy.conj(U)*U).real, fmt='%.4f', delimiter=' ')
 
-        print "Ground state: <S0|E0>^2 = %.5f"%abs(U[-1,0])**2
+        print("Ground state: <S0|E0>^2 = %.5f"%abs(U[-1,0])**2)
 
         for a, astate in enumerate(state_list_soc[1:]):
             astate['coeffS'] = numpy.zeros(self.nsing, complex)

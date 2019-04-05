@@ -2,7 +2,7 @@
 Analysis routines for state density matrices.
 """
 
-import dens_ana_base, lib_mo, error_handler, pop_ana
+from . import dens_ana_base, lib_mo, error_handler, pop_ana
 import numpy
 
 numpy.set_printoptions(precision=6, suppress=True)
@@ -29,8 +29,8 @@ class sden_ana(dens_ana_base.dens_ana_base):
     def print_mullpop(self, state, lvprt=2):
         mp = self.ret_general_pop(state)
 
-        print "Number of electrons: %10.7f"%mp.sum()
-        print mp
+        print("Number of electrons: %10.7f"%mp.sum())
+        print(mp)
 
     def print_all_pop_table(self, lvprt=2):
         """
@@ -52,7 +52,7 @@ class sden_ana(dens_ana_base.dens_ana_base):
 
             pop_pr.add_pop(dens_type, pop)
 
-        print pop_pr.ret_table()
+        print(pop_pr.ret_table())
 
     def print_mo_pops(self, mo_pop_type=1, lvprt=2):
         ppm = pop_ana.pop_printer_mo()
@@ -82,18 +82,18 @@ class sden_ana(dens_ana_base.dens_ana_base):
 
             pop_pr.add_pop(data, pop)
 
-        print pop_pr.ret_table()
+        print(pop_pr.ret_table())
 
     def print_BO(self, state, lvprt=2):
         for iat, BOlist in enumerate(state['BO']):
-            for jat in xrange(iat+1, len(BOlist)):
+            for jat in range(iat+1, len(BOlist)):
                 BOval = BOlist[jat]
                 if BOval > 1.5:
-                    print "{0:>3}={1:<3}:{2:>7.4f}".format(iat+1, jat+1, BOval)
+                    print("{0:>3}={1:<3}:{2:>7.4f}".format(iat+1, jat+1, BOval))
                 elif BOval > 0.5:
-                    print "{0:>3}-{1:<3}:{2:>7.4f}".format(iat+1, jat+1, BOval)
+                    print("{0:>3}-{1:<3}:{2:>7.4f}".format(iat+1, jat+1, BOval))
                 elif BOval > self.ioptions['min_BO']:
-                    print "{0:>3}..{1:<3}:{2:>7.4f}".format(iat+1, jat+1, BOval)
+                    print("{0:>3}..{1:<3}:{2:>7.4f}".format(iat+1, jat+1, BOval))
 
 
 #--------------------------------------------------------------------------#
@@ -138,7 +138,7 @@ class sden_ana(dens_ana_base.dens_ana_base):
             jmolNDO.pre(ofile=self.ioptions['mo_file'])
 
         for state in self.state_list[1:]:
-            print "A/D analysis for %s"%state['name']
+            print("A/D analysis for %s"%state['name'])
             (ad, W) = self.ret_NDO(state, self.state_list[0])
 
             if jmol_orbs:
@@ -148,7 +148,7 @@ class sden_ana(dens_ana_base.dens_ana_base):
                 self.export_NDOs_molden(state, ad, W, minad=self.ioptions['min_occ'])
 
             if self.ioptions.get('cube_orbitals'):
-                print "Calculating NTOs as cube files with orbkit."
+                print("Calculating NTOs as cube files with orbkit.")
                 oi = orbkit_interface.ok()
                 oi.cube_file_creator(state, ad, W, self.mos, minlam=self.ioptions['min_occ'])
 
@@ -178,7 +178,7 @@ class sden_ana(dens_ana_base.dens_ana_base):
 
         if abs(state['p'] + pD) > 10E-8:
             estr = 'pA + pD = %.8f != 0.'%(state['p'] + pD)
-            print ' WARNING: ' + estr
+            print(' WARNING: ' + estr)
 
         return ad, W
 
@@ -199,7 +199,7 @@ class sden_ana(dens_ana_base.dens_ana_base):
             jmolNDO.add_mo(jmolI, "detach_%s_%i"%(state['name'],i+1), di)
 
 
-        for i in xrange(1,len(ad)):
+        for i in range(1,len(ad)):
             ai = ad[-i]
             if ai < minad: break
 
@@ -217,7 +217,7 @@ class sden_ana(dens_ana_base.dens_ana_base):
                            cfmt=self.ioptions['mcfmt'], occmin=minad, alphabeta=self.ioptions['alphabeta'])
 
     def set_AD(self, state, ad, W):
-        print "Computing A/D densities ..."
+        print("Computing A/D densities ...")
         # get positive and negative indices
         #   The signs are chosen in order to make the attachment density negative and the detachment density positive
         pos = -(numpy.sign(ad)+1.)/2.
@@ -250,7 +250,7 @@ class sden_ana(dens_ana_base.dens_ana_base):
         except KeyError:
             return None
 
-        print "Computation of the bond order matrix ..."
+        print("Computation of the bond order matrix ...")
 
         temp = self.mos.CdotD(D, trnsp=False, inv=False)  # C.DAO
         DS   = self.mos.MdotC(temp, trnsp=False, inv=True) # DAO.S = C.D.C^(-1)
@@ -258,9 +258,9 @@ class sden_ana(dens_ana_base.dens_ana_base):
         # add up the contributions for the different atoms
         state['BO'] = numpy.zeros([self.mos.num_at, self.mos.num_at])
 
-        for i in xrange(self.num_bas):
+        for i in range(self.num_bas):
             iat = self.mos.basis_fcts[i].at_ind - 1
-            for j in xrange(self.num_bas):
+            for j in range(self.num_bas):
                 jat = self.mos.basis_fcts[j].at_ind - 1
                 state['BO'][iat, jat] += DS[i, j] * DS[j, i]
 
@@ -269,10 +269,10 @@ class sden_ana(dens_ana_base.dens_ana_base):
         state['V_A'] = numpy.zeros([self.mos.num_at])
         state['F_A'] = numpy.zeros([self.mos.num_at])
         state['tBO'] = numpy.zeros([self.mos.num_at]) # direct valence
-        for iat in xrange(self.mos.num_at):
+        for iat in range(self.mos.num_at):
             state['V_A'][iat] = 2 * QA[iat] - state['BO'][iat, iat]
             state['F_A'][iat] = state['V_A'][iat]
-            for jat in xrange(self.mos.num_at):
+            for jat in range(self.mos.num_at):
                 if jat!=iat:
                     state['F_A'][iat] -= state['BO'][iat, jat]
                     state['tBO'][iat] += state['BO'][iat, jat]

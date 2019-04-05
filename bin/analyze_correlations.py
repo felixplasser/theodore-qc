@@ -1,10 +1,10 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """
 Script for analyzing correlations in OmFrag files
 Author: Sebastian Mai
 """
 
-import theo_header, input_options, lib_file, error_handler, lib_struc
+from theodore import theo_header, input_options, lib_file, error_handler, lib_struc
 import numpy
 import os
 import math
@@ -16,7 +16,7 @@ try:
     import scipy.cluster.hierarchy as sch
     from scipy.spatial.distance import squareform
 except:
-    print "scipy/scipy.cluster/scipy.spatial not installed - cannot continue"
+    print("scipy/scipy.cluster/scipy.spatial not installed - cannot continue")
     raise
 
 # =======================================================================
@@ -24,7 +24,7 @@ except:
 try:
     from matplotlib import pyplot as plt
 except:
-    print "pylab/matplotlib not installed - plotting not possible"
+    print("pylab/matplotlib not installed - plotting not possible")
     raise
 
 # =======================================================================
@@ -33,11 +33,11 @@ try:
     import openbabel
     OPENBABEL=True
 except ImportError:
-    print " *** Warning: python-openbabel not found! ***"
-    print " Using emulation program with limited capabilities ..."
+    print(" *** Warning: python-openbabel not found! ***")
+    print(" Using emulation program with limited capabilities ...")
     import OB_repl as openbabel
     OPENBABEL=False
-    print " Cannot draw bonds in LaTeX plots without python-openbabel."
+    print(" Cannot draw bonds in LaTeX plots without python-openbabel.")
 
 # =======================================================================
 # =======================================================================
@@ -83,8 +83,8 @@ class AnCorr_options(input_options.write_options):
         a,b=D.shape
         D=D.reshape(a,self.numF,self.numF)
         self.OmFrag=D
-        print 'Number of fragments: %i' % self.numF
-        print 'Descriptor data (dimensions: %i obs x %i frags x %i frags):' % D.shape
+        print(('Number of fragments: %i' % self.numF))
+        print(('Descriptor data (dimensions: %i obs x %i frags x %i frags):' % D.shape))
         numpy.set_printoptions(linewidth=130,precision=3,suppress=True,threshold=10000)
         #print self.OmFrag
         #print '\n\n'
@@ -293,7 +293,7 @@ class AnCorr_options(input_options.write_options):
     def calc_corr_matrix(self,D,userows=True,usecols=False):
         a,b,c=D.shape
         if not b==c:
-            print 'Data is not shaped correctly: %i,%i,%i' % (a,b,c)
+            print(('Data is not shaped correctly: %i,%i,%i' % (a,b,c)))
             exit(1)
         V1=numpy.zeros(b)
         V2=numpy.zeros(b)
@@ -398,10 +398,10 @@ class AnCorr_options(input_options.write_options):
 
     # =======================================================================
     def print_results(self,output,title):
-        print '\n'
-        print '='*80
-        print 'Doing analysis for: ',title
-        print '='*80
+        print('\n')
+        print(('='*80))
+        print(('Doing analysis for: ',title))
+        print(('='*80))
 
         ## print correlation matrix
         #COR=output['COR']
@@ -417,20 +417,20 @@ class AnCorr_options(input_options.write_options):
         self.print_dendro(output['dendro'])
 
         # print cophenetic coefficient
-        print '\nThe cophenetic coefficient is %6.3f.' % output['cophco']
-        print 'If this value is close to 1.0 then the dendrogram is \na good representation of the elementwise distances.'
+        print(('\nThe cophenetic coefficient is %6.3f.' % output['cophco']))
+        print('If this value is close to 1.0 then the dendrogram is \na good representation of the elementwise distances.')
 
         # print main output
-        print '\nResult of the clustering procedure:'
-        print '----------------------------------'
-        print 'The %i original fragments from input' % (self.numF)
-        print 'can be merged optimally in the following way:'
+        print('\nResult of the clustering procedure:')
+        print('----------------------------------')
+        print(('The %i original fragments from input' % (self.numF)))
+        print('can be merged optimally in the following way:')
         for i,c in enumerate(output['cluster']):
             s='Cluster #% 3i  =  Fragments' % (i+1)
             for x in c:
                 s+=' % 3i' % x
-            print s
-        print 'This means that instead of %i fragments, only %i fragments might suffice.' % (self.numF,len(output['cluster']))
+            print(s)
+        print(('This means that instead of %i fragments, only %i fragments might suffice.' % (self.numF,len(output['cluster']))))
 
         # Plot
         if self.opt_dict['doplot']:
@@ -466,17 +466,17 @@ class AnCorr_options(input_options.write_options):
     # =======================================================================
     def print_dendro(self,dendro):
         n=len(dendro)+1
-        print '\n iclust   merge[1]  merge[2]  distance  nfrags  nclust'
-        print '-----------------------------------------------------'
+        print('\n iclust   merge[1]  merge[2]  distance  nfrags  nclust')
+        print('-----------------------------------------------------')
         #for i in range(n):
-        print '% 3i-% 3i  elementary fragment  % 8.3f  % 6i  % 6i' % (1,n,0.,1,n)
+        print(('% 3i-% 3i  elementary fragment  % 8.3f  % 6i  % 6i' % (1,n,0.,1,n)))
         for i in range(n-1):
-            print '% 7i   % 8i  % 8i  % 8.3f  % 6i  % 6i' % (n+i+1,
+            print(('% 7i   % 8i  % 8i  % 8.3f  % 6i  % 6i' % (n+i+1,
                                                              dendro[i][0]+1,
                                                              dendro[i][1]+1,
                                                              dendro[i][2],
                                                              dendro[i][3],
-                                                             n-i-1)
+                                                             n-i-1)))
 
     # =======================================================================
 
@@ -526,7 +526,7 @@ class AnCorr_options(input_options.write_options):
 
 \\usepackage{tikz-3dplot}
 
-\usepackage{xcolor}
+\\usepackage{xcolor}
 \definecolor{W}{HTML}{FFFFFF}   %% white
 \definecolor{K}{HTML}{000000}   %% black
 \definecolor{GR}{HTML}{909090}  %% grey

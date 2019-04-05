@@ -1,14 +1,14 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """
 Convert the TheoDORE output data to a table in latex or html format.
 """
 
-import theo_header, input_options, lib_file, error_handler
+from theodore import theo_header, input_options, lib_file, error_handler
 import os
 
 class write_table_options(input_options.write_options):
     def table_input(self):
-        print "Convert the output from a TheoDORE run into a latex or html table.\n"
+        print("Convert the output from a TheoDORE run into a latex or html table.\n")
         
         self.read_str("Name of the file to analyze", "ana_file", "tden_summ.txt")
         

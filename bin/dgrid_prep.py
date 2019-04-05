@@ -1,11 +1,11 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
-import theo_header, input_options, sys
+from theodore import theo_header, input_options, sys
 
-print"""\
+print("""\
 usage: Prepare input for DGRid
 syntax: dgrid_prep.py <mo_file1> [<mo_file2> ...]
-"""
+""")
 
 class dgrid_options(input_options.write_options):
     def input(self):
@@ -17,10 +17,10 @@ def run():
     mldfiles = sys.argv[1:]
 
     if len(mldfiles) == 0:
-        print "No Molden file specified. Stopping."
+        print("No Molden file specified. Stopping.")
         sys.exit(0)
     else:
-        print "Using the Molden files:", mldfiles
+        print("Using the Molden files:", mldfiles)
 
     dopt = dgrid_options('dgrid.in')
     dopt.input()
@@ -38,7 +38,7 @@ def run():
         bfilen = basen + '.md'
         ifilen = basen + '.inp'
 
-        print '\nAnalyzing %s -> %s ...'%(mldfile, bfilen)
+        print('\nAnalyzing %s -> %s ...'%(mldfile, bfilen))
 
         iproc += 1
         if iproc%dopt['nproc'] == 0:
@@ -60,7 +60,7 @@ format=cube
 mesh=%.4f %.2f\n"""%(bfilen, dopt['msize'], dopt['mborder']))
 
     wfile.close()
-    print "File run_dgrid.bash written.\n  Run as:\n  bash run_dgrid.bash"
+    print("File run_dgrid.bash written.\n  Run as:\n  bash run_dgrid.bash")
 
 if __name__=='__main__':
     theo_header.print_header('Prepare input for DGrid')

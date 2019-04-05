@@ -1,9 +1,9 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """
 Automatic plotting of densities or MOs with vmd.
 """
 
-import error_handler, theo_header, input_options, lib_struc, lib_file
+from theodore import error_handler, theo_header, input_options, lib_struc, lib_file
 
 class vmd_options(input_options.write_options):
     def vmd_input(self):
@@ -70,7 +70,7 @@ mol modcolor 4 0 ColorID 1
             lf.write("mol addfile %s type %s\n"%(pltf,ftyp))
 
         lf.close()
-        print "File %s written."%lf.name
+        print("File %s written."%lf.name)
 
     def write_pfile(self, pltfiles):
         """
@@ -86,7 +86,7 @@ mol modcolor 4 0 ColorID 1
             pf.write("render TachyonInternal %s.tga\n"%pltf)
 
         pf.close()
-        print "File %s written."%pf.name
+        print("File %s written."%pf.name)
 
     def write_cfile(self, pltfiles):
         """
@@ -100,7 +100,7 @@ mol modcolor 4 0 ColorID 1
             cf.write("rm %s.tga\n"%pltf)
 
         cf.close()
-        print "File %s written."%cf.name
+        print("File %s written."%cf.name)
 
     def write_hfile(self, pltfiles):
         """
@@ -121,7 +121,7 @@ mol modcolor 4 0 ColorID 1
         ho.post(lvprt=1)
 
 def run():
-    print 'vmd_plots.py [<pltfile> [<pltfile2> ...]]\n'
+    print('vmd_plots.py [<pltfile> [<pltfile2> ...]]\n')
 
     pltfiles = sys.argv[1:]
 
@@ -135,16 +135,16 @@ def run():
     vopt.write_cfile(pltfiles)
     vopt.write_hfile(pltfiles)
 
-    print "Converting coordinate file ..."
+    print("Converting coordinate file ...")
     struc = lib_struc.structure()
     try:
         struc.read_file(file_path=pltfiles[0], file_type=None)
         struc.make_coord_file(file_path='coord.xyz',file_type='xyz',lvprt=1)
     except:
-        print "*** WARNING: The coordinate file coord.xyz could not be created. ***"
-        print   "    Please create this file yourself.\n\n"
+        print("*** WARNING: The coordinate file coord.xyz could not be created. ***")
+        print("    Please create this file yourself.\n\n")
 
-    print """
+    print("""
 Files created. Now do the following:
 1. vmd coord.xyz
 2.   File - Load Visualization State - %s
@@ -152,7 +152,7 @@ Files created. Now do the following:
 4.   File - Load Visualization State - %s
 5. bash %s
 6. Open in browser: %s
-"""%(vopt['lfile'], vopt['pfile'], vopt['cfile'], vopt['hfile'])
+"""%(vopt['lfile'], vopt['pfile'], vopt['cfile'], vopt['hfile']))
 
 if __name__=='__main__':
     import sys

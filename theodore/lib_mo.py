@@ -2,7 +2,7 @@
 Handling and manipulation of MO-coefficients.
 """
 
-import error_handler, lib_file, units
+from . import error_handler, lib_file, units
 import numpy
 
 class MO_set:
@@ -47,29 +47,29 @@ class MO_set:
         # Preferably, the overlap matrix should be used to avoid explicit inversion
         if type(self.S) is numpy.ndarray:
             if lvprt >= 1:
-                print " ... inverse computed as: C^T.S"
+                print(" ... inverse computed as: C^T.S")
             self.inv_mo_mat = numpy.dot(self.mo_mat.transpose(), self.S)
         elif len(self.mo_mat) == len(self.mo_mat[0]):
             if lvprt >= 1:
-                print " ... inverting C"
+                print(" ... inverting C")
             try:
                 self.inv_mo_mat = numpy.linalg.inv(self.mo_mat)
             except:
                 if lvprt >= 1:
-                    print " WARNING: inversion failed."
-                    print '  Using the Moore-Penrose pseudo inverse instead.'
+                    print(" WARNING: inversion failed.")
+                    print('  Using the Moore-Penrose pseudo inverse instead.')
                 self.inv_mo_mat = numpy.linalg.pinv(self.mo_mat)
         else:
             if lvprt >= 1:
-                print 'MO-matrix not square: %i x %i'%(len(self.mo_mat),len(self.mo_mat[0]))
-                print '  Using the Moore-Penrose pseudo inverse.'
+                print('MO-matrix not square: %i x %i'%(len(self.mo_mat),len(self.mo_mat[0])))
+                print('  Using the Moore-Penrose pseudo inverse.')
             self.inv_mo_mat = numpy.linalg.pinv(self.mo_mat)
 
     def compute_lowdin_mat(self, lvprt=1):
         """
         Compute the transformation matrix for Lowdin orthogonalization.
         """
-        print "Performing Lowdin orthogonalization"
+        print("Performing Lowdin orthogonalization")
 
         (U, sqrlam, Vt) = numpy.linalg.svd(self.mo_mat)
 
@@ -79,7 +79,7 @@ class MO_set:
             #self.Sinv2 = numpy.dot(U*sqrlam, U.T)
         elif Vt.shape[0] < U.shape[1]:
             Vts = Vt.shape[0]
-            print '  MO-matrix not square: %i x %i'%(len(self.mo_mat),len(self.mo_mat[0]))
+            print('  MO-matrix not square: %i x %i'%(len(self.mo_mat),len(self.mo_mat[0])))
             self.lowdin_mat = numpy.dot(U[:,:Vts], Vt)
             #self.Sinv2 = numpy.dot(U[:,:Vts]*sqrlam, U.T[:Vts,:])
         else:
@@ -150,7 +150,7 @@ class MO_set:
         try:
             return self.syms[imo]
         except:
-            print "\nNo entry for imo=%i"%imo
+            print("\nNo entry for imo=%i"%imo)
             raise
 
     def set_ens_occs(self):
@@ -167,8 +167,8 @@ class MO_set:
         try:
             return numpy.dot(M, self.ret_mo_mat(trnsp, inv))
         except:
-            print "M: %i x %i"%(len(M), len(M[0]))
-            print "C: %i x %i"%(len(self.ret_mo_mat(trnsp, inv)), len(self.ret_mo_mat(trnsp, inv)[0]))
+            print("M: %i x %i"%(len(M), len(M[0])))
+            print("C: %i x %i"%(len(self.ret_mo_mat(trnsp, inv)), len(self.ret_mo_mat(trnsp, inv)[0])))
             raise
 
     def CdotD(self, D, trnsp=False, inv=False):
@@ -193,9 +193,9 @@ class MO_set:
                 raise error_handler.ElseError('"transpose xor inverse"', 'CdotD')
 
         elif self.ret_num_mo() < len(D):
-                print "\n WARNING: C/D mismatch"
-                print " C: %i x %i"%(self.ret_num_mo(), self.ret_num_bas())
-                print " D: %i x %i"%(len(D), len(D[0]))
+                print("\n WARNING: C/D mismatch")
+                print(" C: %i x %i"%(self.ret_num_mo(), self.ret_num_bas()))
+                print(" D: %i x %i"%(len(D), len(D[0])))
 #                raise error_handler.ElseError('C < D', 'MO matrix')
 
                 Dsub = D[:self.ret_num_mo()]
@@ -268,7 +268,7 @@ class MO_set:
         Sort MOs by symmetry (in case they are sorted by energy).
         This is more of a hack than a clean and stable routine...
         """
-        print "Sorting MOs by symmetry"
+        print("Sorting MOs by symmetry")
 
         occorbs = {}
         virtorbs = {}
@@ -404,10 +404,10 @@ class MO_set_molden(MO_set):
 
             if 'molden format' in line.lower():
                 if not '[Molden Format]' in line:
-                    print " WARNING: the header may not be understood by Jmol:"
-                    print line,
-                    print " This has to be changed to:"
-                    print " [Molden Format]"
+                    print(" WARNING: the header may not be understood by Jmol:")
+                    print(line, end=' ')
+                    print(" This has to be changed to:")
+                    print(" [Molden Format]")
 
                     line = '[Molden Format]'
 
@@ -418,7 +418,7 @@ class MO_set_molden(MO_set):
                 ATOMS = False
 
             if '[MO]' in line:
-                if lvprt >= 2: print "Found [MO] tag"
+                if lvprt >= 2: print("Found [MO] tag")
                 MO = True
                 GTO = False
             # extract the information in that section
@@ -429,8 +429,8 @@ class MO_set_molden(MO_set):
                     except:
                         if words==[]: break # stop parsing the file if an empty line is found
 
-                        print " ERROR in lib_mo, parsing the following line:"
-                        print line
+                        print(" ERROR in lib_mo, parsing the following line:")
+                        print(line)
                         raise
                 elif 'ene' in line.lower():
                     mo_ind += 1
@@ -453,7 +453,7 @@ class MO_set_molden(MO_set):
                 elif (len(words) >= 2) and (words[0].lower() in num_bas):
                   orbsymb = words[0].lower()
 
-                  for i in xrange(num_bas[orbsymb]):
+                  for i in range(num_bas[orbsymb]):
                     self.basis_fcts.append(basis_fct(curr_at, orbsymb, orient[orbsymb][i]))
                     label = self.basis_fcts[-1].label()
                     if not label in self.bf_labels:
@@ -475,11 +475,11 @@ class MO_set_molden(MO_set):
 ### file parsing finished ###
 
         if lvprt >= 1 or len(mo_vecs[0])!=num_orb:
-            print '\nMO file %s parsed.'%self.file
-            print 'Number of atoms: %i'%self.num_at
-            print 'Number of MOs read in: %i'%len(mo_vecs)
-            print 'Dimension: %i,%i,...,%i'%(len(mo_vecs[0]),len(mo_vecs[1]),len(mo_vecs[-1]))
-            print 'Number of basis functions parsed: ', num_orb
+            print('\nMO file %s parsed.'%self.file)
+            print('Number of atoms: %i'%self.num_at)
+            print('Number of MOs read in: %i'%len(mo_vecs))
+            print('Dimension: %i,%i,...,%i'%(len(mo_vecs[0]),len(mo_vecs[1]),len(mo_vecs[-1])))
+            print('Number of basis functions parsed: ', num_orb)
 
         if len(mo_vecs[0])!=num_orb:
             raise error_handler.MsgError('Inconsistent number of basis functions!')
@@ -488,15 +488,15 @@ class MO_set_molden(MO_set):
         if len(mo_vecs[-1]) == 0:
             lv = [len(mo_vec) for mo_vec in mo_vecs]
             imax = lv.index(0)
-            print '*** WARNING: MO file contains MO vectors of zero length!'
-            print 'Using only the first %i entries'%imax
+            print('*** WARNING: MO file contains MO vectors of zero length!')
+            print('Using only the first %i entries'%imax)
             mo_vecs = mo_vecs[:imax]
 
         try:
            self.mo_mat = numpy.array(mo_vecs).transpose()
         except ValueError:
-           print "\n *** Unable to construct MO matrix! ***"
-           print "Is there a mismatch between spherical/cartesian functions?\n ---"
+           print("\n *** Unable to construct MO matrix! ***")
+           print("Is there a mismatch between spherical/cartesian functions?\n ---")
            raise
 
 class MO_set_tddftb(MO_set):
@@ -537,8 +537,8 @@ class MO_set_tddftb(MO_set):
            mo_array = numpy.array(mo_vecs, order=2)
            self.mo_mat = numpy.array(mo_array).transpose()
         except ValueError:
-           print "\n *** Unable to construct MO matrix! ***"
-           print "Is there a mismatch between spherical/cartesian functions?\n ---"
+           print("\n *** Unable to construct MO matrix! ***")
+           print("Is there a mismatch between spherical/cartesian functions?\n ---")
            raise
 
         Eig = False
@@ -608,7 +608,7 @@ class MO_set_tddftb(MO_set):
                                     orbsymb = 'spd'
                                     orb_deg = 5
                                     num_orb = num_orb + orb_deg
-                               for i in xrange(num_bas[orbsymb]):
+                               for i in range(num_bas[orbsymb]):
                                    self.basis_fcts.append(basis_fct(curr_at, orbsymb, orient[orbsymb][i]))
                                    label = self.basis_fcts[-1].label()
                                    if not label in self.bf_labels:
@@ -618,11 +618,11 @@ class MO_set_tddftb(MO_set):
 ### file parsing finished ###
 
         if lvprt >= 1 or len(mo_vecs[0])!=num_orb:
-            print '\nMO file %s parsed.'%self.file
-            print 'Number of atoms: %i'%self.num_at
-            print 'Number of MOs read in: %i'%len(mo_vecs)
-            print 'Dimension: %i,%i,...,%i'%(len(mo_vecs[0]),len(mo_vecs[1]),len(mo_vecs[-1]))
-            print 'Number of basis functions parsed: ', num_orb
+            print('\nMO file %s parsed.'%self.file)
+            print('Number of atoms: %i'%self.num_at)
+            print('Number of MOs read in: %i'%len(mo_vecs))
+            print('Dimension: %i,%i,...,%i'%(len(mo_vecs[0]),len(mo_vecs[1]),len(mo_vecs[-1])))
+            print('Number of basis functions parsed: ', num_orb)
 
         #print (mo_vecs[0])
         if len(mo_vecs[0])!=num_orb:
@@ -648,7 +648,7 @@ class MO_set_adf(MO_set):
         try:
             self.num_at = int(f.read('Geometry','nr of atoms'))
         except:
-            print("\n  ERROR: reading TAPE21 file (%s)!\n"%self.file)
+            print(("\n  ERROR: reading TAPE21 file (%s)!\n"%self.file))
             raise
 
         natomtype=int(f.read('Geometry','nr of atomtypes'))
@@ -664,7 +664,7 @@ class MO_set_adf(MO_set):
             nbasis[iaty]=nbptr[iaty+1]-nbptr[iaty]
 
         if lvprt >= 2:
-            print 'Number of basis functions per atomtype:'
+            print('Number of basis functions per atomtype:')
             print(nbasis)
 
         # get which atom is of which atomtype
@@ -674,7 +674,7 @@ class MO_set_adf(MO_set):
             atom_type[iatom]=atomindex[index+self.num_at]-1
 
         if lvprt >= 2:
-            print 'Mapping of atoms on atomtypes:'
+            print('Mapping of atoms on atomtypes:')
             print(atom_type)
 
         # get number of basis functions
@@ -682,7 +682,7 @@ class MO_set_adf(MO_set):
         for i in atom_type:
             naos+=nbasis[atom_type[i]]
         if lvprt >= 2:
-            print 'Total number of basis functions:', naos
+            print('Total number of basis functions:', naos)
         assert naos==naos2, "wrong number of orbitals"
 
         # map basis functions to atoms
@@ -693,9 +693,9 @@ class MO_set_adf(MO_set):
             self.basis_fcts.append(basis_fct(index+1))
 
         if lvprt >= 3:
-            print 'Basis functions:'
+            print('Basis functions:')
             for bf in self.basis_fcts:
-                print bf
+                print(bf)
 
         # get MO coefficients
         NAO=int(f.read('Basis','naos'))
@@ -819,4 +819,4 @@ class jmol_MOs:
         self.htmlfile.write("</table>\n")
         self.htmlfile.post()
 
-        print "\nJmol input file %s.jmol and %s.html written"%(self.name, self.name)
+        print("\nJmol input file %s.jmol and %s.html written"%(self.name, self.name))

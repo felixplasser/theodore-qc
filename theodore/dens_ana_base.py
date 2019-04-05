@@ -1,4 +1,4 @@
-import file_parser, lib_mo, error_handler, cclib_interface, fchk_parser, units, lib_struc
+from . import file_parser, lib_mo, error_handler, cclib_interface, fchk_parser, units, lib_struc
 import numpy
 
 class dens_ana_base:
@@ -82,7 +82,7 @@ class dens_ana_base:
 
             errcode = ccli.check()
             if errcode >= 2: raise error_handler.MsgError("The file cannot be parsed by cclib")
-            print
+            print()
 
             self.mos = ccli.read_mos()
             self.read2_mos()
@@ -113,7 +113,7 @@ class dens_ana_base:
 
         if 'coor_file' in self.ioptions:
             if lvprt >= 1:
-                print("\nReading structure from coor_file %s"%self.ioptions['coor_file'])
+                print(("\nReading structure from coor_file %s"%self.ioptions['coor_file']))
             self.struc = lib_struc.structure()
             self.struc.read_file(self.ioptions['coor_file'], self.ioptions['coor_format'])
         elif self.ioptions['rtype'].lower() in ['cclib', 'gamess', 'orca', 'adf']:
@@ -121,7 +121,7 @@ class dens_ana_base:
                 print("\nUsing cclib / ADF structure")
         elif 'mo_file' in self.ioptions:
             if lvprt >= 1:
-                print("\nReading structure from mo_file %s"%self.ioptions['mo_file'])
+                print(("\nReading structure from mo_file %s"%self.ioptions['mo_file']))
             self.struc = lib_struc.structure()
             self.struc.read_at_dicts(self.mos.at_dicts)
         else:
@@ -144,8 +144,8 @@ class dens_ana_base:
 
             if lvprt >= 1:
                 num_at = self.struc.ret_num_at()
-                print "Number of atoms: %i"%num_at
-                print "Composition: %s\n"%self.struc.ret_at_list_composition(range(1, num_at+1))
+                print("Number of atoms: %i"%num_at)
+                print("Composition: %s\n"%self.struc.ret_at_list_composition(list(range(1, num_at+1))))
 
     def select_states(self, ana_states, state_list):
         """
@@ -165,12 +165,12 @@ class dens_ana_base:
         """
         General print-out of properties.
         """
-        print
-        print title
+        print()
+        print(title)
 
         for state in self.state_list:
             #print '%i%s'%(state['state_ind'],state['irrep'])
-            print state['name']
+            print(state['name'])
             function(state, lvprt, **kwargs)
 
 #---
@@ -181,11 +181,11 @@ class dens_ana_base:
         """
         ostr = self.ret_summ_table(self.ioptions.get('prop_list'))
 
-        print "\n" + ostr
+        print("\n" + ostr)
 
         if 'output_file' in self.ioptions:
             ofile = self.ioptions.get('output_file')
-            print "Final output copied to %s"%ofile
+            print("Final output copied to %s"%ofile)
             open(ofile, 'w').write(ostr)
 
     def ret_summ_table(self, prop_list):

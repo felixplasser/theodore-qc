@@ -2,9 +2,15 @@
 Parsing of files produced by different quantum chemical programs.
 """
 
-import units, lib_mo, error_handler
+from . import units, lib_mo, error_handler
 import numpy
 import os, struct
+
+
+def translate(in_str, string):
+    for c in string:
+        in_str = in_str.replace(c, '')
+    return in_str
 
 class file_parser_base:
     def __init__(self, ioptions):
@@ -36,33 +42,34 @@ class file_parser_base:
         If rfile is given, then the next line is searched for x,y,z components.
         If rmatrix==True, then a tensor is read from the next three lines.
         """
+        translate_str = ',[]|' 
         if search_string in line:
             if not not_string is None:
                 if not_string in line: return
 
-            sr_line = line.strip(search_string).translate(None, ',[]|')
+            sr_line = translate(line.strip(search_string), translate_str)
             state[key] = float(sr_line.split()[ind])
 
             if not rfile is None:
                 if rmatrix:
-                    line = rfile.next()
+                    line = next(rfile)
                     try:
-                        words=rfile.next().translate(None, ',[]|').split()
+                        words=translate(next(rfile), translate_str)
                         state['%sxx'%key] = float(words[-3])
                         state['%sxy'%key] = float(words[-2])
                         state['%sxz'%key] = float(words[-1])
-                        words=rfile.next().translate(None, ',[]|').split()
+                        words=translate(next(rfile), translate_str)
                         state['%syx'%key] = float(words[-3])
                         state['%syy'%key] = float(words[-2])
                         state['%syz'%key] = float(words[-1])
-                        words=rfile.next().translate(None, ',[]|').split()
+                        words=translate(next(rfile), translate_str)
                         state['%szx'%key] = float(words[-3])
                         state['%szy'%key] = float(words[-2])
                         state['%szz'%key] = float(words[-1])
                     except:
-                        print ' Cannot parse matrix for %s of state %s'%(key, state['name'])
+                        print(' Cannot parse matrix for %s of state %s'%(key, state['name']))
                 else:
-                    line=rfile.next().translate(None, ',[]|')
+                    line=translate(next(rfile), translate_str)
                     words = line.split()
                     state['%sx'%key] = float(words[-3])
                     state['%sy'%key] = float(words[-2])
@@ -143,7 +150,7 @@ class file_parser_ricc2(file_parser_base):
         if self.ioptions.get('read_binary'):
                mos.symsort(self.ioptions['irrep_labels'], self.ioptions['Om_formula'])
                if self.ioptions['jmol_orbitals']:
-                    print " \nWARNING: jmol_orbitals not possible with read_binary. Use molden_orbitals instead!"
+                    print(" \nWARNING: jmol_orbitals not possible with read_binary. Use molden_orbitals instead!")
                     self.ioptions['jmol_orbitals'] = False
 
         return state_list
@@ -162,10 +169,10 @@ class file_parser_ricc2(file_parser_base):
             try:
                 state['tden'][iocc,ivirt] = conf.coeff
             except:
-                print "\nERROR setting %s->%s (%i->%i) transition"%(conf.occ, conf.virt, iocc+1, ivirt+1)
-                print "Did you delete the line"
-                print "       implicit core=   x virt=    x"
-                print "  from the control file before running tm2molden?\n"
+                print("\nERROR setting %s->%s (%i->%i) transition"%(conf.occ, conf.virt, iocc+1, ivirt+1))
+                print("Did you delete the line")
+                print("       implicit core=   x virt=    x")
+                print("  from the control file before running tm2molden?\n")
                 raise
 
     def set_tden_bin(self, state, mos, lvprt=1):
@@ -177,7 +184,7 @@ class file_parser_ricc2(file_parser_base):
         istate=state['state_ind']
         CCfilen = 'CCRE0{0:->2d}{1:->3s}{2:->4d}'.format(iirrep, smult, istate)
 
-        if lvprt >= 1: print 'Reading binary file %s ...'%CCfilen
+        if lvprt >= 1: print('Reading binary file %s ...'%CCfilen)
 
         CCfile = open(CCfilen, 'rb')
         CCfile.read(8)
@@ -191,14 +198,14 @@ class file_parser_ricc2(file_parser_base):
         nvirt = num_mo - nocc
 
         assert(nentry % nvirt == 0)
-        nact = nentry / nvirt
+        nact = nentry // nvirt
         nfrzc = nocc - nact
 
         if lvprt >= 1:
-            print '  Method: %s, number of entries: %i'%(method, nentry)
-            print '  num_mo: %i, nocc: %i, nvirt: %i, nact: %i, nfrzc: %i'%(num_mo, nocc, nvirt, nact, nfrzc)
+            print('  Method: %s, number of entries: %i'%(method, nentry))
+            print('  num_mo: %i, nocc: %i, nvirt: %i, nact: %i, nfrzc: %i'%(num_mo, nocc, nvirt, nact, nfrzc))
         if lvprt >= 2:
-            print '  Syms:', mos.syms
+            print('  Syms:', mos.syms)
 
         if nfrzc > 0:
             raise error_handler.MsgError("""Frozen core orbitals detected in the Molden file!
@@ -212,13 +219,14 @@ from the control file.""")
 
         lbytes = struct.unpack('4s', CCfile.read(4))
         if lvprt >= 2:
-            print '   Last four bytes:', lbytes
-        if not CCfile.read(1) == '':
+            print('   Last four bytes:', lbytes)
+        
+        if not CCfile.read(1) == b'':
             raise error_handler.MsgError('parsing file %s'%CCfilen)
 
         if lvprt >= 3:
-            print 'parsed tden:'
-            print state['tden']
+            print('parsed tden:')
+            print(state['tden'])
 
     def ret_conf_ricc2(self, rfile='ricc2.out'):
         """
@@ -230,19 +238,19 @@ from the control file.""")
         lines = open(rfile,'r')
         while True: # loop over all lines
           try:
-            line = lines.next()
+            line = next(lines)
           except StopIteration:
-            print "Finished parsing file %s"%rfile
+            print("Finished parsing file %s"%rfile)
             break
           else:
             if (' sym | multi | state' in line) and ('excitation energies' in line):
                 # parse the multiplicity from here
                 multis = []
-                line = lines.next()
-                line = lines.next()
-                line = lines.next()
+                line = next(lines)
+                line = next(lines)
+                line = next(lines)
                 while True:
-                    line = lines.next()
+                    line = next(lines)
                     if '---' in line: continue
                     if '===' in line: break
 
@@ -255,18 +263,18 @@ from the control file.""")
                 words = line.split()
                 ret_list[-1]['exc_en'] = float(words[3])
 
-                for i in xrange(3): line = lines.next()
+                for i in range(3): line = next(lines)
 
                 words = line.split() # type: RE0
                 ret_list[-1]['irrep'] = words[4]
                 ret_list[-1]['state_ind'] = int(words[6])
                 ret_list[-1]['mult'] = multis.pop(0)
 
-                for i in xrange(3): line = lines.next()
+                for i in range(3): line = next(lines)
 
                 ret_list[-1]['char'] = []
                 while True: # loop over information about this excitation
-                    line = lines.next()
+                    line = next(lines)
 
                     if '===' in line: break
 
@@ -279,8 +287,8 @@ from the control file.""")
                 if curr_osc < len(ret_list):
                     ret_list[curr_osc]['osc_str'] = float(words[5])
                 elif curr_osc == len(ret_list):
-                    print "\nWARNING: More oscillator strengths than singlet states!"
-                    print "   This is ok if you are computing state-to-state properties.\n"
+                    print("\nWARNING: More oscillator strengths than singlet states!")
+                    print("   This is ok if you are computing state-to-state properties.\n")
                 curr_osc+=1
 
             elif curr_osc < len(ret_list):
@@ -293,12 +301,12 @@ from the control file.""")
                 self.ioptions['irrep_labels'] = line.split()[6:]
 
             elif 'COSMO-ADC(2) energy differences' in line:
-                print '\nReading COSMO-ADC(2) energies ...'
-                for i in range(4): line = lines.next()
+                print('\nReading COSMO-ADC(2) energies ...')
+                for i in range(4): line = next(lines)
 
                 istate = 0
                 while True: # loop over information about this excitation
-                    line = lines.next()
+                    line = next(lines)
 
                     if '---' in line: continue
                     if '===' in line: break
@@ -309,7 +317,7 @@ from the control file.""")
                     if state['irrep'] == irrep and state['mult'] == mult and state['state_ind'] == state_ind:
                         state['exc_en'] = exc_en
                     else:
-                        print('Data not matching:', state['irrep'], irrep, state['mult'], mult, state['state_ind'], state_ind)
+                        print(('Data not matching:', state['irrep'], irrep, state['mult'], mult, state['state_ind'], state_ind))
                         raise error_handler.MsgError('COSMO-ADC: data not matching')
 
                     istate += 1
@@ -342,31 +350,31 @@ class file_parser_escf(file_parser_base):
                     elif abs(occ) < 1.e-4:
                         virtmap.append(iorb)
                     else:
-                        print " Error: invalid occupation!", occ
+                        print(" Error: invalid occupation!", occ)
                         exit(5)
 
             nocc=len(occmap)
             nvirt=len(virtmap)
 
-            print "\n Considering state: %s"%state['name']
-            print "  Number of occupied orbitals:", nocc
-            print "  Number of virtual orbitals:", nvirt
-            print "  Tensor space dimension:", nocc*nvirt
+            print("\n Considering state: %s"%state['name'])
+            print("  Number of occupied orbitals:", nocc)
+            print("  Number of virtual orbitals:", nvirt)
+            print("  Tensor space dimension:", nocc*nvirt)
 
             if os.path.exists('sing_%s'%state['irrep']):
               readf = 'sing_%s'%state['irrep']
-              print '  Reading information of singlet calculation from file %s'%readf
+              print('  Reading information of singlet calculation from file %s'%readf)
             elif os.path.exists('trip_%s'%state['irrep']):
               readf = 'trip_%s'%state['irrep']
-              print '  Reading information of triplet calculation from file %s'%readf
+              print('  Reading information of triplet calculation from file %s'%readf)
             elif os.path.exists('ciss_%s'%state['irrep']):
               readf = 'ciss_%s'%state['irrep']
-              print '  Reading information of TDA singlet calculation from file %s'%readf
+              print('  Reading information of TDA singlet calculation from file %s'%readf)
             elif os.path.exists('cist_%s'%state['irrep']):
               readf = 'cist_%s'%state['irrep']
-              print '  Reading information of TDA triplet calculation from file %s'%readf
+              print('  Reading information of TDA triplet calculation from file %s'%readf)
             else:
-              print 'No file with information about the excited state (sing_a, trip_a, ...) found!'
+              print('No file with information about the excited state (sing_a, trip_a, ...) found!')
               exit(7)
 
             # the file is parsed once for every state
@@ -383,7 +391,7 @@ class file_parser_escf(file_parser_base):
                     iiocc  = 0
                     iivirt = 0
                 elif curr_state == state['state_ind']:
-                    words = [line[0+20*i:20+20*i] for i in xrange(4)]
+                    words = [line[0+20*i:20+20*i] for i in range(4)]
                     for word in words:
                         state['tden'][occmap[iiocc],virtmap[iivirt]] = float(word.replace('D','E'))
 
@@ -491,13 +499,13 @@ class file_parser_libwfa(file_parser_base):
         return state_list
 
     def rmatfile(self,fname):
-        print "Reading: %s ..."%fname
+        print("Reading: %s ..."%fname)
 
         try:
             rfile=open(fname,'r')
         except IOError:
-            print "\n WARNING: could not open %s."%fname
-            print "Did the calculation converge?\n"
+            print("\n WARNING: could not open %s."%fname)
+            print("Did the calculation converge?\n")
             return None, None, None, None, None, None
 
         line=rfile.readline()
@@ -537,7 +545,7 @@ class file_parser_libwfa(file_parser_base):
               ia += 1
               ib = 0
               if ia == dima:
-                print " All values read in"
+                print(" All values read in")
 
         return typ, excen, osc, dima, dimb, outarr
 
@@ -609,10 +617,10 @@ class file_parser_qcadc(file_parser_libwfa):
 
             elif ' Term symbol' in line:
                 if self.irrep_labels == None:
-                    print "\n   WARNING: irrep labels not found in %s"%self.ioptions.get('rfile')
-                    print   "   Use 'adc_print 2' or enter them into %s"%self.ioptions.ifile
-                    print   "   Using info from %s: irrep_labels="%self.ioptions.ifile, self.ioptions.get('irrep_labels')
-                    print
+                    print("\n   WARNING: irrep labels not found in %s"%self.ioptions.get('rfile'))
+                    print("   Use 'adc_print 2' or enter them into %s"%self.ioptions.ifile)
+                    print("   Using info from %s: irrep_labels="%self.ioptions.ifile, self.ioptions.get('irrep_labels'))
+                    print()
                     self.irrep_labels = self.ioptions.get('irrep_labels')
 
                 state_list.append({})
@@ -646,7 +654,7 @@ class file_parser_qcadc(file_parser_libwfa):
                     state_list[-1]['exc_en'] = exc_chk
 
                 if abs(exc_chk - state_list[-1]['exc_en']) > exc_chk * 1.e-4:
-                    print exc_chk, state_list[-1]['exc_en']
+                    print(exc_chk, state_list[-1]['exc_en'])
                     raise error_handler.MsgError("Excitation energies do not match")
 
             elif 'Exciton analysis of the difference density matrix' in line:
@@ -668,7 +676,7 @@ class file_parser_qcadc(file_parser_libwfa):
         # Post-processing
         # Pre-factor for 2P cross-section
         pre2P = numpy.pi**3 * units.constants['c0']**(-2) * units.tpa['GM']
-        print "pre2P, GM: ", pre2P, units.tpa['GM']
+        print("pre2P, GM: ", pre2P, units.tpa['GM'])
         # This is numerically the same as [JCP, 146, 174102]:
         #   numpy.pi**3 / u.c0 * u.cm**5 / 2.9979E10 * 10**50
         for state in state_list:
@@ -700,7 +708,7 @@ class file_parser_qcadc(file_parser_libwfa):
         omname = '%s_ctnum_atomic.om'%state['fname']
 
         if not os.path.exists(omname):
-            print ' WARNING: did not find %s,'%omname,
+            print((' WARNING: did not find %s,' % omname), end=' ')
             irrepo = self.irrep_labels.index(state['irrep'])
 
             # subtract 1 for ground state irrep
@@ -709,7 +717,7 @@ class file_parser_qcadc(file_parser_libwfa):
             state['fname'] = '%s_%i_%i'%(multo, irrepo, state_indo)
             omname = '%s_ctnum_atomic.om'%state['fname']
 
-            print 'using %s instead.'%omname
+            print('using %s instead.'%omname)
 
         return omname
 
@@ -727,15 +735,15 @@ class file_parser_qctddft(file_parser_libwfa):
         else:
             ststr = 'TDDFT Excitation Energies'
 
-        print "Parsing %s for %s ..."%(self.ioptions.get('rfile'), ststr)
+        print("Parsing %s for %s ..."%(self.ioptions.get('rfile'), ststr))
 
 #        for line in open(self.ioptions.get('rfile'), 'r'):
         rfileh = open(self.ioptions.get('rfile'),'r')
         while True: # loop over all lines
             try:
-                line = rfileh.next()
+                line = next(rfileh)
             except StopIteration:
-              print "Finished parsing file %s"%self.ioptions.get('rfile')
+              print("Finished parsing file %s"%self.ioptions.get('rfile'))
               break
 
             if ststr in line:
@@ -750,12 +758,12 @@ class file_parser_qctddft(file_parser_libwfa):
                 if len(state_list) == 0:
                     errstr = "No excitation energy parsed!"
                     errstr+= "\n   Please, set 'TDA=True' if this was a TDA calculation."
-                    raise(error_handler.MsgError(errstr))
+                    raise error_handler
             elif 'SA-NTO Decomposition' in line:
                 libwfa = False
             elif 'Welcome to Q-Chem' in line:
                 if len(state_list) > 0:
-                    print "\n WARNING: found second Q-Chem job!\n   Deleting everything parsed so far.\n"
+                    print("\n WARNING: found second Q-Chem job!\n   Deleting everything parsed so far.\n")
 
                 state_list = []
                 exc_diff = exc_1TDM = tdread = libwfa = False
@@ -769,8 +777,8 @@ class file_parser_qctddft(file_parser_libwfa):
                     state_list[-1]['state_num'] = int(words[2])
                     state_list[-1]['exc_en'] = float(words[-1])
 
-                    line = rfileh.next()
-                    line = rfileh.next()
+                    line = next(rfileh)
+                    line = next(rfileh)
                     words = line.split()
 
                     if words[0] == 'Multiplicity:':
@@ -837,7 +845,7 @@ class file_parser_col(file_parser_base):
         rfile = open(filen, 'r')
         while True:
             try:
-                line=rfile.next()
+                line=next(rfile)
             except StopIteration:
                 break
             if ' 0.000000000000E+00' in line:
@@ -845,20 +853,20 @@ class file_parser_col(file_parser_base):
                     words = last_line.split()
                     (num,lab1,ibvtyp,itypea,itypeb,ifmt,last,nipv) = [int(word) for word in words]
                     if itypea==0 and itypeb==7:
-                        print ' Reading symmetric density ...'
+                        print(' Reading symmetric density ...')
                         in_data=True
                         sym = 1
                     elif itypea==2 and itypeb==9:
-                        print ' Reading antisymmetric density ...'
+                        print(' Reading antisymmetric density ...')
                         in_data=True
                         sym = -1
                     else:
-                        print 'Warning: this section does not contain a density'
-                        print 'itypea: %i, itypeb: %i'%(itypea,itypeb)
-                        print last_line
+                        print('Warning: this section does not contain a density')
+                        print('itypea: %i, itypeb: %i'%(itypea,itypeb))
+                        print(last_line)
                         in_data=False
             elif '-1025   -1025      -1' in line:
-                line=rfile.next()
+                line=next(rfile)
                 (eexc, eref, ecore) = [float(word) for word in line.split()]
             elif '    ' in line:
                 pass
@@ -869,7 +877,7 @@ class file_parser_col(file_parser_base):
                 i = int(words[1])-1
                 j = int(words[2])-1
 
-                if 0.2 < abs(val) < 1.9999: print "(i,j)=(%2i,%2i), val=%6.3f"%(i,j,val)
+                if 0.2 < abs(val) < 1.9999: print("(i,j)=(%2i,%2i), val=%6.3f"%(i,j,val))
                 dens[j,i] += fac * val
 
                 if i != j: dens[i,j] += fac * sym * val
@@ -919,23 +927,23 @@ class file_parser_col(file_parser_base):
         rfile = open(filen,'r')
         while True:
             try:
-                line=rfile.next()
+                line=next(rfile)
             except StopIteration:
                 break
             if ' symm-trans density matrix:' in line:
-                print 'file %s, reading:'%filen
-                print line.strip('\n')
-                line=rfile.next()
+                print('file %s, reading:'%filen)
+                print(line.strip('\n'))
+                line=next(rfile)
                 self.read_block_mat(mat, mos, rfile, sym=1, dfac=dfac)
             elif 'asymm-trans density matrix:' in line:
-                print 'reading ...'
-                print line[:-1]
-                line=rfile.next()
+                print('reading ...')
+                print(line[:-1])
+                line=next(rfile)
                 self.read_block_mat(mat, mos, rfile, sym=-1, dfac=dfac)
             elif 'Transition energy:  ' in line:
                 words=line.split() # use the line with "a.u." because it is given with more digits
                 state['exc_en']=float(words[2]) * units.energy['eV']
-                rfile.next()
+                next(rfile)
             elif 'Oscillator strength : ' in line:
                 words = line.split()
                 state['osc_str']=float(words[-1])
@@ -947,40 +955,40 @@ class file_parser_col(file_parser_base):
         This is not the cleanest routine but it seems to work ...
         """
         while(1):
-            words=rfile.next().replace('MO','').split()
+            words=next(rfile).replace('MO','').split()
 
             if 'density' in words: # skip two lines in case the next symmetry block is coming
-                line=rfile.next()
-                words=rfile.next().replace('MO','').split()
+                line=next(rfile)
+                words=next(rfile).replace('MO','').split()
 
             try:
                 head_inds = [mos.syms2.index(sym2) for sym2 in words]
             except:
-                print " ERROR reading:", words
-                print "syms2: ", mos.syms2
-                print
+                print(" ERROR reading:", words)
+                print("syms2: ", mos.syms2)
+                print()
                 raise
 
-            words=rfile.next().replace('MO','').split()
+            words=next(rfile).replace('MO','').split()
             while(len(words)>0): # loop over a block with constant header labels
                 if 'integral' in words: break
                 try:
                     left_ind = mos.syms2.index(words[0])
                 except:
-                    print '\n ERROR parsing: '
-                    print words
+                    print('\n ERROR parsing: ')
+                    print(words)
                     raise
 
                 for i, word in enumerate(words[1:]):
                     val = float(word)
-                    if val*val > 0.01: print "(%2i->%2i)-(%s->%s), val=% 8.4f"%\
-                       (head_inds[i],left_ind,mos.syms2[head_inds[i]],mos.syms2[left_ind],val)
+                    if val*val > 0.01: print("(%2i->%2i)-(%s->%s), val=% 8.4f"%\
+                       (head_inds[i],left_ind,mos.syms2[head_inds[i]],mos.syms2[left_ind],val))
 
                     mat[head_inds[i],left_ind] += dfac * val
                     if left_ind != head_inds[i]:
                         mat[left_ind,head_inds[i]] += dfac * sym*val
 
-                words=rfile.next().replace('MO','').split()
+                words=next(rfile).replace('MO','').split()
 
             if 'integral' in words: break
 
@@ -995,7 +1003,7 @@ class file_parser_col_mrci(file_parser_col):
         for lfile in sorted(os.listdir('LISTINGS')):
             if not 'trncils' in lfile: continue
 
-            print "Reading %s ..."%lfile
+            print("Reading %s ..."%lfile)
             state = {}
             self.read_trncils(state, mos, 'LISTINGS/%s'%lfile)
             if 'tden' in state:
@@ -1021,7 +1029,7 @@ class file_parser_col_mrci(file_parser_col):
         elif os.path.exists(fn21):
             self.read_trncils(state_list[2], mos, fn21)
         else:
-            print "Not using transition charges."
+            print("Not using transition charges.")
             state_list[2] == None
 
         return state_list
@@ -1038,14 +1046,14 @@ class file_parser_col_mcscf(file_parser_col):
             if self.ioptions['s_or_t'] == 't':
                 if not '-' in lfile: continue
 
-                print "Reading %s ..."%lfile
+                print("Reading %s ..."%lfile)
                 state_list.append({})
                 self.read_mc_tden(state_list[-1], mos, lfile)
 
             elif self.ioptions['s_or_t'] == 's':
                 if '-' in lfile: continue
 
-                print "Reading %s ..."%lfile
+                print("Reading %s ..."%lfile)
                 state_list.append({})
                 self.read_mc_sden(state_list[-1], mos, lfile)
 
@@ -1070,11 +1078,11 @@ class file_parser_col_mcscf(file_parser_col):
         try:
             self.read_mc_tden(state_list[2], mos, fn12)
         except IOError:
-            print "File %s not found, trying %s..."%(fn12, fn21)
+            print("File %s not found, trying %s..."%(fn12, fn21))
             try:
                 self.read_mc_tden(state_list[2], mos, fn21)
             except IOError:
-                print "Not using transition charges."
+                print("Not using transition charges.")
                 state_list[2] == None
 
         return state_list
@@ -1112,9 +1120,9 @@ class file_parser_terachem(file_parser_base):
         rfileh = open(self.ioptions['rfile'], 'r')
         while True: # loop over all lines
             try:
-                line = rfileh.next()
+                line = next(rfileh)
             except StopIteration:
-              print "Reached end of file %s"%self.ioptions.get('rfile')
+              print("Reached end of file %s"%self.ioptions.get('rfile'))
               break
 
             if 'Largest CI coefficients' in line:
@@ -1123,7 +1131,7 @@ class file_parser_terachem(file_parser_base):
                 state['tden'] = self.init_den(mos, rect=True)
 
                 while True:
-                    line = rfileh.next()
+                    line = next(rfileh)
                     words = line.split()
                     if len(words) == 0: break
 
@@ -1137,11 +1145,11 @@ class file_parser_terachem(file_parser_base):
                     state['tden'][iocc, avirt] = coeff
 
             elif 'Final Excited State Results' in line:
-                line = rfileh.next()
-                line = rfileh.next()
-                line = rfileh.next()
+                line = next(rfileh)
+                line = next(rfileh)
+                line = next(rfileh)
                 for state in state_list:
-                    line = rfileh.next()
+                    line = next(rfileh)
                     words = line.split()
 
                     state['state_ind'] = int(words[0])
@@ -1206,14 +1214,14 @@ class file_parser_tddftb(file_parser_base):
         rfileh.close()
 
         excfile = open(self.ioptions['rfile'], 'r') # rfile is EXC.DAT
-        line = excfile.next()
-        line = excfile.next()
-        line = excfile.next()
-        line = excfile.next()
-        line = excfile.next()
+        line = next(excfile)
+        line = next(excfile)
+        line = next(excfile)
+        line = next(excfile)
+        line = next(excfile)
         state_ind = 0
         for state in state_list:
-            line = excfile.next()
+            line = next(excfile)
             words = line.split()
             if len(words) == 8:
                state_ind += 1
@@ -1241,13 +1249,13 @@ class file_parser_adf(file_parser_base):
             nmo = int(rfile.read('A','nmo_A'))
             nelec = int(rfile.read('General','electrons'))
         except:
-            print("\n  ERROR: reading TAPE21 file (%s)!\n"%self.ioptions['rfile'])
+            print(("\n  ERROR: reading TAPE21 file (%s)!\n"%self.ioptions['rfile']))
             raise
         assert nelec%2==0, "Odd number of electrons not supported"
 
         group = rfile.read('Geometry','grouplabel')[0]
         if not group in ['NOSYM', 'C1', 'c1']:
-            print("grouplabel: " + group)
+            print(("grouplabel: " + group))
             raise error_handler.MsgError('No support for symmetry')
 
         nocc = nelec / 2
@@ -1284,13 +1292,13 @@ class file_parser_adf(file_parser_base):
             istate += 1
 
             # print-out
-            print(state['name'])
+            print((state['name']))
             tden = state['tden']
             for i in range(len(tden)):
                 for j in range(len(tden[0])):
                     val = tden[i, j]
                     if val*val > 0.1:
-                        print("(%i -> %i) % .4f"%(i+1,j+1,val))
+                        print(("(%i -> %i) % .4f"%(i+1,j+1,val)))
 
         for itrip in range(self.ntrip):
             state = state_list[istate]
@@ -1306,13 +1314,13 @@ class file_parser_adf(file_parser_base):
             istate += 1
 
             # print-out
-            print(state['name'])
+            print((state['name']))
             tden = state['tden']
             for i in range(len(tden)):
                 for j in range(len(tden[0])):
                     val = tden[i, j]
                     if val*val > 0.1:
-                        print("(%i -> %i) % .4f"%(i+1,j+1,val))
+                        print(("(%i -> %i) % .4f"%(i+1,j+1,val)))
 
         rfile.close()
 
@@ -1373,7 +1381,7 @@ class file_parser_nos(file_parser_base):
             nos.set_ens_occs()
 
         if not self.ioptions['ignore_irreps'] == []:
-            print "  Ignoring irreps: ", self.ioptions['ignore_irreps']
+            print("  Ignoring irreps: ", self.ioptions['ignore_irreps'])
             for imo, sym in enumerate(nos.syms):
                 for iirr in self.ioptions['ignore_irreps']:
                     if iirr in sym:
@@ -1383,16 +1391,16 @@ class file_parser_nos(file_parser_base):
         if not(self.ioptions['min_bf'] == ()):
             ntake = 0
             ibf, vbf = self.ioptions['min_bf']
-            print "Selecting only NOs with %s > %f ..."%(nos.bf_labels[ibf], vbf)
+            print("Selecting only NOs with %s > %f ..."%(nos.bf_labels[ibf], vbf))
             for imo in range(nos.ret_num_mo()):
                 pop = nos.ret_mo_pop(imo, dosum=2)
                 if pop[ibf] > vbf:
-                    if self.ioptions['lvprt'] >= 2: print("Selecting MO %i, occ = %.3f"%(imo+1, nos.occs[imo]))
+                    if self.ioptions['lvprt'] >= 2: print(("Selecting MO %i, occ = %.3f"%(imo+1, nos.occs[imo])))
                     ntake += 1
                 else:
                     nos.occs[imo] = 0.
-                    if self.ioptions['lvprt'] >= 2: print("Discarding MO %i"%(imo+1))
-            print "%i NOs selected."%ntake
+                    if self.ioptions['lvprt'] >= 2: print(("Discarding MO %i"%(imo+1)))
+            print("%i NOs selected."%ntake)
 
         T = numpy.dot(ref_mos.ret_mo_mat(trnsp=False, inv=True), nos.mo_mat)
 
@@ -1442,7 +1450,7 @@ class file_parser_rassi(file_parser_libwfa):
                 if self.ioptions['s_or_t'] == 't':
                     if st1 == st2: continue
 
-                    print "Reading %s ..."%lfile
+                    print("Reading %s ..."%lfile)
                     state_list.append({})
 
                     state_list[-1]['name'] = 'R%i.%i'%(st1, st2)
@@ -1450,7 +1458,7 @@ class file_parser_rassi(file_parser_libwfa):
                     try:
                         state_list[-1]['osc_str'] = oscs[(st2, st1)]
                     except:
-                        print "No osc. strength found for transition %i -> %i"%(st2, st1)
+                        print("No osc. strength found for transition %i -> %i"%(st2, st1))
                     state_list[-1]['tden'] = self.init_den(mos)
 
                     self.read_rassi_den(state_list[-1]['tden'], mos, lfile)
@@ -1458,7 +1466,7 @@ class file_parser_rassi(file_parser_libwfa):
                 elif self.ioptions['s_or_t'] == 's':
                     if st1 != st2: continue
 
-                    print "Reading %s ..."%lfile
+                    print("Reading %s ..."%lfile)
                     state_list.append({})
 
                     state_list[-1]['name'] = 'RASSI_%i'%st1
@@ -1481,7 +1489,7 @@ class file_parser_rassi(file_parser_libwfa):
 
         while(True):
             try:
-                line = rfile.next()
+                line = next(rfile)
             except:
                 break
 
@@ -1492,22 +1500,22 @@ class file_parser_rassi(file_parser_libwfa):
             #         words = rfile.next().split()
 
             if 'SPIN-FREE ENERGIES' in line:
-                line = rfile.next()
-                if 'Shifted by' in line: rfile.next()
-                rfile.next()
-                rfile.next()
-                words = rfile.next().split()
+                line = next(rfile)
+                if 'Shifted by' in line: next(rfile)
+                next(rfile)
+                next(rfile)
+                words = next(rfile).split()
                 while(len(words) > 0):
                     energies.append(float(words[1]))
-                    words = rfile.next().split()
+                    words = next(rfile).split()
 
             elif '++ Dipole transition strengths' in line:
-                rfile.next()
-                rfile.next()
-                rfile.next()
-                rfile.next()
-                rfile.next()
-                words = rfile.next().split()
+                next(rfile)
+                next(rfile)
+                next(rfile)
+                next(rfile)
+                next(rfile)
+                words = next(rfile).split()
                 while(len(words) > 1):
                     if words[1] == 'Max':
                         break
@@ -1515,7 +1523,7 @@ class file_parser_rassi(file_parser_libwfa):
                     jst = int(words[1])
                     osc = float(words[2])
                     oscs[(ist, jst)] = osc
-                    words = rfile.next().split()
+                    words = next(rfile).split()
                 if not self.ioptions['read_libwfa']:
                     break
 
@@ -1526,8 +1534,8 @@ class file_parser_rassi(file_parser_libwfa):
 
                 state['name'] = line.split()[-1]
 
-                line = rfile.next()
-                line = rfile.next()
+                line = next(rfile)
+                line = next(rfile)
                 state['exc_en'] = float(line.split()[1])
                 try:
                     state['osc_str'] = oscs[(1, istate)]
@@ -1541,7 +1549,7 @@ class file_parser_rassi(file_parser_libwfa):
                 typ = words[-1][1:-1]
                 (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile("%s_ctnum_atomic.om"%typ)
                 if abs(exctmp * units.energy['eV'] - state['exc_en']) > 1.e-3:
-                    print " WARNING: inconsistent energies for %s: %.5f/%.5f - skipping."%(typ, exctmp * units.energy['eV'], state['exc_en'])
+                    print(" WARNING: inconsistent energies for %s: %.5f/%.5f - skipping."%(typ, exctmp * units.energy['eV'], state['exc_en']))
                 else:
                     state['Om'] = om_at.sum()
                     state['OmAt'] = om_at
@@ -1565,15 +1573,15 @@ class file_parser_rassi(file_parser_libwfa):
         TRD_string = 'Active TRD1'
         while True:
             try:
-                line = rfile.next()
+                line = next(rfile)
             except StopIteration:
                 break
 
             if 'Multiplicities' in line:
-                words = rfile.next().split()
+                words = next(rfile).split()
                 mult1 = int(words[0])
                 mult2 = int(words[1])
-                print 'Multiplicities: %i, %i'%(mult1, mult2)
+                print('Multiplicities: %i, %i'%(mult1, mult2))
 
                 # Read the spin-traced TDM if the multiplicities are the same
                 #   and the spin-difference TDM otherwise
@@ -1582,26 +1590,26 @@ class file_parser_rassi(file_parser_libwfa):
                 else:
                     TRD_string = 'Active Spin TRD1'
             elif 'Basis functions' in line:
-                nbas = int(rfile.next().split()[0])
+                nbas = int(next(rfile).split()[0])
                 assert(nbas == mos.ret_num_mo())
             elif 'Inactive orbitals' in line:
-                ninact = int(rfile.next().split()[0])
+                ninact = int(next(rfile).split()[0])
 
                 if sden:
-                    for imo in xrange(ninact): dens[imo, imo] = 2.0
+                    for imo in range(ninact): dens[imo, imo] = 2.0
                 imo = ninact
                 jmo = ninact
             elif 'Active orbitals' in line:
-                nact = int(rfile.next().split()[0])
+                nact = int(next(rfile).split()[0])
             elif TRD_string in line:
-                line = rfile.next()
+                line = next(rfile)
                 trd1 = True
             elif trd1:
-                strl = len(line) / 5
-                for i in xrange(5):
+                strl = len(line) // 5
+                for i in range(5):
                     val = float(line[i*strl:(i+1)*strl].replace('D','E'))
                     dens[jmo, imo] = val
-                    if 0.2 < abs(val) < 1.9999: print "(i,j)=(%2i,%2i), val=%6.3f"%(imo,jmo,val)
+                    if 0.2 < abs(val) < 1.9999: print("(i,j)=(%2i,%2i), val=%6.3f"%(imo,jmo,val))
 
                     jmo += 1
                     if jmo == ninact + nact:
