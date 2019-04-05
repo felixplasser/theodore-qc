@@ -2,9 +2,10 @@
 """
 Check if a file can be read by cclib and if all the required information is available.
 """
+from __future__ import print_function, division
+import sys
 
 from theodore import theo_header, cclib_interface, input_options, error_handler
-import sys
 
 theo_header.print_header('Check cclib')
 

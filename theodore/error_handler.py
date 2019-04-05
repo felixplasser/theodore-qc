@@ -1,3 +1,6 @@
+
+from __future__ import print_function, division
+
 class MsgError(Exception):
     def __init__(self, errmsg):
         self.errmsg = errmsg

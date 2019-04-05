@@ -5,6 +5,8 @@ Library containing unit conversion factors. Magnitudes correspond to 1 atomic un
 For example, 'eV':27.2113961 can be understood as 27.211 eV/au
 """
 
+from __future__ import print_function, division
+
 energy={'au':1.0,
         'eV':27.2113961,
         'kJ/mol':2625.49963,

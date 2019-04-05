@@ -6,6 +6,8 @@ usage: OB_repl is intended as a replacement that supplies some of the functional
    package in case this is not available.
 """
 
+from __future__ import print_function, division
+
 import sys
 from . import units
 

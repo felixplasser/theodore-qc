@@ -3,7 +3,9 @@
 Convert the TheoDORE output data to a table in latex or html format.
 """
 
+from __future__ import print_function, division
 from theodore import theo_header, input_options, lib_file, error_handler
+
 import os
 
 class write_table_options(input_options.write_options):

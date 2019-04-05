@@ -2,6 +2,8 @@
 Library file with some routines for plotting graphs.
 """
 
+from __future__ import print_function, division
+
 from . import input_options, error_handler, lib_file
 import os
 

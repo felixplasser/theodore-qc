@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 #import argparse - only available in version 2.7
+from __future__ import print_function, division
 import sys
 from theodore import theo_header, lib_struc
 

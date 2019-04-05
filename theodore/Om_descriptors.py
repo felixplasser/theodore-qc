@@ -3,6 +3,8 @@ Computation and storage of Omega descriptors, which are derived from the charge
 transfer numbers.
 """
 
+from __future__ import print_function, division
+
 import numpy
 
 class Om_desc_coll:

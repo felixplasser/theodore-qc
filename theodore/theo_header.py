@@ -1,3 +1,5 @@
+from __future__ import print_function, division
+
 width=80
 
 def print_header(*args, **kwargs):

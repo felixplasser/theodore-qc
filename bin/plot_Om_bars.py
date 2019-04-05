@@ -5,6 +5,7 @@ This creates a latex/pgfplots input file.
 Author: Felix Plasser, Sebastian Mai
 """
 
+from __future__ import print_function, division
 from theodore import theo_header, input_options, lib_file, error_handler
 import numpy
 import os

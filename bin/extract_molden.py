@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from __future__ import print_function, division
 import os, sys
 import numpy
 from theodore import theo_header, lib_mo, error_handler

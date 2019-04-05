@@ -2,9 +2,10 @@
 """
 Convert a log-file to Molden format with the help of cclib.
 """
+from __future__ import print_function, division
+import sys
 
 from theodore import theo_header, cclib_interface, input_options, error_handler, lib_mo
-import sys
 
 theo_header.print_header('cc2molden')
 

@@ -4,6 +4,7 @@ Script for analyzing correlations in OmFrag files
 Author: Sebastian Mai
 """
 
+from __future__ import print_function, division
 from theodore import theo_header, input_options, lib_file, error_handler, lib_struc
 import numpy
 import os

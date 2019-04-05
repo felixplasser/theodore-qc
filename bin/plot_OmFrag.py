@@ -4,6 +4,7 @@ Script for plotting the Omega matrix.
 """
 # TODO: variable output format
 
+from __future__ import print_function, division
 from theodore import theo_header, input_options, lib_file, error_handler
 import numpy
 import os

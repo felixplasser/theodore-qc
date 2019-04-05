@@ -3,6 +3,7 @@ This is an interface to the orbkit, an external post-processing toolbox.
 https://orbkit.github.io/
 Download and install orbkit if you want to use the functions.
 """
+from __future__ import print_function, division
 
 orbkit_avail = True
 try:

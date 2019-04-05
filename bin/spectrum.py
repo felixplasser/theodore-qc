@@ -3,6 +3,7 @@
 Create a convoluted spectrum from the oscillator strengths.
 """
 
+from __future__ import print_function, division
 import math, numpy
 from theodore import theo_header, units, lib_file, input_options, error_handler
 

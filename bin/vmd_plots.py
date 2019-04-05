@@ -2,7 +2,7 @@
 """
 Automatic plotting of densities or MOs with vmd.
 """
-
+from __future__ import print_function, division
 from theodore import error_handler, theo_header, input_options, lib_struc, lib_file
 
 class vmd_options(input_options.write_options):

@@ -3,6 +3,7 @@
 Plot arrows for dipole and quadrupole moments.
 """
 
+from __future__ import print_function, division
 import numpy
 from theodore import theo_header, units, lib_file, input_options, error_handler
 

@@ -4,6 +4,7 @@ Perform a fragment charge difference analysis, following
   A. A. Voityuk, N. Roesch J. Chem. Phys. 2002, 117, 5607.
 """
 
+from __future__ import print_function, division
 from theodore import theo_header, input_options,  error_handler, lib_diab
 import sys, os, numpy
 

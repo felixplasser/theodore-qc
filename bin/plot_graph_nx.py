@@ -3,6 +3,7 @@
 Script for creating graphs from multiple directories, e.g. potential curves.
 """
 
+from __future__ import print_function, division
 from theodore import theo_header, input_options, lib_plot, lib_file
 
 class write_plot_options_nx(lib_plot.write_plot_options):

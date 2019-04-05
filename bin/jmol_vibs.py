@@ -4,6 +4,7 @@ Automatic plotting of vibrations with jmol.
 """
 # Code adapted from jmol_MOs.py
 
+from __future__ import print_function, division
 from theodore import error_handler, lib_file, theo_header, input_options
 
 class jmol_vib_opts(input_options.write_options):

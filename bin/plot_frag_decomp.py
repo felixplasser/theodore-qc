@@ -3,6 +3,7 @@
 Script for plotting fragment decomposition.
 """
 
+from __future__ import print_function, division
 from theodore import theo_header, input_options, error_handler
 import numpy
 

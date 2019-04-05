@@ -2,6 +2,7 @@
 Utilities for reading and writing options from/to an input file.
 """
 
+from __future__ import print_function, division
 from . import error_handler
 
 class options:

@@ -3,6 +3,7 @@
 Automatic plotting of MOs with jmol.
 """
 
+from __future__ import print_function, division
 from theodore import lib_mo, error_handler, lib_file, theo_header, input_options
 
 class mo_output:

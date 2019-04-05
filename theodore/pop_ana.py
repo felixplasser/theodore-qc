@@ -3,6 +3,8 @@ Module for population analysis.
 Currently only Mulliken style analysis is supported.
 """
 
+from __future__ import print_function, division
+
 from . import error_handler, lib_struc
 import numpy
 

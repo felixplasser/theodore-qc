@@ -1,3 +1,5 @@
+from __future__ import print_function, division
+
 from . import lib_struc, error_handler, units
 import numpy
 

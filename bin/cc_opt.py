@@ -3,9 +3,11 @@
 Use cclib and openbabel to analyze a geometry optimization.
 """
 
+from __future__ import print_function, division
+import sys
+
 from theodore import theo_header, cclib_interface, input_options, error_handler, units
 import openbabel
-import sys
 
 theo_header.print_header('Analysis of a geometry optimization')
 

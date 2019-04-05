@@ -2,9 +2,10 @@
 """
 Script for parsing libwfa output.
 """
+import sys
+from __future__ import print_function, division
 
 from theodore import theo_header, dens_ana_base, input_options
-import sys
 
 def ihelp():
     print(" parse_libwfa.py <logfile> <type>\n")

@@ -3,6 +3,8 @@ Tools for molecular structure analysis and manipulation.
 This is a wrapper to python-openbabel.
 """
 
+from __future__ import print_function, division
+
 import os, shutil, locale
 import numpy
 obabel_avail = True

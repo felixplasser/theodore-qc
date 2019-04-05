@@ -2,9 +2,10 @@
 """
 Driver script for transition density matrix analysis.
 """
+from __future__ import print_function, division
+import os, sys, time
 
 from theodore import theo_header, lib_soc, input_options, error_handler
-import os, sys, time
 
 (tc, tt) = (time.clock(), time.time())
 

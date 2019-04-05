@@ -3,8 +3,11 @@
 Driver script for analyzing a set of NO files.
 """
 
-from theodore import theo_header, lib_sden, input_options
+from __future__ import print_function, division
 import sys
+
+from theodore import theo_header, lib_sden, input_options
+
 
 theo_header.print_header('NO file analysis')
 
