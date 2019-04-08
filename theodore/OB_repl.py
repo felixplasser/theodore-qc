@@ -133,8 +133,8 @@ class OBConversion:
         outfile.close()
 
     def write_tmol(self,mol,file):
-	outfile = open(file,'w')
-	num_at = mol.NumAtoms()
+        outfile = open(file,'w')
+        num_at = mol.NumAtoms()
 
         outfile.write('$coord\n')
 
@@ -142,13 +142,13 @@ class OBConversion:
             obatom  = mol.GetAtom(ind)
 
             outstr  = '% 14.8f'%(obatom.x() / units.length['A'])
-	    outstr += '% 14.8f'%(obatom.y() / units.length['A'])
-	    outstr += '% 14.8f'%(obatom.z() / units.length['A'])
-	    outstr += '%2s'%Z_symbol_dict[obatom.GetAtomicNum()]
-	    outfile.write(outstr+'\n')
+            outstr += '% 14.8f'%(obatom.y() / units.length['A'])
+            outstr += '% 14.8f'%(obatom.z() / units.length['A'])
+            outstr += '%2s'%Z_symbol_dict[obatom.GetAtomicNum()]
+            outfile.write(outstr+'\n')
 
         outfile.write('$end\n')
-	outfile.close()
+        outfile.close()
 
 class OBMol:
     def __init__(self):
