@@ -138,7 +138,7 @@ class write_options_theo(input_options.write_options):
             self['coor_format'] = ''
 
     def set_read_options(self):
-        if self.has_key('rfile'):
+        if 'rfile' in self:
            self.read_str('Main file to read', 'rfile', self['rfile'], autocomp=True)
 
         # switch for libwfa
@@ -156,15 +156,15 @@ class write_options_theo(input_options.write_options):
         if self['rtype'] == 'ricc2':
             self.read_yn('Read binary CCRE0 files?', 'read_binary', False)
             if not self['read_binary']:
-                print
-                print " *** Warning: without read_binary you have to delete the line"
-                print "       implicit core=   x virt=    x"
-                print "     from the control file before running tm2molden."
+                print()
+                print(" *** Warning: without read_binary you have to delete the line")
+                print("       implicit core=   x virt=    x")
+                print("     from the control file before running tm2molden.")
         elif self['rtype'] == 'orca':
             self.read_yn('Read the binary orca.cis file?', 'read_binary', True)
 
     def choose_mo_file(self):
-        if not self.has_key('mo_file'): return
+        if 'mo_file' not in self: return
 
         mo_str = 'MO file (Molden format)\
                       \n -> This file should ideally contain a square invertible coefficient matrix'
@@ -172,7 +172,7 @@ class write_options_theo(input_options.write_options):
 
         if self['rtype'] == 'nos':
             nodir = self.ret_str('Directory with the NO files:', '.', True)
-            print "%s contains the following files:"%nodir
+            print("%s contains the following files:"%nodir)
 
             lfiles = sorted(os.listdir(nodir))
             self.print_list(lfiles)
@@ -186,7 +186,7 @@ class write_options_theo(input_options.write_options):
 
 
     def make_at_lists(self):
-        print "Fragment definition for CT nubmer analysis"
+        print("Fragment definition for CT nubmer analysis")
         aexpl = ['Manual input', 'Automatic generation by fragment (using python-openbabel)', \
                 'Automatic generation for transition metal complexes (using python-openbabel)', \
                 'Automatic generation by element (using python-openbabel)', 'Leave empty and fill out later']
@@ -208,7 +208,7 @@ class write_options_theo(input_options.write_options):
     def read_at_lists(self):
         atl_tmp = []
 
-        for ifrag in xrange(1, 1000):
+        for ifrag in range(1, 1000):
             rstr = self.ret_str('Input the indices of the atoms belonging to fragment %i:\n(separated by spaces)'%ifrag)
             if rstr == '': break
 
@@ -217,7 +217,7 @@ class write_options_theo(input_options.write_options):
         return atl_tmp
 
     def file_at_lists(self, mode):
-        print "Automatic generation of at_lists partitioning ..."
+        print("Automatic generation of at_lists partitioning ...")
         self.coor_file()
 
         struc = lib_struc.structure()
@@ -308,7 +308,7 @@ class write_options_theo(input_options.write_options):
         if self.ret_yn('Compute approximate exciton size?', True):
             self['prop_list'] += ['RMSeh']
             if not self['rtype'] in ['cclib', 'adf']:
-                print "\nMolecular coordinates for exciton analysis:"
+                print("\nMolecular coordinates for exciton analysis:")
                 self.coor_file()
 
         if self['read_libwfa']:
@@ -351,8 +351,8 @@ class write_options_theo(input_options.write_options):
     def get_ncore(self):
         if self.ret_yn('Were there frozen core orbitals in the calculation?', True):
             self['ncore_dict'] = {}
-            print "Please enter the irrep label and number of orbitals (separated by spaces), e.g. b1u 5"
-            for iirrep in xrange(1, 32):
+            print("Please enter the irrep label and number of orbitals (separated by spaces), e.g. b1u 5")
+            for iirrep in range(1, 32):
                 rstr = self.ret_str('Info for irrep %i'%iirrep)
                 if rstr == '': break
 
@@ -371,14 +371,14 @@ class write_options_theo(input_options.write_options):
             self.read_yn('Print-out sorted by energies?', 'print_sorted', True)
 
     def get_rassi_list(self):
-        print """
+        print("""
 It is assumed that you ran a RASSI job using the TRD1 option
     and copied the TRD2* files to a directory.
 Please specify this directory and choose, which files will be analyzed,
     e.g. only transitions to the ground state.
-        """
+        """)
         ddir = self.ret_str('Directory with the TRD2 files:', 'TRD', True)
-        print "%s contains the following files:"%ddir
+        print("%s contains the following files:"%ddir)
 
         lfiles = sorted(os.listdir(ddir))
         self.print_list(lfiles)
@@ -441,7 +441,7 @@ def run_theoinp():
     wopt.flush(lvprt=1, choose_file=True)
 
     if wopt['rtype'] == 'colmcscf':
-        print "\nNow, please run write_den.bash to prepare the MCSCF density matrices!"
+        print("\nNow, please run write_den.bash to prepare the MCSCF density matrices!")
 
 if __name__ == '__main__':
     theo_header.print_header('Input generation')
