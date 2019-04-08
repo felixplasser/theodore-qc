@@ -2,8 +2,8 @@
 """
 Script for parsing libwfa output.
 """
-import sys
 from __future__ import print_function, division
+import sys
 
 from theodore import theo_header, dens_ana_base, input_options
 

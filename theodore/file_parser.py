@@ -8,11 +8,6 @@ import numpy
 import os, struct
 
 
-def translate(in_str, string):
-    for c in string:
-        in_str = in_str.replace(c, '')
-    return in_str
-
 class file_parser_base:
     def __init__(self, ioptions):
         self.ioptions = ioptions
@@ -48,43 +43,42 @@ class file_parser_base:
             if not not_string is None:
                 if not_string in line: return
 
-            sr_line = translate(line.strip(search_string), translate_str)
-            state[key] = float(sr_line.split()[ind])
+            words = self.delete_chars(line.strip(search_string), translate_str)
+            state[key] = float(words[ind])
 
             if not rfile is None:
                 if rmatrix:
                     line = next(rfile)
                     try:
-                        words=translate(next(rfile), translate_str)
+                        words=self.delete_chars(next(rfile), translate_str)
                         state['%sxx'%key] = float(words[-3])
                         state['%sxy'%key] = float(words[-2])
                         state['%sxz'%key] = float(words[-1])
-                        words=translate(next(rfile), translate_str)
+                        words=self.delete_chars(next(rfile), translate_str)
                         state['%syx'%key] = float(words[-3])
                         state['%syy'%key] = float(words[-2])
                         state['%syz'%key] = float(words[-1])
-                        words=translate(next(rfile), translate_str)
+                        words=self.delete_chars(next(rfile), translate_str)
                         state['%szx'%key] = float(words[-3])
                         state['%szy'%key] = float(words[-2])
                         state['%szz'%key] = float(words[-1])
                     except:
                         print(' Cannot parse matrix for %s of state %s'%(key, state['name']))
                 else:
-                    line=translate(next(rfile), translate_str)
-                    words = line.split()
+                    words=self.delete_chars(next(rfile), translate_str)
                     state['%sx'%key] = float(words[-3])
                     state['%sy'%key] = float(words[-2])
                     state['%sz'%key] = float(words[-1])
 
-    def delete_chars(self, line, delete):
+    def delete_chars(self, line, delete, lmap=None):
         """
-        Delete the characters in <delete> from line.
+        Delete the characters in <delete> from line, split, and optionally map.
         """
         retline = line
         for char in delete:
             retline = retline.replace(char, '')
 
-        return retline
+        return retline.split()
 
     def sym_split(self, sym):
         """
@@ -255,7 +249,7 @@ from the control file.""")
                     if '---' in line: continue
                     if '===' in line: break
 
-                    words = self.delete_chars(line, ['|']).split()
+                    words = self.delete_chars(line, ['|'])
 
                     multis.append(words[1])
 
@@ -807,7 +801,7 @@ class file_parser_qctddft(file_parser_libwfa):
                     #    Otherwise the Y would go into the virt-occ block!
                     if 'Y:' in line: continue
 
-                    awords = self.delete_chars(line, ['X:', 'Y:', 'D', 'V', '(', ')', '-->']).split()
+                    awords = self.delete_chars(line, ['X:', 'Y:', 'D', 'V', '(', ')', '-->'])
 
                     iocc = int(awords[0]) - 1
                     ivirt = int(awords[1]) + mos.ret_ihomo()
