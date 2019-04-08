@@ -2,7 +2,7 @@
 """
 Input generation for TheoDORE runs.
 """
-
+from __future__ import print_statement, division
 import theo_header, input_options, lib_struc, error_handler, orbkit_interface
 import os
 
