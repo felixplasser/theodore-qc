@@ -11,7 +11,7 @@ echo "THEODIR set to $THEODIR"
 
 # set PATH and PYTHONPATH
 export PATH=$THEODIR/bin:$PATH
-export PYTHONPATH=$THEODIR/theodore
+export PYTHONPATH=$THEODIR
 
 # add external packages here if they have not been installed in the default locations
 #export PYTHONPATH=$HOME/programs/cclib/cclib-1.3.1/build/lib:$PYTHONPATH

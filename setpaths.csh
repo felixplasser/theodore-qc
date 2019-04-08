@@ -3,4 +3,4 @@
 
 setenv THEODIR /home/felix/programs/TheoDORE/GIT
 setenv PATH ${THEODIR}/bin:${PATH}
-setenv PYTHONPATH ${THEODIR}/lib
+setenv PYTHONPATH ${THEODIR}
