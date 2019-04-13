@@ -2,8 +2,8 @@
 """
 Input generation for TheoDORE runs.
 """
-from __future__ import print_statement, division
-import theo_header, input_options, lib_struc, error_handler, orbkit_interface
+from __future__ import print_function, division
+from theodore import theo_header, input_options, lib_struc, error_handler, orbkit_interface
 import os
 
 class write_options_theo(input_options.write_options):
