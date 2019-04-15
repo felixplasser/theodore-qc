@@ -3,7 +3,23 @@ Utilities for reading and writing options from/to an input file.
 """
 
 from __future__ import print_function, division
+import sys
 from . import error_handler
+
+
+def user_input_py2(inpstr):
+    return raw_input(inpstr)
+
+
+def user_input_py3(inpstr):
+    return input(inpstr)
+
+
+if sys.version_info[0] == 2:
+    user_input = user_input_py2
+else:
+    user_input = user_input_py3
+
 
 class options:
     """
@@ -199,7 +215,7 @@ class write_options(options):
         if autocomp:
             readline.set_completer_delims(' \t\n;')
             readline.parse_and_bind("tab: complete")    # activate autocomplete
-        val = input(inpstr)
+        val = user_input(inpstr)
         readline.parse_and_bind("tab: ")            # deactivate autocomplete
 
         if val=='': val = default
@@ -223,7 +239,7 @@ class write_options(options):
         inpstr = 'Choice: '
         if not default==1.111: inpstr += '[%f] '%default
 
-        sval = input(inpstr)
+        sval = user_input(inpstr)
         if sval=='':
             val = default
         else:
@@ -255,7 +271,7 @@ class write_options(options):
         retval = idef
         while True:
             try:
-                retval = int(input(inpstr))
+                retval = int(user_input(inpstr))
             except:
                 if retval==-1:
                     print("Please enter an integer number!")
@@ -288,7 +304,7 @@ class write_options(options):
         else:
             inpstr += '[n] '
 
-        answer = input(inpstr)
+        answer = user_input(inpstr)
 
         if default:
             return not 'n' in answer.lower()
