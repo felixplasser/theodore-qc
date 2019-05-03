@@ -2,8 +2,9 @@
 
 PDIR=`pwd`
 
-echo "theo_test.bash [<module>]"
+echo "theo_test.bash [<module> [<py_interp>]]"
 echo "  available modules: standard, all, openbabel, cclib, adf, noadf"
+echo "  py_interp: python2, python3, ..."
 
 echo "Starting theo_test.bash"
 echo "THEODIR=$THEODIR"
@@ -13,8 +14,8 @@ if [ -z "$THEODIR" ]; then
    exit 1
 fi
 
-stddirs="pyrrole.qcadc hexatriene.colmrci fa2.ricc2 pv2p.escf pv2p.qctddft pyridine.ricc2 fa2.col fa2.rassi fa2.rassi-libwfa fa2.terachem tyrosine.ricc2-es2es biphenyl.tddftb naphth.fchk"
-obdirs="ir_c3n3.qctddft"
+stddirs="pyrrole.qcadc hexatriene.colmrci fa2.ricc2 pv2p.escf pv2p.qctddft pyridine.ricc2 fa2.col fa2.rassi fa2.rassi-libwfa fa2.terachem tyrosine.ricc2-es2es biphenyl.tddftb"
+obdirs="ir_c3n3.qctddft naphth.fchk"
 cclibdirs="fa2.cclib SnH4-ecp.firefly H2S.orca"
 adfdirs="fa2.adf"
 
@@ -30,6 +31,13 @@ else
     "cclib") rundirs="$cclibdirs";;
     "adf") rundirs="$adfdirs";;
     esac
+fi
+
+if [ $# == 2 ]
+then
+    PYTHON=$2
+else
+    PYTHON=python
 fi
 
 rm -r RUN_THEO_TEST
@@ -62,7 +70,7 @@ do
 
         dtype=`echo $ifile | cut -d '.' -f 1`
         atype=`echo $ifile | cut -d '.' -f 3`
-        comm="python $THEODIR/bin/analyze_$dtype.py -ifile $ifile"
+        comm="$PYTHON $THEODIR/bin/analyze_$dtype.py -ifile $ifile"
         echo $comm
         $comm > analyze_$atype.out
         lchk=$?
