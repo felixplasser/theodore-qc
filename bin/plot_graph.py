@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Script for creating graphs from multiple directories, e.g. potential curves.
 """

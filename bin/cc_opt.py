@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Use cclib and openbabel to analyze a geometry optimization.
 """

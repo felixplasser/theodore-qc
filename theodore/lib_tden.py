@@ -549,9 +549,9 @@ class tden_ana(dens_ana_base.dens_ana_base):
             (U, lam, Vt) = self.ret_NTO(state)
             cbfid = lib_orbkit.compute_p_h_dens(state, U, lam, Vt, self.mos, minlam=self.ioptions['min_occ'],numproc=self.ioptions.get('numproc'))
             cube_ids.append(cbfid)
-     	if self.ioptions.get('vmd_ph_dens'):
+        if self.ioptions.get('vmd_ph_dens'):
             print("VMD network for particle/hole densities")
-    	    lib_orbkit.vmd_network_creator(filename='p_h_dens',cube_ids=numpy.hstack(cube_ids),isovalue=self.ioptions.get('vmd_ph_dens_iv'))
+            lib_orbkit.vmd_network_creator(filename='p_h_dens',cube_ids=numpy.hstack(cube_ids),isovalue=self.ioptions.get('vmd_ph_dens_iv'))
 
     def compute_all_DNTO(self):
         """
@@ -560,7 +560,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         if len(self.state_list) == 0: return
         if not 'tden' in self.state_list[0]: return
 
-        print "\n*** Computing domain NTOs ... ***"
+        print("\n*** Computing domain NTOs ... ***")
         if not self.ioptions.get('Om_formula') == 2:
             raise error_handler.MsgError('Only Om_formula==2 supported for conditional e/h densities.')
 
@@ -585,7 +585,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
             DNTO_denss = None
 
         for state in self.state_list:
-            print "DNTOs for ", state['name']
+            print("DNTOs for ", state['name'])
 
             for A, Aatoms in enumerate(self.ioptions['at_lists']):
                 if not self.ioptions['dnto_frags'] == []:
@@ -606,7 +606,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
                     fex.dump_LTmat('%s hole-F%02i Electron Density'%(state['name'], A+1), DNTO_denss[1])
                 if dnto_dens == 1 or dnto_dens == 3:
                     if sum(lam) < self.ioptions['min_occ']:
-                        print "Norm = %.2f < min_occ. Skipping %s ..."%(sum(lam), export_opts['post'])
+                        print("Norm = %.2f < min_occ. Skipping %s ..."%(sum(lam), export_opts['post']))
                     else:
                         N = 1/sum(lam) if self.ioptions['normalize_dnto_dens'] else 1.
                         try:
@@ -614,7 +614,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
                             self.mos, numproc=self.ioptions['numproc'], **export_opts)
                             cube_ids.append(cbfid)
                         except:
-                            print "... failed."
+                            print("... failed.")
 
                 ### conditional electron density ###
                 (U, lam, Vt) = self.ret_DNTO_e(state, Aatoms, DNTO_denss)
@@ -628,7 +628,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
                     fex.dump_LTmat('%s elec-F%02i Electron Density'%(state['name'], A+1), DNTO_denss[1])
                 if dnto_dens >= 2:
                     if sum(lam) < self.ioptions['min_occ']:
-                         print "Norm = %.2f < min_occ. Skipping %s ..."%(sum(lam), export_opts['post'])
+                         print("Norm = %.2f < min_occ. Skipping %s ..."%(sum(lam), export_opts['post']))
                     else:
                         N = 1/sum(lam) if self.ioptions['normalize_dnto_dens'] else 1.
                         try:
@@ -636,7 +636,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
                             self.mos, numproc=self.ioptions['numproc'], **export_opts)
                             cube_ids.append(cbfid)
                         except:
-                            print "... failed."
+                            print("... failed.")
 
         if jmol_orbs:
             jmh.post()

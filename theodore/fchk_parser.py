@@ -4,7 +4,7 @@ A Molden file can be produced, as well, for further processing.
 """
 
 from __future__ import print_function, division
-from . import error_handler, file_parser, units
+from . import error_handler, file_parser, units, lib_mo, lib_struc
 import numpy
 
 class file_parser_fchk(file_parser.file_parser_base):
@@ -28,7 +28,7 @@ class file_parser_fchk(file_parser.file_parser_base):
                 break
 
             if 'Transition DM' in line:
-                print line.strip()
+                print(line.strip())
                 state_list.append({})
                 state = state_list[-1]
                 words = line.split()
@@ -52,7 +52,7 @@ class file_parser_fchk(file_parser.file_parser_base):
                 state['tden'] = 2**(-.5) * mos.MdotC(temp, trnsp=True, inv=True)
 
             elif 'State Density' in line or 'SCF Density' in line:
-                print line.strip()
+                print(line.strip())
                 refdim = num_bas * (num_bas + 1) / 2
                 tmplist = self.fchk_list(line, refdim)
 
@@ -60,7 +60,7 @@ class file_parser_fchk(file_parser.file_parser_base):
                 temp[numpy.tril_indices(num_bas)] = tmplist
                 sden = numpy.triu(temp.T, 1) + temp
 
-                print 'DS:   ', numpy.sum(sden * mos.S)
+                print('DS:   ', numpy.sum(sden * mos.S))
 
             # Skip unnecessary arrays
             elif 'N=' in line:
@@ -88,13 +88,13 @@ class MO_set_fchk(lib_mo.MO_set_molden):
     Parse MO-related information from the fchk file.
     """
     def read(self):
-        print 'Reading MOs from fchk file %s'%self.file
+        print('Reading MOs from fchk file %s'%self.file)
         self.rfileh = open(self.file, 'r')
         while True: # loop over all lines
             try:
-                line = self.rfileh.next()
+                line = next(self.rfileh)
             except StopIteration:
-                print "Reached end of file %s"%self.rfileh.name
+                print("Reached end of file %s"%self.rfileh.name)
                 break
 
             if 'Number of alpha electrons' in line:
@@ -132,6 +132,7 @@ class MO_set_fchk(lib_mo.MO_set_molden):
                 tmplist = self.fchk_list(line)
                 self.mo_mat = numpy.reshape(map(float, tmplist), [num_bas,num_bas]).T
                 self.occs = nocc * [2] + (self.ret_num_mo() - nocc) * [0]
+                print("MO-matrix read", self.mo_mat.shape)
             elif 'Alpha Orbital Energies' in line:
                 self.ens = map(float, self.fchk_list(line))
                 self.syms = ['X' for en in self.ens]
@@ -142,7 +143,7 @@ class MO_set_fchk(lib_mo.MO_set_molden):
             # Skip unnecessary arrays
             elif 'N=' in line:
                 dim = int(line.split()[-1])
-                for i in range(dim/5-1):
+                for i in range(dim//5-1):
                     self.rfileh.next()
 
         self.rfileh.close()
@@ -232,7 +233,7 @@ class fchk_export:
             f.writelines(open(ifile, 'r').readlines())
 
     def dump_data(self, label, data, dtype='R'):
-        print 'Writing %s to %s ...'%(label, self.ofile)
+        print('Writing %s to %s ...'%(label, self.ofile))
         with open(self.ofile, 'a') as f:
             f.write('{0:<42s} R   N=  {1:>10d}'.format(label,len(data)))
             for id,d in enumerate(data):

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 #import argparse - only available in version 2.7
 from __future__ import print_function, division

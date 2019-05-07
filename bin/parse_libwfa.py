@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Script for parsing libwfa output.
 """
@@ -15,9 +15,9 @@ def ihelp():
     print("  -ifile, -f [dens_ana.in]: name of the input file")
     exit(0)
 
-#--------------------------------------------------------------------------#        
+#--------------------------------------------------------------------------#
 # Input options
-#--------------------------------------------------------------------------# 
+#--------------------------------------------------------------------------#
 
 tmp = sys.argv.pop(0)
 #if len(sys.argv) == 0: ihelp()
@@ -45,7 +45,7 @@ if (not 'rfile' in ioptions) or (not 'rtype' in ioptions):
 
 theo_header.print_header('Parse libwfa output', ioptions=ioptions)
 
-#--------------------------------------------------------------------------#        
+#--------------------------------------------------------------------------#
 # Parsing and computations
 #--------------------------------------------------------------------------#
 
@@ -55,7 +55,7 @@ dena = dens_ana_base.dens_ana_base(ioptions)
 try:
     dena.read_dens()
 except error_handler.MsgError:
-    print 'Setting TDA=True ...'
+    print('Setting TDA=True ...')
     ioptions['TDA'] = True
     dena.read_dens()
 

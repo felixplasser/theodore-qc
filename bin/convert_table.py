@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Convert the TheoDORE output data to a table in latex or html format.
 """

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Check if a file can be read by cclib and if all the required information is available.
 """

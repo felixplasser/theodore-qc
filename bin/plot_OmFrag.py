@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Script for plotting the Omega matrix as a pseudocolor matrix plot.
 """

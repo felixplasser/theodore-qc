@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from __future__ import print_function, division
 """
 Driver script for analyzing a set of NO files.

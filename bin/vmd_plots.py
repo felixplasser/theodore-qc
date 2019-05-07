@@ -1,9 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Automatic plotting of densities or MOs with vmd.
 """
 from __future__ import print_function, division
-from theodore import error_handler, theo_header, input_options, lib_struc, lib_file
+from theodore import error_handler, theo_header, input_options, lib_struc, lib_file, lib_util
 
 class vmd_options(input_options.write_options):
     def vmd_input(self):
@@ -185,8 +185,8 @@ def run():
     if len(pltfiles) == 0:
         raise error_handler.MsgError('No file specified')
     else:
-        print '%i Files analyzed:'%len(pltfiles),
-        for pltf in pltfiles: print pltf,
+        print('%i Files analyzed:'%len(pltfiles), end='')
+        for pltf in pltfiles: print(pltf, end='')
         print
 
     vopt = vmd_options('vmd.in')

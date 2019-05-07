@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Script for analyzing correlations in OmFrag files
 Author: Sebastian Mai
