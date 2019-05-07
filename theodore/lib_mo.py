@@ -11,7 +11,7 @@ class MO_set:
     """
     Main class that contains orbital information.
     """
-    def __init__(self, file):
+    def __init__(self, file, read=False):
         self.file = file
 
         self.header = '' # header info for print-out
@@ -24,6 +24,10 @@ class MO_set:
         self.mo_mat = None
         self.inv_mo_mat = None
         self.lowdin_mat = None
+        self.Sinv2 = None # S^(-1/2)
+
+        if read:
+            self.read()
 
     def read(self, *args, **kwargs):
         """
@@ -47,10 +51,10 @@ class MO_set:
         """
 
         # Preferably, the overlap matrix should be used to avoid explicit inversion
-        if type(self.S) is numpy.ndarray:
+        if not self.S is None:
             if lvprt >= 1:
                 print(" ... inverse computed as: C^T.S")
-            self.inv_mo_mat = numpy.dot(self.mo_mat.transpose(), self.S)
+            self.inv_mo_mat = numpy.dot(self.mo_mat.T, self.S)
         elif len(self.mo_mat) == len(self.mo_mat[0]):
             if lvprt >= 1:
                 print(" ... inverting C")
@@ -78,12 +82,12 @@ class MO_set:
         if Vt.shape[0] == U.shape[1]:
             self.lowdin_mat = numpy.dot(U, Vt)
             # The matrix S^(-1/2) for backtransformation
-            #self.Sinv2 = numpy.dot(U*sqrlam, U.T)
+            self.Sinv2 = numpy.dot(U*sqrlam, U.T)
         elif Vt.shape[0] < U.shape[1]:
             Vts = Vt.shape[0]
             print('  MO-matrix not square: %i x %i'%(len(self.mo_mat),len(self.mo_mat[0])))
             self.lowdin_mat = numpy.dot(U[:,:Vts], Vt)
-            #self.Sinv2 = numpy.dot(U[:,:Vts]*sqrlam, U.T[:Vts,:])
+            self.Sinv2 = numpy.dot(U[:,:Vts]*sqrlam, U.T[:Vts,:])
         else:
             raise error_handler.ElseError('>', 'Lowdin ortho')
 
@@ -222,6 +226,17 @@ class MO_set:
             return numpy.dot(Lmat[:,:DUTT.shape[0]], DUTT)
         else:
             raise error_handler.ElseError('<', 'Lowdin trans')
+
+    def lowdin_AO_trans(self, D):
+        """
+        Transformation from Lowdin basis to normal AO basis using
+          DAO = S^(-0.5) DLow S^(-0.5) and
+          S^(-0.5) = C (U V^T)^T
+        """
+        #if self.Sinv2 is None:
+        #    self.Sinv2 = self.CdotD(self.lowdin_mat.T)
+
+        return numpy.dot(self.Sinv2, numpy.dot(D, self.Sinv2))
 
     def export_MO(self, ens, occs, U, *args, **kwargs):
         """
@@ -821,4 +836,5 @@ class jmol_MOs:
         self.htmlfile.write("</table>\n")
         self.htmlfile.post()
 
-        print("\nJmol input file %s.jmol and %s.html written"%(self.name, self.name))
+        print("\nJmol input file %s.jmol and %s.html written"%(self.jmfile.name, self.htmlfile.name))
+        print("   Run as: jmol -n %s"%self.jmfile.name)

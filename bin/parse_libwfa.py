@@ -51,6 +51,12 @@ theo_header.print_header('Parse libwfa output', ioptions=ioptions)
 
 dena = dens_ana_base.dens_ana_base(ioptions)
 #sdena.read_mos()
-dena.read_dens()
+
+try:
+    dena.read_dens()
+except error_handler.MsgError:
+    print 'Setting TDA=True ...'
+    ioptions['TDA'] = True
+    dena.read_dens()
 
 dena.print_summary()

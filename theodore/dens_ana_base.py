@@ -25,7 +25,7 @@ class dens_ana_base:
         rtype = self.ioptions.get('rtype')
         if rtype=='tddftb':
            self.mos = lib_mo.MO_set_tddftb(file=self.ioptions.get('mo_file'))
-        else:  
+        else:
            self.mos = lib_mo.MO_set_molden(file=self.ioptions.get('mo_file'))
         self.mos.read(lvprt=lvprt)
         self.read2_mos(lvprt)
@@ -53,7 +53,11 @@ class dens_ana_base:
         elif rtype=='qctddft':
             self.state_list = file_parser.file_parser_qctddft(self.ioptions).read(self.mos)
         elif rtype=='fchk':
+            self.mos = fchk_parser.MO_set_fchk(file=self.ioptions.get('rfile'), read=True)
+            self.read2_mos()
             self.state_list = fchk_parser.file_parser_fchk(self.ioptions).read(self.mos)
+            self.mos.write_molden_file(fname='MOs.mld')
+            self.ioptions['mo_file'] = 'MOs.mld'
         elif rtype in ['mcscf', 'colmcscf']:
             self.state_list = file_parser.file_parser_col_mcscf(self.ioptions).read(self.mos)
         elif rtype in ['mrci', 'colmrci']:
@@ -209,7 +213,7 @@ class dens_ana_base:
 
             prt_list.append([state['exc_en'], vstr])
 
-        if self.ioptions['print_sorted']: prt_list.sort() 
+        if self.ioptions['print_sorted']: prt_list.sort()
 
         ostr  = hstr + "\n"
         ostr += len(hstr) * '-' + "-\n"

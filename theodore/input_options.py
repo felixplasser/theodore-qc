@@ -411,6 +411,16 @@ class dens_ana_options(read_options):
         self['print_OmFrag'] = True # print out the fragment Omega matrix to an ASCII file
         self['eh_pop'] = 1 # print e/h populations: 1 - for fragments, 2 - also for atoms
         self['comp_ntos'] = True
+        self['comp_dntos'] = False # Compute the domain NTOs
+        self['dnto_frags'] = [] # Compute DNTOs only for these fragments
+
+        # sden analysis
+        self['pop_ana'] = True
+        self['unpaired_ana'] = True
+        self['AD_ana'] = True
+        self['BO_ana'] = True
+        self['min_BO'] = 0.5 # minimal bond order to print
+        self['mo_pop_type'] = -1
 
         # options for orbkit
         self['cube_orbitals'] = False  # output orbitals as cube files?
@@ -423,14 +433,12 @@ class dens_ana_options(read_options):
         self['vmd_rho0n'] = False
         self['vmd_rho0n_iv'] = 0.01
         self['numproc'] = 1
-
-        # sden analysis
-        self['pop_ana'] = True
-        self['unpaired_ana'] = True
-        self['AD_ana'] = True
-        self['BO_ana'] = True
-        self['min_BO'] = 0.5 # minimal bond order to print
-        self['mo_pop_type'] = -1
+        self['comp_dnto_dens'] = 0 # compute cube files for DNTO densities
+            # 0 - none, 1 - only hole, 2 - only electron, 3 - both
+        self['fchk_dnto_dens'] = 0  # Print densities to the fchk file
+            # 0 - none, 1 - only hole, 2 - only electron, 3 - both
+        self['normalize_dnto_dens'] = False # Normalize the DNTO densities
+            # for each fragment
 
         # Additional information
         # irrep labels for output

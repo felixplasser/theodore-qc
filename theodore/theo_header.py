@@ -79,6 +79,12 @@ def add_exciton(ioptions):
         rstr += addlinel("F. Plasser, B. Thomitzni, S. A. Baeppler et al.")
         rstr += addlinel("J. Comput. Chem. (2015), 36, 1609.")
 
+    if ioptions['comp_dntos']:
+        rstr += addlinec()
+        rstr += addlinel("Conditional densities and DNTOs:", 3)
+        rstr += addlinel("F. Plasser")
+        rstr += addlinel("ChemPhotoChem (2019), DOI: 10.1002/cptc.201900014.")
+
     return rstr
 
 def add_entanglement(ioptions):
