@@ -1,0 +1,24 @@
+$molecule
+ read coord.qcin
+$end
+
+$rem
+JOBTYPE                 SP
+BASIS                   VDZ
+THRESH                  12
+n_frozen_core           FC
+METHOD                  ADC(1)
+ee_singlets             [0,0,0,0,0,0,0,2]
+ee_triplets             [0,0,0,0,0,0,0,2]
+adc_davidson_conv       4
+adc_davidson_maxsubspace 21
+adc_nguess_singles      9
+adc_print               3
+MEM_STATIC              2000
+MEM_TOTAL               33000
+MAKE_CUBE_FILES         false
+GUI                     2
+state_analysis          true
+nto_pairs               5
+molden_format           false
+$end
