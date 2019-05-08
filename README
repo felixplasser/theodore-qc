@@ -8,8 +8,9 @@ TheoDORE is distributed under the GNU General Public License 3.0 (see LICENSE.tx
 For more information, go to http://theodore-qc.sourceforge.net/. Please use the discussion forum at https://sourceforge.net/p/theodore-qc/discussion if you have any question.
 
 TheoDORE uses the cclib library (http://cclib.github.io) for some of its file parsing work.
-cclib is distributed under an LGPL license and it is contained as part of this distribution.
-The source code can be found at external/cclib.tgz .
+cclib is distributed under a BSD 3-Clause License, see cclib/LICENSE .
+Copyright (c) 2017, the cclib development team.
+cclib is contained as part of this distribution.
 Citation for cclib:
    N. M. O'Boyle, A. L. Tenderholt, K. M. Langner, J. Comput. Chem. (2008), 29, 839.
 
@@ -22,4 +23,17 @@ Citations for Open Babel:
 TheoDORE uses ORBKIT (http://orbkit.github.io/) for visualization of orbitals and densities.
 ORBKIT is distributed under an LGPL license. Install orbkit if you want to use this functionality.
 Citation for ORBKIT:
-   G. Hermann, V. Pohl, J. C. Tremblay, B. Paulus, H.-C. Hege, A. Schild, J. Comput. Chem. (2016), 37, 1511.  
+   G. Hermann, V. Pohl, J. C. Tremblay, B. Paulus, H.-C. Hege, A. Schild, J. Comput. Chem. (2016), 37, 1511.
+
+---
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

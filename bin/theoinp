@@ -280,7 +280,7 @@ class write_options_theo(input_options.write_options):
         if self['read_libwfa']: return
 
         self.read_yn('Perform natural transition orbital (NTO) analysis?', 'comp_ntos', True)
-        self.read_yn('Perform analysis of domain NTOs?', 'comp_dntos', False)
+        self.read_yn('Perform analysis of domain NTOs and conditional densities?', 'comp_dntos', False)
         if self['comp_ntos'] or self['comp_dntos']:
             self['prop_list'] += ['PRNTO', 'Z_HE']
             if self['rtype'] in ['adf', 'tddftb']:
@@ -304,9 +304,9 @@ class write_options_theo(input_options.write_options):
                     if self['vmd_ph_dens']:
                         self.read_float('Isosurface value for VMD network', 'vmd_ph_dens_iv', 0.01)
                 if self['comp_dntos']:
-                    self.read_int('Compute DNTO densities as cube files?\n 0 - no, 1 - hole, 2 - electron, 3 - both', 'comp_dnto_dens', 0)
+                    self.read_int('Compute conditional densities as cube files?\n 0 - no, 1 - hole, 2 - electron, 3 - both', 'comp_dnto_dens', 0)
                     if self['rtype'] == 'fchk':
-                        self.read_int('Write DNTO densities to fchk file\n 0 - no, 1 - hole, 2 - electron, 3 - both', 'fchk_dnto_dens', 0)
+                        self.read_int('Write conditional densities to fchk file\n 0 - no, 1 - hole, 2 - electron, 3 - both', 'fchk_dnto_dens', 0)
         else:
             self.ostr += 'comp_ntos=False\n'
 
