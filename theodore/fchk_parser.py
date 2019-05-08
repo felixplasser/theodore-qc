@@ -22,7 +22,7 @@ class file_parser_fchk(file_parser.file_parser_base):
         self.rfileh = open(self.ioptions['rfile'], 'r')
         while True: # loop over all lines
             try:
-                line = next(rfileh)
+                line = next(self.rfileh)
             except StopIteration:
                 print("Reached end of file %s"%self.ioptions.get('rfile'))
                 break
@@ -45,7 +45,7 @@ class file_parser_fchk(file_parser.file_parser_base):
 
                 refdim = num_bas * num_bas
                 tmplist = self.fchk_list(line, refdim)
-                tden_ao = numpy.reshape(map(float, tmplist), [num_bas,num_bas])
+                tden_ao = numpy.reshape([float(w) for w in tmplist], [num_bas,num_bas])
                 # The tden is transformed back to the MO basis to comply with the
                 #   remaining TheoDORE infrastructure
                 temp = mos.CdotD(tden_ao.T, trnsp=False, inv=True)
@@ -65,8 +65,8 @@ class file_parser_fchk(file_parser.file_parser_base):
             # Skip unnecessary arrays
             elif 'N=' in line:
                 dim = int(line.split()[-1])
-                for i in range(dim/5-1):
-                    self.rfileh.next()
+                for i in range(dim//5-1):
+                    next(self.rfileh)
 
         self.rfileh.close()
 
@@ -79,7 +79,7 @@ class file_parser_fchk(file_parser.file_parser_base):
             assert dim == refdim, 'Inconsistent dimensions'
         tmplist = []
         while len(tmplist) < dim:
-            tmplist += self.rfileh.next().split()
+            tmplist += next(self.rfileh).split()
 
         return tmplist
 
@@ -110,13 +110,13 @@ class MO_set_fchk(lib_mo.MO_set_molden):
             elif 'Shell types' in line:
                 shtypes = map(int, self.fchk_list(line))
             elif 'Number of primitives per shell' in line:
-                noprim = map(int, self.fchk_list(line))
+                noprim = [int(w) for w in self.fchk_list(line)]
             elif 'Shell to atom map' in line:
-                shmap = map(int, self.fchk_list(line))
+                shmap = [int(w) for w in self.fchk_list(line)]
             elif 'Primitive exponents' in line:
-                prims = map(float, self.fchk_list(line))
+                prims = [float(w) for w in self.fchk_list(line)]
             elif 'Contraction coefficients' in line:
-                contr = map(float, self.fchk_list(line))
+                contr = [float(w) for w in self.fchk_list(line)]
                 self.set_bf_info(shtypes, noprim, shmap, prims, contr)
 
             elif 'Overlap Matrix' in line:
@@ -130,11 +130,11 @@ class MO_set_fchk(lib_mo.MO_set_molden):
             elif 'Alpha MO coefficients' in line:
                 #dim = int(line.split()[-1])
                 tmplist = self.fchk_list(line)
-                self.mo_mat = numpy.reshape(map(float, tmplist), [num_bas,num_bas]).T
+                self.mo_mat = numpy.reshape([float(w) for w in tmplist], [num_bas,num_bas]).T
                 self.occs = nocc * [2] + (self.ret_num_mo() - nocc) * [0]
                 print("MO-matrix read", self.mo_mat.shape)
             elif 'Alpha Orbital Energies' in line:
-                self.ens = map(float, self.fchk_list(line))
+                self.ens = [float(w) for w in self.fchk_list(line)]
                 self.syms = ['X' for en in self.ens]
 
             elif 'Beta MO coefficients' in line:
@@ -144,7 +144,7 @@ class MO_set_fchk(lib_mo.MO_set_molden):
             elif 'N=' in line:
                 dim = int(line.split()[-1])
                 for i in range(dim//5-1):
-                    self.rfileh.next()
+                    next(self.rfileh)
 
         self.rfileh.close()
 
@@ -161,7 +161,7 @@ class MO_set_fchk(lib_mo.MO_set_molden):
             assert dim == refdim, 'Inconsistent dimensions'
         tmplist = []
         while len(tmplist) < dim:
-            tmplist += self.rfileh.next().split()
+            tmplist += next(self.rfileh).split()
 
         return tmplist
 
