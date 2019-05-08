@@ -38,7 +38,7 @@ class file_parser_base:
         If rfile is given, then the next line is searched for x,y,z components.
         If rmatrix==True, then a tensor is read from the next three lines.
         """
-        translate_str = ',[]|' 
+        translate_str = ',[]|'
         if search_string in line:
             if not not_string is None:
                 if not_string in line: return
@@ -215,7 +215,7 @@ from the control file.""")
         lbytes = struct.unpack('4s', CCfile.read(4))
         if lvprt >= 2:
             print('   Last four bytes:', lbytes)
-        
+
         if not CCfile.read(1) == b'':
             raise error_handler.MsgError('parsing file %s'%CCfilen)
 
@@ -1229,17 +1229,32 @@ class file_parser_tddftb(file_parser_base):
 
         return state_list
 
-class file_parser_adf(file_parser_base):
+class adf_kffile:
     """
-    Read ADF TDDFT using the TAPE21 file.
+    Wrapper for ADF.
     """
-    def read(self, mos):
+    def __init__(self, fname):
         try:
             from scm.plams import KFFile
         except ImportError:
             from kf import kffile as KFFile
 
-        rfile = KFFile(self.ioptions['rfile'])
+        self.kffile = KFFile(fname)
+
+    def read(self, sec, key):
+        tmp_arr = numpy.array(self.kffile.read(sec, key))
+
+        if len(tmp_arr.shape) == 0:
+            return numpy.array([tmp_arr])
+        else:
+            return tmp_arr
+
+class file_parser_adf(file_parser_base):
+    """
+    Read ADF TDDFT using the TAPE21 file.
+    """
+    def read(self, mos):
+        rfile = adf_kffile(self.ioptions['rfile'])
         try:
             nmo = int(rfile.read('A','nmo_A'))
             nelec = int(rfile.read('General','electrons'))
@@ -1248,12 +1263,12 @@ class file_parser_adf(file_parser_base):
             raise
         assert nelec%2==0, "Odd number of electrons not supported"
 
-        group = rfile.read('Geometry','grouplabel')[0]
+        group = rfile.read('Geometry','grouplabel')[0].strip()
         if not group in ['NOSYM', 'C1', 'c1']:
             print(("grouplabel: " + group))
             raise error_handler.MsgError('No support for symmetry')
 
-        nocc = nelec / 2
+        nocc = nelec // 2
         assert nocc == mos.ret_ihomo() + 1
         nvirt = nmo - nocc
         assert nvirt == mos.ret_num_mo() - nocc
@@ -1317,7 +1332,7 @@ class file_parser_adf(file_parser_base):
                     if val*val > 0.1:
                         print(("(%i -> %i) % .4f"%(i+1,j+1,val)))
 
-        rfile.close()
+        #rfile.close()
 
         return state_list
 
