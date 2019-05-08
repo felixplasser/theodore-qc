@@ -19,6 +19,8 @@ LTDIR="TheoDORE_$1"
 TDIR="$SDIR/../Versions/$LTDIR"
 echo "Creating new version in $TDIR"
 
+git tag -a v$1
+
 mkdir $TDIR || exit 2
 
 cp README COPYRIGHT.txt LICENSE.txt $TDIR
