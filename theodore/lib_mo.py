@@ -735,13 +735,13 @@ class MO_set_adf(MO_set):
 
         nelec = int(f.read('General','electrons'))
         assert nelec%2==0, "Odd number of electrons not supported"
-        nocc = nelec / 2
+        nocc = nelec // 2
         nvirt = NMO_A - nocc
         self.occs = nocc * [2.] + nvirt * [0.]
 
         # read coordinates and elements
         atom_Z=[int(atcharge[atom_type[i]]) for i in range(self.num_at)]
-        xyz = f.read('Geometry', 'xyz').reshape(self.num_at, 3) * units.length['A']
+        xyz = numpy.array(f.read('Geometry', 'xyz')).reshape(self.num_at, 3) * units.length['A']
 
         for iat in range(self.num_at):
             self.at_dicts.append({'Z':atom_Z[iat], 'x':xyz[atomorder[iat]-1, 0], 'y':xyz[atomorder[iat]-1, 1], 'z':xyz[atomorder[iat]-1, 2]})

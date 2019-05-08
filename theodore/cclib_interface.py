@@ -104,13 +104,9 @@ class file_parser_cclib(file_parser.file_parser_base):
 
     def tden_adf(self, state_list, mos, rect_dens):
         print("\n   WARNING: using deprecated old ADF interface!\n")
-        try:
-            from scm.plams import KFFile
-        except ImportError:
-            from kf import kffile as KFFile
 
         print("Opening file TAPE21 ...")
-        rfile = KFFile('TAPE21')
+        rfile = file_parser.adf_kffile('TAPE21')
 
         try:
             nmo = int(rfile.read('A','nmo_A'))
@@ -120,12 +116,12 @@ class file_parser_cclib(file_parser.file_parser_base):
             raise
         assert nelec%2==0, "Odd number of electrons"
 
-        group = rfile.read('Geometry','grouplabel')[0]
+        group = rfile.read('Geometry','grouplabel')[0].strip()
         if not group in ['NOSYM', 'C1', 'c1']:
             print(("grouplabel: " + group))
             raise error_handler.MsgError('No support for symmetry')
 
-        nocc = nelec / 2
+        nocc = nelec // 2
         assert nocc == mos.ret_ihomo() + 1
         nvirt = nmo - nocc
         assert nvirt == mos.ret_num_mo() - nocc
@@ -183,8 +179,6 @@ class file_parser_cclib(file_parser.file_parser_base):
                     val = tden[i, j]
                     if val*val > 0.1:
                         print(("(%i -> %i) % .4f"%(i+1,j+1,val)))
-
-        rfile.close()
 
     def tden_orca(self, state_list, mos, rect_dens, filen='orca.cis'):
         """
