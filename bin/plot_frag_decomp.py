@@ -22,7 +22,7 @@ class decomp_options(input_options.write_options):
     def __init__(self, *args, **kwargs):
         self.state_list = []
         self.numF = 0 # number of fragments
-       
+
         input_options.write_options.__init__(self, *args, **kwargs)
         self['colors'] = ['b', 'g', 'orange', 'red']
 
@@ -33,30 +33,30 @@ class decomp_options(input_options.write_options):
         """
         Ofile = open(fname, 'r')
         line = next(Ofile)
-        
+
         self.numF = int(line)
-        
+
         while True:
             try:
                 line = next(Ofile)
             except StopIteration:
                 break
-            
+
             words = line.split()
-            
+
             self.state_list.append({})
             state = self.state_list[-1]
             state['name'] = words[0]
             state['Om'] = words[1]
             state['OmFrag'] = numpy.zeros([self.numF, self.numF], float)
-            
+
             for iel, el in enumerate(words[2:]):
-                iF = iel % self.numF
-                jF = iel / self.numF
+                iF = iel %  self.numF
+                jF = iel // self.numF
                 state['OmFrag'][iF, jF] = el # max(float(el), 0.)
 
     def decomp_input(self):
-        
+
         self.read_float('Relative width of the bars', 'barwidth', 0.75)
         self.read_int('Resolution (dpi) for plotting', 'plot_dpi', 200)
         self.read_int('Font size', 'fsize', 5)
@@ -64,21 +64,21 @@ class decomp_options(input_options.write_options):
         self.labels = []
         for iF in range(self.numF):
             self.labels.append(self.ret_str("Label for fragment %i"%(iF+1), 'F%i'%(iF+1)))
-            
-    def plot(self):       
+
+    def plot(self):
         matplotlib.rc('font', size=self['fsize'])
-        
+
         hpops = numpy.zeros([len(self.state_list),self.numF])
         epops = numpy.zeros([len(self.state_list),self.numF])
         ind = numpy.arange(len(self.state_list))
-        
+
         for istate, state in enumerate(self.state_list):
             hpops[istate, :] = -numpy.sum(state['OmFrag'], 0)
             epops[istate, :] =  numpy.sum(state['OmFrag'], 1)
-       
+
         #print hpops
         #print epops
-        
+
         pylab.figure(figsize=[0.5 * len(self.state_list)+1,3])
 
         barkwargs = {'width':self['barwidth']}
@@ -98,20 +98,20 @@ class decomp_options(input_options.write_options):
 
         pylab.legend()
         pylab.xticks([])
-        
+
         fname = 'frag_decomp.%s'%self['output_format']
         pylab.savefig(fname, dpi=self['plot_dpi'])
         print(("File %s written."%fname))
 
 def run_plot():
-    opt = decomp_options('plot.in')        
+    opt = decomp_options('plot.in')
     opt.read_OmFrag()
-    
+
     opt.decomp_input()
-    
+
     opt.plot()
-    
-    
+
+
 if __name__ == '__main__':
     theo_header.print_header('Plot fragment decomposition')
 

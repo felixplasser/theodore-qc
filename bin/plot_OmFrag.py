@@ -51,8 +51,8 @@ class OmFrag_options(input_options.write_options):
             state['OmFrag'] = numpy.zeros([numF, numF])
 
             for iel, el in enumerate(words[2:]):
-                iF = iel % numF
-                jF = iel / numF
+                iF = iel %  numF
+                jF = iel // numF
                 state['OmFrag'][iF, jF] = el
 
             self.maxOm = max(self.maxOm, state['OmFrag'].max())
