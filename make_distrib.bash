@@ -3,6 +3,7 @@
 
 # TODO before:
 #   - Check version number in theo_header.py
+#   - git tag set by this script
 
 echo "Syntax: make_distrib.bash [Version]"
 echo
@@ -46,4 +47,4 @@ rm -r $TDIR/cclib/__pycache__ $TDIR/cclib/*/__pycache__
 
 # create tar with shorter relative paths
 cd $SDIR/../Versions
-tar -czf $LTDIR.tgz $LTDIR
+tar -czf $LTDIR.tar.gz $LTDIR

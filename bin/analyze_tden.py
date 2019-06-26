@@ -5,9 +5,19 @@ Driver script for transition density matrix analysis.
 from __future__ import print_function, division
 import os, sys, time
 
+# Python 2/3 compatibility
+try:
+    from time import process_time
+except ImportError:
+    from time import clock as process_time
+try:
+    from time import perf_counter
+except ImportError:
+    from time import time as perf_counter
+
 from theodore import theo_header, lib_tden, lib_exciton, input_options, error_handler
 
-(tc, tt) = (time.process_time(), time.perf_counter())
+(tc, tt) = (process_time(), perf_counter())
 
 def ihelp():
     print(" analyze_tden.py")
@@ -75,4 +85,4 @@ tdena.print_summary()
 
 #print 'Finished at ' + time.asctime()
 
-print("CPU time: % .1f s, wall time: %.1f s"%(time.process_time() - tc, time.perf_counter() - tt))
+print("CPU time: % .1f s, wall time: %.1f s"%(process_time() - tc, perf_counter() - tt))
