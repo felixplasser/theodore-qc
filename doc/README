@@ -2,6 +2,7 @@ Download the newest TheoDORE release and tutorial.
 
 TheoDORE 2.0
 - Compatibility with TM >= 7.2
+- Some bugfixes related to python3
 
 TheoDORE 2.0_beta
 - Compatibility to python3 (Max Menger)
