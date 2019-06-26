@@ -1,6 +1,9 @@
 Download the newest TheoDORE release and tutorial.
 
 TheoDORE 2.0
+- Compatibility with TM >= 7.2
+
+TheoDORE 2.0_beta
 - Compatibility to python3 (Max Menger)
 - Conditional electron densities
 - Plot dipole and quadrupole moments (draw_moments.py)

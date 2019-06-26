@@ -186,7 +186,18 @@ class file_parser_ricc2(file_parser_base):
         method = struct.unpack('8s', CCfile.read(8))[0]
         CCfile.read(8)
         nentry = struct.unpack('i', CCfile.read(4))[0]
-        CCfile.read(20)
+        CCfile.read(4)
+
+        # The format was changed for TM Version >= 7.2
+        vcheck = struct.unpack('l', CCfile.read(8))[0]
+        if vcheck == 0:
+            if lvprt >= 1:
+                print("  Assuming TM Version >= 7.2")
+            CCfile.read(16)
+        else:
+            if lvprt >= 1:
+                print("  Assuming TM Version <= 7.2")
+            CCfile.read(8)
 
         num_mo = mos.ret_num_mo()
         nocc  = mos.ret_ihomo() + 1

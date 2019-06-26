@@ -7,7 +7,7 @@ import os, sys, time
 
 from theodore import theo_header, lib_tden, lib_exciton, input_options, error_handler
 
-(tc, tt) = (time.clock(), time.time())
+(tc, tt) = (time.process_time(), time.perf_counter())
 
 def ihelp():
     print(" analyze_tden.py")
@@ -75,4 +75,4 @@ tdena.print_summary()
 
 #print 'Finished at ' + time.asctime()
 
-print("CPU time: % .1f s, wall time: %.1f s"%(time.clock() - tc, time.time() - tt))
+print("CPU time: % .1f s, wall time: %.1f s"%(time.process_time() - tc, time.perf_counter() - tt))
