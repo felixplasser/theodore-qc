@@ -288,6 +288,14 @@ class file_parser_cclib(file_parser.file_parser_base):
             if chk and lvprt >= 2:
                 print(getattr(self.data, attr))
 
+        if hasattr(self.data, 'homos'):
+            chk = len(self.data.homos) == 1
+            if not chk: errcode = 2
+
+            if lvprt >= 1:
+                print("\nCurrently only RHF/RKS is supported. Checking:")
+                print(('%15s ... %s'%('RHF/RKS', chk)))
+
         if lvprt >= 1:
             print("\nOptional attributes:")
 
