@@ -310,6 +310,10 @@ class file_parser_cclib(file_parser.file_parser_base):
         if lvprt >= 1:
             print("\nAttributes for structure parsing and creation of Molden file:")
 
+        if self.prog.lower() in ['orca']:
+            print(" Conversion to Molden format not supported for %s!"%self.prog)
+            errcode = max(1, errcode)
+
         for attr in ['gbasis', 'natom', 'atomcoords', 'atomnos']:
             chk = hasattr(self.data, attr)
             if not chk: errcode = max(1, errcode)
@@ -398,18 +402,33 @@ class MO_set_cclib(lib_mo.MO_set_molden):
             self.header+= "%3s %5i %3i %12.6f %12.6f %12.6f\n"%\
                 (lib_struc.Z_symbol_dict[atno], iat+1, atno, x, y, z)
 
+        # Count the basis functions to see if it spherical or Cartesian
+        numl_s={'s':1,'p':3,'sp':4,'d':5,'f': 7,'g': 9}
+        numl_c={'s':1,'p':3,'sp':4,'d':6,'f':10,'g':15}
+        nbas = [0,0]
         self.header+= "[GTO]\n"
         for iat, at in enumerate(self.gbasis):
             self.header+= "%3i 0\n"%(iat+1)
             for bas in at:
                 typ = bas[0]
                 exps = bas[1]
+                nbas[0] += numl_s[typ.lower()]
+                nbas[1] += numl_c[typ.lower()]
 
                 self.header+= "%3s %5i 1.00\n"%(typ, len(exps))
 
                 for exp in exps:
                     self.header+= "%18.10E %18.10E\n"%exp
             self.header+= "\n"
+
+        if nbas[1] == self.ret_num_bas():
+            print("Assuming Cartesian basis functions")
+        elif nbas[0] == self.ret_num_bas():
+            print("Assuming spherical basis functions")
+            self.header += '\n[5D]\n[7F]\n[9G]\n'
+        else:
+            print("\n WARNING: Inconsistent number of basis functions!")
+            print("Spherical: %i, Cartesian: %i, actual: %i"%(nbas[0], nbas[1], self.ret_num_bas()))
 
         self.export_AO(self.ens, self.occs, self.mo_mat.transpose(), fname, cfmt, occmin)
 
