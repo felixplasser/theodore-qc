@@ -48,7 +48,7 @@ class write_options_theo(input_options.write_options):
             ('escf', 'Turbomole escf'),
             ('terachem', 'Terachem (TDDFT)'),
             ('cclib', 'Use external cclib library: Gaussian, GAMESS, ...'),
-            ('orca', 'ORCA TDDFT (using cclib)'),
+            ('orca', 'ORCA TDDFT (using a Molden file and cclib)'),
             ('adf', 'ADF (TDDFT)'),
             ('tddftb', 'DFTB+ - TDDFTB')
         ], rdef)
@@ -118,7 +118,7 @@ class write_options_theo(input_options.write_options):
             self['coor_format'] = ''
         elif self['rtype'] == 'orca':
             self['rfile'] = 'orca.out'
-            self['mo_file'] = None
+            self['mo_file'] = 'orca.molden.input'
             self['coor_file'] = ''
             self['coor_format'] = ''
         elif self['rtype'] == 'adf':
@@ -313,7 +313,7 @@ class write_options_theo(input_options.write_options):
     def exciton_ana(self):
         if self.ret_yn('Compute approximate exciton size?', True):
             self['prop_list'] += ['RMSeh']
-            if not self['rtype'] in ['cclib', 'adf']:
+            if not self['rtype'] in ['orca', 'cclib', 'adf']:
                 print("\nMolecular coordinates for exciton analysis:")
                 self.coor_file()
 

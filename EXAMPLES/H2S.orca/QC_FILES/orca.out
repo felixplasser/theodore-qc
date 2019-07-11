@@ -18,7 +18,7 @@
                   #######################################################
 
 
-                         Program Version 4.0.1 -  RELEASE  -
+                         Program Version 4.0.1.2 - RELEASE -
 
 
  With contributions from (in alphabetic order):
@@ -198,24 +198,6 @@ Atom   0C    basis set group =>   1
 Atom   1H    basis set group =>   2
 Atom   2H    basis set group =>   2
 Atom   3S    basis set group =>   3
-
-Checking for AutoStart:
-The File: orca.gbw exists
-Trying to determine its content:
-     ... Fine, the file contains calculation information
-     ... Fine, the calculation information was read
-     ... Fine, the file contains a basis set
-     ... Fine, the basis set was read
-     ... Fine, the file contains a geometry
-     ... Fine, the geometry was read
-     ... Fine, the file contains a set of orbitals
-     ... Fine, the orbitals can be read
-     => possible old guess file was deleted
-     => GBW file was renamed to GES file
-     => GES file is set as startup file
-     => Guess is set to MORead
-     ... now leaving AutoStart
-
 ------------------------------------------------------------------------------
                            ORCA GTO INTEGRAL CALCULATION
                            -- RI-GTO INTEGRALS CHOSEN --
@@ -248,18 +230,18 @@ Integral package used                  ... LIBINT
  Ordering of the shell pairs             ... done (   0.000 sec) 54 of 55 pairs
  Determination of significant pairs      ... done (   0.000 sec)
  Creation of shell pair data             ... done (   0.000 sec)
- Storage of shell pair data              ... done (   0.003 sec)
- Shell pair data done in (   0.003 sec)
+ Storage of shell pair data              ... done (   0.000 sec)
+ Shell pair data done in (   0.000 sec)
  Computing two index integrals           ... done
  Cholesky decomposition of the V-matrix  ... done
 
 
 Timings:
- Total evaluation time                   ...   0.162 sec (  0.003 min)
- One electron matrix time                ...   0.011 sec (  0.000 min) =  7.0%
- Schwartz matrix evaluation time         ...   0.105 sec (  0.002 min) = 64.9%
- Two index repulsion integral time       ...   0.005 sec (  0.000 min) =  2.8%
- Cholesky decomposition of V             ...   0.004 sec (  0.000 min) =  2.5%
+ Total evaluation time                   ...   0.106 sec (  0.002 min)
+ One electron matrix time                ...   0.003 sec (  0.000 min) =  2.9%
+ Schwartz matrix evaluation time         ...   0.082 sec (  0.001 min) = 77.4%
+ Two index repulsion integral time       ...   0.001 sec (  0.000 min) =  0.5%
+ Cholesky decomposition of V             ...   0.000 sec (  0.000 min) =  0.3%
  Three index repulsion integral time     ...   0.000 sec (  0.000 min) =  0.0%
 
 -------------------------------------------------------------------------------
@@ -335,8 +317,8 @@ Smallest eigenvalue                        ... 2.618e-01
 Time for diagonalization                   ...    0.000 sec
 Threshold for overlap eigenvalues          ... 1.000e-08
 Number of eigenvalues below threshold      ... 0
-Time for construction of square roots      ...    0.005 sec
-Total time needed                          ...    0.005 sec
+Time for construction of square roots      ...    0.000 sec
+Total time needed                          ...    0.000 sec
 
 --------------
 OVERLAP MATRIX
@@ -392,17 +374,6 @@ OVERLAP MATRIX
      13       0.000000   1.000000   0.000000   0.000000
      14       0.000000   0.000000   1.000000   0.000000
      15      -0.000000   0.000000   0.000000   1.000000
----------------------
-INITIAL GUESS: MOREAD
----------------------
-Guess MOs are being read from file: orca.ges
-Input Geometry matches current geometry (good)
-Input basis set matches current basis set (good)
-MOs were renormalized
-MOs were reorthogonalized (Cholesky)
-                      ------------------
-                      INITIAL GUESS DONE (   0.0 sec)
-                      ------------------
 -------------------
 DFT GRID GENERATION
 -------------------
@@ -434,27 +405,58 @@ Average number of large basis fcns per batch ...    11.21 (90.98%)
 Maximum spatial batch extension              ...  24.36, 21.09, 25.60 au
 Average spatial batch extension              ...   5.07,  5.55,  6.54 au
 
-Time for grid setup =    0.031 sec
+Time for grid setup =    0.021 sec
 
+------------------------------
+INITIAL GUESS: MODEL POTENTIAL
+------------------------------
+Loading Hartree-Fock densities                     ... done
+Calculating cut-offs                               ... done
+Setting up the integral package                    ... done
+Initializing the effective Hamiltonian             ... done
+Starting the Coulomb interaction                   ... done (   0.0 sec)
+Reading the grid                                   ... done
+Mapping shells                                     ... done
+Starting the XC term evaluation                    ... done (   0.0 sec)
+  promolecular density results
+     # of electrons  =     23.998065069
+     EX              =    -30.697408469
+     EC              =     -0.963141457
+     EX+EC           =    -31.660549926
+Transforming the Hamiltonian                       ... done (   0.0 sec)
+Diagonalizing the Hamiltonian                      ... done (   0.0 sec)
+Back transforming the eigenvectors                 ... done (   0.0 sec)
+Now organizing SCF variables                       ... done
+                      ------------------
+                      INITIAL GUESS DONE (   0.1 sec)
+                      ------------------
 --------------
 SCF ITERATIONS
 --------------
 ITER       Energy         Delta-E        Max-DP      RMS-DP      [F,P]     Damp
                ***  Starting incremental Fock matrix formation  ***
+  0   -432.5786519236   0.000000000000 0.03643590  0.00469197  0.0483549 0.7000
+  1   -432.5813170984  -0.002665174837 0.02804497  0.00361038  0.0290059 0.7000
+                               ***Turning on DIIS***
+  2   -432.5826773542  -0.001360255821 0.05454084  0.00745866  0.0148311 0.0000
+  3   -432.5849294289  -0.002252074656 0.01650944  0.00211312  0.0095320 0.0000
+  4   -432.5851655398  -0.000236110971 0.00464641  0.00071262  0.0060428 0.0000
                       *** Initiating the SOSCF procedure ***
+                           *** Shutting down DIIS ***
                       *** Re-Reading the Fockian *** 
                       *** Removing any level shift *** 
 ITER      Energy       Delta-E        Grad      Rot      Max-DP    RMS-DP
-  0   -432.58521271 -432.5852127132  0.000033  0.000033  0.000169  0.000018
+  5   -432.58520772  -0.0000421803  0.000388  0.000388  0.001981  0.000228
                *** Restarting incremental Fock matrix formation ***
-  1   -432.58521271   0.0000000035  0.000046  0.000264  0.000574  0.000054
-  2   -432.58521261   0.0000000986  0.000190  0.000220  0.000479  0.000043
+  6   -432.58521215  -0.0000044283  0.000417  0.002375  0.005168  0.000460
+  7   -432.58520616   0.0000059867  0.001506  0.001757  0.003822  0.000346
+  8   -432.58521269  -0.0000065296  0.000090  0.000113  0.000320  0.000042
                  **** Energy Check signals convergence ****
               ***Rediagonalizing the Fockian in SOSCF/NRSCF***
 
                *****************************************************
                *                     SUCCESS                       *
-               *           SCF CONVERGED AFTER   3 CYCLES          *
+               *           SCF CONVERGED AFTER   9 CYCLES          *
                *****************************************************
 
 Setting up the final grid:
@@ -486,11 +488,11 @@ Average number of large basis fcns per batch ...    10.04 (90.38%)
 Maximum spatial batch extension              ...  16.31, 20.57, 20.64 au
 Average spatial batch extension              ...   3.29,  3.40,  3.87 au
 
-Final grid set up in    0.2 sec
+Final grid set up in    0.1 sec
 Final integration                            ... done (   0.1 sec)
 Change in XC energy                          ...    -0.000512387
 Integrated number of electrons               ...    24.000014772
-Previous integrated no of electrons          ...    23.999441552
+Previous integrated no of electrons          ...    23.999441551
 
 ----------------
 TOTAL SCF ENERGY
@@ -500,33 +502,33 @@ Total Energy       :         -432.58572510 Eh          -11771.25602 eV
 
 Components:
 Nuclear Repulsion  :           43.75774190 Eh            1190.70869 eV
-Electronic Energy  :         -476.34346700 Eh          -12961.96471 eV
-One Electron Energy:         -686.20221273 Eh          -18672.51150 eV
-Two Electron Energy:          209.85874573 Eh            5710.54679 eV
+Electronic Energy  :         -476.34346699 Eh          -12961.96471 eV
+One Electron Energy:         -686.20152689 Eh          -18672.49284 eV
+Two Electron Energy:          209.85805990 Eh            5710.52813 eV
 
 Virial components:
-Potential Energy   :         -859.31115333 Eh          -23383.04525 eV
-Kinetic Energy     :          426.72542823 Eh           11611.78923 eV
-Virial Ratio       :            2.01373318
+Potential Energy   :         -859.31089002 Eh          -23383.03809 eV
+Kinetic Energy     :          426.72516492 Eh           11611.78207 eV
+Virial Ratio       :            2.01373380
 
 
 DFT components:
-N(Alpha)           :       12.000007386214 electrons
-N(Beta)            :       12.000007386214 electrons
-N(Total)           :       24.000014772429 electrons
-E(X)               :      -30.972725291747 Eh       
-E(C)               :       -0.996231191725 Eh       
-E(XC)              :      -31.968956483472 Eh       
+N(Alpha)           :       12.000007385850 electrons
+N(Beta)            :       12.000007385850 electrons
+N(Total)           :       24.000014771699 electrons
+E(X)               :      -30.972698437037 Eh       
+E(C)               :       -0.996228171720 Eh       
+E(XC)              :      -31.968926608757 Eh       
 
 ---------------
 SCF CONVERGENCE
 ---------------
 
-  Last Energy change         ...   -1.0416e-07  Tolerance :   1.0000e-06
-  Last MAX-Density change    ...    8.5471e-06  Tolerance :   1.0000e-05
-  Last RMS-Density change    ...    1.1982e-06  Tolerance :   1.0000e-06
-  Last Orbital Gradient      ...    2.4781e-06  Tolerance :   5.0000e-05
-  Last Orbital Rotation      ...    3.1977e-06  Tolerance :   5.0000e-05
+  Last Energy change         ...   -1.6747e-08  Tolerance :   1.0000e-06
+  Last MAX-Density change    ...    1.2678e-04  Tolerance :   1.0000e-05
+  Last RMS-Density change    ...    1.6829e-05  Tolerance :   1.0000e-06
+  Last Orbital Gradient      ...    5.6166e-05  Tolerance :   5.0000e-05
+  Last Orbital Rotation      ...    4.4567e-05  Tolerance :   5.0000e-05
 
              **** THE GBW FILE WAS UPDATED (orca.gbw) ****
              **** DENSITY FILE WAS UPDATED (orca.scfp.tmp) ****
@@ -536,85 +538,85 @@ ORBITAL ENERGIES
 ----------------
 
   NO   OCC          E(Eh)            E(eV) 
-   0   2.0000     -86.923170     -2365.2997 
-   1   2.0000      -9.723708      -264.5955 
-   2   2.0000      -7.310211      -198.9210 
-   3   2.0000      -5.329929      -145.0347 
-   4   2.0000      -5.327992      -144.9820 
-   5   2.0000      -5.303980      -144.3286 
-   6   2.0000      -0.640435       -17.4271 
-   7   2.0000      -0.468525       -12.7492 
-   8   2.0000      -0.350939        -9.5495 
-   9   2.0000      -0.250405        -6.8139 
-  10   2.0000      -0.179864        -4.8944 
-  11   2.0000      -0.065878        -1.7926 
-  12   0.0000      -0.004167        -0.1134 
-  13   0.0000       0.293081         7.9751 
-  14   0.0000       0.409635        11.1467 
-  15   0.0000       0.438139        11.9224 
+   0   2.0000     -86.923212     -2365.3008 
+   1   2.0000      -9.723767      -264.5971 
+   2   2.0000      -7.310249      -198.9220 
+   3   2.0000      -5.329966      -145.0357 
+   4   2.0000      -5.328030      -144.9831 
+   5   2.0000      -5.304018      -144.3297 
+   6   2.0000      -0.640456       -17.4277 
+   7   2.0000      -0.468536       -12.7495 
+   8   2.0000      -0.350941        -9.5496 
+   9   2.0000      -0.250427        -6.8145 
+  10   2.0000      -0.179888        -4.8950 
+  11   2.0000      -0.065900        -1.7932 
+  12   0.0000      -0.004191        -0.1141 
+  13   0.0000       0.293059         7.9746 
+  14   0.0000       0.409630        11.1466 
+  15   0.0000       0.438134        11.9222 
 ------------------
 MOLECULAR ORBITALS
 ------------------
                       0         1         2         3         4         5   
-                 -86.92317  -9.72371  -7.31021  -5.32993  -5.32799  -5.30398
+                 -86.92321  -9.72377  -7.31025  -5.32997  -5.32803  -5.30402
                    2.00000   2.00000   2.00000   2.00000   2.00000   2.00000
                   --------  --------  --------  --------  --------  --------
-  0C   1s        -0.000082 -0.990564  0.001747  0.001572  0.000000  0.000000
-  0C   2s         0.000686 -0.042855 -0.013711 -0.019187 -0.000000 -0.000000
-  0C   1pz        0.000000  0.000000  0.000000 -0.000000  0.005723  0.000000
-  0C   1px       -0.000000 -0.000000  0.000000  0.000000 -0.000000  0.006409
-  0C   1py       -0.000590 -0.000152  0.010650  0.013754  0.000000 -0.000000
-  1H   1s         0.000010  0.009560 -0.000172  0.000072  0.000000 -0.000863
-  2H   1s         0.000010  0.009560 -0.000172  0.000072 -0.000000  0.000863
-  3S   1s         0.994029  0.000105 -0.366460  0.007021  0.000000 -0.000000
-  3S   2s         0.017507 -0.000107  1.043023 -0.020216 -0.000000  0.000000
-  3S   1pz        0.000000 -0.000000 -0.000000  0.000000 -0.982120 -0.000000
-  3S   1px        0.000000 -0.000000  0.000000 -0.000000  0.000000 -0.982253
-  3S   1py        0.000199 -0.000900  0.015840  0.979784  0.000000 -0.000000
-  3S   3s        -0.002711  0.007039  0.065535  0.009505  0.000000  0.000000
-  3S   2pz       -0.000000  0.000000  0.000000  0.000000 -0.062657 -0.000000
-  3S   2px        0.000000  0.000000 -0.000000 -0.000000  0.000000 -0.062252
-  3S   2py       -0.000474  0.006910  0.009882  0.073309  0.000000 -0.000000
+  0C   1s        -0.000082  0.990564  0.001747 -0.001572 -0.000000  0.000000
+  0C   2s         0.000686  0.042855 -0.013711  0.019187  0.000000 -0.000000
+  0C   1pz       -0.000000 -0.000000  0.000000 -0.000000  0.005724  0.000000
+  0C   1px        0.000000 -0.000000 -0.000000  0.000000 -0.000000 -0.006409
+  0C   1py       -0.000590  0.000152  0.010650 -0.013754 -0.000000 -0.000000
+  1H   1s         0.000010 -0.009560 -0.000172 -0.000072  0.000000  0.000863
+  2H   1s         0.000010 -0.009560 -0.000172 -0.000072 -0.000000 -0.000863
+  3S   1s         0.994029 -0.000105 -0.366460 -0.007021 -0.000000  0.000000
+  3S   2s         0.017507  0.000107  1.043023  0.020216  0.000000 -0.000000
+  3S   1pz        0.000000  0.000000  0.000000  0.000000 -0.982120 -0.000000
+  3S   1px        0.000000  0.000000 -0.000000 -0.000000 -0.000000  0.982253
+  3S   1py        0.000199  0.000900  0.015840 -0.979784 -0.000000 -0.000000
+  3S   3s        -0.002711 -0.007039  0.065534 -0.009505 -0.000000  0.000000
+  3S   2pz        0.000000 -0.000000  0.000000  0.000000 -0.062657 -0.000000
+  3S   2px       -0.000000 -0.000000  0.000000 -0.000000 -0.000000  0.062252
+  3S   2py       -0.000474 -0.006910  0.009882 -0.073310 -0.000000 -0.000000
                       6         7         8         9        10        11   
-                  -0.64043  -0.46853  -0.35094  -0.25040  -0.17986  -0.06588
+                  -0.64046  -0.46854  -0.35094  -0.25043  -0.17989  -0.06590
                    2.00000   2.00000   2.00000   2.00000   2.00000   2.00000
                   --------  --------  --------  --------  --------  --------
-  0C   1s        -0.189946 -0.124705 -0.000000  0.053128  0.000000  0.000000
-  0C   2s         0.539509  0.400571  0.000000 -0.232797 -0.000000 -0.000000
-  0C   1pz        0.000000  0.000000 -0.000000 -0.000000  0.638011  0.000000
-  0C   1px        0.000000 -0.000000  0.568814  0.000000  0.000000 -0.027924
-  0C   1py       -0.096265  0.303516  0.000000  0.494065  0.000000 -0.000000
-  1H   1s         0.130887  0.244793  0.393745  0.157049  0.000000 -0.208188
-  2H   1s         0.130887  0.244793 -0.393745  0.157049 -0.000000  0.208188
-  3S   1s         0.059670 -0.066788 -0.000000  0.045330  0.000000  0.000000
-  3S   2s        -0.203826  0.222399  0.000000 -0.142344 -0.000000 -0.000000
-  3S   1pz       -0.000000 -0.000000  0.000000  0.000000 -0.227066 -0.000000
-  3S   1px       -0.000000 -0.000000 -0.055211 -0.000000  0.000000 -0.316944
-  3S   1py       -0.069978  0.005167  0.000000  0.207049  0.000000  0.000000
-  3S   3s         0.523937 -0.676264 -0.000000  0.575326  0.000000  0.000000
-  3S   2pz        0.000000  0.000000 -0.000000 -0.000000  0.698021  0.000000
-  3S   2px        0.000000  0.000000  0.151502  0.000000 -0.000000  1.010253
-  3S   2py        0.158335 -0.015875 -0.000000 -0.575807 -0.000000 -0.000000
+  0C   1s         0.189936  0.124710  0.000000  0.053125  0.000000  0.000000
+  0C   2s        -0.539469 -0.400570 -0.000000 -0.232799 -0.000000 -0.000000
+  0C   1pz        0.000000  0.000000 -0.000000  0.000000 -0.638030 -0.000000
+  0C   1px        0.000000  0.000000 -0.568765  0.000000  0.000000  0.027909
+  0C   1py        0.096296 -0.303483  0.000000  0.494058  0.000000  0.000000
+  1H   1s        -0.130884 -0.244822 -0.393776  0.157077 -0.000000  0.208222
+  2H   1s        -0.130884 -0.244822  0.393776  0.157077 -0.000000 -0.208222
+  3S   1s        -0.059673  0.066785  0.000000  0.045329  0.000000  0.000000
+  3S   2s         0.203836 -0.222390 -0.000000 -0.142341 -0.000000 -0.000000
+  3S   1pz       -0.000000 -0.000000  0.000000 -0.000000  0.227060  0.000000
+  3S   1px       -0.000000 -0.000000  0.055222 -0.000000 -0.000000  0.316941
+  3S   1py        0.069984 -0.005154  0.000000  0.207048  0.000000  0.000000
+  3S   3s        -0.523969  0.676248  0.000000  0.575314  0.000000  0.000000
+  3S   2pz        0.000000  0.000000 -0.000000  0.000000 -0.698003 -0.000000
+  3S   2px        0.000000  0.000000 -0.151540  0.000000  0.000000 -1.010242
+  3S   2py       -0.158353  0.015840 -0.000000 -0.575804 -0.000000 -0.000000
                      12        13        14        15   
-                  -0.00417   0.29308   0.40963   0.43814
+                  -0.00419   0.29306   0.40963   0.43813
                    0.00000   0.00000   0.00000   0.00000
                   --------  --------  --------  --------
-  0C   1s        -0.000000 -0.202225 -0.108295 -0.000000
-  0C   2s         0.000000  1.182515  0.700724  0.000000
-  0C   1pz        0.786536 -0.000000 -0.000000  0.000000
-  0C   1px       -0.000000 -0.000000 -0.000000  1.145242
-  0C   1py       -0.000000 -0.487561  1.012561  0.000000
-  1H   1s        -0.000000 -0.428351 -0.802120 -0.863148
-  2H   1s        -0.000000 -0.428351 -0.802120  0.863148
-  3S   1s        -0.000000 -0.029439  0.014507  0.000000
-  3S   2s         0.000000  0.082771 -0.038068 -0.000000
-  3S   1pz        0.236765 -0.000000 -0.000000  0.000000
-  3S   1px       -0.000000 -0.000000 -0.000000  0.062778
-  3S   1py        0.000000  0.259816 -0.108435 -0.000000
-  3S   3s        -0.000000 -0.509561  0.284648  0.000000
-  3S   2pz       -0.779274  0.000000  0.000000 -0.000000
-  3S   2px        0.000000  0.000000  0.000000 -0.231402
-  3S   2py       -0.000000 -0.981353  0.438061  0.000000
+  0C   1s        -0.000000  0.202217  0.108322 -0.000000
+  0C   2s         0.000000 -1.182446 -0.700870  0.000000
+  0C   1pz       -0.786521 -0.000000 -0.000000 -0.000000
+  0C   1px       -0.000000  0.000000  0.000000  1.145267
+  0C   1py        0.000000  0.487668 -1.012520  0.000000
+  1H   1s         0.000000  0.428252  0.802159 -0.863126
+  2H   1s        -0.000000  0.428252  0.802159  0.863126
+  3S   1s        -0.000000  0.029441 -0.014504 -0.000000
+  3S   2s         0.000000 -0.082776  0.038058  0.000000
+  3S   1pz       -0.236770 -0.000000 -0.000000 -0.000000
+  3S   1px       -0.000000  0.000000  0.000000  0.062784
+  3S   1py        0.000000 -0.259830  0.108402  0.000000
+  3S   3s        -0.000000  0.509596 -0.284591 -0.000000
+  3S   2pz        0.779290  0.000000  0.000000  0.000000
+  3S   2px        0.000000 -0.000000 -0.000000 -0.231423
+  3S   2py       -0.000000  0.981407 -0.437939 -0.000000
 
 
 
@@ -625,25 +627,25 @@ MOLECULAR ORBITALS
 -----------------------
 MULLIKEN ATOMIC CHARGES
 -----------------------
-   0 C :   -0.261050
-   1 H :    0.080047
-   2 H :    0.080047
-   3 S :    0.100956
+   0 C :   -0.260875
+   1 H :    0.079934
+   2 H :    0.079934
+   3 S :    0.101007
 Sum of atomic charges:   -0.0000000
 
 --------------------------------
 MULLIKEN REDUCED ORBITAL CHARGES
 --------------------------------
-  0 C s       :     3.277301  s :     3.277301
-      pz      :     0.949719  p :     2.983749
-      px      :     1.032065
-      py      :     1.001964
-  1 H s       :     0.919953  s :     0.919953
-  2 H s       :     0.919953  s :     0.919953
-  3 S s       :     5.911895  s :     5.911895
-      pz      :     3.050281  p :     9.987150
-      px      :     3.951271
-      py      :     2.985598
+  0 C s       :     3.277231  s :     3.277231
+      pz      :     0.949766  p :     2.983644
+      px      :     1.031953
+      py      :     1.001925
+  1 H s       :     0.920066  s :     0.920066
+  2 H s       :     0.920066  s :     0.920066
+  3 S s       :     5.911894  s :     5.911894
+      pz      :     3.050234  p :     9.987099
+      px      :     3.951260
+      py      :     2.985604
 
 
                      *******************************
@@ -653,24 +655,24 @@ MULLIKEN REDUCED ORBITAL CHARGES
 ----------------------
 LOEWDIN ATOMIC CHARGES
 ----------------------
-   0 C :   -0.178754
-   1 H :    0.038144
-   2 H :    0.038144
-   3 S :    0.102467
+   0 C :   -0.178636
+   1 H :    0.038058
+   2 H :    0.038058
+   3 S :    0.102520
 
 -------------------------------
 LOEWDIN REDUCED ORBITAL CHARGES
 -------------------------------
-  0 C s       :     3.136396  s :     3.136396
-      pz      :     0.954604  p :     3.042358
-      px      :     1.049263
-      py      :     1.038491
-  1 H s       :     0.961856  s :     0.961856
-  2 H s       :     0.961856  s :     0.961856
-  3 S s       :     5.863917  s :     5.863917
-      pz      :     3.045396  p :    10.033617
-      px      :     3.952654
-      py      :     3.035566
+  0 C s       :     3.136350  s :     3.136350
+      pz      :     0.954650  p :     3.042286
+      px      :     1.049175
+      py      :     1.038461
+  1 H s       :     0.961942  s :     0.961942
+  2 H s       :     0.961942  s :     0.961942
+  3 S s       :     5.863915  s :     5.863915
+      pz      :     3.045350  p :    10.033565
+      px      :     3.952643
+      py      :     3.035571
 
 
                       *****************************
@@ -685,13 +687,13 @@ LOEWDIN REDUCED ORBITAL CHARGES
   FA   - Mayer's free valence
 
   ATOM       NA         ZA         QA         VA         BVA        FA
-  0 C      6.2611     6.0000    -0.2611     3.9195     3.9195    -0.0000
-  1 H      0.9200     1.0000     0.0800     0.9936     0.9936    -0.0000
-  2 H      0.9200     1.0000     0.0800     0.9936     0.9936    -0.0000
-  3 S     15.8990    16.0000     0.1010     2.0842     2.0842    -0.0000
+  0 C      6.2609     6.0000    -0.2609     3.9196     3.9196     0.0000
+  1 H      0.9201     1.0000     0.0799     0.9936     0.9936    -0.0000
+  2 H      0.9201     1.0000     0.0799     0.9936     0.9936    -0.0000
+  3 S     15.8990    16.0000     0.1010     2.0842     2.0842     0.0000
 
   Mayer bond orders larger than 0.1
-B(  0-C ,  1-H ) :   0.9510 B(  0-C ,  2-H ) :   0.9510 B(  0-C ,  3-S ) :   2.0176 
+B(  0-C ,  1-H ) :   0.9510 B(  0-C ,  2-H ) :   0.9510 B(  0-C ,  3-S ) :   2.0177 
 
 
 -------
@@ -700,25 +702,25 @@ TIMINGS
 
 Total SCF time: 0 days 0 hours 0 min 1 sec 
 
-Total time                  ....       1.095 sec
-Sum of individual times     ....       1.001 sec  ( 91.4%)
+Total time                  ....       1.300 sec
+Sum of individual times     ....       1.295 sec  ( 99.6%)
 
-Fock matrix formation       ....       0.783 sec  ( 71.5%)
-  Split-RI-J                ....       0.433 sec  ( 55.3% of F)
-  XC integration            ....       0.273 sec  ( 34.9% of F)
-    Basis function eval.    ....       0.070 sec  ( 25.8% of XC)
-    Density eval.           ....       0.022 sec  (  8.0% of XC)
-    XC-Functional eval.     ....       0.071 sec  ( 26.0% of XC)
-    XC-Potential eval.      ....       0.007 sec  (  2.5% of XC)
-Diagonalization             ....       0.000 sec  (  0.0%)
+Fock matrix formation       ....       1.033 sec  ( 79.4%)
+  Split-RI-J                ....       0.798 sec  ( 77.3% of F)
+  XC integration            ....       0.230 sec  ( 22.3% of F)
+    Basis function eval.    ....       0.098 sec  ( 42.5% of XC)
+    Density eval.           ....       0.021 sec  (  9.3% of XC)
+    XC-Functional eval.     ....       0.089 sec  ( 38.9% of XC)
+    XC-Potential eval.      ....       0.010 sec  (  4.3% of XC)
+Diagonalization             ....       0.001 sec  (  0.1%)
 Density matrix formation    ....       0.000 sec  (  0.0%)
-Population analysis         ....       0.016 sec  (  1.5%)
-Initial guess               ....       0.004 sec  (  0.4%)
+Population analysis         ....       0.000 sec  (  0.0%)
+Initial guess               ....       0.102 sec  (  7.9%)
 Orbital Transformation      ....       0.000 sec  (  0.0%)
 Orbital Orthonormalization  ....       0.000 sec  (  0.0%)
 DIIS solution               ....       0.000 sec  (  0.0%)
-SOSCF solution              ....       0.006 sec  (  0.6%)
-Grid generation             ....       0.191 sec  ( 17.4%)
+SOSCF solution              ....       0.021 sec  (  1.6%)
+Grid generation             ....       0.138 sec  ( 10.6%)
 ------------------------------------------------------------------------------
                           ORCA TD-DFT CALCULATION
 ------------------------------------------------------------------------------
@@ -816,34 +818,34 @@ Number of trial vectors determined             ...     24
    Memory available              ...   512 MB
    Number of vectors per batch   ...   512
    Number of batches             ...     1
-   Time for densities:     0.004
-   Time for XC-Integration:     0.026
-   Time for RI-J (Direct):     0.142
-   Time for Sigma-Completion:     0.027
+   Time for densities:     0.000
+   Time for XC-Integration:     0.012
+   Time for RI-J (Direct):     0.103
+   Time for Sigma-Completion:     0.000
    Size of expansion space: 6
-   Lowest Energy          :     0.075467641556
-   Maximum Energy change  :     0.273905573899 (vector 1)
-   Maximum residual norm  :     0.001027441769
+   Lowest Energy          :     0.075465308831
+   Maximum Energy change  :     0.273903208247 (vector 1)
+   Maximum residual norm  :     0.001027767289
 
                        ****Iteration    1****
-   Time for densities:     0.001
-   Time for XC-Integration:     0.015
-   Time for RI-J (Direct):     0.120
-   Time for Sigma-Completion:     0.007
+   Time for densities:     0.000
+   Time for XC-Integration:     0.007
+   Time for RI-J (Direct):     0.081
+   Time for Sigma-Completion:     0.000
    Size of expansion space: 8
-   Lowest Energy          :     0.075466152872
-   Maximum Energy change  :     0.000808020229 (vector 1)
-   Maximum residual norm  :     0.000018056746
+   Lowest Energy          :     0.075463820143
+   Maximum Energy change  :     0.000808265914 (vector 1)
+   Maximum residual norm  :     0.000018064477
 
                        ****Iteration    2****
-   Time for densities:     0.001
-   Time for XC-Integration:     0.013
-   Time for RI-J (Direct):     0.116
-   Time for Sigma-Completion:     0.004
+   Time for densities:     0.000
+   Time for XC-Integration:     0.006
+   Time for RI-J (Direct):     0.079
+   Time for Sigma-Completion:     0.000
    Size of expansion space: 9
-   Lowest Energy          :     0.075466152872
-   Maximum Energy change  :     0.000021996844 (vector 1)
-   Maximum residual norm  :     0.000000034280
+   Lowest Energy          :     0.075463820143
+   Maximum Energy change  :     0.000022004041 (vector 1)
+   Maximum residual norm  :     0.000000034310
 
       *** CONVERGENCE OF RESIDUAL NORM REACHED ***
 
@@ -851,7 +853,7 @@ Storing the converged CI vectors               ... orca.cis1
 
                  *** DAVIDSON DONE ***
 
-Total time for solving the RPA problem:     0.900sec
+Total time for solving the RPA problem:     0.295sec
 
 --------------------------------
 TD-DFT EXCITED STATES (SINGLETS)
@@ -859,10 +861,10 @@ TD-DFT EXCITED STATES (SINGLETS)
 
 the weight of the individual excitations are printed if larger than 0.01
 
-STATE  1:  E=   0.075466 au      2.054 eV    16562.9 cm**-1
+STATE  1:  E=   0.075464 au      2.053 eV    16562.4 cm**-1
     11a ->  12a  :     0.999996 
 
-STATE  2:  E=   0.273076 au      7.431 eV    59933.2 cm**-1
+STATE  2:  E=   0.273073 au      7.431 eV    59932.6 cm**-1
      7a ->  12a  :     0.014262 
      9a ->  12a  :     0.984540 
 
@@ -895,40 +897,40 @@ Number of trial vectors determined             ...     24
    Memory available              ...   512 MB
    Number of vectors per batch   ...   512
    Number of batches             ...     1
-   Time for densities:     0.004
-   Time for XC-Integration:     0.024
-   Time for Sigma-Completion:     0.027
+   Time for densities:     0.000
+   Time for XC-Integration:     0.012
+   Time for Sigma-Completion:     0.000
    Size of expansion space: 6
-   Lowest Energy          :     0.045897595925
-   Maximum Energy change  :     0.110056444366 (vector 1)
-   Maximum residual norm  :     0.003874210361
+   Lowest Energy          :     0.045894273923
+   Maximum Energy change  :     0.110055162133 (vector 1)
+   Maximum residual norm  :     0.003874342407
 
                        ****Iteration    1****
-   Time for densities:     0.001
-   Time for XC-Integration:     0.015
-   Time for Sigma-Completion:     0.007
+   Time for densities:     0.000
+   Time for XC-Integration:     0.007
+   Time for Sigma-Completion:     0.000
    Size of expansion space: 8
-   Lowest Energy          :     0.045878249480
-   Maximum Energy change  :     0.002925953558 (vector 1)
-   Maximum residual norm  :     0.000055882455
+   Lowest Energy          :     0.045874920740
+   Maximum Energy change  :     0.002926034026 (vector 1)
+   Maximum residual norm  :     0.000055880956
 
                        ****Iteration    2****
-   Time for densities:     0.001
-   Time for XC-Integration:     0.013
-   Time for Sigma-Completion:     0.003
+   Time for densities:     0.000
+   Time for XC-Integration:     0.006
+   Time for Sigma-Completion:     0.000
    Size of expansion space: 9
-   Lowest Energy          :     0.045878249480
-   Maximum Energy change  :     0.000047459712 (vector 1)
-   Maximum residual norm  :     0.000004091511
+   Lowest Energy          :     0.045874920740
+   Maximum Energy change  :     0.000047457913 (vector 1)
+   Maximum residual norm  :     0.000004091548
 
                        ****Iteration    3****
-   Time for densities:     0.001
-   Time for XC-Integration:     0.013
-   Time for Sigma-Completion:     0.004
+   Time for densities:     0.000
+   Time for XC-Integration:     0.006
+   Time for Sigma-Completion:     0.000
    Size of expansion space: 10
-   Lowest Energy          :     0.045878249480
-   Maximum Energy change  :     0.000003267932 (vector 1)
-   Maximum residual norm  :     0.000000600367
+   Lowest Energy          :     0.045874920740
+   Maximum Energy change  :     0.000003267990 (vector 1)
+   Maximum residual norm  :     0.000000600274
 
       *** CONVERGENCE OF RESIDUAL NORM REACHED ***
 
@@ -942,10 +944,10 @@ TD-DFT EXCITED STATES (TRIPLETS)
 
 the weight of the individual excitations are printed if larger than 0.01
 
-STATE  1:  E=   0.045878 au      1.248 eV    10069.1 cm**-1
+STATE  1:  E=   0.045875 au      1.248 eV    10068.4 cm**-1
     11a ->  12a  :     0.999987 
 
-STATE  2:  E=   0.107080 au      2.914 eV    23501.3 cm**-1
+STATE  2:  E=   0.107078 au      2.914 eV    23501.0 cm**-1
     10a ->  12a  :     0.998626 
 
 
@@ -967,10 +969,10 @@ Transforming integrals                            ... done
 State   Energy  Wavelength   fosc         T2         TX        TY        TZ  
         (cm-1)    (nm)                  (au**2)     (au)      (au)      (au) 
 -----------------------------------------------------------------------------
-   1   16562.9    603.8   0.000000000   0.00000  -0.00000  -0.00000   0.00000
-   2   59933.2    166.9   0.023056703   0.12665  -0.00000  -0.00000   0.35588
-   3   10069.1    993.1   spin forbidden (mult=3)
-   4   23501.3    425.5   spin forbidden (mult=3)
+   1   16562.4    603.8   0.000000000   0.00000  -0.00000   0.00000   0.00000
+   2   59932.6    166.9   0.023053422   0.12663   0.00000   0.00000   0.35586
+   3   10068.4    993.2   spin forbidden (mult=3)
+   4   23501.0    425.5   spin forbidden (mult=3)
 
 -----------------------------------------------------------------------------
          ABSORPTION SPECTRUM VIA TRANSITION VELOCITY DIPOLE MOMENTS
@@ -978,10 +980,10 @@ State   Energy  Wavelength   fosc         T2         TX        TY        TZ
 State   Energy  Wavelength   fosc         P2         PX        PY        PZ  
         (cm-1)    (nm)                  (au**2)     (au)      (au)      (au) 
 -----------------------------------------------------------------------------
-   1   16562.9    603.8   0.000000000   0.00000   0.00000  -0.00000  -0.00000
-   2   59933.2    166.9   0.039530872   0.01619   0.00000  -0.00000  -0.12725
-   3   10069.1    993.1   spin forbidden (mult=3)
-   4   23501.3    425.5   spin forbidden (mult=3)
+   1   16562.4    603.8   0.000000000   0.00000   0.00000  -0.00000  -0.00000
+   2   59932.6    166.9   0.039523467   0.01619  -0.00000   0.00000  -0.12724
+   3   10068.4    993.2   spin forbidden (mult=3)
+   4   23501.0    425.5   spin forbidden (mult=3)
 
 -------------------------------------------------------------------
                              CD SPECTRUM
@@ -989,12 +991,12 @@ State   Energy  Wavelength   fosc         P2         PX        PY        PZ
 State   Energy Wavelength       R         MX        MY        MZ   
         (cm-1)   (nm)       (1e40*cgs)   (au)      (au)      (au)  
 -------------------------------------------------------------------
-   1   16562.9    603.8      0.00000   0.00000  -0.58909   0.00000
-   2   59933.2    166.9      0.00000  -0.82093   0.00000  -0.00000
-   3   10069.1    993.1 spin forbidden
-   4   23501.3    425.5 spin forbidden
+   1   16562.4    603.8      0.00000  -0.00000   0.58910   0.00000
+   2   59932.6    166.9     -0.00000  -0.82094   0.00000   0.00000
+   3   10068.4    993.2 spin forbidden
+   4   23501.0    425.5 spin forbidden
 
-Total run time:        1.838 sec
+Total run time:        0.433 sec
 
            *** ORCA-CIS/TD-DFT FINISHED WITHOUT ERROR ***
 
@@ -1002,14 +1004,14 @@ Total run time:        1.838 sec
 CIS/TD-DFT TOTAL ENERGY
 -----------------------
 
-    E(SCF)  =   -432.585725103 Eh
-    DE(CIS) =      0.075466153 Eh (Root  1)
+    E(SCF)  =   -432.585725095 Eh
+    DE(CIS) =      0.075463820 Eh (Root  1)
     ----------------------------- ---------
-    E(tot)  =   -432.510258950 Eh
+    E(tot)  =   -432.510261275 Eh
 
 
 -------------------------   --------------------
-FINAL SINGLE POINT ENERGY      -432.510258949666
+FINAL SINGLE POINT ENERGY      -432.510261274925
 -------------------------   --------------------
 
 
@@ -1038,20 +1040,20 @@ The origin for moment calculation is the CENTER OF MASS  = ( 0.000000, -0.134259
 DIPOLE MOMENT
 -------------
                                 X             Y             Z
-Electronic contribution:      0.00000      -2.93995      -0.00000
+Electronic contribution:     -0.00000      -2.94031       0.00000
 Nuclear contribution   :      0.00000       3.20711       0.00000
                         -----------------------------------------
-Total Dipole Moment    :      0.00000       0.26715      -0.00000
+Total Dipole Moment    :     -0.00000       0.26679       0.00000
                         -----------------------------------------
-Magnitude (a.u.)       :      0.26715
-Magnitude (Debye)      :      0.67905
+Magnitude (a.u.)       :      0.26679
+Magnitude (Debye)      :      0.67813
 
 
 Timings for individual modules:
 
-Sum of individual times         ...        3.212 sec (=   0.054 min)
-GTO integral calculation        ...        0.211 sec (=   0.004 min)   6.6 %
-SCF iterations                  ...        1.127 sec (=   0.019 min)  35.1 %
-CIS module                      ...        1.873 sec (=   0.031 min)  58.3 %
+Sum of individual times         ...        1.881 sec (=   0.031 min)
+GTO integral calculation        ...        0.121 sec (=   0.002 min)   6.5 %
+SCF iterations                  ...        1.314 sec (=   0.022 min)  69.9 %
+CIS module                      ...        0.446 sec (=   0.007 min)  23.7 %
                              ****ORCA TERMINATED NORMALLY****
-TOTAL RUN TIME: 0 days 0 hours 0 minutes 3 seconds 465 msec
+TOTAL RUN TIME: 0 days 0 hours 0 minutes 1 seconds 994 msec

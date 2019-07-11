@@ -269,9 +269,11 @@ class file_parser_cclib(file_parser.file_parser_base):
                 state['tden'][nfrzc:nocc, nocc:nmo] += numpy.reshape(coeff, [nact,nvir])
                 state['tden'][nfrzc:nocc, nocc:nmo] *= .5
 
-    def check(self, lvprt=1):
+    def check(self, lvprt=1, maxerr=50):
         """
         Check if the input file can be used by cclib.
+        lvprt  ... print level
+        maxerr ... maximum allowed error code
         """
         errcode = 0
 
@@ -322,6 +324,9 @@ class file_parser_cclib(file_parser.file_parser_base):
                 print(('%15s ... %s'%(attr, chk)))
             if chk and lvprt >= 2:
                 print(getattr(self.data, attr))
+
+        if errcode > maxerr:
+            raise error_handler.MsgError("The file cannot be parsed by cclib")
 
         return errcode
 

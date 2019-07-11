@@ -1,0 +1,17 @@
+rtype='orca'
+rfile='orca.out'
+read_binary=True
+mo_file='orca.molden.input'
+at_lists=[[1, 2, 3], [4]]
+Om_formula=2
+eh_pop=0
+comp_ntos=True
+comp_dntos=False
+jmol_orbitals=True
+molden_orbitals=False
+cube_orbitals=False
+comp_p_h_dens=False
+comp_rho0n=False
+prop_list=['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt', 'PRNTO', 'Z_HE', 'RMSeh']
+output_prec=(9,5)
+output_file='tden_summ_molden.txt'

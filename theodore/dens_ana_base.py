@@ -70,8 +70,6 @@ class dens_ana_base:
             self.mos = lib_mo.MO_set_adf(file=self.ioptions.get('rfile'))
             self.mos.read(lvprt=1)
             self.read2_mos()
-            self.struc = lib_struc.structure()
-            self.struc.read_at_dicts(self.mos.at_dicts)
             self.state_list = file_parser.file_parser_adf(self.ioptions).read(self.mos)
 
             # deactivate print out that is not possible because of the use of STOs
@@ -85,22 +83,14 @@ class dens_ana_base:
             # these are parsed with the external cclib library
             ccli = cclib_interface.file_parser_cclib(self.ioptions)
 
-            errcode = ccli.check()
-            if errcode >= 2: raise error_handler.MsgError("The file cannot be parsed by cclib")
-            print()
+            if not hasattr(self, 'mos'):
+                errcode = ccli.check(maxerr=1)
+                print()
+                self.mos = ccli.read_mos()
 
-            self.mos = ccli.read_mos()
             self.read2_mos()
             self.state_list = ccli.read(self.mos)
-
             self.struc = ccli.ret_struc()
-
-            # Write a Molden file if possible
-            if errcode == 0:
-                self.mos.write_molden_file(fname='MOs.mld')
-                self.ioptions['mo_file'] = 'MOs.mld'
-            else:
-                self.ioptions['molden_orbitals'] = False
         else:
             raise error_handler.ElseError(rtype, 'rtype')
 
@@ -121,9 +111,14 @@ class dens_ana_base:
                 print(("\nReading structure from coor_file %s"%self.ioptions['coor_file']))
             self.struc = lib_struc.structure()
             self.struc.read_file(self.ioptions['coor_file'], self.ioptions['coor_format'])
-        elif self.ioptions['rtype'].lower() in ['cclib', 'gamess', 'orca', 'adf']:
+        elif self.ioptions['rtype'].lower() in ['cclib', 'gamess', 'orca']:
             if lvprt >= 1:
-                print("\nUsing cclib / ADF structure")
+                print("\nUsing cclib structure")
+        elif self.ioptions['rtype'].lower() in ['adf']:
+            if lvprt >= 1:
+                print("\nUsing ADF structure")
+            self.struc = lib_struc.structure()
+            self.struc.read_at_dicts(self.mos.at_dicts)
         elif 'mo_file' in self.ioptions:
             if lvprt >= 1:
                 print(("\nReading structure from mo_file %s"%self.ioptions['mo_file']))
