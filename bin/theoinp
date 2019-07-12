@@ -187,16 +187,19 @@ class write_options_theo(input_options.write_options):
 
     def make_at_lists(self):
         print("Fragment definition for CT nubmer analysis")
-        aexpl = ['Manual input', 'Automatic generation by fragment (using python-openbabel)', \
-                'Automatic generation for transition metal complexes (using python-openbabel)', \
-                'Automatic generation by element (using python-openbabel)', 'Leave empty and fill out later']
+        aexpl = ['Manual input',\
+                 'Automatic generation by fragment (using python-openbabel)', \
+                 'Automatic generation for transition metal complexes (using python-openbabel)', \
+                 'Mixed manual/automatic generation (using python-openbabel)', \
+                 'Automatic generation by element (using python-openbabel)', \
+                 'Leave empty and fill out later']
         ichoice = self.ret_choose_list('Mode for specifying molecular fragments (at_lists):', aexpl)
 
         if ichoice==1:
             self['at_lists'] = self.read_at_lists()
-        elif ichoice in [2,3,4]:
+        elif ichoice in [2,3,4,5]:
             self['at_lists'] = self.file_at_lists(ichoice)
-        elif ichoice==5:
+        elif ichoice==6:
             self['at_lists'] = [[]]
             self.ostr += 'at_lists=\n'
             return
@@ -230,6 +233,10 @@ class write_options_theo(input_options.write_options):
             inp_list = [int(iat) for iat in rstr.replace(',', ' ').split()]
             return struc.ret_partition(inp_lists=[inp_list])
         elif mode == 4:
+            print("\nEnter the manual fragment defitions first.\nLeave empty to switch to automatic mode.")
+            inp_lists = self.read_at_lists()
+            return struc.ret_partition(inp_lists=inp_lists)
+        elif mode == 5:
             return struc.ret_el_partition()
         else:
             raise error_handler.ElseError('mode', mode)

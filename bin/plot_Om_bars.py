@@ -50,7 +50,7 @@ class Om_bar_options(input_options.write_options):
         print("Please enter the different excitation components to be plotted")
         print("    - leave empty to finish")
         for icomp in range(1,1000):
-            rstr = self.ret_str('Name of component %i'%icomp)
+            rstr = self.ret_str('Name of component %i (e.g. MLCT or A-B)'%icomp)
             if rstr == '':
                 print(" ... component input finished.")
                 break
