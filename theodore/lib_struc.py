@@ -17,7 +17,7 @@ except ImportError:
     from . import OB_repl as openbabel
 from . import units, error_handler
 # get Z_symbol_dict, symbol_Z_dict 
-from .atomids import symbol_Z_dict, Z_symbol_dict
+from .atominfo import symbol_Z_dict, Z_symbol_dict
 
 veloc_types = ['vtxyz','vnx'] # these are defined below
 

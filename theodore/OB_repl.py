@@ -10,18 +10,10 @@ from __future__ import print_function, division
 
 import sys
 from . import units
+from .atominfo import symbol_Z_dict, Z_symbol_dict
+from .atominfo import Z_exact_mass_dict
 
-Z_mass_dict = {1:1.008,6:12.011,7:14.007,8:16.,15:30.97,16:32.066,17:35.453,77:192.22}
-Z_exact_mass_dict = {1:1.00782504,6:12.,7:14.00307401,8:15.99491464,17:34.96885273,77:192.962917}
-Z_symbol_dict = {1:'H',2:'He',
-                 3:'Li',4:'Be',5:'B',6:'C',7:'N',8:'O',9:'F',10:'Ne',
-                 11:'Na',12:'Mg',13:'Al',14:'Si',15:'P',16:'S',17:'Cl',18:'Ar',
-                 26:'Fe',27:'Co',29:'Cu',34:'Se',35:'Br',44:'Ru',50:'Sn',53:'I',75:'Re',77:'Ir'}
-
-symbol_Z_dict = {}
-for key,val in Z_symbol_dict.items():
-    symbol_Z_dict[val] = key
-Z_symbol_dict[99] = 'X'
+Z_mass_dict = Z_exact_mass_dict
 
 class OBConversion:
     """
