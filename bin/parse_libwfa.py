@@ -5,7 +5,7 @@ Script for parsing libwfa output.
 from __future__ import print_function, division
 import sys
 
-from theodore import theo_header, dens_ana_base, input_options
+from theodore import theo_header, dens_ana_base, input_options, error_handler
 
 def ihelp():
     print(" parse_libwfa.py <logfile> <type>\n")

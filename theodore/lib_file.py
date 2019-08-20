@@ -218,12 +218,12 @@ class summ_file:
 #            self.header = ''
 #            return
 
-        self.header = next(f).split()
+        self.header = next(f).replace('|','').split()
         next(f)
 
         while True:
             try:
-                line = next(f)
+                line = next(f).replace('|','')
             except StopIteration:
                 break
 

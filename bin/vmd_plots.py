@@ -137,7 +137,8 @@ mol modcolor 4 0 ColorID 1
                 pf.write("mol modstyle 3 0 Isosurface  %.5f %i 0 0 1 1\n"%(iso2, iplt + len(pltfiles)))
                 pf.write("mol modstyle 4 0 Isosurface -%.5f %i 0 0 1 1\n"%(iso2, iplt + len(pltfiles)))
             elif self['niso'] >= 2:
-                iso2 = isovals[1]
+                if self['do_vol']:
+                    iso2 = isovals[1]
                 pf.write("mol modstyle 3 0 Isosurface  %.5f %i 0 0 1 1\n"%(iso2, iplt))
                 pf.write("mol modstyle 4 0 Isosurface -%.5f %i 0 0 1 1\n"%(iso2, iplt))
             pf.write("render TachyonInternal %s.tga\n"%pltf)

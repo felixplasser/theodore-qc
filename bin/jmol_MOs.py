@@ -177,9 +177,9 @@ class mocollf(mocoll):
         else:
             ihomo = self.moset.ret_ihomo()
             if imo%2==0:
-                imo2 = ihomo - imo/2
+                imo2 = ihomo - imo//2
             else:
-                imo2 = ihomo + imo/2 + 1
+                imo2 = ihomo + imo//2 + 1
             try:
                 ene, occ = self.moset.ret_eo(imo2)
             except:

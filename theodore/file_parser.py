@@ -1506,6 +1506,9 @@ class file_parser_rassi(file_parser_libwfa):
         oscs = {}
         libwfa = False
 
+        # This is a bit of a hack to deal with different file names
+        ctnumtypes = ['atomic', 'lowdin', 'mulliken']
+
         rfile = open(filen,'r')
 
         while(True):
@@ -1567,13 +1570,20 @@ class file_parser_rassi(file_parser_libwfa):
 
             elif 'RASSI analysis for transiton from state' in line or 'RASSI analysis for transition from state' in line: # typo fixed
                 words = line.split()
-                typ = words[-1][1:-1]
-                (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile("%s_ctnum_atomic.om"%typ)
-                if abs(exctmp * units.energy['eV'] - state['exc_en']) > 1.e-3:
-                    print(" WARNING: inconsistent energies for %s: %.5f/%.5f - skipping."%(typ, exctmp * units.energy['eV'], state['exc_en']))
-                else:
-                    state['Om'] = om_at.sum()
-                    state['OmAt'] = om_at
+                ttyp = words[-1][1:-1]
+
+                # This is a bit of a hack to find the correct file name
+                while(len(ctnumtypes)>0):
+                    (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile("%s_ctnum_%s.om"%(ttyp, ctnumtypes[0]))
+                    if not exctmp == None:
+                        if abs(exctmp * units.energy['eV'] - state['exc_en']) > 1.e-3:
+                            print(" WARNING: inconsistent energies for %s: %.5f/%.5f - skipping."%(typ, exctmp * units.energy['eV'], state['exc_en']))
+                        else:
+                            state['Om'] = om_at.sum()
+                            state['OmAt'] = om_at
+                        break
+                    ctnumtypes.pop(0)
+
 
             elif libwfa:
                 self.parse_line(state, line, rfile)
