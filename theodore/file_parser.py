@@ -602,6 +602,12 @@ class file_parser_libwfa(file_parser_base):
             self.parse_key(state, 'dH-E', line, '|<r_e - r_h>|')
             self.parse_key(state, 'COV', line, 'Covariance(r_h, r_e) [Ang^2]')
             self.parse_key(state, 'Corr', line, 'Correlation coefficient')
+            self.parse_key(state, 'rHx', line, '<r_h>', -3)
+            self.parse_key(state, 'rHy', line, '<r_h>', -2)
+            self.parse_key(state, 'rHz', line, '<r_h>', -1)
+            self.parse_key(state, 'rEx', line, '<r_e>', -3)
+            self.parse_key(state, 'rEy', line, '<r_e>', -2)
+            self.parse_key(state, 'rEz', line, '<r_e>', -1)
 
 class file_parser_qcadc(file_parser_libwfa):
     """

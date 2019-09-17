@@ -16,7 +16,6 @@ except ImportError:
     print(" Using emulation program with limited capabilities ...")
     from . import OB_repl as openbabel
 from . import units, error_handler
-# get Z_symbol_dict, symbol_Z_dict 
 from .atominfo import symbol_Z_dict, Z_symbol_dict
 
 veloc_types = ['vtxyz','vnx'] # these are defined below
@@ -321,7 +320,7 @@ class structure:
         mass_list = []
         for i in range(self.mol.NumAtoms()):
             atom = self.mol.GetAtom(i+1)
-            mass_list += rep * [atom.GetAtomicMass()**power]
+            mass_list += rep * [atom.GetExactMass()**power]
 
         return numpy.array(mass_list, float)
 
