@@ -186,8 +186,8 @@ def run():
     if len(pltfiles) == 0:
         raise error_handler.MsgError('No file specified')
     else:
-        print('%i Files analyzed:'%len(pltfiles), end='')
-        for pltf in pltfiles: print(pltf, end='')
+        print('%i Files analyzed:'%len(pltfiles), end=' ')
+        for pltf in pltfiles: print(pltf, end=' ')
         print
 
     vopt = vmd_options('vmd.in')

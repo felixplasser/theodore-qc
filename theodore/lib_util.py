@@ -42,8 +42,9 @@ class cube_file:
         self.s = sum(self.vals)
         self.avals = [abs(val) for val in self.vals]
         self.abss = sum(self.avals)
+        self.sqs = sum(val*val for val in self.vals)
         if lvprt >= 1:
-            print('Integral: % .6f, Abs. Integral: % .6f'%(self.s * self.V, self.abss * self.V))
+            print('Integral: % .6f, Abs. Int.: % .6f, Squ. Int. % .6f:'%(self.s * self.V, self.abss * self.V, self.sqs * self.V))
         self.avals.sort(reverse=True)
 
     def ret_isovals(self, frac=[0.1, 0.5, 0.75, 0.9, 0.95, 0.99], lvprt=0):

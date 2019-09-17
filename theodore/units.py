@@ -44,14 +44,51 @@ tpa={}
 tpa['GM']=10**50 * length['cm']**4 * time['s']
 
 # shortcuts
+
 def eV2nm(val):
+    """
+    Convert eV to nanometers.
+    """
     return energy['eV']*energy['nm']/val
 
 def nm2eV(val):
+    """
+    Convert nanometers to eV.
+    """
     return eV2nm(val)
 
 def eVdiff(au1,au2):
+    """
+    Energy difference in eV.
+    """
     print("%.5f eV"%((au2-au1)*energy['eV']))
+
+def print_units(pformat='%15s : %E'):
+    """
+    Print information about all the units.
+    """
+    print(' *** Conversion from atomic units ***')
+    print('  Energy')
+    for att, val in energy.items():
+        print(pformat%(att, val))
+    print('  Length')
+    for att, val in length.items():
+        print(pformat%(att, val))
+    print('  Time')
+    for att, val in time.items():
+        print(pformat%(att, val))
+    print('  Mass')
+    for att, val in mass.items():
+        print(pformat%(att, val))
+    print('  Dipole')
+    for att, val in dipole.items():
+        print(pformat%(att, val))
+    print('  Constants')
+    for att, val in constants.items():
+        print(pformat%(att, val))
+    print('  Two-photon absorption')
+    for att, val in tpa.items():
+        print(pformat%(att, val))
 
 class converter:
     def __init__(self):
@@ -71,3 +108,6 @@ class converter:
             setattr(self, att, val)
 
 u = converter()
+
+if __name__=='__main__':
+    print_units()
