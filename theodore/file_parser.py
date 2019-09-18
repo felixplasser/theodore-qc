@@ -643,6 +643,9 @@ class file_parser_qcadc(file_parser_libwfa):
                 state_list[-1]['name']      = '%s%s%s'%(words[2], words[3], words[4])
 
                 om_filen = self.om_file_name(state_list[-1])
+                if om_filen == None:
+                    print(" WARNING: could not find .om file for %s"%state_list[-1]["name"])
+                    continue
                 (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile(os.path.join(basedir,om_filen))
                 if typ == None:
                     continue
@@ -717,21 +720,29 @@ class file_parser_qcadc(file_parser_libwfa):
                 state_indo -= 1
 
         state['fname'] = '%s_%s_%i'%(multo, state['irrep'], state_indo)
+
+        omname = '%s_ctnum_atomic.om'%state['fname']
+        if os.path.exists(omname):
+            return omname
+
+        omname = '%s_ctnum_mulliken.om'%state['fname']
+        if os.path.exists(omname):
+            return omname
+
+        omname = '%s_ctnum_lowdin.om'%state['fname']
+        if os.path.exists(omname):
+            return omname
+
+        irrepo = self.irrep_labels.index(state['irrep'])
+        # subtract 1 for ground state irrep
+        state_indo = state['state_ind'] - 1*(irrepo==0)*(state['mult'] == '(1)')
+        state['fname'] = '%s_%i_%i'%(multo, irrepo, state_indo)
         omname = '%s_ctnum_atomic.om'%state['fname']
 
-        if not os.path.exists(omname):
-            print((' WARNING: did not find %s,' % omname), end=' ')
-            irrepo = self.irrep_labels.index(state['irrep'])
+        if os.path.exists(omname):
+            return omname
 
-            # subtract 1 for ground state irrep
-            state_indo = state['state_ind'] - 1*(irrepo==0)*(state['mult'] == '(1)')
-
-            state['fname'] = '%s_%i_%i'%(multo, irrepo, state_indo)
-            omname = '%s_ctnum_atomic.om'%state['fname']
-
-            print('using %s instead.'%omname)
-
-        return omname
+        return None
 
 class file_parser_qctddft(file_parser_libwfa):
     def read(self, mos):
