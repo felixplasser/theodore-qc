@@ -13,7 +13,7 @@ from . import units
 
 Z_mass_dict = {1:1.008,6:12.011,7:14.007,8:16.,15:30.97,16:32.066,17:35.453,77:192.22}
 Z_exact_mass_dict = {1:1.00782504,6:12.,7:14.00307401,8:15.99491464,17:34.96885273,77:192.962917}
-from .atomids import symbol_Z_dict, Z_symbol_dict
+from .atominfo import symbol_Z_dict, Z_symbol_dict
 
 class OBConversion:
     """
