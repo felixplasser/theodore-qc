@@ -505,6 +505,9 @@ class file_parser_libwfa(file_parser_base):
         return state_list
 
     def rmatfile(self,fname):
+        """
+        Read Omega (atoms) matrix as produced by libwfa
+        """
         print("Reading: %s ..."%fname)
 
         try:
@@ -760,7 +763,8 @@ class file_parser_qctddft(file_parser_libwfa):
 
         print("Parsing %s for %s ..."%(self.ioptions.get('rfile'), ststr))
 
-#        for line in open(self.ioptions.get('rfile'), 'r'):
+        nsing = 0
+        ntrip = 0
         rfileh = open(self.ioptions.get('rfile'),'r')
         while True: # loop over all lines
             try:
@@ -781,7 +785,7 @@ class file_parser_qctddft(file_parser_libwfa):
                 if len(state_list) == 0:
                     errstr = "No excitation energy parsed!"
                     errstr+= "\n   Please, set 'TDA=True' if this was a TDA calculation."
-                    raise error_handler
+                    raise error_handler.MsgError(errstr)
             elif 'SA-NTO Decomposition' in line:
                 libwfa = False
             elif 'Welcome to Q-Chem' in line:
@@ -796,20 +800,28 @@ class file_parser_qctddft(file_parser_libwfa):
                 words = line.replace(':','').split()
                 if 'Excited state' in line:
                     state_list.append({})
+                    state = state_list[-1]
 
-                    state_list[-1]['state_num'] = int(words[2])
-                    state_list[-1]['exc_en'] = float(words[-1])
+                    state['state_num'] = int(words[2])
+                    state['exc_en'] = float(words[-1])
 
                     line = next(rfileh)
                     line = next(rfileh)
                     words = line.split()
 
                     if words[0] == 'Multiplicity:':
-                        state_list[-1]['mult'] = '(%s)'%words[1][0]
+                        state['mult'] = words[1]
                     else:
-                        state_list[-1]['mult'] = '(-)'
+                        state['mult'] = 'X'
 
-                    state_list[-1]['name'] = 'es_%i%s'%(state_list[-1]['state_num'], state_list[-1]['mult'])
+                    if state['mult'] == 'Singlet':
+                        nsing += 1
+                        state['name'] = "S%i"%nsing
+                    elif state['mult'] == 'Triplet':
+                        ntrip += 1
+                        state['name'] = "T%i"%ntrip
+                    else:
+                        state['name'] = 'es_%i'%(state['state_num'])
 
                     if self.ioptions['read_libwfa']:
                         om_filen = 'es_%i_ctnum_atomic.om'%state_list[-1]['state_num']
@@ -840,7 +852,16 @@ class file_parser_qctddft(file_parser_libwfa):
 
             if libwfa:
                 if 'Excited state' in line:
-                    istate = int(line.split()[-1].replace(':',''))
+                    words = line.split()
+                    istate = int(words[1])
+
+                # Disentangle the order of singlets and triplets
+                elif '  Singlet' in line or '  Triplet' in line:
+                    words = line.split()
+                    for istate, state in enumerate(state_list):
+                        if state['name'] == words[0][0] + words[1]:
+                            break
+
                 elif 'Exciton analysis of the difference density matrix' in line:
                     exc_1TDM = False
                     exc_diff = True
@@ -849,7 +870,7 @@ class file_parser_qctddft(file_parser_libwfa):
                     exc_diff = False
                     exc_1TDM = True
 
-                self.parse_keys(state_list[istate-1], exc_diff, exc_1TDM, line)
+                self.parse_keys(state_list[istate], exc_diff, exc_1TDM, line)
 
         rfileh.close()
         return state_list

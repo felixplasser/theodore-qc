@@ -1,5 +1,8 @@
 Download the newest TheoDORE release and tutorial.
 
+TheoDORE 2.0.2
+- Fix for runs without openbabel
+
 TheoDORE 2.0.1
 - Updated Orca interface
 - Support for all elements of the periodic table
