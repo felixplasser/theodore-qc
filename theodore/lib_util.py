@@ -12,7 +12,8 @@ class cube_file:
         self.avals = None
 
     def read(self, lvprt=0):
-        print('Analysing %s ...'%self.fname)
+        if lvprt >= 1:
+            print('Analysing %s ...'%self.fname)
         with open(self.fname, 'r') as f:
             line = next(f)
             line = next(f)
@@ -43,8 +44,11 @@ class cube_file:
         self.avals = [abs(val) for val in self.vals]
         self.abss = sum(self.avals)
         self.sqs = sum(val*val for val in self.vals)
+        self.minval = min(self.vals)
+        self.maxval = max(self.vals)
         if lvprt >= 1:
             print('Integral: % .6f, Abs. Int.: % .6f, Squ. Int. % .6f:'%(self.s * self.V, self.abss * self.V, self.sqs * self.V))
+            print('Min: % .6f, Max % .6f'%(self.minval, self.maxval))
         self.avals.sort(reverse=True)
 
     def ret_isovals(self, frac=[0.1, 0.5, 0.75, 0.9, 0.95, 0.99], lvprt=0):
@@ -73,3 +77,20 @@ class cube_file:
                     break
 
         return retvals
+
+    def dot(self, other, lvprt=0):
+        """
+        Compute the dot product / overlap between two cube files.
+        """
+        if self.vals is None:
+            self.read(lvprt=lvprt)
+        if other.vals is None:
+            other.read(lvprt=lvprt)
+        assert self.V == other.V
+
+        dot = sum(val * other.vals[ival] for ival, val in enumerate(self.vals)) * self.V
+        if lvprt >= 1:
+            print("Computing dot product between %s and %s"%(self.fname, other.fname))
+            print("Dot: % .6f"%dot)
+
+        return dot

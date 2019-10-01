@@ -569,6 +569,7 @@ class file_parser_libwfa(file_parser_base):
         self.parse_keys(state, self.excD, self.excT, line, rfile)
 
     def parse_keys(self, state, exc_diff, exc_1TDM, line, rfile=None):
+        self.parse_key(state, 'osc_str', line, 'Osc. strength:')
         self.parse_key(state, 'mu', line, 'Total dipole')
         self.parse_key(state, 'mux', line, 'Dip. moment [a.u.]', -3)
         self.parse_key(state, 'muy', line, 'Dip. moment [a.u.]', -2)
@@ -757,9 +758,11 @@ class file_parser_qctddft(file_parser_libwfa):
         istate = 1
 
         if self.ioptions.get('TDA'):
-            ststr = 'TDDFT/TDA Excitation Energies'
+            ststr  = 'TDDFT/TDA Excitation Energies'
+            ststr2 = 'CIS Excitation Energies'
         else:
-            ststr = 'TDDFT Excitation Energies'
+            ststr  = 'TDDFT Excitation Energies'
+            ststr2 = 'xyzabc'
 
         print("Parsing %s for %s ..."%(self.ioptions.get('rfile'), ststr))
 
@@ -773,7 +776,7 @@ class file_parser_qctddft(file_parser_libwfa):
               print("Finished parsing file %s"%self.ioptions.get('rfile'))
               break
 
-            if ststr in line:
+            if ststr in line or ststr2 in line:
                 tdread = True
             elif 'TDDFT calculation will be performed' in line:
                 tdread = False
@@ -816,16 +819,22 @@ class file_parser_qctddft(file_parser_libwfa):
 
                     if state['mult'] == 'Singlet':
                         nsing += 1
-                        state['name'] = "S%i"%nsing
+                        state['name'] = "S_%i"%nsing
                     elif state['mult'] == 'Triplet':
                         ntrip += 1
-                        state['name'] = "T%i"%ntrip
+                        state['name'] = "T_%i"%ntrip
                     else:
                         state['name'] = 'es_%i'%(state['state_num'])
 
                     if self.ioptions['read_libwfa']:
-                        om_filen = 'es_%i_ctnum_atomic.om'%state_list[-1]['state_num']
-                        (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile(om_filen)
+                        print("aaa", state['name'])
+                        typ = None
+                        if os.path.exists('%s_ctnum_atomic.om'%state['name']):
+                            (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile('%s_ctnum_atomic.om'%state['name'])
+                        elif os.path.exists('%s_ctnum_mulliken.om'%state['name']):
+                            (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile('%s_ctnum_mulliken.om'%state['name'])
+                        elif os.path.exists('%s_ctnum_lowdin.om'%state['name']):
+                            (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile('%s_ctnum_lowdin.om'%state['name'])
 
                         if not typ==None:
                             state_list[-1]['Om']   = om_at.sum()
@@ -852,8 +861,8 @@ class file_parser_qctddft(file_parser_libwfa):
 
             if libwfa:
                 if 'Excited state' in line:
-                    words = line.split()
-                    istate = int(words[1])
+                    words = line.replace(':', '').split()
+                    istate = int(words[2]) - 1
 
                 # Disentangle the order of singlets and triplets
                 elif '  Singlet' in line or '  Triplet' in line:

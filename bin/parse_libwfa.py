@@ -9,7 +9,7 @@ from theodore import theo_header, dens_ana_base, input_options, error_handler
 
 def ihelp():
     print(" parse_libwfa.py <logfile> <type>\n")
-    print("  type: qcadc, qctddft, rassi\n")
+    print("  type: qcadc, qctddft, qctda, rassi\n")
     print(" Command line options:")
     print("  -h, -H, -help: print this help")
     print("  -ifile, -f [dens_ana.in]: name of the input file")
@@ -40,6 +40,10 @@ if len(args2) >= 1:
     if len(args2) >= 2:
         ioptions['rtype'] = args2[1]
 
+if ioptions['rtype'] == 'qctda':
+    ioptions['TDA'] = True
+    ioptions['rtype'] = 'qctddft'
+
 if (not 'rfile' in ioptions) or (not 'rtype' in ioptions):
     ihelp()
 
@@ -52,11 +56,6 @@ theo_header.print_header('Parse libwfa output', ioptions=ioptions)
 dena = dens_ana_base.dens_ana_base(ioptions)
 #sdena.read_mos()
 
-try:
-    dena.read_dens()
-except error_handler.MsgError:
-    print('Setting TDA=True ...')
-    ioptions['TDA'] = True
-    dena.read_dens()
+dena.read_dens()
 
 dena.print_summary()
