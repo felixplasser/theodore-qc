@@ -1,5 +1,7 @@
 Download the newest TheoDORE release and tutorial.
 
+- Support for Q-Chem 5.2
+
 TheoDORE 2.0.2
 - Fix for runs without openbabel
 
