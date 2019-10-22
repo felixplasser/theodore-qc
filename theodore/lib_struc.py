@@ -205,6 +205,24 @@ class structure:
 
         return numpy.array(mat_list)
 
+    def ret_center_of_mass(self, at_list=None, masswt=1):
+        """
+        Return the center of mass of a fragment.
+        masswt - power of the mass used for mass-weighting
+        at_list - fragment definition
+        """
+        if at_list == None:
+            at_list = [i+1 for i in range(self.mol.NumAtoms())]
+
+        tmass = 0.
+        xyz = numpy.zeros(3, float)
+        for i in at_list:
+            atom = self.mol.GetAtom(i)
+            mass = atom.GetExactMass()**masswt
+            tmass += mass
+            xyz += mass * numpy.array([atom.x(), atom.y(), atom.z()])
+
+        return xyz / tmass
 
     def ret_moved_structure(self, add_vec, name=''):
         """

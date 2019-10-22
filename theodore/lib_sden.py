@@ -4,7 +4,7 @@ Analysis routines for state density matrices.
 
 from __future__ import print_function, division
 
-from . import dens_ana_base, lib_mo, error_handler, pop_ana
+from . import dens_ana_base, lib_mo, error_handler, pop_ana, orbkit_interface
 import numpy
 
 numpy.set_printoptions(precision=6, suppress=True)
