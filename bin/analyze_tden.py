@@ -72,8 +72,8 @@ if 'RMSeh' in ioptions.get('prop_list') or 'MAeh' in ioptions.get('prop_list') o
     exca.get_distance_matrix(tdena.struc)
     tdena.analyze_excitons(exca)
 
-if 'Ombar' in ioptions['prop_list']:
-    tdena.compute_all_Ombar()
+if 'Phe' in ioptions['prop_list']:
+    tdena.compute_all_Phe()
 
 #--------------------------------------------------------------------------#
 # Print-out
