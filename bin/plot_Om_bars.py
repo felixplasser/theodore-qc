@@ -49,13 +49,15 @@ class Om_bar_options(input_options.write_options):
         self.comps = []
         print("Please enter the different excitation components to be plotted")
         print("    - leave empty to finish")
+
+        colors = ['blue', 'red', 'G', 'O', 'Y']
         for icomp in range(1,1000):
             rstr = self.ret_str('Name of component %i (e.g. MLCT or A-B)'%icomp)
             if rstr == '':
                 print(" ... component input finished.")
                 break
 
-            color = self.ret_str('Color for plotting')
+            color = self.ret_str('Color for plotting', colors[(icomp-1)%5])
 
             print("\n *** Fragment pairs belonging to %s ***"%rstr)
             print("  Enter two indices between 1 and %i, separated by spaces"%self.numF)
@@ -107,17 +109,17 @@ class Om_bar_options(input_options.write_options):
       xlabel={State}, ylabel={Character},
       ytick={0.0,0.2,...,0.8},\n""")
         lfile.write("ymin=-0.0, ymax=1,\n")
-        lfile.write("ybar stacked, bar width=%.3f cm]\n"%(self['width']/self.numSt/1.2))
+        lfile.write("ybar stacked, bar width=%.3f cm]\n"%(self['width']/self.numSt/1.5))
 
         for icomp, comp in enumerate(self.comps):
-            lfile.write("\\addplot[ybar, draw=none, fill=%s] table[x index=0, y index=%i] {Om_bar_data.txt};\n"%(comp['color'], icomp+4))
+            lfile.write("\\addplot[ybar, draw=black, fill=%s] table[x index=0, y index=%i] {Om_bar_data.txt};\n"%(comp['color'], icomp+4))
             lfile.write("\\addlegendentry{%s};\n"%comp['name'])
         lfile.write('\end{axis}\n\n')
 
         # Graphs with energies
         lfile.write("""\\begin{axis}[
       anchor=south west, at={(0,0)},
-      height=2.0cm,
+      height=3.0cm,
       xlabel={}, ylabel={Energy (eV)}
       %, colorbar % uncomment for colorbar as legend
       ]\n""")
@@ -143,12 +145,35 @@ class Om_bar_options(input_options.write_options):
 \pgfplotsset{compat=1.4}
 
 % ===========================================================================
+% colour definitions
+
+\definecolor{BL}{HTML}{0099e6}
+\definecolor{B}{HTML}{006699}
+\definecolor{BD}{HTML}{004466}
+\definecolor{BR}{HTML}{0080FF}  % like RoyalBlue
+
+\definecolor{RL}{HTML}{d65454}
+\definecolor{R}{HTML}{893636}
+\definecolor{RD}{HTML}{ad1737}  % like Maroon
+
+\definecolor{GL}{HTML}{10d05d}
+\definecolor{G}{HTML}{009933}
+\definecolor{GD}{HTML}{004d1a}
+
+\definecolor{Y}{HTML}{D0D030}
+\definecolor{O}{HTML}{FFA500}
+\definecolor{T}{HTML}{4DC0FF}
+\definecolor{OL}{HTML}{FFAA80}
+\definecolor{P}{HTML}{DD88BB}
+\definecolor{V}{HTML}{703676}
+
+% ===========================================================================
 
 % settings for the coordinate system
 \pgfplotsset{
 every linear axis/.append style={
 """
-        str += 'width=%.3f cm, height=2.0cm,'%self['width']
+        str += 'width=%.3f cm, height=3.0cm,'%self['width']
         str += "xmin=0, xmax=%i,\n"%(self.numSt+1)
         str += """xtick={-10}, xticklabels={},
   scale only axis, axis on top,

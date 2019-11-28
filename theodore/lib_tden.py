@@ -4,7 +4,8 @@ Analysis routines for transition density matrices.
 
 from __future__ import print_function, division
 
-from . import dens_ana_base, Om_descriptors, lib_mo, error_handler, pop_ana, orbkit_interface
+from . import dens_ana_base, Om_descriptors, lib_mo, error_handler, pop_ana
+from . import orbkit_interface, fchk_parser
 import numpy
 import os
 
@@ -393,15 +394,15 @@ class tden_ana(dens_ana_base.dens_ana_base):
         return state['Om'], state['OmFrag']
 
 #---
-    def compute_all_Ombar(self):
+    def compute_all_Phe(self):
         """
-        Computation of the deexcitation(?) Omega values.
+        Computation of the deexcitation values <P_he>.
         """
         for i, state in enumerate(self.state_list):
-            self.compute_Ombar(state)
+            self.compute_Phe(state)
 
-    def compute_Ombar(self, state):
-        if 'Ombar' in state:
+    def compute_Phe(self, state):
+        if 'Phe' in state:
             return
 
         try:
@@ -410,9 +411,9 @@ class tden_ana(dens_ana_base.dens_ana_base):
             return
 
         if D.shape[0] == D.shape[1]:
-            state['Ombar'] = numpy.sum(D * D.T)
+            state['Phe'] = numpy.sum(D * D.T) / state['Om']
         elif D.shape[0] < D.shape[1]:
-            state['Ombar'] = numpy.sum(D[:,:D.shape[0]] * D[:,:D.shape[0]].T)
+            state['Phe'] = numpy.sum(D[:,:D.shape[0]] * D[:,:D.shape[0]].T) / state['Om']
         else:
             raise error_handler.ElseError('>', 'D.shape')
 

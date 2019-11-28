@@ -50,6 +50,7 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
             # Dipole and quadrupole moments
             af.write('draw delete all\n')
             if self['do_dip']:
+                # Conversion from e*Bohr to e*Ang
                 dfac = self['dip_scale']  * units.length['A']
                 if not 'mux' in sdict:
                     print(" *** No dipole info found for state %s"%state)
@@ -70,6 +71,7 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
             # Transition dipole and 2P moments
             af.write('draw delete all\n')
             if self['do_tdip']:
+                # Conversion from e*Bohr to e*Ang
                 tdfac = self['tdip_scale']  * units.length['A']
                 if not 'Tmux' in sdict:
                     print(" *** No transition dipole info found for state %s"%state)
@@ -81,7 +83,7 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
 
                     af.write('draw cone ')
                     self.vmd_coors( .4 * tdfac, .6 * tdfac, sdict['Tmux'], sdict['Tmuy'], sdict['Tmuz'])
-                    af.write('radius % .3f\n'%(2*self['tdip_rad']))          
+                    af.write('radius % .3f\n'%(2*self['tdip_rad']))
             if self['do_2P']:
                 self.plot_2P(sdict)
 
@@ -97,7 +99,7 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
         tQxx = 2 * sdict['Qxx'] - sdict['Qyy'] - sdict['Qzz']
         tQyy = 2 * sdict['Qyy'] - sdict['Qxx'] - sdict['Qzz']
         tQzz = 2 * sdict['Qzz'] - sdict['Qyy'] - sdict['Qxx']
-        
+
         af = self.af
         if self.vmd_color(tQxx):
             fac = self['quad_scale'] * units.length['A'] * abs(tQxx)**.5
@@ -112,15 +114,15 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
     def plot_2P(self, sdict):
         if not '2Pxx' in sdict:
             return
-    
+
         TPmat = numpy.zeros([3,3], float)
         TPmat[0,:] = sdict['2Pxx'], sdict['2Pxy'], sdict['2Pxz']
         TPmat[1,:] = sdict['2Pyx'], sdict['2Pyy'], sdict['2Pyz']
         TPmat[2,:] = sdict['2Pzx'], sdict['2Pzy'], sdict['2Pzz']
-        
+
         TPstrength = numpy.trace(TPmat)**2 + numpy.sum(TPmat*TPmat) + numpy.sum(TPmat*TPmat.T)
         print('30*TPA strength [M a.u.]: % .5f'%(TPstrength*0.000002))
-        
+
         (Sdiag, coor) = numpy.linalg.eigh(TPmat)
         print(Sdiag)
         for mu in range(3):
@@ -135,7 +137,7 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
         self.af.write('draw cylinder ')
         self.vmd_coors(-ifac, ifac, x, y, z)
         self.af.write('radius % .3f\n'%rad)
-        
+
         self.af.write('draw sphere ')
         self.af.write('{% .3f % .3f % .3f} '%(ifac * x, ifac * y, ifac * z))
         self.af.write('radius % .3f\n'%(3*rad))
@@ -148,7 +150,7 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
         # self.af.write('radius % .3f\n'%(2*self['2P_rad']))
         # self.af.write('draw cone ')
         # self.vmd_coors(-.4 * fac, -.6 * fac, coor[0, mu], coor[1, mu], coor[2, mu])
-        # self.af.write('radius % .3f\n'%(2*self['2P_rad']))        
+        # self.af.write('radius % .3f\n'%(2*self['2P_rad']))
 
     def vmd_coors(self, fac1, fac2, x, y, z):
         self.af.write('{% .3f % .3f % .3f} '%(fac1 * x, fac1 * y, fac1 * z))
@@ -162,7 +164,7 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
             return True
         else:
             self.af.write('draw color red\n')
-            return True     
+            return True
 
 if __name__=='__main__':
     import sys
@@ -175,5 +177,4 @@ if __name__=='__main__':
     opt = mom_options('mom.in')
     opt['ana_file'] = sys.argv[1]
     opt.input()
-    opt.write_afile()    
-
+    opt.write_afile()
