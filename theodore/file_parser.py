@@ -558,6 +558,40 @@ class file_parser_libwfa(file_parser_base):
 
         return typ, excen, osc, dima, dimb, outarr
 
+    def rmatfile_all(self, fname, typ):
+        """
+        Read Omega (atoms) matrix as produced by libwfa. New format where
+        everything is written to one file.
+        """
+        print("Parsing entry %s of %s ..."%(typ, fname))
+        rfile=open(fname,'r')
+
+        while True:
+            try:
+                line = next(rfile)
+            except StopIteration:
+                raise error_handler.MsgError("Reached end of file %s"%fname)
+
+            if typ in line:
+                words = next(rfile).split()
+                dima=int(words[1])
+                dimb=int(words[2])
+
+                outarr = numpy.zeros([dima,dimb], float)
+
+                ia = ib = 0
+                while ia < dima:
+                  for val in next(rfile).split():
+                    outarr[ib, ia] = float(val)
+                    ib += 1
+                    if ib == dimb:
+                      ia += 1
+                      ib = 0
+                break
+
+        rfile.close()
+        return outarr
+
     def parse_line(self, state, line, rfile=None):
         if 'Exciton analysis of the difference density matrix' in line:
             self.excD = True
@@ -585,6 +619,7 @@ class file_parser_libwfa(file_parser_base):
         self.parse_key(state, 'nunl', line, 'Number of unpaired electrons')
         self.parse_key(state, 'p', line, 'Number of detached / attached electrons')
         self.parse_key(state, 'Om_', line, 'Sum of SVs')
+        self.parse_key(state, 'Phe', line, '<Phe>')
         self.parse_key(state, 'PRNTO', line, 'PR_NTO')
         self.parse_key(state, 'PRD', line, 'PR_D', 6)
         self.parse_key(state, 'PRA', line, 'PR_A')
@@ -762,7 +797,7 @@ class file_parser_qctddft(file_parser_libwfa):
             ststr2 = 'CIS Excitation Energies'
         else:
             ststr  = 'TDDFT Excitation Energies'
-            ststr2 = 'xyzabc'
+            ststr2 = 'xyzabc' # dummy string
 
         print("Parsing %s for %s ..."%(self.ioptions.get('rfile'), ststr))
 
@@ -820,23 +855,29 @@ class file_parser_qctddft(file_parser_libwfa):
                     if state['mult'] == 'Singlet':
                         nsing += 1
                         state['name'] = "S_%i"%nsing
+                        state['lname'] = "Singlet %i"%nsing
                     elif state['mult'] == 'Triplet':
                         ntrip += 1
                         state['name'] = "T_%i"%ntrip
+                        state['lname'] = "Triplet %i"%ntrip
                     else:
                         state['name'] = 'es_%i'%(state['state_num'])
+                        state['lname'] = 'Excited State %i'%(state['state_num'])
 
                     if self.ioptions['read_libwfa']:
-                        print("aaa", state['name'])
-                        typ = None
-                        if os.path.exists('%s_ctnum_atomic.om'%state['name']):
+                        om_at = None
+                        if os.path.exists("ctnum_mulliken.om"):
+                            om_at = self.rmatfile_all("ctnum_mulliken.om", state['lname'])
+                        if os.path.exists("ctnum_lowdin.om"):
+                            om_at = self.rmatfile_all("ctnum_lowdin.om", state['lname'])
+                        elif os.path.exists('%s_ctnum_atomic.om'%state['name']):
                             (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile('%s_ctnum_atomic.om'%state['name'])
                         elif os.path.exists('%s_ctnum_mulliken.om'%state['name']):
                             (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile('%s_ctnum_mulliken.om'%state['name'])
                         elif os.path.exists('%s_ctnum_lowdin.om'%state['name']):
                             (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile('%s_ctnum_lowdin.om'%state['name'])
 
-                        if not typ==None:
+                        if not om_at is None:
                             state_list[-1]['Om']   = om_at.sum()
                             state_list[-1]['OmAt'] = om_at
                     else:
@@ -867,9 +908,12 @@ class file_parser_qctddft(file_parser_libwfa):
                 # Disentangle the order of singlets and triplets
                 elif '  Singlet' in line or '  Triplet' in line:
                     words = line.split()
+                    currname = words[0][0] + "_" + words[1]
                     for istate, state in enumerate(state_list):
-                        if state['name'] == words[0][0] + words[1]:
+                        if state['name'] == currname:
                             break
+                    else:
+                        raise error_handler.MsgError("Did not find state %s"%currname)
 
                 elif 'Exciton analysis of the difference density matrix' in line:
                     exc_1TDM = False
