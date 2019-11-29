@@ -29,8 +29,6 @@ class green_ana(dens_ana_base.dens_ana_base):
         """
         print("\n*** Computing Green's functions ... ***")
 
-        E = 0.5 * (0.049 - 0.252)
-
         if self.ioptions['jmol_orbitals']:
             jmolO = lib_mo.jmol_MOs("green")
             jmolO.pre(ofile=self.ioptions['mo_file'])
@@ -42,31 +40,30 @@ class green_ana(dens_ana_base.dens_ana_base):
             for A, Aatoms in enumerate(self.ioptions['at_lists']):
                 (U, lam, Vt) = self.ret_GNTO(invF, Aatoms)
                 if self.ioptions['jmol_orbitals']:
-                    self.export_NTOs_jmol({'name':'_E%.3f'%E}, jmolO, U, lam, Vt, post="_F%02i"%(A+1),\
-                    minlam=self.ioptions['minlam'])
+                    self.export_NTOs_jmol({'name':'_E%.3f'%E}, jmolO, U, lam, Vt, post="_F%02i"%(A+1))
 
         # Post-precessing
         if self.ioptions['jmol_orbitals']:
             jmolO.post()
 
-    def export_jmol(self, name, jmolO, n, U, mincoeff=0.2, minn=0.05):
-        """
-        Export orbitals in jmol.
-        """
-        Ut = U.T
-        jmolO.next_set(name)
-        for i, ni in enumerate(n):
-            if abs(ni) < minn:
-                continue
-
-            jmolI = 'mo ['
-            for occind in (-abs(Ut[i])**2.).argsort():
-                occ = Ut[i][occind]
-                if abs(occ) < mincoeff: break
-                jmolI += ' %.3f %i'%(occ,occind+1)
-
-            jmolI += ']\n'
-            jmolO.add_mo(jmolI, "G_%s_%i"%(name, i+1), ni)
+    # def export_jmol(self, name, jmolO, n, U, mincoeff=0.2, minn=0.05):
+    #     """
+    #     Export orbitals in jmol.
+    #     """
+    #     Ut = U.T
+    #     jmolO.next_set(name)
+    #     for i, ni in enumerate(n):
+    #         if abs(ni) < minn:
+    #             continue
+    #
+    #         jmolI = 'mo ['
+    #         for occind in (-abs(Ut[i])**2.).argsort():
+    #             occ = Ut[i][occind]
+    #             if abs(occ) < mincoeff: break
+    #             jmolI += ' %.3f %i'%(occ,occind+1)
+    #
+    #         jmolI += ']\n'
+    #         jmolO.add_mo(jmolI, "G_%s_%i"%(name, i+1), ni)
 
     def ret_GNTO(self, invF, Aatoms):
         """
@@ -81,3 +78,31 @@ class green_ana(dens_ana_base.dens_ana_base):
         lam = sqrlam * sqrlam
 
         return U, lam, Vt
+
+    def export_NTOs_jmol(self, state, jmolNTO, U, lam, Vt, mincoeff=0.2, nNTO=1, pref='G', post=''):
+        Ut = numpy.transpose(U)
+        sname = pref + state['name'].replace('(', '-').replace(')', '-') + post
+        jmolNTO.next_set(sname)
+        for i, l in enumerate(lam):
+            if i >= nNTO:
+                break
+
+            jmolI = 'mo color blue red\nmo ['
+            jmolF = 'mo color orange green\nmo ['
+
+            for occind in (-abs(Ut[i])**2.).argsort():
+                occ = Ut[i][occind]
+                if abs(occ) < mincoeff: break
+
+                jmolI += ' %.3f %i'%(occ,occind+1)
+
+            for virtind in (-abs(Vt[i])**2.).argsort():
+                virt = Vt[i][virtind]
+                if abs(virt) < mincoeff: break
+
+                jmolF += ' %.3f %i'%(virt,virtind+1)
+
+            jmolI += ']\n'
+            jmolNTO.add_mo(jmolI, "%s_%i_probe"%(sname,i+1), l)
+            jmolF += ']\n'
+            jmolNTO.add_mo(jmolF, "%s_%i_cond"%(sname,i+1), l)

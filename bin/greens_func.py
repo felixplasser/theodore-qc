@@ -6,7 +6,7 @@ Driver script for analyzing a set of NO files.
 
 import os, sys
 
-from theodore import theo_header, lib_green
+from theodore import theo_header, lib_green, units
 
 theo_header.print_header('Construction of Green\'s functions')
 
@@ -51,7 +51,17 @@ ioptions['Om_formula'] = 2
 ga = lib_green.green_ana(ioptions)
 ga.read_mos()
 
+ihomo = ga.mos.ret_ihomo()
+ehomo = ga.mos.ens[ihomo]
+elumo = ga.mos.ens[ihomo+1]
 
-energies = [0.5*(-0.252)+0.5*0.049, 0.75*(-0.252)+0.25*0.049]
+# Fermi energy
+EF = 0.5 * ehomo + 0.5 * elumo
+
+print(ehomo, elumo, EF)
+
+#energies = [(1.-x)*ehomo + x*elumo for x in [0.1, 0.25, 0.5, 0.75, 0.9]]
+
+energies = [EF + x / units.energy['eV'] for x in [-1, -0.5, -0.25, 0, 0.25, 0.5, 1]]
 
 ga.compute_G(energies)
