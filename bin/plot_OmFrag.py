@@ -83,11 +83,12 @@ class OmFrag_options(input_options.write_options):
         self.read_str("Format of output graphics files", "output_format", "png", autocomp=False)
         self.read_yn('Use the same scale for all plots', 'sscale', True)
         if self['sscale']:
+            self.read_float('Minimal value to plot', 'vmin', 0.)
             self.read_float('Maximal value to plot', 'vmax', self.maxOm)
         self.read_yn('Plot frame?', 'axis', True)
         if self['axis']:
             self.read_yn('Axis with tick labels?', 'ticks', False)
-        self.read_yn('Draw grid?', 'grid', False)
+        self.read_yn('Draw grid?', 'grid', True)
         self.read_yn('Plot colorbar for each individual plot?', 'cbar', False)
 
 
@@ -115,12 +116,29 @@ class OmFrag_options(input_options.write_options):
                 raise error_handler.ElseError(str(self['plot_type']), 'plot_type')
 
             if self['sscale']:
+                vmin = self['vmin']
                 vmax = self['vmax']
             else:
+                vmin = 0.
                 vmax = state['OmFrag'].max()
 
+            # Completely delete the small elements
+            # for x in numpy.nditer(plot_arr, op_flags = ['readwrite']):
+            #     if x < vmin:
+            #         x[...] = -1. # numpy.nan
+
             pylab.figure(figsize=(2,2))
-            pylab.pcolor(plot_arr, cmap=pylab.get_cmap(name=self['cmap']), vmin=0., vmax=vmax, edgecolors=edgecolors)
+            pylab.pcolor(plot_arr, cmap=pylab.get_cmap(name=self['cmap']), vmin=vmin, vmax=vmax, edgecolors=edgecolors)
+
+            # *** Different colouring of different parts ***
+            # frag_lists = [[0, 2, 4, 6], [1, 3, 5]]
+            # cmaps = ['Reds', 'Blues']
+            # OmDim = len(plot_arr)
+            # for frag in frag_lists:
+            #     tmp_arr = numpy.array([[numpy.nan for i in range(OmDim)] for j in range(OmDim)])
+            #     for i in frag:
+            #         tmp_arr[i,i] = plot_arr[i,i]
+            #     pylab.pcolor(tmp_arr, cmap=pylab.get_cmap(cmaps.pop(0)), vmin=0., vmax=vmax, edgecolors=edgecolors)
 
             if self['axis']:
                 pylab.axis('on')
@@ -159,7 +177,7 @@ class OmFrag_options(input_options.write_options):
             pylab.savefig('axes_no.%s'%self['output_format'], dpi=self['plot_dpi'])
 #            pylab.figure(figsize=(2,2))
 
-            pylab.pcolor(numpy.zeros([1, 1]), cmap=pylab.get_cmap(name=self['cmap']), vmin=0., vmax=self['vmax'])
+            pylab.pcolor(numpy.zeros([1, 1]), cmap=pylab.get_cmap(name=self['cmap']), vmin=self['vmin'], vmax=self['vmax'])
 
             pylab.colorbar()
 

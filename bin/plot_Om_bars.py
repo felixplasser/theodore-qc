@@ -103,11 +103,30 @@ class Om_bar_options(input_options.write_options):
         lfile = lib_file.latexfile('Om_bars.tex')
         lfile.write(self.pre())
 
+        # Graphs with energies
+        lfile.write("""\\begin{axis}[
+      anchor=south west, at={(0,0)},
+      height=3.0cm,
+      xlabel={}, ylabel={Energy (eV)},
+      xtick={-10}, xticklabels={},
+      %colorbar % uncomment for colorbar as legend
+      ]\n""")
+
+        lfile.write("\\addplot[mark=-, only marks, mark options={scale=2, line width=2pt}]  table[x index=0, y index=2] {Om_bar_data.txt};\n\n")
+        lfile.write("% Uncomment to plot oscillator strengths as shading\n")
+        lfile.write("%\\addplot+[solid, mesh, point meta=explicit, no markers, line width=5cm, shader=flat corner] table[x expr=\\thisrowno{0}-0.5, y expr=5, meta expr=\\thisrowno{3}] {Om_bar_data.txt};\n")
+        lfile.write('\end{axis}\n')
+
         # Bar graphs with state characters
         lfile.write("""\\begin{axis}[
       anchor=north west, at={(0,0)},
       xlabel={State}, ylabel={Character},
-      ytick={0.0,0.2,...,0.8},\n""")
+      ytick={0.0,0.2,...,0.8},
+      xtick pos=left, xtick align=outside,\n""")
+        lfile.write("xtick={1, %i, %i},\n"%(self.numSt//2, self.numSt))
+        #lfile.write("xticklables={1, %i, %i},"%(self.numSt//2, self.numSt))
+        labs = (self.state_list[0]['name'], self.state_list[self.numSt//2-1]['name'], self.state_list[self.numSt-1]['name'])
+        lfile.write("xticklabels={$%s$, $%s$, $%s$},\n"%labs)
         lfile.write("ymin=-0.0, ymax=1,\n")
         lfile.write("ybar stacked, bar width=%.3f cm]\n"%(self['width']/self.numSt/1.5))
 
@@ -115,19 +134,6 @@ class Om_bar_options(input_options.write_options):
             lfile.write("\\addplot[ybar, draw=black, fill=%s] table[x index=0, y index=%i] {Om_bar_data.txt};\n"%(comp['color'], icomp+4))
             lfile.write("\\addlegendentry{%s};\n"%comp['name'])
         lfile.write('\end{axis}\n\n')
-
-        # Graphs with energies
-        lfile.write("""\\begin{axis}[
-      anchor=south west, at={(0,0)},
-      height=3.0cm,
-      xlabel={}, ylabel={Energy (eV)}
-      %, colorbar % uncomment for colorbar as legend
-      ]\n""")
-
-        lfile.write("\\addplot[mark=-, only marks, mark options={scale=2, line width=2pt}]  table[x index=0, y index=2] {Om_bar_data.txt};\n\n")
-        lfile.write("% Uncomment to plot oscillator strengths as shading\n")
-        lfile.write("%\\addplot+[solid, mesh, point meta=explicit, no markers, line width=2cm, shader=flat corner] table[x expr=\\thisrowno{0}-0.5, y expr=5, meta expr=\\thisrowno{3}] {Om_bar_data.txt};\n")
-        lfile.write('\end{axis}\n')
 
         # Finish
         lfile.write('\end{tikzpicture}\n')
@@ -175,8 +181,7 @@ every linear axis/.append style={
 """
         str += 'width=%.3f cm, height=3.0cm,'%self['width']
         str += "xmin=0, xmax=%i,\n"%(self.numSt+1)
-        str += """xtick={-10}, xticklabels={},
-  scale only axis, axis on top,
+        str += """scale only axis, axis on top,
   yticklabel style={
     /pgf/number format/fixed,
     /pgf/number format/zerofill,
@@ -184,7 +189,7 @@ every linear axis/.append style={
   legend style={at={(1.01,0.00)}, anchor=south west, draw=none, fill=black!5, inner sep=0.5pt, outer sep=0.5pt},
   legend columns=1, legend cell align=left},
 }
-\pgfplotsset{colormap={CI}{color=(white); color=(green!50); color=(blue!70);}}
+\pgfplotsset{colormap={CI}{color=(white); color=(blue!50); color=(O!70);}}
 
 % ===========================================================================
 
