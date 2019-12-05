@@ -207,13 +207,13 @@ Use alpha/beta rather then negative/positive to code for hole/particle orbitals?
 Choice (y/n): [n] \redl{n <ENTER>} \comment{! Only for special applications}
 
 NTOs in Cube file format (requires orbkit) (cube_orbitals):
-Choice (y/n): [n] \redl{<ENTER>}
+Choice (y/n): [n] \redl{<ENTER>} \comment{! This option appears only when orbkit is installed}
 
 Calculation of Particle/Hole density (requires orbkit)? (comp_p_h_dens):
-Choice (y/n): [n] \redl{<ENTER>}
+Choice (y/n): [n] \redl{<ENTER>} \comment{! Only with orbkit}
 
 Calculation of transition densities between ground state and excited states (requires orbkit) (comp_rho0n):
-Choice (y/n): [n] \redl{<ENTER>}
+Choice (y/n): [n] \redl{<ENTER>} \comment{! Only with orbkit}
 
 Perform exciton analysis?
 Choice (y/n): [y] \redl{n <ENTER>}
@@ -454,9 +454,9 @@ The meaning of these values is discussed in Refs~\cite{DMAT, DMAT_ADC_II} and at
 In the case of using \texttt{ricc2} the first value \texttt{Om} or $\Omega$ is just a normalization factor.
 In cases, where an exact 1TDM is available, this is the one-electron excitation character.
 \item
-The values $\om{POS}=1.500$ and $\om{PR}=2.000$ in all cases mean that the excitation is distributed evenly between fragment 1 and fragment 2 (for symmetry reasons)
+The values POS=1.500 and PR=2.000 in all cases mean that the excitation is distributed evenly between fragment 1 and fragment 2 (for symmetry reasons)
 \item
-The crucial information lies in the $\om{CT}$ value. $\om{CT}\approx 0$ for the first four excited states, meaning that these are mostly coupled local excitations (Frenkel excitons). For the last two states $\om{CT}$ is greater than 0.8 indicating that these are charge resonance states.
+The crucial information lies in the CT value. CT$\approx 0$ for the first four excited states, meaning that these are mostly coupled local excitations (Frenkel excitons). For the last two states CT is greater than 0.8 indicating that these are charge resonance states.
 \item
 The trend in the CT values is also reflected by the (approximated) root-mean square electron-hole separation (RMSeh, also denoted $\tilde{d}_{exc}$) given in \AA~\cite{PPV_Steffi}.
 This value is is about equal to the intermolecular separation of 3.5~\AA{} in the case of the charge resonance states while it is significantly smaller for the locally excited states.
@@ -467,7 +467,7 @@ To create electron-hole correlation plots, run
 
 \comm{plot\_OmFrag.py}
 
-Simply use all default values an then look at \texttt{OmFrag.html} in a browser.\\
+Simply use all default values and then look at \texttt{OmFrag.html} in a browser.\\
 
 \begin{tabular}{|cccc|}
 \hline
@@ -580,7 +580,7 @@ Coordinate file (coor_file):
 Choice (autocomplete enabled): \rede{gaussian.log} \comment{! simply take the log file}
 
 Format of coordinate file (coor_format):
-Choice: g09 \comment{! format, as recongized by openbabel} %CHECK THIS%
+Choice: g09 \comment{! format, as recongized by openbabel}
 \end{Verbatim}
 \normalsize
 
@@ -841,19 +841,18 @@ The file should look like this:
 
 \scriptsize
 \begin{Verbatim}[commandchars=\\\{\}]
-rtype='colmrci'
-rtype='colmrci'
-mo_file='MOLDEN/molden_mo_mc.sp'
-coor_file='geom.mol'
-coor_format='mol'
-at_lists=[[1, 3, 7, 9, 11], [2, 4, 8, 10, 12], [5, 6, 13, 14]]
+rtype="colmrci"
+mo_file="MOLDEN/molden_mo_mc.sp"
+coor_file="geom.mol"
+coor_format="mol"
+at_lists=[[1, 3, 7, 9, 11], [5, 6, 13, 14], [2, 4, 8, 10, 12]]
 Om_formula=2
 eh_pop=1
 comp_ntos=False
 comp_dntos=False
 comp_ntos=False
 comp_rho0n=False
-prop_list=['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt']
+prop_list=["Om", "POS", "PR", "CT", "COH", "CTnt"]
 \end{Verbatim}
 \normalsize
 \vspace{-1em}
@@ -866,36 +865,37 @@ As always:
 \vspace{-0.5em}
 \scriptsize
 \begin{Verbatim}[commandchars=\\\{\}]
-Decomposition over fragments
-I1.1-2
+I2.1-2
 -------------------------------------------------------
        Fragment        h+        e-       sum      diff
 -------------------------------------------------------
-         C2 H3    0.12150   0.11214   0.23364   0.00936
-         C2 H3    0.12150   0.11214   0.23364   0.00936
-         C2 H2    0.13249   0.15121   0.28370  -0.01872
+         C2 H3    0.12852   0.11292   0.24144   0.01561
+         C2 H2    0.17536   0.20658   0.38194  -0.03122
+         C2 H3    0.12852   0.11292   0.24144   0.01561
 -------------------------------------------------------
-                  0.37549   0.37549   0.75099   0.00000
+                  0.43241   0.43241   0.86482   0.00000
 -------------------------------------------------------
 
-
-...
+File ehFrag.txt with information about e/h populations written.
 
 state       dE(eV)    f     Om    POS     PR     CT    COH   CTnt
 ------------------------------------------------------------------
-I1.1-2      5.565  0.000  0.375  2.067  2.966  0.812  2.715  0.075
-I2.1-1      6.530  1.254  0.865  2.122  2.897  0.617  2.861 -0.113
-I2.1-2      6.772  0.006  0.432  2.162  2.837  0.897  1.833  0.108
+I1.1-2      5.565  0.000  0.375  2.000  2.966  0.812  2.715  0.000
+I2.1-1      6.530  1.254  0.865  2.000  2.897  0.617  2.861  0.000
+I2.1-2      6.772  0.006  0.432  2.000  2.837  0.897  1.833 -0.000
 \end{Verbatim}
 \normalsize
 
 \greybox{The first and third states show predominant double excitation character $(\Omega<0.5)$.
-Note, that in these cases the 1TDM analysis does not provide a complete description.}
+Note, that for low $\Omega$ values the 1TDM analysis does not provide a complete description and one might resort to the difference density matrix instead.}
 \clearpage
 
-\section{Fragment decomposition}
-\theo{} is able to decompose electron and hole populations of excited states Refs~\cite{Fragments}. For this example, we are going to use a small Ir complex with three bidentate ligands. First get the files from the \texttt{EXAMPLES} directory:\\
+\section{Fragment decomposition for a transition metal complex}
+A more compact representation for showing the different local and charge transfer contributions to an excited state has been worked out in Ref.~\cite{Fragments}.
+For this example, we are going to use a small Ir complex with three bidentate ligands. First get the files from the \texttt{EXAMPLES} directory:\\
 \comm{cp -r \$THEODIR/EXAMPLES/ir\_c3n3.qctddft/QC\_FILES/ ir\_c3n3.qctddft.tutorial} \\
+
+\comment{TODO: this can be done without Avogadro}
 
 As before, do:\\
 \comm{avogadro qchem.xyz}\\
@@ -967,6 +967,8 @@ at_lists= [[1], [2, 23, 6, 16, 7, 5, 15, 14], [3, 25, 12, 22, 13, 9, 20, 21], [4
   4 lists with individual numbers of entries:
 [1, 8, 8, 8]
   25 total entries, with maximal value 25
+
+\comment{TODO: Use option 2}
 
 Omega descriptors to be computed:
   [ 1] Standard set
@@ -1090,12 +1092,12 @@ Choice: \rede{}
  ... switching to next component.
 
 Name of component 3 (e.g. MLCT or A-B)
-Choice: \redl{LE(L)} \comment{! local excitations on ligands}
+Choice: \redl{LC} \comment{! ligand-centred local excitations}
 
 Color for plotting
 Choice: \redl{red <ENTER>}
 
- *** Fragment pairs belonging to LE(L) ***
+ *** Fragment pairs belonging to LC ***
   Enter two indices between 1 and 4, separated by spaces
   Leave empty to finish
 
@@ -1172,12 +1174,17 @@ The results of the decomposition are as shown:\\
 \clearpage
 
 \section{Domain NTO and conditional density analysis}
-It is possible to visualise excited state correlation using \theo{}. This is done by plotting domain NTOs and conditional densities. The idea is the consider the excited state using an 'electron-hole' picture. A hole is fixed on a fragment of the molecule and the resulting conditional electron density is observed. Further explanation can be found in Ref~\cite{ExcCorr}. This procedure requires \texttt{ORBKIT} which is not installed with \theo{} but is available from \url{https://github.com/orbkit/orbkit.}
+It is possible to visualise excited state correlation using \theo{}. This is done by plotting domain NTOs and conditional densities. The idea is the consider the excited state using an 'electron-hole' picture. A hole is fixed on a fragment of the molecule and the resulting conditional electron density is observed. Further explanation can be found in Ref~\cite{ExcCorr}. This procedure requires \texttt{ORBKIT} which is not installed by default but is available from \url{https://github.com/orbkit/orbkit.}
 
 Get the input files from the \texttt{EXAMPLES} directory\\
 \comm{cp -r \$THEODIR/EXAMPLES/naphth.fchk/QC\_FILES/ naphth.fchk.tutorial}
 
 From the tutorial folder, open the .xyz file with \textsc{Avogadro}, create fragments for the napthalene molecule and save it as a .mol file as done in Section \ref{sec:advinp}. 
+
+\comment{TODO: show Avogadro screenshot}
+
+\greybox{In the present case, we want to separate two symmetry-unique CH groups from the remaining molecule.
+This allows us to view correlation effects between the individual atoms.}
 
 \subsection{Input generation}
 Call \comm{theoinp}
@@ -1199,8 +1206,7 @@ Type of job (rtype):
   [13]       orca - ORCA TDDFT (using a Molden file and cclib)
   [14]        adf - ADF (TDDFT)
   [15]     tddftb - DFTB+ - TDDFTB
-Choice: [4] \rede{} \comment{! In order to plot domain NTOs and conditional densities you need full}
-                     \comment{! information about MO coefficients.}
+Choice: [4] \rede{}
 
 Main file to read (rfile):
 Choice (autocomplete enabled): [qchem.fchk] \rede{}
@@ -1238,6 +1244,8 @@ at_lists= [[1, 6, 2, 3, 9, 4, 10, 5, 11, 12, 7, 8, 13, 16], [14, 17], [15, 18]]
   3 lists with individual numbers of entries:
 [14, 2, 2]
   18 total entries, with maximal value 18
+
+\comment{TODO: this is not the same as shown below}
 
 Formula for Omega matrix computation
    0 - simple, 1 - Mulliken, 2 - Lowdin (Om_formula):
@@ -1358,7 +1366,7 @@ Using \textsc{Jmol}, the shortcuts used earlier are available to view the orbita
 
 Then the results can be viewed by looking at the .html files in a browser.
 
-A more in depth analysis can be carried out using VMD. Run:\\
+A more compact representation is obtained by processing the cube files generated via VMD. Run:\\
 \comm{vmd\_plots.py rho*.cb}\\
 When prompted, do the following:
 \scriptsize
@@ -1413,7 +1421,7 @@ Finally open the images in a web browser
 
 The results you get for the naphthalene molecule as outlined in this tutorial are shown below:
 
-\greybox{You can also use \textsc{PyMOL} to visualise the conditional densities but note that you need to change the .cb file ending to .cube}
+\greybox{You can also use \textsc{PyMOL} to visualise the conditional densities but note that you need to change the .cb file ending to .cube . Plots can be created via the \textsc{qc\_pymol} toolkit: \url{https://github.com/felixplasser/qc_pymol} }
 \clearpage
 \section{Attachment/detachment analysis (Molcas - natural orbitals)}
 While the previous examples were focused on an analysis of the transition density matrices, TheoDORE can also analyze state- and difference-density matrices.
@@ -1594,7 +1602,7 @@ If you have any questions about this tutorial or about the \textsc{TheoDORE} pro
 
 \url{https://sourceforge.net/p/theodore-qc/discussion/bugs_questions/}
 
-You can also reach me via email: \texttt{felix.plasser at univie.ac.at}
+You can also reach me via email: \texttt{f.plasser at lboro.ac.uk}
 
 \scriptsize
 \begin{Verbatim}[commandchars=\\\{\}]
