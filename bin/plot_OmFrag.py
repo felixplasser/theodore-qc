@@ -75,7 +75,11 @@ class OmFrag_options(input_options.write_options):
             ('YlGn', 'Yellow -> Green'),
             ('YlOrRd', 'Yellow -> Orange -> Red'),
             ('YlOrBr', 'Yellow -> Orange -> Brown'),
-            ('RdYlBu', 'Red -> Yellow -> Blue')
+            ('RdYlBu', 'Red -> Yellow -> Blue'),
+            ('binary', 'White -> Black'),
+            ('bone_r', 'White -> Blue -> Black'),
+            ('pink_r', 'White -> Pink -> Black'),
+            ('hot_r',  'White -> Yellow -> Red -> Black')
         ], 'Greys'
         )
 
@@ -88,6 +92,11 @@ class OmFrag_options(input_options.write_options):
         self.read_yn('Plot frame?', 'axis', True)
         if self['axis']:
             self.read_yn('Axis with tick labels?', 'ticks', False)
+            if self['ticks']:
+                self.read_yn('Use custom tick labels?', 'cticks', False)
+                if self['cticks']:
+                    self['xticks'] = self.ret_str('Enter x-tick labels (separated by spaces)').split()
+                    self['yticks'] = self.ret_str('Enter y-tick labels (separated by spaces)').split()
         self.read_yn('Draw grid?', 'grid', True)
         self.read_yn('Plot colorbar for each individual plot?', 'cbar', False)
 
@@ -144,8 +153,12 @@ class OmFrag_options(input_options.write_options):
                 pylab.axis('on')
                 if self['ticks']:
                     pylab.tick_params(which='both', length=0)
-                    pylab.xticks([x + 0.5 for x in range(len(plot_arr))], [x + 1 for x in range(len(plot_arr))])
-                    pylab.yticks([y + 0.5 for y in range(len(plot_arr))], [y + 1 for y in range(len(plot_arr))])
+                    if self['cticks']:
+                        pylab.xticks([x + 0.5 for x in range(len(plot_arr))], self['xticks'])
+                        pylab.yticks([y + 0.5 for y in range(len(plot_arr))], self['yticks'])
+                    else:
+                        pylab.xticks([x + 0.5 for x in range(len(plot_arr))], [x + 1 for x in range(len(plot_arr))])
+                        pylab.yticks([y + 0.5 for y in range(len(plot_arr))], [y + 1 for y in range(len(plot_arr))])
                 else:
                     pylab.xticks([])
                     pylab.yticks([])
@@ -156,6 +169,7 @@ class OmFrag_options(input_options.write_options):
 
             pname = 'pcolor_%s.%s'%(state['name'], self['output_format'])
             print("Writing %s ..."%pname)
+            pylab.tight_layout()
             pylab.savefig(pname, dpi=self['plot_dpi'])
             pylab.close()
 
