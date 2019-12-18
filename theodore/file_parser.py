@@ -299,9 +299,9 @@ from the control file.""")
 
             elif curr_osc < len(ret_list):
                 state = ret_list[curr_osc]
-                self.parse_key(state, 'Tmux', line, 'xdiplen', 1)
-                self.parse_key(state, 'Tmuy', line, 'ydiplen', 1)
-                self.parse_key(state, 'Tmuz', line, 'zdiplen', 1)
+                self.parse_key(state, 'Tmux', line, 'xdiplen', 1, not_string='rel')
+                self.parse_key(state, 'Tmuy', line, 'ydiplen', 1, not_string='rel')
+                self.parse_key(state, 'Tmuz', line, 'zdiplen', 1, not_string='rel')
 
             elif 'real representations' in line:
                 self.ioptions['irrep_labels'] = line.split()[6:]
