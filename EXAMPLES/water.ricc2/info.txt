@@ -1,0 +1,2 @@
+input from Reed Nieman:
+problem for parsing ricc2 when no transition moments are requested
