@@ -54,6 +54,7 @@
 
 \newcommand{\incmo}[1]{\includegraphics[trim=1cm 1cm 1cm 1cm, clip=true, width=4cm]{#1}}
 \newcommand{\incom}[1]{\includegraphics[width=3cm]{#1}}
+\newcommand{\incrho}[1]{\includegraphics[trim=3cm 4cm 3cm 4cm, clip=true, width=3.5cm]{#1}}
 
 \let\origttfamily=\ttfamily % alte Definition von \ttfamily sichern
 \renewcommand{\ttfamily}{\origttfamily \hyphenchar\font=`\-}
@@ -895,12 +896,6 @@ A more compact representation for showing the different local and charge transfe
 For this example, we are going to use a small Ir complex with three bidentate ligands. First get the files from the \texttt{EXAMPLES} directory:\\
 \comm{cp -r \$THEODIR/EXAMPLES/ir\_c3n3.qctddft/QC\_FILES/ ir\_c3n3.qctddft.tutorial} \\
 
-\comment{TODO: this can be done without Avogadro}
-
-As before, do:\\
-\comm{avogadro qchem.xyz}\\
-
-Split the complex into fragments (the Ir centre and three ligands). Save this structure as a .mol file
 \subsection{Input generation}
 Call \comm{theoinp}
 \scriptsize
@@ -921,16 +916,16 @@ Type of job (rtype):
   [13]       orca - ORCA TDDFT (using a Molden file and cclib)
   [14]        adf - ADF (TDDFT)
   [15]     tddftb - DFTB+ - TDDFTB
-Choice: [1] \redl{3 <ENTER>} \comment{! \theo{} guesses qcadc but we actually ran qctddft}
+Choice: [1] \rede{3}
 
 Main file to read (rfile):
 Choice (autocomplete enabled): [qchem.out] \rede{}
 
 Did you run "state_analysis=True"? (read_libwfa):
-Choice (y/n): [n] \redl{y <ENTER>} \comment{! The input file for this job has read_libwfa=True} 
+Choice (y/n): [n] \rede{y}
 
 Read TDA rather than full TDDFT results? (TDA):
-Choice (y/n): [n] \rede{} \comment{! We ran TDA=False}
+Choice (y/n): [n] \rede{}
 
 Analysis of transition density matrices?
 Choice (y/n): [y] \rede{}
@@ -946,19 +941,23 @@ Mode for specifying molecular fragments (at_lists):
   [ 4] Mixed manual/automatic generation (using python-openbabel)
   [ 5] Automatic generation by element (using python-openbabel)
   [ 6] Leave empty and fill out later
-Choice: \redl{2 <ENTER>}
+Choice: \rede{3} \comment{! for transition metal complexes, openbabel can automatically distinguish between the metal centre} 
+                    \comment{and ligands provided you give the index of the metal centre}
 Automatic generation of at_lists partitioning ...
 
 Coordinate file (coor_file):
-Choice (autocomplete enabled): [qchem.out] \redl{qchem.mol <ENTER>} 
+Choice (autocomplete enabled): [qchem.out] \rede{qchem.mol}
 Detected file type: mol
 
 Format of coordinate file (coor_format):
 Choice: [mol] \rede{}
 
+Input the index of the transition metal atom (or indices of the corresponding fragment)
+Choice: \rede{1} \comment{! In this case Ir is atom 1 (you can check this in avogadro)}
+
 *** Fragment composition ***
-  Fragment 1: Ir       \comment{! These indices will be needed later on - it's helpful to know which}
-  Fragment 2: C3 H4 N  \comment{one corresponds to each fragment} 
+  Fragment 1: Ir 
+  Fragment 2: C3 H4 N 
   Fragment 3: C3 H4 N 
   Fragment 4: C3 H4 N 
 
@@ -968,13 +967,11 @@ at_lists= [[1], [2, 23, 6, 16, 7, 5, 15, 14], [3, 25, 12, 22, 13, 9, 20, 21], [4
 [1, 8, 8, 8]
   25 total entries, with maximal value 25
 
-\comment{TODO: Use option 2}
-
 Omega descriptors to be computed:
   [ 1] Standard set
   [ 2] Transition metal complex
   [ 3] None
-Choice: [1] \rede{}
+Choice: [1] \rede{2} \comment{! Earlier we used option 1 but we are working with a TM complex now} 
 
 Print-out of electron/hole populations
   [ 1] None
@@ -1008,6 +1005,7 @@ Choice (y/n): [n] \rede{}
 Name of input file
 Choice: [dens_ana.in] \rede{}
 Finished: File dens_ana.in written.
+
 \end{Verbatim}
 \normalsize
 
@@ -1017,14 +1015,14 @@ Run \comm{analyze\_tden.py}
 This gives the results for the first six excited states:
 \scriptsize
 \begin{Verbatim}[commandchars=\\\{\}]
-state       dE(eV)    f     Om    POS     PR     CT    COH   CTnt  RMSeh
--------------------------------------------------------------------------
-S_1         3.948  0.031  1.012  2.371  3.058  0.646  2.638  0.963  2.397
-S_2         3.999  0.035  1.013  2.429  2.653  0.586  2.341  0.962  2.249
-S_3         4.000  0.035  1.012  2.139  2.633  0.586  2.329  0.685  2.250
-S_4         4.408  0.040  1.004  2.043  2.498  0.788  2.470  0.785  2.685
-S_5         4.410  0.041  1.004  2.463  2.474  0.789  2.452  1.383  2.685
-S_6         4.426  0.008  1.004  2.178  3.011  0.753  2.759  0.946  2.621
+state       dE(eV)    f     Om   POSi   POSf     PR     CT     MC     LC   MLCT   LMCT   LLCT  RMSeh
+-----------------------------------------------------------------------------------------------------
+S_1         3.948  0.031  1.012  1.889  2.852  3.058  0.646  0.043  0.311  0.513  0.034  0.098  2.397
+S_2         3.999  0.035  1.013  1.948  2.910  2.653  0.586  0.098  0.316  0.465  0.052  0.069  2.249
+S_3         4.000  0.035  1.012  1.797  2.482  2.633  0.586  0.098  0.316  0.465  0.052  0.069  2.250
+S_4         4.408  0.040  1.004  1.650  2.436  2.498  0.788  0.075  0.136  0.569  0.032  0.187  2.685
+S_5         4.410  0.041  1.004  1.772  3.154  2.474  0.789  0.075  0.136  0.569  0.032  0.187  2.685
+S_6         4.426  0.008  1.004  1.705  2.651  3.011  0.753  0.112  0.134  0.535  0.053  0.166  2.621
 \end{Verbatim}
 \normalsize
 
@@ -1181,7 +1179,7 @@ Get the input files from the \texttt{EXAMPLES} directory\\
 
 From the tutorial folder, open the .xyz file with \textsc{Avogadro}, create fragments for the napthalene molecule and save it as a .mol file as done in Section \ref{sec:advinp}. 
 
-\comment{TODO: show Avogadro screenshot}
+\includegraphics[trim=0cm 0cm 0.1cm 0cm, clip=true, scale=0.23]{naphth_frag.png}
 
 \greybox{In the present case, we want to separate two symmetry-unique CH groups from the remaining molecule.
 This allows us to view correlation effects between the individual atoms.}
@@ -1244,8 +1242,6 @@ at_lists= [[1, 6, 2, 3, 9, 4, 10, 5, 11, 12, 7, 8, 13, 16], [14, 17], [15, 18]]
   3 lists with individual numbers of entries:
 [14, 2, 2]
   18 total entries, with maximal value 18
-
-\comment{TODO: this is not the same as shown below}
 
 Formula for Omega matrix computation
    0 - simple, 1 - Mulliken, 2 - Lowdin (Om_formula):
@@ -1320,7 +1316,7 @@ rtype='fchk'
 rfile='qchem.fchk'
 coor_file='coord.mol'
 coor_format='mol'
-at_lists=[[1, 6], [2, 3, 9, 4, 10, 5, 11, 12], [7, 8, 13, 14, 16, 15, 17, 18]]
+at_lists=[[1, 6, 2, 3, 9, 4, 10, 5, 11, 12, 7, 8, 13, 16], [14, 17], [15, 18]]
 Om_formula=2
 eh_pop=0
 comp_ntos=True
@@ -1419,7 +1415,13 @@ Close \texttt{VMD} and from call:
 Finally open the images in a web browser 
 \comm{firefox vmd\_plots.html}
 
-The results you get for the naphthalene molecule as outlined in this tutorial are shown below:
+The key results you get for the naphthalene CH fragments as outlined in this tutorial are shown below. The red shading indicates the position of the hole. 
+
+\begin{tabular}{cccc}
+%\incrho{naphth/rho_p_S_B3u_1_hole-F01.png} & \incrho{naphth/rho_p_S_B3u_2_hole-F01.png} & \incrho{naphth/rho_p_T_B3u_1_hole-F01.png} & \incrho{naphth/rho_p_T_B3u_2_hole-F01.png} \\
+\incrho{naphth/rho_p_S_B3u_1_hole-F02.png} & \incrho{naphth/rho_p_S_B3u_2_hole-F02.png} & \incrho{naphth/rho_p_T_B3u_1_hole-F02.png} & \incrho{naphth/rho_p_T_B3u_2_hole-F02.png} \\
+\incrho{naphth/rho_p_S_B3u_1_hole-F03.png} & \incrho{naphth/rho_p_S_B3u_2_hole-F03.png} & \incrho{naphth/rho_p_T_B3u_1_hole-F03.png} & \incrho{naphth/rho_p_T_B3u_2_hole-F03.png}
+\end{tabular}
 
 \greybox{You can also use \textsc{PyMOL} to visualise the conditional densities but note that you need to change the .cb file ending to .cube . Plots can be created via the \textsc{qc\_pymol} toolkit: \url{https://github.com/felixplasser/qc_pymol} }
 \clearpage
