@@ -1,0 +1,20 @@
+load molden.input FILTER "nosort"
+mo titleformat ""
+
+background white
+mo fill
+mo cutoff 0.04
+
+mo color blue red
+mo [ 1.000 4]
+write image pngt "NTO1-1-a1_1o_0.98.png"
+mo color orange green
+mo [ 1.000 6]
+write image pngt "NTO1-1-a1_1v_0.98.png"
+
+mo color blue red
+mo [ 1.000 3]
+write image pngt "NTO2-1-a1_1o_0.97.png"
+mo color orange green
+mo [ 1.000 7]
+write image pngt "NTO2-1-a1_1v_0.97.png"

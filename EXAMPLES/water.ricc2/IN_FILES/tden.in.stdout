@@ -1,0 +1,13 @@
+rtype='ricc2'
+rfile='adc2.out'
+read_binary=False
+mo_file='molden.input'
+at_lists=[[1], [2], [3]]
+Om_formula=2
+eh_pop=2
+comp_ntos=True
+comp_dntos=False
+jmol_orbitals=True
+molden_orbitals=False
+prop_list=['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt', 'PRNTO', 'Z_HE', 'RMSeh']
+output_file='tden_summ_stdout.txt'

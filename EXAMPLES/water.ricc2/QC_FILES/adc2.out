@@ -1,0 +1,2903 @@
+
+  ========================================================================
+                license information 
+ Customer : Prof. Dr. Hans Lischka, Uni Wien und Texas Tech University
+ ID       : 104150
+
+ License file is VALID, continuing with full version
+  ========================================================================
+
+  ========================================================================
+                license information 
+ Customer : Prof. Dr. Hans Lischka, Uni Wien und Texas Tech University
+ ID       : 104150
+
+ License file is VALID, continuing with full version
+  ========================================================================
+
+   OpenMP run-time library returned nthreads = 12
+
+ ricc2 (hpn-compute-a1-29) : TURBOMOLE V7.3 ( 22142 ) 4 Jul 2018 at 15:33:22
+ Copyright (C) 2018 TURBOMOLE GmbH, Karlsruhe
+
+
+    2019-12-21 05:39:27.716 
+
+
+
+                              R I C C 2 - PROGRAM
+
+                          the quantum chemistry groups
+                             at the universities in
+                           Karlsruhe, Bochum & Mainz
+                                   Germany
+
+
+
+   *-----------------------------------------------------------------------*
+   |                     program will use 12 thread(s)                     |
+   *-----------------------------------------------------------------------*
+
+
+              +--------------------------------------------------+
+              | Atomic coordinate, charge and isotop information |
+              +--------------------------------------------------+
+
+                    atomic coordinates            atom    charge  isotop
+          0.00000000    0.00000000   -0.72557892    o      8.000     0
+          1.41713421    0.00000000    0.36278946    h      1.000     0
+         -1.41713421    0.00000000    0.36278946    h      1.000     0
+ 
+       center of nuclear mass  :    0.00000000    0.00000000   -0.60378908
+       center of nuclear charge:    0.00000000    0.00000000   -0.50790525
+
+              +--------------------------------------------------+
+              |               basis set information              |
+              +--------------------------------------------------+
+
+              we will work with the 1s 3p 5d 7f 9g ... basis set
+              ...i.e. with spherical basis functions...
+
+   type   atoms  prim   cont   basis
+   ---------------------------------------------------------------------------
+    o        1     24     14   SVP   [3s2p1d|7s4p1d]
+    h        2      7      5   SVP   [2s1p|4s1p]
+   ---------------------------------------------------------------------------
+   total:    3     38     24
+   ---------------------------------------------------------------------------
+
+   total number of primitive shells          :   17
+   total number of contracted shells         :   12
+   total number of cartesian basis functions :   25
+   total number of SCF-basis functions       :   24
+
+
+ symmetry group of the molecule :   c2v
+
+ the group has the following generators :
+   c2(z)
+   mirror plane sigma(xz)
+
+    4 symmetry operations found
+
+ there are 4 real representations :   a1   a2   b1   b2  
+
+
+   =========================================================================
+
+
+     restricted closed shell calculation for the wavefunction models:
+               ADC(2)     - Algebraic Diagrammatic Construction to 2. Order (strict)
+
+
+     global parameters for ricc2 program:
+
+        hard restart (reuse of interm.) :  disabled
+        soft restart (reuse of vectors) :  disabled
+        threshold for vector function   :    0.100000E-02
+        convergence threshold energy    :    0.100000E-06
+        linear dependence threshold     :    0.100000E-13
+        global print level              :      1
+        maximum number of iterations    :   100
+        maximum number DIIS vectors     :    10
+        max. dim. of reduced space      :   100
+        core memory limit (MB)          :  6000
+
+     Scratch Directory : 
+
+
+   =========================================================================
+
+    der. integral neglect threshold  :  0.10E-07
+    integral neglect threshold       :  0.13E-09
+    integral storage threshold THIZE :  0.10E-04
+    integral storage threshold THIME :         5
+
+
+                  +------------------------------------------+
+                  |     Auxiliary basis set information      |
+                  +------------------------------------------+
+
+              we will work with the 1s 3p 5d 7f 9g ... basis set
+              ...i.e. with spherical basis functions...
+
+   type   atoms  prim   cont   basis
+   ---------------------------------------------------------------------------
+    o        1     72     48   SVP   [6s5p4d1f|8s6p5d3f]
+    h        2     23     14   SVP   [3s2p1d|4s3p2d]
+   ---------------------------------------------------------------------------
+   total:    3    118     76
+   ---------------------------------------------------------------------------
+
+   total number of primitive shells          :   31
+   total number of contracted shells         :   28
+   total number of cartesian basis functions :   85
+   total number of SCF-basis functions       :   76
+
+
+ maximum number of shells which are related by symmetry :  2
+
+
+ The symmetry information takes   1 MB
+
+*---------------------------------------------------------------------*
+|      simplified algorithm for abelian symmetry will be applied      |
+*---------------------------------------------------------------------*
+  MOs are in ASCII format !
+
+
+ reading orbital data $scfmo  from file mos
+ orbital characterization : scfconv=7
+ time elapsed for calculating density matrices :   0.000 sec
+
+
+
+              +--------------------------------------------+
+              | list of orbitals that will be kept frozen: |
+              +--------------------------------------------+
+              |   irrep   index      energy     occ/vir    |
+              +--------------------------------------------+
+              |   a1        1      -20.5436     occupied   |
+              +--------------------------------------------+
+
+
+
+   Molecular Orbital Statistic:
+   ============================
+
+
+   ------------------------------------
+    irred. repres.:   a1   a2   b1   b2
+   ------------------------------------
+   frozen occupied:    1    0    0    0
+   active occupied:    2    0    1    1
+   active virtual :    8    2    6    3
+   frozen virtual :    0    0    0    0
+   ------------------------------------
+ 
+
+   -----------------------------
+   orbitals in total:
+   -----------------------------
+    frozen occupied :      1
+    active occupied :      4
+    active virtual  :     19
+    frozen virtual  :      0
+    all together    :     24
+   -----------------------------
+
+
+     time in riccmos       cpu:  0.01 sec    wall:  0.00 sec    ratio:  2.7
+
+     total memory allocated for calculation of (Q|P)**(-1/2) : 1 MiB
+
+
+     calculation of (P|Q) ...
+     time in lp2sym        cpu:  0.14 sec    wall:  0.02 sec    ratio:  6.3
+
+
+     calculation of the Cholesky decomposition of (P|Q)**(-1) ...
+     time in invmetri      cpu:  0.00 sec    wall:  0.00 sec    ratio:  4.0
+
+   threshold for RMS(d[D]) in SCF was     :  0.10E-06
+   integral neglect threshold             :  0.13E-09
+   derivative integral neglect threshold  :  0.10E-07
+
+
+ setting up bound for integral derivative estimation
+
+ increment for numerical differentiation : 0.00050000
+
+   =========================================================================
+
+     Energy of reference wave function is   -75.9613370204700
+     Maximum orbital residual is           0.6729221841463E-06
+
+
+     Number of symmetry-nonredundant auxiliary basis functions:       62
+
+     Block lengths for integral files:
+        frozen occupied (BOI):        1 MiB
+        active occupied (BJI):        1 MiB
+        active virtual  (BAI):        1 MiB
+        frozen virtual  (BGI):        0 MiB
+               general  (BTI):        1 MiB
+
+   =========================================================================
+
+
+
+
+   **************************************************************************
+   *                                                                        *
+   *          OPTIMIZATION OF THE GROUND STATE CLUSTER AMPLITUDES           *
+   *                                                                        *
+   **************************************************************************
+
+
+   Iter.   MP2 energy       Norm(Omega)   Norm(t1)  Norm(t2)     cpu    wall
+   ...........................................................................
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+    1    -76.1615094225    0.0293311521     0.00000   0.12598    0.00    0.00
+   ...........................................................................
+
+
+     time in total         cpu:  0.16 sec    wall:  0.02 sec    ratio:  6.8
+
+
+     **********************************************************************
+     *                                                                    *
+     *   RHF  energy                             :    -75.9613370205      *
+     *   MP2 correlation energy                  :     -0.2001724020      *
+     *                                                                    *
+     *   Final MP2 energy                        :    -76.1615094225      *
+     *                                                                    *
+     *   Norm of MP1 T2 amplitudes               :      0.1259779470      *
+     *                                                                    *
+     *   D1 diagnostic                           :      0.0084            *
+     *                                                                    *
+     **********************************************************************
+
+
+
+ **************************************************************
+ *                                                            *
+ *    OPTIMIZATION OF THE EXCITED STATE CLUSTER AMPLITUDES    *
+ *                                                            *
+ **************************************************************
+
+
+  preoptimize excitation energies/vectors using CCS:
+  ==================================================
+
+
+ ======== LINEAR CC RESPONSE SOLVER ========
+
+    threshold for convergence: 0.10E-02
+    maximum number of simultaneous jacoby matrix transformations:  2
+                                                
+     summary of start vectors generation:
+     -------------------------------------------
+     type of solution vectors      : RE0
+     symmetry                      : a1 
+     number of vectors requested   :     2
+     number of vectors generated   :     2
+       -- guessed as rhs/(e_a-e_i) :     2
+     -------------------------------------------
+                                                
+
+    Iter  #Vectors  time (min)    max. residual 
+    --------------------------------------------
+      1       2         0.00     0.19E+00  (  2)
+      2       2         0.00     0.45E-01  (  2)
+      3       2         0.00     0.69E-02  (  2)
+      4       2         0.00     0.11E-02  (  2)
+      5       1         0.00     0.19E-03  (  1)
+    --------------------------------------------
+    converged in  5 iterations
+
+         Total time          0.00 minutes
+
+
+ ===========================================
+
+
+
+
+ Note that this is the intermediate result of a preoptimization!
+ The convergence threshold was  0.1E-02 only!
+
+
+ +==================================================================+
+ | sym | multi | state |          CCS excitation energies           |
+ |     |       |       +--------------------------------------------+
+ |     |       |       |   Hartree    |     eV       |     cm-1     |
+ +==================================================================+
+ | a1  |   1   |   1   |    0.4391845 |     11.95082 |    96389.849 |
+ | a1  |   1   |   2   |    0.6864592 |     18.67951 |   150660.390 |
+ +==================================================================+
+
+
+
+
+  preoptimize ADC(2) excitation energies/vectors using a quasi linear algorithm:
+  ==============================================================================
+
+
+ ======== LINEAR CC RESPONSE SOLVER ========
+
+    threshold for convergence: 0.10E-02
+    maximum number of simultaneous jacoby matrix transformations:  2
+                                                
+     summary of start vectors generation:
+     -------------------------------------------
+     type of solution vectors      : RE0
+     symmetry                      : a1 
+     number of vectors requested   :     2
+     number of vectors generated   :     2
+       -- restarted from file      :     2
+     -------------------------------------------
+                                                
+
+    Iter  #Vectors  time (min)    max. residual 
+    --------------------------------------------
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+ threshold for this macro iteration:  4.543109228005027E-002
+      1       2         0.00     0.49E-01  (  1)
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+ ...adapted threshold to:  4.783547050587150E-002
+      2       1         0.00     0.41E-01  (  2)
+                                                
+     summary of start vectors generation:
+     -------------------------------------------
+     type of solution vectors      : RE0
+     symmetry                      : a1 
+     number of vectors requested   :     2
+     number of vectors generated   :     2
+       -- restarted from file      :     2
+     -------------------------------------------
+                                                
+
+    Iter  #Vectors  time (min)    max. residual 
+    --------------------------------------------
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+ threshold for this macro iteration:  2.478388404055454E-003
+      3       2         0.00     0.41E-01  (  2)
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+      4       2         0.00     0.10E-01  (  2)
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+      5       1         0.00     0.22E-02  (  2)
+                                                
+     summary of start vectors generation:
+     -------------------------------------------
+     type of solution vectors      : RE0
+     symmetry                      : a1 
+     number of vectors requested   :     2
+     number of vectors generated   :     2
+       -- restarted from file      :     2
+     -------------------------------------------
+                                                
+
+    Iter  #Vectors  time (min)    max. residual 
+    --------------------------------------------
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+ threshold for this macro iteration:  1.000000000000000E-003
+      6       2         0.00     0.61E-03  (  2)
+    --------------------------------------------
+    converged in  6 iterations
+
+         Total time          0.00 minutes
+
+
+ ===========================================
+
+
+
+
+ Note that this is the intermediate result of a preoptimization!
+ The convergence threshold was  0.1E-02 only!
+
+
+ +==================================================================+
+ | sym | multi | state |          ADC(2) excitation energies        |
+ |     |       |       +--------------------------------------------+
+ |     |       |       |   Hartree    |     eV       |     cm-1     |
+ +==================================================================+
+ | a1  |   1   |   1   |    0.3936527 |     10.71183 |    86396.774 |
+ | a1  |   1   |   2   |    0.6649795 |     18.09501 |   145946.130 |
+ +==================================================================+
+
+
+
+
+
+  solve for ADC(2) excitation energies/vectors using a DIIS algorithm:
+  =================================================================
+                                                
+     summary of start vectors generation:
+     -------------------------------------------
+     type of solution vectors      : RE0
+     symmetry                      : a1 
+     number of vectors requested   :     2
+     number of vectors generated   :     2
+       -- restarted from file      :     2
+     -------------------------------------------
+                                                
+
+
+ ========= DIIS CC RESPONSE SOLVER =========
+
+    threshold for convergence:0.10E-02
+    max. nb. of DIIS vectors :      10
+    maximum number of simultaneous jacoby matrix transformations:  2
+
+    Iter  #Vectors  time (min)   residual
+    --------------------------------------
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+
+Intel MKL ERROR: Parameter 3 was incorrect on entry to DGEMM .
+      1       2         0.00     0.14E-03  (  2)    0.29E-04
+    --------------------------------------
+    converged in   1 iterations
+
+   Total time          0.00 minutes
+
+
+ ===========================================
+
+
+
+
+
+ +================================================================================+
+ | sym | multi | state |          ADC(2) excitation energies    |  %t1   |  %t2   |
+ |     |       |       +----------------------------------------+--------+--------+
+ |     |       |       |   Hartree    |    eV      |    cm-1    |    %   |    %   |
+ +================================================================================+
+ | a1  |   1   |   1   |    0.3936527 |   10.71183 |  86396.774 |  95.10 |   4.90 |
+ | a1  |   1   |   2   |    0.6649795 |   18.09501 | 145946.130 |  96.00 |   4.00 |
+ +================================================================================+
+
+
+       Energy:     0.3936527 H     10.71183 eV    86396.774 cm-1
+
+     +=======================================================================+
+     | type: RE0                    symmetry: a1              state:    1    |
+     +-----------------------+-----------------------+-----------------------+
+     | occ. orb.  index spin | vir. orb.  index spin |  coeff/|amp|     %    |
+     +=======================+=======================+=======================+
+     |    3 a1       3       |    4 a1       6       |   0.99243      98.5   |
+     +=======================+=======================+=======================+
+     norm of printed elements:  0.98493
+
+
+       Energy:     0.6649795 H     18.09501 eV   145946.130 cm-1
+
+     +=======================================================================+
+     | type: RE0                    symmetry: a1              state:    2    |
+     +-----------------------+-----------------------+-----------------------+
+     | occ. orb.  index spin | vir. orb.  index spin |  coeff/|amp|     %    |
+     +=======================+=======================+=======================+
+     |    1 b1       4       |    2 b1      16       |   0.98610      97.2   |
+     +=======================+=======================+=======================+
+     norm of printed elements:  0.97240
+
+
+
+     Info: copy ADC(2) right eigenvectors into left eigenvector files.
+
+
+                    ========   CC DENSITY MODULE   ========
+
+                      current wave-function model: ADC(2)  
+
+  calculating overlap between    2 left and right vector(s)
+    density nr.      cpu/min        wall/min    L     R
+   ------------------------------------------------------
+         1             0.00            0.00    LE0    RE0 
+         2             0.00            0.00    LE0    RE0 
+   ------------------------------------------------------
+     time in cc_1den       cpu:  0.20 sec    wall:  0.03 sec    ratio:  7.8
+
+
+
+     +==========================================================+
+     |   contributions of excitation levels to excited states   |
+     |     wavefunctions as computed from the <L|R> overlap     |
+     +----------------------------------------------------------+
+     | sym | multi | state |    E / eV  | % singles | % doubles |
+     +==========================================================+
+     | a1  |   1   |   1   |   10.71183 |   95.10   |    4.90   |
+     | a1  |   1   |   2   |   18.09501 |   96.00   |    4.00   |
+     +==========================================================+
+
+
+
+
+   **************************************************************************
+   **************************************************************************
+   **                                                                      **
+   **          CALCULATION OF COUPLED CLUSTER RESPONSE PROPERTIES          **
+   **                                                                      **
+   **************************************************************************
+   **************************************************************************
+
+      The semi-canonical algorithm will be used for densities
+
+
+                    ========   CC DENSITY MODULE   ========
+
+                      current wave-function model: MP2     
+
+  calculating CC ground state density
+
+   a semicanonical algorithm will be used when possible
+
+    density nr.      cpu/min        wall/min    L     R
+   ------------------------------------------------------
+         1             0.00            0.00    L0     R0  
+   ------------------------------------------------------
+     time in cc_1den       cpu:  0.06 sec    wall:  0.01 sec    ratio:  9.3
+
+ reading orbital data $scfmo  from file mos
+ orbital characterization : scfconv=7
+
+   EMP2            :      -76.161509422480
+   EMP2 from traces:      -76.161509422480
+   Delta           :        0.000000000000
+
+   --------------------------------------------------------------------------
+
+        Solving 4-Index ERI based CPHF equations
+
+
+ ======== LINEAR CC RESPONSE SOLVER ========
+
+    threshold for convergence: 0.10E-02
+    maximum number of simultaneous jacoby matrix transformations:  1
+                                                
+     summary of start vectors generation:
+     -------------------------------------------
+     type of solution vectors      : l0o
+     symmetry                      : a1 
+     number of vectors requested   :     1
+     number of vectors generated   :     1
+     -------------------------------------------
+                                                
+
+    Iter  #Vectors  time (min)    max. residual 
+    --------------------------------------------
+      1       1         0.00     0.72E-01  (  1)
+      2       1         0.00     0.29E-01  (  1)
+      3       1         0.00     0.70E-02  (  1)
+      4       1         0.00     0.12E-02  (  1)
+      5       1         0.00     0.28E-03  (  1)
+    --------------------------------------------
+    converged in  5 iterations
+
+         Total time          0.00 minutes
+
+
+ ===========================================
+
+
+   --------------------------------------------------------------------------
+
+
+                    ========   CC DENSITY MODULE   ========
+
+                      current wave-function model: ADC(2)  
+
+  calculating     4 xi densities
+     and     2 xi type intermediate(s) for excited state gradient
+
+   a semicanonical algorithm will be used when possible
+
+    density nr.      cpu/min        wall/min    L     R
+   ------------------------------------------------------
+         1             0.00            0.00    LE0    R0  
+         2             0.00            0.00    LE0    R0  
+         3             0.01            0.00    NL0    R0  
+         4             0.00            0.00    NL0    R0  
+   ------------------------------------------------------
+     time in cc_1den       cpu:  0.82 sec    wall:  0.10 sec    ratio:  7.9
+
+
+                    ========   CC DENSITY MODULE   ========
+
+                      current wave-function model: ADC(2)  
+
+  calculating     2 A densities
+     and     2 set of A type intermediate(s) for excited state gradient
+
+   a semicanonical algorithm will be used when possible
+
+    density nr.      cpu/min        wall/min    L     R
+   ------------------------------------------------------
+         1             0.01            0.00    LE0    RE0 
+         2             0.02            0.00    LE0    RE0 
+   ------------------------------------------------------
+     time in cc_1den       cpu:  1.48 sec    wall:  0.17 sec    ratio:  8.9
+
+ reading orbital data $scfmo  from file mos
+ orbital characterization : scfconv=7
+
+   EMP2+Excitation energy :      -75.767850824378
+   dto. calc. from traces :      -75.767851128641
+   Delta                  :        0.000000304263
+
+
+   EMP2+Excitation energy :      -75.496532954832
+   dto. calc. from traces :      -75.496533165373
+   Delta                  :        0.000000210542
+
+ cpu-time elapsed since end of
+ last dp1 matrix construction          :        8.688 s
+   --------------------------------------------------------------------------
+
+        Solving 4-Index ERI based CPHF equations
+
+
+ ======== LINEAR CC RESPONSE SOLVER ========
+
+    threshold for convergence: 0.10E-02
+    maximum number of simultaneous jacoby matrix transformations:  2
+                                                
+     summary of start vectors generation:
+     -------------------------------------------
+     type of solution vectors      : l0o
+     symmetry                      : a1 
+     number of vectors requested   :     2
+     number of vectors generated   :     2
+       -- restarted from file      :     1
+       -- from projection vectors  :     0
+       -- from root homing vectors :     0
+       -- supplied by input        :     0
+       -- guessed as rhs/(e_a-e_i) :     1
+     skipped because of zero norm  :     0
+     skipped because of linear dep.:     0
+     -------------------------------------------
+                                                
+
+    Iter  #Vectors  time (min)    max. residual 
+    --------------------------------------------
+ cpu-time elapsed since end of
+ last dp1 matrix construction          :        9.084 s
+      1       2         0.00     0.65E+00  (  1)    0.49E-31
+          ................................
+            1    0.000000    0.65E+00    F
+            2    0.000000    0.31E+00    F
+          ................................
+ cpu-time elapsed since end of
+ last dp1 matrix construction          :        9.292 s
+      2       2         0.00     0.97E-01  (  1)    0.12E-30
+          ................................
+            1    0.000000    0.97E-01    F
+            2    0.000000    0.60E-01    F
+          ................................
+ cpu-time elapsed since end of
+ last dp1 matrix construction          :        9.672 s
+      3       2         0.00     0.24E-01  (  1)    0.16E-30
+          ................................
+            1    0.000000    0.24E-01    F
+            2    0.000000    0.91E-02    F
+          ................................
+ cpu-time elapsed since end of
+ last dp1 matrix construction          :        9.772 s
+      4       2         0.00     0.22E-02  (  1)    0.31E-30
+          ................................
+            1    0.000000    0.22E-02    F
+            2    0.000000    0.95E-03    T
+          ................................
+ cpu-time elapsed since end of
+ last dp1 matrix construction          :        9.808 s
+      5       1         0.00     0.63E-03  (  2)    0.33E-30
+          ................................
+            1    0.000000    0.25E-03    T
+            2    0.000000    0.63E-03    T
+          ................................
+    --------------------------------------------
+    converged in  5 iterations
+
+         Total time          0.00 minutes
+
+
+ ===========================================
+
+
+   --------------------------------------------------------------------------
+     time in cc_relden     cpu:  1.19 sec    wall:  0.14 sec    ratio:  8.2
+
+
+ **************************************************************
+ *                                                            *
+ *<<<<<<<<<<  GROUND STATE FIRST-ORDER PROPERTIES  >>>>>>>>>>>*
+ *                                                            *
+ **************************************************************
+
+
+        ------------------------------------------------
+            Method          :  MP2     
+            Total Energy    :    -76.1615094225
+            D1 diagnostic   :      0.0084
+        ------------------------------------------------
+
+
+        ------------------------------------------------
+                      moments of inertia 
+                2.121      4.049      6.169  in a.u.
+
+                   rotational constants 
+             28.38596   14.86944    9.75793  in cm**(-1)
+        ------------------------------------------------
+
+
+  NOTE: unrelaxed properties printed below refer to the MP1 wavefunction and
+        are only correct through first order in the fluctuation potential!
+
+ +===========================================================================+
+ | OPERATOR         | EXPECTAT. VALUE  | ELECTRONIC CONT. | NUCLEAR CONTRIB. |
+ +==================+==================+==================+==================+
+ |                  |                  |                  |                  |
+ | xdiplen  (unrel) |      0.00000000  |      0.00000000  |      0.00000000  | 
+ | xdiplen  (relax) |      0.00000000  |      0.00000000  |      0.00000000  | 
+ |                  |                  |                  |                  |
+ | ydiplen  (unrel) |      0.00000000  |      0.00000000  |      0.00000000  | 
+ | ydiplen  (relax) |      0.00000000  |      0.00000000  |      0.00000000  | 
+ |                  |                  |                  |                  |
+ | zdiplen  (unrel) |      0.82320320  |      5.90225567  |     -5.07905247  | 
+ | zdiplen  (relax) |      0.79886721  |      5.87791968  |     -5.07905247  | 
+ |                  |                  |                  |                  |
+ | xxqudlen (unrel) |     -3.13247993  |     -7.14901866  |      4.01653873  | 
+ | xxqudlen (relax) |     -3.19590049  |     -7.21243922  |      4.01653873  | 
+ |                  |                  |                  |                  |
+ | xyqudlen (unrel) |      0.00000000  |      0.00000000  |      0.00000000  | 
+ | xyqudlen (relax) |      0.00000000  |      0.00000000  |      0.00000000  | 
+ |                  |                  |                  |                  |
+ | xzqudlen (unrel) |      0.00000000  |      0.00000000  |      0.00000000  | 
+ | xzqudlen (relax) |      0.00000000  |      0.00000000  |      0.00000000  | 
+ |                  |                  |                  |                  |
+ | yyqudlen (unrel) |     -5.23875027  |     -5.23875027  |      0.00000000  | 
+ | yyqudlen (relax) |     -5.25303024  |     -5.25303024  |      0.00000000  | 
+ |                  |                  |                  |                  |
+ | yzqudlen (unrel) |      0.00000000  |      0.00000000  |      0.00000000  | 
+ | yzqudlen (relax) |      0.00000000  |      0.00000000  |      0.00000000  | 
+ |                  |                  |                  |                  |
+ | zzqudlen (unrel) |     -5.28368987  |     -9.75864046  |      4.47495059  | 
+ | zzqudlen (relax) |     -5.29319962  |     -9.76815021  |      4.47495059  | 
+ |                  |                  |                  |                  |
+ +===========================================================================+
+
+
+     Analysis of relaxed properties:
+     ===============================
+
+
+     dipole moment:
+     --------------
+
+     x      0.00000000
+     y      0.00000000
+     z      0.79886721
+
+     | dipole moment | =      0.79886721 a.u. =      2.03051790 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x     2.07721444     0.00000000     0.00000000
+     y                   -1.00848018     0.00000000
+     z                                  -1.06873426
+
+
+     tensor is diagonal: 
+       [ (x',y',z') = (x,y,z) ]
+
+     < Q(x'x') > =      2.07721444 a.u.
+     < Q(y'y') > =     -1.00848018 a.u.
+     < Q(z'z') > =     -1.06873426 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x     7.21243922     0.00000000     0.00000000
+     y                    5.25303024     0.00000000
+     z                                   9.76815021
+
+
+     tensor is diagonal: 
+       [ (x',y',z') = (x,y,z) ]
+
+     < x'x'> =      7.21243922 a.u.
+     < y'y'> =      5.25303024 a.u.
+     < z'z'> =      9.76815021 a.u.
+
+     Isotropic second moment:     alpha =      7.41120656 a.u.
+
+     Anisotropy of second moment:  beta =      3.92155904 a.u.
+ 
+
+    --------------------------------------------------------------------------
+
+
+     Analysis of unrelaxed properties:
+     =================================
+
+
+     dipole moment:
+     --------------
+
+     x      0.00000000
+     y      0.00000000
+     z      0.82320320
+
+     | dipole moment | =      0.82320320 a.u. =      2.09237381 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x     2.12874015     0.00000000     0.00000000
+     y                   -1.03066537     0.00000000
+     z                                  -1.09807477
+
+
+     tensor is diagonal: 
+       [ (x',y',z') = (x,y,z) ]
+
+     < Q(x'x') > =      2.12874015 a.u.
+     < Q(y'y') > =     -1.03066537 a.u.
+     < Q(z'z') > =     -1.09807477 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x     7.14901866     0.00000000     0.00000000
+     y                    5.23875027     0.00000000
+     z                                   9.75864046
+
+
+     tensor is diagonal: 
+       [ (x',y',z') = (x,y,z) ]
+
+     < x'x'> =      7.14901866 a.u.
+     < y'y'> =      5.23875027 a.u.
+     < z'z'> =      9.75864046 a.u.
+
+     Isotropic second moment:     alpha =      7.38213646 a.u.
+
+     Anisotropy of second moment:  beta =      3.92992739 a.u.
+ 
+ Exporting ground state density
+
+
+ **************************************************************
+ *                                                            *
+ *<<<<<<<<<<<<  ONE-PHOTON ABSORPTION STRENGTHS  >>>>>>>>>>>>>*
+ *                                                            *
+ **************************************************************
+
+
+  +=========================================================================+
+  |  Transition                                             model: ADC(2)   |
+  |    number, symmetry, multiplicity:    1 a1   1                          |
+  |    frequency :   0.3936526698 a.u.    10.71183 e.V.     86396.8 rcm     |
+  +=========================================================================+
+
+     +-----------+-----------------+-----------------+---------------------+
+     | operator  |   left moment   |  right moment   | transition strength |
+     +-----------+-----------------+-----------------+---------------------+
+     | xdiplen   |      0.00000000 |      0.00000000 |       0.00000000    |
+     | ydiplen   |      0.00000000 |      0.00000000 |       0.00000000    |
+     | zdiplen   |     -0.58945146 |     -0.58945146 |       0.34745302    |
+     | xxqudlen  |     -0.54211381 |     -0.54211381 |       0.29388739    |
+     | xyqudlen  |      0.00000000 |      0.00000000 |       0.00000000    |
+     | xzqudlen  |      0.00000000 |      0.00000000 |       0.00000000    |
+     | yyqudlen  |     -0.08081751 |     -0.08081751 |       0.00653147    |
+     | yzqudlen  |      0.00000000 |      0.00000000 |       0.00000000    |
+     | zzqudlen  |      0.18870248 |      0.18870248 |       0.03560863    |
+     +-----------+-----------------+-----------------+---------------------+
+ 
+       oscillator strength (length gauge)   :      0.09118387
+ 
+ 
+
+
+  +=========================================================================+
+  |  Transition                                             model: ADC(2)   |
+  |    number, symmetry, multiplicity:    2 a1   1                          |
+  |    frequency :   0.6649795008 a.u.    18.09501 e.V.    145946.1 rcm     |
+  +=========================================================================+
+
+     +-----------+-----------------+-----------------+---------------------+
+     | operator  |   left moment   |  right moment   | transition strength |
+     +-----------+-----------------+-----------------+---------------------+
+     | xdiplen   |      0.00000000 |      0.00000000 |       0.00000000    |
+     | ydiplen   |      0.00000000 |      0.00000000 |       0.00000000    |
+     | zdiplen   |      0.51371482 |      0.51371482 |       0.26390292    |
+     | xxqudlen  |      1.90617060 |      1.90617060 |       3.63348634    |
+     | xyqudlen  |      0.00000000 |      0.00000000 |       0.00000000    |
+     | xzqudlen  |      0.00000000 |      0.00000000 |       0.00000000    |
+     | yyqudlen  |      0.21171141 |      0.21171141 |       0.04482172    |
+     | yzqudlen  |      0.00000000 |      0.00000000 |       0.00000000    |
+     | zzqudlen  |      0.04175113 |      0.04175113 |       0.00174316    |
+     +-----------+-----------------+-----------------+---------------------+
+ 
+       oscillator strength (length gauge)   :      0.11699335
+ 
+ 
+ Exporting transition densities
+
+
+ *************************************************************
+ *                                                           *
+ *<<<<<<<<<<<<<<<  EXCITED STATE PROPERTIES  >>>>>>>>>>>>>>>>*
+ *                                                           *
+ *************************************************************
+
+
+
+  +=========================================================================+
+  |  Excited state reached by transition:                   model: ADC(2)   |
+  |    number, symmetry, multiplicity:    1 a1   1                          |
+  |    frequency :   0.3936526698 a.u.    10.71183 e.V.     86396.8 rcm     |
+  +=========================================================================+
+
+      Total energy of excited state:     -75.7678567527
+
+   +-----------------+-----------------+-----------------+-----------------+
+   | operator        | expect. value   | electr. contrib.| diff to gr.st.  |
+   +-----------------+-----------------+-----------------+-----------------+
+   | xdiplen (unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | xdiplen (relax) |     -0.00000000 |     -0.00000000 |       ---       |
+   | ydiplen (unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | ydiplen (relax) |      0.00000000 |      0.00000000 |       ---       |
+   | zdiplen (unrel) |     -0.63275003 |      4.44630244 |     -1.45595323 |
+   | zdiplen (relax) |     -0.42792277 |      4.65112970 |       ---       |
+   | xxqudlen(unrel) |     -7.30272605 |    -11.31926478 |     -4.17024612 |
+   | xxqudlen(relax) |     -6.91431752 |    -10.93085625 |       ---       |
+   | xyqudlen(unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | xyqudlen(relax) |      0.00000000 |      0.00000000 |       ---       |
+   | xzqudlen(unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | xzqudlen(relax) |      0.00000000 |      0.00000000 |       ---       |
+   | yyqudlen(unrel) |     -7.04504396 |     -7.04504396 |     -1.80629369 |
+   | yyqudlen(relax) |     -6.89953803 |     -6.89953803 |       ---       |
+   | yzqudlen(unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | yzqudlen(relax) |      0.00000000 |      0.00000000 |       ---       |
+   | zzqudlen(unrel) |     -6.15414459 |    -10.62909518 |     -0.87045472 |
+   | zzqudlen(relax) |     -6.10141454 |    -10.57636513 |       ---       |
+   +-----------------+-----------------+-----------------+-----------------+
+
+
+     Analysis of relaxed properties:
+     ===============================
+
+
+     dipole moment:
+     --------------
+
+     x     -0.00000000
+     y      0.00000000
+     z     -0.42792277
+
+     | dipole moment | =      0.42792277 a.u. =      1.08767118 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x    -0.41384124     0.00000000     0.00000000
+     y                   -0.39167199     0.00000000
+     z                                   0.80551323
+
+
+     tensor is diagonal: 
+       [ (x',y',z') = (x,y,z) ]
+
+     < Q(x'x') > =     -0.41384124 a.u.
+     < Q(y'y') > =     -0.39167199 a.u.
+     < Q(z'z') > =      0.80551323 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x    10.93085625     0.00000000    -0.00000000
+     y                    6.89953803     0.00000000
+     z                                  10.57636513
+
+
+     tensor is diagonal: 
+       [ (x',y',z') = (x,y,z) ]
+
+     < x'x'> =     10.93085625 a.u.
+     < y'y'> =      6.89953803 a.u.
+     < z'z'> =     10.57636513 a.u.
+
+     Isotropic second moment:     alpha =      9.46891980 a.u.
+
+     Anisotropy of second moment:  beta =      3.86628039 a.u.
+ 
+
+
+     Analysis of unrelaxed properties:
+     =================================
+
+
+     dipole moment:
+     --------------
+
+     x      0.00000000
+     y      0.00000000
+     z     -0.63275003
+
+     | dipole moment | =      0.63275003 a.u. =      1.60829014 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x    -0.70313177     0.00000000     0.00000000
+     y                   -0.31660864     0.00000000
+     z                                   1.01974041
+
+
+     tensor is diagonal: 
+       [ (x',y',z') = (x,y,z) ]
+
+     < Q(x'x') > =     -0.70313177 a.u.
+     < Q(y'y') > =     -0.31660864 a.u.
+     < Q(z'z') > =      1.01974041 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x    11.31926478     0.00000000     0.00000000
+     y                    7.04504396     0.00000000
+     z                                  10.62909518
+
+
+     tensor is diagonal: 
+       [ (x',y',z') = (x,y,z) ]
+
+     < x'x'> =     11.31926478 a.u.
+     < y'y'> =      7.04504396 a.u.
+     < z'z'> =     10.62909518 a.u.
+
+     Isotropic second moment:     alpha =      9.66446798 a.u.
+
+     Anisotropy of second moment:  beta =      3.97433773 a.u.
+ 
+     Difference in isotropic second moment relative to ground state:
+       Delta alpha =    2.282332 a.u. (    30.9%)
+
+
+  +=========================================================================+
+  |  Excited state reached by transition:                   model: ADC(2)   |
+  |    number, symmetry, multiplicity:    2 a1   1                          |
+  |    frequency :   0.6649795008 a.u.    18.09501 e.V.    145946.1 rcm     |
+  +=========================================================================+
+
+      Total energy of excited state:     -75.4965299216
+
+   +-----------------+-----------------+-----------------+-----------------+
+   | operator        | expect. value   | electr. contrib.| diff to gr.st.  |
+   +-----------------+-----------------+-----------------+-----------------+
+   | xdiplen (unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | xdiplen (relax) |     -0.00000000 |     -0.00000000 |       ---       |
+   | ydiplen (unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | ydiplen (relax) |      0.00000000 |      0.00000000 |       ---       |
+   | zdiplen (unrel) |     -0.02361704 |      5.05543543 |     -0.84682024 |
+   | zdiplen (relax) |      0.06660772 |      5.14566019 |       ---       |
+   | xxqudlen(unrel) |     -8.98029062 |    -12.99682935 |     -5.84781070 |
+   | xxqudlen(relax) |     -8.54034879 |    -12.55688752 |       ---       |
+   | xyqudlen(unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | xyqudlen(relax) |      0.00000000 |      0.00000000 |       ---       |
+   | xzqudlen(unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | xzqudlen(relax) |     -0.00000000 |     -0.00000000 |       ---       |
+   | yyqudlen(unrel) |     -6.75791336 |     -6.75791336 |     -1.51916309 |
+   | yyqudlen(relax) |     -6.60675569 |     -6.60675569 |       ---       |
+   | yzqudlen(unrel) |      0.00000000 |      0.00000000 |      0.00000000 |
+   | yzqudlen(relax) |      0.00000000 |      0.00000000 |       ---       |
+   | zzqudlen(unrel) |     -6.91142775 |    -11.38637834 |     -1.62773788 |
+   | zzqudlen(relax) |     -6.75746818 |    -11.23241877 |       ---       |
+   +-----------------+-----------------+-----------------+-----------------+
+
+
+     Analysis of relaxed properties:
+     ===============================
+
+
+     dipole moment:
+     --------------
+
+     x     -0.00000000
+     y      0.00000000
+     z      0.06660772
+
+     | dipole moment | =      0.06660772 a.u. =      0.16929994 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x    -1.85823685     0.00000000    -0.00000000
+     y                    1.04215279     0.00000000
+     z                                   0.81608406
+
+
+     tensor is diagonal: 
+       [ (x',y',z') = (x,y,z) ]
+
+     < Q(x'x') > =     -1.85823685 a.u.
+     < Q(y'y') > =      1.04215279 a.u.
+     < Q(z'z') > =      0.81608406 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x    12.55688752     0.00000000     0.00000000
+     y                    6.60675569     0.00000000
+     z                                  11.23241877
+
+
+     tensor is diagonal: 
+       [ (x',y',z') = (x,y,z) ]
+
+     < x'x'> =     12.55688752 a.u.
+     < y'y'> =      6.60675569 a.u.
+     < z'z'> =     11.23241877 a.u.
+
+     Isotropic second moment:     alpha =     10.13202066 a.u.
+
+     Anisotropy of second moment:  beta =      5.41087078 a.u.
+ 
+
+
+     Analysis of unrelaxed properties:
+     =================================
+
+
+     dipole moment:
+     --------------
+
+     x      0.00000000
+     y      0.00000000
+     z     -0.02361704
+
+     | dipole moment | =      0.02361704 a.u. =      0.06002853 debye
+
+
+     traceless quadrupole tensor:
+     ----------------------------
+
+               x              y              z
+
+     x    -2.14562007     0.00000000     0.00000000
+     y                    1.18794583     0.00000000
+     z                                   0.95767424
+
+
+     tensor is diagonal: 
+       [ (x',y',z') = (x,y,z) ]
+
+     < Q(x'x') > =     -2.14562007 a.u.
+     < Q(y'y') > =      1.18794583 a.u.
+     < Q(z'z') > =      0.95767424 a.u.
+
+
+     second moment of electron density:
+     ----------------------------------
+
+               x              y              z
+
+     x    12.99682935     0.00000000     0.00000000
+     y                    6.75791336     0.00000000
+     z                                  11.38637834
+
+
+     tensor is diagonal: 
+       [ (x',y',z') = (x,y,z) ]
+
+     < x'x'> =     12.99682935 a.u.
+     < y'y'> =      6.75791336 a.u.
+     < z'z'> =     11.38637834 a.u.
+
+     Isotropic second moment:     alpha =     10.38037368 a.u.
+
+     Anisotropy of second moment:  beta =      5.60982680 a.u.
+ 
+     Difference in isotropic second moment relative to ground state:
+       Delta alpha =    2.998237 a.u. (    40.6%)
+ Exporting excited state densities
+
+
+    ------------------------------------------------------------------------
+         total  cpu-time :   9.98 seconds
+         total wall-time :   1.53 seconds
+    ------------------------------------------------------------------------
+
+   ****  ricc2 : all done  ****
+
+
+    2019-12-21 05:39:29.003 
+
