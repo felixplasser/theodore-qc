@@ -44,7 +44,11 @@ class file_parser_base:
                 if not_string in line: return
 
             words = self.delete_chars(line.strip(search_string), translate_str)
-            state[key] = float(words[ind])
+            try:
+                state[key] = float(words[ind])
+            except:
+                print(' WARNING: Error in parse_key for %s of state %s'%(key, state['name']))
+                print(line)
 
             if not rfile is None:
                 if rmatrix:
@@ -66,9 +70,14 @@ class file_parser_base:
                         print(' Cannot parse matrix for %s of state %s'%(key, state['name']))
                 else:
                     words=self.delete_chars(next(rfile), translate_str)
-                    state['%sx'%key] = float(words[-3])
-                    state['%sy'%key] = float(words[-2])
-                    state['%sz'%key] = float(words[-1])
+                    try:
+                        state['%sx'%key] = float(words[-3])
+                        state['%sy'%key] = float(words[-2])
+                        state['%sz'%key] = float(words[-1])
+                    except:
+                        print(' WARNING: Error in parse_key for %s of state %s'%(key, state['name']))
+                        print(line)
+                        print(words)
 
     def delete_chars(self, line, delete, lmap=None):
         """
@@ -604,13 +613,15 @@ class file_parser_libwfa(file_parser_base):
 
     def parse_keys(self, state, exc_diff, exc_1TDM, line, rfile=None):
         self.parse_key(state, 'osc_str', line, 'Osc. strength:')
-        self.parse_key(state, 'mu', line, 'Total dipole')
-        self.parse_key(state, 'mux', line, 'Dip. moment [a.u.]', -3)
-        self.parse_key(state, 'muy', line, 'Dip. moment [a.u.]', -2)
-        self.parse_key(state, 'muz', line, 'Dip. moment [a.u.]', -1)
-        self.parse_key(state, 'Tmux', line, 'Trans. dip. moment [a.u.]', -3)
-        self.parse_key(state, 'Tmuy', line, 'Trans. dip. moment [a.u.]', -2)
-        self.parse_key(state, 'Tmuz', line, 'Trans. dip. moment [a.u.]', -1)
+        # self.parse_key(state, 'mu', line, 'Total dipole')
+        # self.parse_key(state, 'mux', line, 'Dip. moment [a.u.]', -3)
+        # self.parse_key(state, 'muy', line, 'Dip. moment [a.u.]', -2)
+        # self.parse_key(state, 'muz', line, 'Dip. moment [a.u.]', -1)
+        #self.parse_key(state, 'Tmux', line, 'Trans. dip. moment [a.u.]', -3)
+        #self.parse_key(state, 'Tmuy', line, 'Trans. dip. moment [a.u.]', -2)
+        #self.parse_key(state, 'Tmuz', line, 'Trans. dip. moment [a.u.]', -1)
+        self.parse_key(state, 'mu', line, ' Dipole moment [D]', rfile=rfile)
+        self.parse_key(state, 'Tmu', line, 'Trans. dipole moment [D]', rfile=rfile)
         self.parse_key(state, 'r2x', line, '<r^2>', -3, not_string='Total')
         self.parse_key(state, 'r2y', line, '<r^2>', -2, not_string='Total')
         self.parse_key(state, 'r2z', line, '<r^2>', -1, not_string='Total')
@@ -626,7 +637,6 @@ class file_parser_libwfa(file_parser_base):
         self.parse_key(state, '2P', line, 'Two-photon absorption cross-section [a.u.]', rfile=rfile, rmatrix=True)
         self.parse_key(state, 'S_HE', line, 'Entanglement entropy')
         self.parse_key(state, 'Z_HE', line, 'Nr of entangled states')
-        self.parse_key(state, 'mu', line, 'Dipole moment [D]', rfile=rfile)
         self.parse_key(state, 'sigR', line, 'RMS size of the density', rfile=rfile)
 
         if exc_diff:
