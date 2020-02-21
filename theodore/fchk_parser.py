@@ -33,7 +33,7 @@ class file_parser_fchk(file_parser.file_parser_base):
                 state = state_list[-1]
                 words = line.split()
 
-                state['name']    = words[0].replace('singlet','S').replace('triplet','T').replace("'", '1').replace('"', '11')
+                state['name']    = words[0].lower().replace('singlet','S').replace('triplet','T').replace("'", '1').replace('"', '11')
                 try:
                     state['exc_en'] = float(words[1]) * units.energy['eV']
                     state['osc_str'] = float(words[2])

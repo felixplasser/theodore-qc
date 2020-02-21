@@ -17,8 +17,8 @@ class vmd_options(input_options.write_options):
             else:
                 self.read_float('Volume integral for conditional density', 'iso1', 0.75)
                 self.read_float('Volume integral for probe density', 'iso2', self['iso1'])
-            self.read_str('VMD Material for conditional density', 'mat1', 'AOShiny')
-            self.read_str('VMD Material for probe density', 'mat2', 'Glass1')
+            self.read_str('VMD Material for conditional density [AOShiny, EdgyGlass, ...]', 'mat1', 'AOShiny')
+            self.read_str('VMD Material for probe density [Glass1, AOEdgy, ...]', 'mat2', 'Glass1')
         else:
             self.read_int('How many isovalues (1 or 2)?', 'niso', 2)
             if not self['do_vol']:

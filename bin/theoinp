@@ -113,7 +113,7 @@ class write_options_theo(input_options.write_options):
             self['coor_format'] = ''
         elif self['rtype'] == 'cclib':
             self['rfile'] = ''
-            self['mo_file'] = None
+            self['mo_file'] = 'orbs.mld'
             self['coor_file'] = ''
             self['coor_format'] = ''
         elif self['rtype'] == 'orca':
@@ -145,8 +145,12 @@ class write_options_theo(input_options.write_options):
         if self['rtype'] in ['qctddft']:
             if self.read_yn('Did you run "state_analysis=True"?', 'read_libwfa', False):
                 self['mo_file'] = None
-        if self['rtype'] in ['rassi']:
+        elif self['rtype'] in ['rassi']:
             if self.read_yn('Did you use &WFA?', 'read_libwfa', True):
+                self['mo_file'] = None
+        elif self['rtype'] in ['cclib', 'gamess']:
+            print('\nNote: If used in connection with ORBKIT it is preferable to have an externally generated Molden file.')
+            if not self.ret_yn('Do you have an externally generated Molden file?', False):
                 self['mo_file'] = None
 
         # switch for TDA
