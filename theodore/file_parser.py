@@ -461,11 +461,88 @@ class file_parser_libwfa(file_parser_base):
         self.ioptions = ioptions
         self.excD = False
         self.excT = False
+        self.state_list_om = [] # state_list read from the file ctnum*.om
 
     def read(self):
+        return self.rmatfile_one(old=True)
+
+    def rmatfile_one(self, old=False):
         """
-        Read the .om files as created with libwfa.
-        These already contain OmAt
+        Read all om_at data from one file.
+        old - activate old mode if new file is not available.
+        """
+        state_list = []
+
+        mom = os.path.exists("ctnum_mulliken.om")
+        lom = os.path.exists("ctnum_lowdin.om")
+
+        if mom:
+            if lom:
+                if self.ioptions['Om_formula'] == 1:
+                    fname = "ctnum_mulliken.om"
+                elif self.ioptions['Om_formula'] == 2:
+                    fname = "ctnum_lowdin.om"
+                else:
+                    raise error_handler.ElseError(str(self.ioptions['Om_formula']), "Om_formula")
+            else:
+                fname = "ctnum_mulliken.om"
+                print("Found file %s")
+        else:
+            if lom:
+                fname = "ctnum_lowdin.om"
+            else:
+                print("WARNING: Using old mode of reading .om files")
+                return self.read_old()
+
+        print("Reading %s ..."%fname)
+
+        rfile=open(fname,'r')
+
+        while True:
+            try:
+                line = next(rfile)
+            except StopIteration:
+                print("Finished parsing %s."%fname)
+                break
+            if len(line) < 3: continue
+
+            # Parse the header
+            words = line.split()
+            state_list.append({})
+            state = state_list[-1]
+            state['name'] = words[0]
+            state['exc_en'] = float(words[1]) * units.energy['eV'] if len(words) >= 2 else  0.
+            state['osc_str'] = float(words[2]) if len(words) >= 3 else -1.
+            state['lname'] = line.strip()
+
+            # Dimensions
+            words = next(rfile).split()
+            dima=int(words[1])
+            dimb=int(words[2])
+
+            # Parse the array
+            outarr = numpy.zeros([dima,dimb], float)
+
+            ia = ib = 0
+            while ia < dima:
+              for val in next(rfile).split():
+                outarr[ib, ia] = float(val)
+                ib += 1
+                if ib == dimb:
+                  ia += 1
+                  ib = 0
+            state['OmAt'] = outarr
+            state['Om'] = outarr.sum()
+
+        rfile.close()
+        return state_list
+
+# Everything below here can be deleted at some point
+
+    def read_old(self):
+        """
+        Read the ctnum*.om file as created with libwfa.
+        This assumes the new output format where only one file is present.
         """
         state_list = []
 
@@ -482,6 +559,7 @@ class file_parser_libwfa(file_parser_base):
 
             # Here several try statements are used to check for different versions of the output
             #    Not very elegant but it should work ...
+            state_list[-1]['lname'] = typ
             try:
                 multl, iirrep, ist = typ.split('_')
             except:
@@ -567,40 +645,6 @@ class file_parser_libwfa(file_parser_base):
 
         return typ, excen, osc, dima, dimb, outarr
 
-    def rmatfile_all(self, fname, typ):
-        """
-        Read Omega (atoms) matrix as produced by libwfa. New format where
-        everything is written to one file.
-        """
-        print("Parsing entry %s of %s ..."%(typ, fname))
-        rfile=open(fname,'r')
-
-        while True:
-            try:
-                line = next(rfile)
-            except StopIteration:
-                raise error_handler.MsgError("Reached end of file %s"%fname)
-
-            if typ in line:
-                words = next(rfile).split()
-                dima=int(words[1])
-                dimb=int(words[2])
-
-                outarr = numpy.zeros([dima,dimb], float)
-
-                ia = ib = 0
-                while ia < dima:
-                  for val in next(rfile).split():
-                    outarr[ib, ia] = float(val)
-                    ib += 1
-                    if ib == dimb:
-                      ia += 1
-                      ib = 0
-                break
-
-        rfile.close()
-        return outarr
-
     def parse_line(self, state, line, rfile=None):
         if 'Exciton analysis of the difference density matrix' in line:
             self.excD = True
@@ -667,6 +711,8 @@ class file_parser_qcadc(file_parser_libwfa):
 
         basedir='.'
 
+        self.state_list_om = self.rmatfile_one()
+
         exc_diff = False
         exc_1TDM = False
         self.irrep_labels = None
@@ -685,25 +731,18 @@ class file_parser_qcadc(file_parser_libwfa):
                     self.irrep_labels = self.ioptions.get('irrep_labels')
 
                 state_list.append({})
+                state = state_list[-1]
 
-                state_list[-1]['state_ind'] = int(words[2])
-                state_list[-1]['mult']      = words[3]
-                state_list[-1]['irrep']     = words[4]
-                state_list[-1]['name']      = '%s%s%s'%(words[2], words[3], words[4])
+                state['state_ind'] = int(words[2])
+                state['mult']      = words[3]
+                state['irrep']     = words[4]
+                state['name']      = '%s%s%s'%(words[2], words[3], words[4])
 
-                om_filen = self.om_file_name(state_list[-1])
-                if om_filen == None:
-                    print(" WARNING: could not find .om file for %s"%state_list[-1]["name"])
-                    continue
-                (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile(os.path.join(basedir,om_filen))
-                if typ == None:
-                    continue
-
-                state_list[-1]['exc_en'] = exctmp * units.energy['eV']
-                state_list[-1]['osc_str'] = osc
-
-                state_list[-1]['Om']   = om_at.sum()
-                state_list[-1]['OmAt'] = om_at
+                oname = self.om_file_name(state)
+                for ostate in self.state_list_om:
+                    if oname == ostate['lname'].split()[0]:
+                        for prop in ['Om', 'OmAt', 'exc_en', 'osc_str']:
+                            state[prop] = ostate[prop]
 
             elif 'MP(2) Summary' in line:
                 state_list.append({})
@@ -755,8 +794,7 @@ class file_parser_qcadc(file_parser_libwfa):
 
     def om_file_name(self, state):
         """
-        Construct the name of the .om file
-        This routine parses different versions of Q-Chem and libwfa.
+        Construct the name of the state in the .om file
         """
         multo = {'(1)':'singlet',
                  '(3)':'triplet',
@@ -768,30 +806,7 @@ class file_parser_qcadc(file_parser_libwfa):
             if state['irrep'].lower() in ['a', 'ag', 'a1', "a'"]:
                 state_indo -= 1
 
-        state['fname'] = '%s_%s_%i'%(multo, state['irrep'], state_indo)
-
-        omname = '%s_ctnum_atomic.om'%state['fname']
-        if os.path.exists(omname):
-            return omname
-
-        omname = '%s_ctnum_mulliken.om'%state['fname']
-        if os.path.exists(omname):
-            return omname
-
-        omname = '%s_ctnum_lowdin.om'%state['fname']
-        if os.path.exists(omname):
-            return omname
-
-        irrepo = self.irrep_labels.index(state['irrep'])
-        # subtract 1 for ground state irrep
-        state_indo = state['state_ind'] - 1*(irrepo==0)*(state['mult'] == '(1)')
-        state['fname'] = '%s_%i_%i'%(multo, irrepo, state_indo)
-        omname = '%s_ctnum_atomic.om'%state['fname']
-
-        if os.path.exists(omname):
-            return omname
-
-        return None
+        return '%s_%s_%i'%(multo, state['irrep'], state_indo)
 
 class file_parser_qctddft(file_parser_libwfa):
     def read(self, mos):
@@ -801,6 +816,8 @@ class file_parser_qctddft(file_parser_libwfa):
         state_list = []
         exc_diff = exc_1TDM = tdread = libwfa = False
         istate = 1
+
+        self.state_list_om = self.rmatfile_one()
 
         if self.ioptions.get('TDA'):
             ststr  = 'TDDFT/TDA Excitation Energies'
@@ -876,16 +893,17 @@ class file_parser_qctddft(file_parser_libwfa):
 
                     if self.ioptions['read_libwfa']:
                         om_at = None
-                        if os.path.exists("ctnum_mulliken.om"):
-                            om_at = self.rmatfile_all("ctnum_mulliken.om", state['lname'])
-                        if os.path.exists("ctnum_lowdin.om"):
-                            om_at = self.rmatfile_all("ctnum_lowdin.om", state['lname'])
-                        elif os.path.exists('%s_ctnum_atomic.om'%state['name']):
-                            (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile('%s_ctnum_atomic.om'%state['name'])
-                        elif os.path.exists('%s_ctnum_mulliken.om'%state['name']):
-                            (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile('%s_ctnum_mulliken.om'%state['name'])
-                        elif os.path.exists('%s_ctnum_lowdin.om'%state['name']):
-                            (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile('%s_ctnum_lowdin.om'%state['name'])
+                        for ostate in self.state_list_om:
+                            if ostate['lname'] == state['lname']:
+                                om_at = ostate['OmAt']
+
+                        if om_at is None:
+                            if os.path.exists('%s_ctnum_atomic.om'%state['name']):
+                                (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile('%s_ctnum_atomic.om'%state['name'])
+                            elif os.path.exists('%s_ctnum_mulliken.om'%state['name']):
+                                (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile('%s_ctnum_mulliken.om'%state['name'])
+                            elif os.path.exists('%s_ctnum_lowdin.om'%state['name']):
+                                (typ, exctmp, osc, num_at, num_at1, om_at) = self.rmatfile('%s_ctnum_lowdin.om'%state['name'])
 
                         if not om_at is None:
                             state_list[-1]['Om']   = om_at.sum()
