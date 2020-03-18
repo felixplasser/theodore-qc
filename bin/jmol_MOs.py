@@ -260,7 +260,7 @@ class jmol_options(input_options.write_options):
         if self['ccode']:
             self.read_str('Hole (occupied) orbitals', 'chole', 'blue red')
             self.read_str('Electron (virtual) orbitals', 'celec', 'orange green')
-        self.read_str('Format of the output files (png, pngt, ...)', 'oformat', 'png')
+        self.read_str('Format of the output files (png, pngt, ...)', 'oformat', 'pngt')
         self.read_int('Width of images in output html file', 'width', 400)
 
         self.read_yn('Run Jmol?', 'run_jmol', False)

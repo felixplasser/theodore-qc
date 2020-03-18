@@ -33,7 +33,7 @@ class Om_bar_options(input_options.write_options):
             words = line.split()
 
             self.state_list.append({'name':words[0],
-                'Om':words[1],
+                'Om':float(words[1]),
                 'OmFrag':list(map(float, words[2:]))})
         self.numSt = len(self.state_list)
 
@@ -96,6 +96,7 @@ class Om_bar_options(input_options.write_options):
             for comp in self.comps:
                 wt = sum(state['OmFrag'][icol] for icol in comp['cols'])
                 f.write(" %.6f"%wt)
+            f.write(" %.6f"%(1.-state['Om']))
             f.write("\n")
         f.close()
 
@@ -114,7 +115,7 @@ class Om_bar_options(input_options.write_options):
 
         lfile.write("\\addplot[mark=-, only marks, mark options={scale=2, line width=2pt}]  table[x index=0, y index=2] {Om_bar_data.txt};\n\n")
         lfile.write("% Uncomment to plot oscillator strengths as shading\n")
-        lfile.write("%\\addplot+[solid, mesh, point meta=explicit, no markers, line width=5cm, shader=flat corner] table[x expr=\\thisrowno{0}-0.5, y expr=5, meta expr=\\thisrowno{3}] {Om_bar_data.txt};\n")
+        lfile.write("%\\addplot+[solid, mesh, point meta=explicit, no markers, line width=5cm, shader=flat corner] table[x expr=\\thisrowno{0}-0.5, y expr=2, meta expr=\\thisrowno{3}] {Om_bar_data.txt};\n")
         lfile.write('\end{axis}\n')
 
         # Bar graphs with state characters
@@ -133,7 +134,34 @@ class Om_bar_options(input_options.write_options):
         for icomp, comp in enumerate(self.comps):
             lfile.write("\\addplot[ybar, draw=black, fill=%s] table[x index=0, y index=%i] {Om_bar_data.txt};\n"%(comp['color'], icomp+4))
             lfile.write("\\addlegendentry{%s};\n"%comp['name'])
-        lfile.write('\end{axis}\n\n')
+        lfile.write('\n% Uncomment for double excitations\n% ')
+        lfile.write("\\addplot[ybar, draw=black, fill=yellow!50] table[x index=0, y index=%i] {Om_bar_data.txt};\n"%(len(self.comps)+4))
+        lfile.write('% \\addlegendentry{2-el.};\n')
+
+        lfile.write('''% Handles for arrows
+\\node at (axis cs: 1,-0.15) (h1) {};\n''')
+        lfile.write("\\node at (axis cs: %i,-0.15) (h2) {};\n"%(self.numSt//2))
+        lfile.write("\\node at (axis cs: %i,-0.15) (h3) {};\n"%(self.numSt))
+        lfile.write('''\end{axis}\n\n
+
+% Template for drawing orbital pictures
+%    You can use the \incMO command defined above
+% \\node[orb, anchor=north west, at={(-1cm,-4.8cm)}] (S1e) {incMO};
+% \\node[orb, below of=S1e, anchor=north, node distance=2cm] (S1h) {incMO};
+% \\node[orb, right of=S1e, anchor=west, xshift=0.7cm, yshift=-0.3cm] (S2e) {incMO};
+% \\node[orb, below of=S2e, anchor=north, node distance=2cm] (S2h) {incMO};
+% \\node[orb, right of=S2e, anchor=west, xshift=0.7cm, yshift=0.3cm] (S3e) {incMO};
+% \\node[orb, below of=S3e, anchor=north, node distance=2cm] (S3h) {incMO};
+%
+
+% \draw (S1e) to (S1h);
+% \draw (S2e) to (S2h);
+% \draw (S3e) to (S3h);
+
+% \draw[arrow] (S1e) to [out=90, in=-90] (h1);
+% \draw[arrow] (S2e) to [out=90, in=-90] (h2);
+% \draw[arrow] (S3e) to [out=90, in=-90] (h3);
+''')
 
         # Finish
         lfile.write('\end{tikzpicture}\n')
@@ -147,6 +175,7 @@ class Om_bar_options(input_options.write_options):
         str = """\documentclass{standalone}
 \\usepackage{xcolor}
 \\usepackage{tikz, pgfplots}
+\\usetikzlibrary{plotmarks, arrows}
 \\usetikzlibrary{calc, decorations, plotmarks, fit, positioning, shapes.geometric}
 \pgfplotsset{compat=1.4}
 
@@ -192,6 +221,10 @@ every linear axis/.append style={
 \pgfplotsset{colormap={CI}{color=(white); color=(blue!50); color=(O!70);}}
 
 % ===========================================================================
+
+\\tikzstyle{orb} = [ellipse, draw, color=black, fill=black!5, inner sep=-1pt, align=center]
+\\tikzstyle{arrow} = [-open triangle 45, black, thick]
+\\newcommand{\\incMO}[1]{\\includegraphics[width=4.5cm, trim=1cm 1cm 1cm 1cm, clip=true]{#1}}
 
 \\begin{document}
 \\begin{tikzpicture}
