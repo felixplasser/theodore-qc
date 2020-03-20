@@ -486,7 +486,6 @@ class file_parser_libwfa(file_parser_base):
                     raise error_handler.ElseError(str(self.ioptions['Om_formula']), "Om_formula")
             else:
                 fname = "ctnum_mulliken.om"
-                print("Found file %s")
         else:
             if lom:
                 fname = "ctnum_lowdin.om"
@@ -557,9 +556,9 @@ class file_parser_libwfa(file_parser_base):
 
             state_list.append({})
 
+            state_list[-1]['lname'] = typ
             # Here several try statements are used to check for different versions of the output
             #    Not very elegant but it should work ...
-            state_list[-1]['lname'] = typ
             try:
                 multl, iirrep, ist = typ.split('_')
             except:
