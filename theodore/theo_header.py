@@ -10,8 +10,10 @@ def ret_header(title=None, ioptions=None, ver='2.0.2'):
 
     hstr += addlinec("TheoDORE %s"%ver)
     hstr += addlinec("Theoretical Density, Orbital Relaxation and Exciton analysis")
+    hstr += addlinec()
     hstr += addlinec("Author: Felix Plasser")
-    hstr += addlinec("Contributions by: L. Stojanovic, G. Hermann, S. Mai, M.F.S.J. Menger")
+    hstr += addlinec("Contributions by: L. Stojanovic, G. Hermann, S. Mai,")
+    hstr += addlinec(" M.F.S.J. Menger, P. Kimber")
 
     hstr += width*'-' + '\n'
 
@@ -35,9 +37,10 @@ def ret_header(title=None, ioptions=None, ver='2.0.2'):
 
     hstr += addlinec()
     hstr += addlinel("Program citation:", 3)
-    hstr += addlinel("F. Plasser \"TheoDORE %s: a package for theoretical density, orbital"%ver)
-    hstr += addlinel("relaxation, and exciton analysis\"; available from")
-    hstr += addlinel("http://theodore-qc.sourceforge.net")
+    hstr += addlinel("F. Plasser, J. Chem. Phys. (2020), 152, 084108.")
+#    hstr += addlinel("F. Plasser \"TheoDORE %s: a package for theoretical density, orbital"%ver)
+#    hstr += addlinel("relaxation, and exciton analysis\"; available from")
+#    hstr += addlinel("http://theodore-qc.sourceforge.net")
 
     if not title==None:
         hstr += width*'-' + '\n'

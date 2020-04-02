@@ -757,7 +757,7 @@ class file_parser_qcadc(file_parser_libwfa):
 
                 if abs(exc_chk - state_list[-1]['exc_en']) > exc_chk * 1.e-4:
                     print(exc_chk, state_list[-1]['exc_en'])
-                    raise error_handler.MsgError("Excitation energies do not match")
+                    raise error_handler.MsgError("Excitation energies do not match\n   -> Try using rtype='libwfa' instead.")
 
             elif 'Exciton analysis of the difference density matrix' in line:
                 exc_1TDM = False

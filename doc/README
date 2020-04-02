@@ -1,6 +1,8 @@
 Download the newest TheoDORE release and tutorial.
 
-- Support for Q-Chem 5.2
+- Support for Q-Chem 5.2/5.3
+- De-excitation measures
+- Improvements in plot_Om_bars.py
 
 TheoDORE 2.0.2
 - Fix for runs without openbabel
