@@ -1358,6 +1358,62 @@ class file_parser_tddftb(file_parser_base):
 
         return state_list
 
+class file_parser_dftmrci(file_parser_base):
+    """
+    Read DFT/MRCI job.
+    """
+    def read(self, mos):
+        state_list = []
+
+        self.read_cidens(mos, state_list)
+
+        return state_list
+
+    def read_cidens(self, mos, state_list):
+        df = open('mrci.cidens', 'rb')
+        print('\nReading file %s ...'%df.name)
+        dummy, nroot = struct.unpack('2i', df.read(8))
+        print('nroot:', nroot)
+
+        for iroot in range(2*nroot-1):
+            df.read(8)
+            lab1 = struct.unpack('6s', df.read(6))[0]
+            lab2 = struct.unpack('6s', df.read(6))[0]
+            df.read(8) # dummy
+            en = struct.unpack('d', df.read(8))[0]
+
+            df.read(8)
+            nmo, dummy  = struct.unpack('2i', df.read(8))
+            dummy, sden = struct.unpack('2i', df.read(8))
+            dummy, reclen = struct.unpack('2i', df. read(8))
+
+            if nmo != mos.ret_num_mo():
+                raise error_handler.MsgError('Inconsistent number of MOs')
+            nentry = nmo * nmo
+            if nentry*8 != reclen:
+                raise error_handler.MsgError('Inconsistent record length')
+
+            coeff = struct.unpack(nentry*'d', df.read(nentry*8))
+
+            if self.ioptions['s_or_t'] == 's':
+                if sden != 0:
+                    print(" Analysing state %s"%lab1)
+                    state_list.append({})
+                    state = state_list[-1]
+                    state['name'] = str(lab1)
+                    state['exc_en'] = en # * units.energy['eV']
+                    state['sden'] = numpy.reshape(coeff, [nmo, nmo])
+            else:
+                if sden == 0:
+                    print(" Analysing transition %s -> %s"%(lab1, lab2))
+                    state_list.append({})
+                    state = state_list[-1]
+                    state['name'] = lab2
+                    state['exc_en'] = en * units.energy['eV']
+                    state['tden'] = numpy.reshape(coeff, [nmo, nmo])
+
+        df.close()
+
 class adf_kffile:
     """
     Wrapper for ADF.

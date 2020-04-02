@@ -77,6 +77,8 @@ class dens_ana_base:
             self.ioptions['molden_orbitals'] = False
         elif rtype=='tddftb':
             self.state_list = file_parser.file_parser_tddftb(self.ioptions).read(self.mos)
+        elif rtype=='dftmrci':
+            self.state_list = file_parser.file_parser_dftmrci(self.ioptions).read(self.mos)
         elif rtype == 'nos':
             self.state_list = file_parser.file_parser_nos(self.ioptions).read(self.mos)
         elif rtype in ['cclib', 'gamess', 'orca']:
