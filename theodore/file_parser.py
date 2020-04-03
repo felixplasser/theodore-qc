@@ -1370,15 +1370,16 @@ class file_parser_dftmrci(file_parser_base):
         return state_list
 
     def read_cidens(self, mos, state_list):
-        df = open('mrci.cidens', 'rb')
+        df = open(self.ioptions['rfile'], 'rb')
         print('\nReading file %s ...'%df.name)
         dummy, nroot = struct.unpack('2i', df.read(8))
         print('nroot:', nroot)
 
+        en0 = None
         for iroot in range(2*nroot-1):
             df.read(8)
-            lab1 = struct.unpack('6s', df.read(6))[0]
-            lab2 = struct.unpack('6s', df.read(6))[0]
+            lab1 = struct.unpack('6s', df.read(6))[0].strip().decode('UTF-8')
+            lab2 = struct.unpack('6s', df.read(6))[0].strip().decode('UTF-8')
             df.read(8) # dummy
             en = struct.unpack('d', df.read(8))[0]
 
@@ -1400,8 +1401,12 @@ class file_parser_dftmrci(file_parser_base):
                     print(" Analysing state %s"%lab1)
                     state_list.append({})
                     state = state_list[-1]
-                    state['name'] = str(lab1)
-                    state['exc_en'] = en # * units.energy['eV']
+                    state['name'] = lab1
+                    if en0 is None:
+                        state['exc_en'] = 0.
+                        en0 = en
+                    else:
+                        state['exc_en'] = (en - en0) * units.energy['eV']
                     state['sden'] = numpy.reshape(coeff, [nmo, nmo])
             else:
                 if sden == 0:
@@ -1410,7 +1415,7 @@ class file_parser_dftmrci(file_parser_base):
                     state = state_list[-1]
                     state['name'] = lab2
                     state['exc_en'] = en * units.energy['eV']
-                    state['tden'] = numpy.reshape(coeff, [nmo, nmo])
+                    state['tden'] = numpy.reshape(coeff, [nmo, nmo]).T
 
         df.close()
 

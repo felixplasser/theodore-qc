@@ -22,6 +22,8 @@ class write_options_theo(input_options.write_options):
             rdef = 'colmrci'
         elif os.path.exists('molcas.rasscf.molden'):
             rdef = 'rassi'
+        elif os.path.exists('mrci.cidens'):
+            rdef = 'dftmrci'
         elif os.path.exists('coord'):
             if os.path.exists('auxbasis'):
                 rdef = 'ricc2'
@@ -50,7 +52,8 @@ class write_options_theo(input_options.write_options):
             ('cclib', 'Use external cclib library: Gaussian, GAMESS, ...'),
             ('orca', 'ORCA TDDFT (using a Molden file and cclib)'),
             ('adf', 'ADF (TDDFT)'),
-            ('tddftb', 'DFTB+ - TDDFTB')
+            ('tddftb', 'DFTB+ - TDDFTB'),
+            ('dftmrci', 'DFT/MRCI')
         ], rdef)
 
         # set defaults
@@ -131,6 +134,11 @@ class write_options_theo(input_options.write_options):
             self['mo_file'] = 'eigenvec.out'
             self['coor_file'] = 'geom.xyz'
             self['coor_format'] = 'xyz'
+        elif self['rtype'] == 'dftmrci':
+            self['rfile'] = 'mrci.cidens'
+            self['mo_file'] = 'molden.input'
+            self['coor_file'] = ''
+            self['coor_format'] = ''
         else:
             self['rfile'] = ''
             self['mo_file'] = ''
