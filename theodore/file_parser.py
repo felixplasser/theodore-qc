@@ -38,14 +38,14 @@ class file_parser_base:
         """
         if lvprt <= 0: return
 
-        print("\nDensity matrix statistics")
-        print("Trace: % .6f"%numpy.trace(dens))
+        print(" Density matrix statistics")
+        print(" Trace: % .6f"%numpy.trace(dens))
 
-        print("Largest elements:")
+        print(" Largest elements:")
         for ind in reversed(numpy.argsort((dens*dens).flatten())):
             i = ind // dens.shape[1]
             j = ind %  dens.shape[1]
-            print("(%4i/%4i): % .6f"%(i, j, dens[i, j]))
+            print("  (%4i/%4i): % .6f"%(i, j, dens[i, j]))
 
             if dens[i, j] * dens[i, j] < 0.1:
                 break
@@ -1385,15 +1385,44 @@ class file_parser_dftmrci(file_parser_base):
     """
     def read(self, mos):
         state_list = []
+        self.orb_map = numpy.zeros([mos.ret_num_mo(), mos.ret_num_mo()], int)
 
+        self.read_stdout(mos)
         self.read_cidens(mos, state_list)
 
         return state_list
 
+    def read_stdout(self, mos):
+        """
+        Parse the standard output to get the mapping of MO indices with symmetry.
+        """
+        with open(self.ioptions['rfile'], 'r') as f:
+            while True:
+                try:
+                    line = next(f)
+                except StopIteration:
+                    raise error_handler.MsgError('Did not find orbital map')
+
+                if 'typ nr (CI/TM)' in line:
+                    for iorb in range(mos.ret_num_mo()):
+                        line = next(f)
+
+                        # Frozen orbitals are kept as zero entries
+                        if line.strip() == '.':
+                            break
+                        if line[:6] == 'frozen':
+                            continue
+
+                        words = line[7:].split()
+                        ien = int(words[0])
+                        isy = int(words[1])
+                        self.orb_map[ien-1, isy-1] = 1
+                    break
+
     def read_cidens(self, mos, state_list):
         lvprt = self.ioptions['lvprt']
 
-        df = open(self.ioptions['rfile'], 'rb')
+        df = open('mrci.cidens', 'rb')
         print('\nReading file %s ...'%df.name)
         dummy, nroot = struct.unpack('2i', df.read(8))
         print('nroot:', nroot)
@@ -1411,9 +1440,8 @@ class file_parser_dftmrci(file_parser_base):
             dummy, sden = struct.unpack('2i', df.read(8))
             dummy, reclen = struct.unpack('2i', df. read(8))
 
-            if lvprt >= 1:
-                print("Parsing <%s|E_pq|%s>"%(lab1, lab2))
-                print(" nmo: %i, reclen: %i"%(nmo, reclen))
+            if lvprt >= 2:
+                print("\nParsing <%s|E_pq|%s>.  nmo: %i, reclen: %i"%(lab1, lab2, nmo, reclen))
 
             if nmo != mos.ret_num_mo():
                 raise error_handler.MsgError('Inconsistent number of MOs')
@@ -1434,7 +1462,10 @@ class file_parser_dftmrci(file_parser_base):
                         en0 = en
                     else:
                         state['exc_en'] = (en - en0) * units.energy['eV']
-                    state['sden'] = numpy.reshape(coeff, [nmo, nmo])
+
+                    den_tmp = numpy.reshape(coeff, [nmo, nmo])
+                    state['sden'] = numpy.dot(self.orb_map,\
+                        numpy.dot(den_tmp, self.orb_map.T))
                     if lvprt >= 2:
                         self.dens_stat(state['sden'], lvprt)
             else:
@@ -1444,7 +1475,10 @@ class file_parser_dftmrci(file_parser_base):
                     state = state_list[-1]
                     state['name'] = lab2
                     state['exc_en'] = en * units.energy['eV']
-                    state['tden'] = numpy.reshape(coeff, [nmo, nmo])
+
+                    den_tmp = .5**.5 * numpy.reshape(coeff, [nmo, nmo])
+                    state['tden'] = numpy.dot(self.orb_map,\
+                        numpy.dot(den_tmp, self.orb_map.T))
                     if lvprt >= 2:
                         self.dens_stat(state['tden'], lvprt)
 

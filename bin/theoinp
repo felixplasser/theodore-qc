@@ -135,7 +135,7 @@ class write_options_theo(input_options.write_options):
             self['coor_file'] = 'geom.xyz'
             self['coor_format'] = 'xyz'
         elif self['rtype'] == 'dftmrci':
-            self['rfile'] = 'mrci.cidens'
+            self['rfile'] = 'mrci.log'
             self['mo_file'] = 'orca.molden.input'
             self['coor_file'] = ''
             self['coor_format'] = ''
@@ -332,9 +332,9 @@ class write_options_theo(input_options.write_options):
     def exciton_ana(self):
         if self.ret_yn('Compute approximate exciton size?', True):
             self['prop_list'] += ['RMSeh']
-            if not self['rtype'] in ['orca', 'cclib', 'adf']:
-                print("\nMolecular coordinates for exciton analysis:")
-                self.coor_file()
+            #if not self['rtype'] in ['orca', 'cclib', 'adf']:
+            #    print("\nMolecular coordinates for exciton analysis:")
+            #    self.coor_file()
 
         if self['read_libwfa']:
             if self.ret_yn('Parse exciton information from libwfa analysis?', False):
