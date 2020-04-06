@@ -32,6 +32,27 @@ class file_parser_base:
             nvirt = num_mo - nocc
             return numpy.zeros([nocc, num_mo])
 
+    def dens_stat(self, dens, lvprt=1):
+        """
+        Print statistics about density matrix.
+        """
+        if lvprt <= 0: return
+
+        print("\nDensity matrix statistics")
+        print("Trace: % .6f"%numpy.trace(dens))
+
+        print("Largest elements:")
+        for ind in reversed(numpy.argsort((dens*dens).flatten())):
+            i = ind // dens.shape[1]
+            j = ind %  dens.shape[1]
+            print("(%4i/%4i): % .6f"%(i, j, dens[i, j]))
+
+            if dens[i, j] * dens[i, j] < 0.1:
+                break
+
+        if lvprt >= 3:
+            print(dens)
+
     def parse_key(self, state, key, line, search_string, ind=-1, rfile=None, rmatrix=False, not_string=None):
         """
         Find search_string in the specified line and set it as state[key].
@@ -1370,6 +1391,8 @@ class file_parser_dftmrci(file_parser_base):
         return state_list
 
     def read_cidens(self, mos, state_list):
+        lvprt = self.ioptions['lvprt']
+
         df = open(self.ioptions['rfile'], 'rb')
         print('\nReading file %s ...'%df.name)
         dummy, nroot = struct.unpack('2i', df.read(8))
@@ -1387,6 +1410,10 @@ class file_parser_dftmrci(file_parser_base):
             nmo, dummy  = struct.unpack('2i', df.read(8))
             dummy, sden = struct.unpack('2i', df.read(8))
             dummy, reclen = struct.unpack('2i', df. read(8))
+
+            if lvprt >= 1:
+                print("Parsing <%s|E_pq|%s>"%(lab1, lab2))
+                print(" nmo: %i, reclen: %i"%(nmo, reclen))
 
             if nmo != mos.ret_num_mo():
                 raise error_handler.MsgError('Inconsistent number of MOs')
@@ -1408,6 +1435,8 @@ class file_parser_dftmrci(file_parser_base):
                     else:
                         state['exc_en'] = (en - en0) * units.energy['eV']
                     state['sden'] = numpy.reshape(coeff, [nmo, nmo])
+                    if lvprt >= 2:
+                        self.dens_stat(state['sden'], lvprt)
             else:
                 if sden == 0:
                     print(" Analysing transition %s -> %s"%(lab1, lab2))
@@ -1415,7 +1444,9 @@ class file_parser_dftmrci(file_parser_base):
                     state = state_list[-1]
                     state['name'] = lab2
                     state['exc_en'] = en * units.energy['eV']
-                    state['tden'] = numpy.reshape(coeff, [nmo, nmo]).T
+                    state['tden'] = numpy.reshape(coeff, [nmo, nmo])
+                    if lvprt >= 2:
+                        self.dens_stat(state['tden'], lvprt)
 
         df.close()
 

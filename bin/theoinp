@@ -136,7 +136,7 @@ class write_options_theo(input_options.write_options):
             self['coor_format'] = 'xyz'
         elif self['rtype'] == 'dftmrci':
             self['rfile'] = 'mrci.cidens'
-            self['mo_file'] = 'molden.input'
+            self['mo_file'] = 'orca.molden.input'
             self['coor_file'] = ''
             self['coor_format'] = ''
         else:
