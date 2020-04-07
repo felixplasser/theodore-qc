@@ -1,0 +1,2 @@
+Test for DFT/MRCI computation.
+Here, analyze_sden.py computes the NOs

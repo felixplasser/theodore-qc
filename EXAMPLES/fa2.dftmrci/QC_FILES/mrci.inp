@@ -1,0 +1,7 @@
+$method dftci
+$hamiltonian R2018
+$dftparam standard
+$esel standard
+$orca
+$ciref 8 8 2
+$roots 2 2 2 2

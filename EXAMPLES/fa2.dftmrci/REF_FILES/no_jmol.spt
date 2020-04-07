@@ -1,0 +1,70 @@
+load orca.molden.input FILTER "nosort"
+mo titleformat ""
+
+background white
+mo fill
+mo cutoff 0.04
+
+
+mo [ -0.986 17]
+write image pngt "no_2a1_16_1.00.png"
+mo [ 0.997 15]
+write image pngt "no_2a1_17_1.00.png"
+mo [ -0.997 16]
+write image pngt "no_2a1_18_1.00.png"
+mo [ 0.987 18]
+write image pngt "no_2a1_19_1.00.png"
+
+mo [ 0.992 15]
+write image pngt "no_1a2_16_1.61.png"
+mo [ 0.993 16]
+write image pngt "no_1a2_17_1.40.png"
+mo [ -0.995 17]
+write image pngt "no_1a2_18_0.63.png"
+mo [ 0.995 18]
+write image pngt "no_1a2_19_0.41.png"
+
+mo [ 0.999 16]
+write image pngt "no_2a2_16_1.57.png"
+mo [ 0.996 15]
+write image pngt "no_2a2_17_1.42.png"
+mo [ -0.990 18]
+write image pngt "no_2a2_18_0.59.png"
+mo [ 0.984 17]
+write image pngt "no_2a2_19_0.45.png"
+
+mo [ 0.991 16]
+write image pngt "no_1b1_16_1.59.png"
+mo [ -0.993 15]
+write image pngt "no_1b1_17_1.41.png"
+mo [ 0.995 17]
+write image pngt "no_1b1_18_0.62.png"
+mo [ -0.995 18]
+write image pngt "no_1b1_19_0.42.png"
+
+mo [ 0.997 15]
+write image pngt "no_2b1_16_1.57.png"
+mo [ 0.997 16]
+write image pngt "no_2b1_17_1.42.png"
+mo [ -0.990 18]
+write image pngt "no_2b1_18_0.58.png"
+mo [ 0.987 17]
+write image pngt "no_2b1_19_0.46.png"
+
+mo [ -0.998 17]
+write image pngt "no_1b2_16_1.26.png"
+mo [ -0.997 15]
+write image pngt "no_1b2_17_1.08.png"
+mo [ 0.997 16]
+write image pngt "no_1b2_18_1.03.png"
+mo [ -0.998 18]
+write image pngt "no_1b2_19_0.71.png"
+
+mo [ 0.998 11]
+write image pngt "no_2b2_16_1.61.png"
+mo [ -0.989 12]
+write image pngt "no_2b2_17_1.40.png"
+mo [ 0.994 17]
+write image pngt "no_2b2_18_0.63.png"
+mo [ 0.994 18]
+write image pngt "no_2b2_19_0.41.png"

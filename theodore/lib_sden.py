@@ -168,20 +168,22 @@ class sden_ana(dens_ana_base.dens_ana_base):
         return pop, U
 
     def export_NOs_jmol(self, state, jmolNO, pop, U, mincoeff=0.2, minp=0.05):
-        Ut = U.T
+        Ut = U.transpose()
 
         jmolNO.next_set(state['name'])
-        for i, pi in enumerate(pop):
+        for i in range(1,len(pop)):
+            pi = pop[-i]
+            if pi > 2.-minp: continue
             if pi < minp: break
 
             jmolI = 'mo ['
-            for occind in (-abs(Ut[i])**2).argsort():
-                occ = Ut[i][occind]
+            for occind in (-abs(Ut[-i])**2).argsort():
+                occ = Ut[-i][occind]
                 if abs(occ) < mincoeff: break
                 jmolI += ' %.3f %i'%(occ,occind+1)
 
             jmolI += ']\n'
-            jmolNO.add_mo(jmolI, "no_%s_%i"%(state['name'],i+1), di)
+            jmolNO.add_mo(jmolI, "no_%s_%i"%(state['name'],i+1), pi)
 
     def export_NOs_molden(self, state, pop, U, minp=0.05):
         self.mos.export_MO(pop, pop, U, 'no_%s.mld'%state['name'],

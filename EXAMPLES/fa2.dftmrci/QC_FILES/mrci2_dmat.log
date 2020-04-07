@@ -1,0 +1,501 @@
+ 
+          ****************************************
+          *                                      *
+          *              M R - C I               *
+          *        S.Grimme & M.Waletzke         *
+          *        Universitaet Muenster         *
+          *             1998-2000                *
+          *                                      *
+          *    Improved and parallel Version     *
+          *          Code Maintenance            *
+          *          M. Kleinschmidt             *
+          *       Universitaet Duesseldorf       *
+          *             2000-2018                *
+          *                                      *
+          *     Redesigned DFTCI Haniltonian     *
+          *               R2016                  *
+          *             I. Lyskov                *
+          *       Universitaet Duesseldorf       *
+          *             2014-2016                *
+          *                                      *
+          *     Redesigned DFTCI Haniltonians    *
+          *          R2017 and R2018             *
+          *   extension to Doublets & Quartets   *
+          *               A. Heil                *
+          *       Universitaet Duesseldorf       *
+          *             2015-2018                *
+          *                                      *
+          ****************************************
+                                                  
+           cite DFT/MRCI or MRCI work as:         
+             S.Grimme & M.Waletzke,               
+             J. Chem. Phys., 111, (1999), 5645    
+           cite parallel CI as:                   
+             M. Kleinschmidt, C. M. Marian,       
+             S.Grimme & M.Waletzke                
+             J. Chem. Phys., 130, (2009), 044708  
+           cite redesigned hamiltonian R2016 as:  
+             I.Lyskov, M.Kleinschmidt, C.M.Marian 
+             J. Chem. Phys. 144, 034104 (2016)    
+           cite redesigned hamiltonian R2017 as:  
+             A. Heil, C.M.Marian                  
+             J. Chem. Phys. 147, 194104 (2017)    
+           cite redesigned hamiltonian R2018 as:  
+             A. Heil, M.Kleinschmidt, C.M.Marian  
+             J. Chem. Phys.  149, 164106(2018)    
+           cite MR-MP2 work as:                   
+             S.Grimme & M.Waletzke,               
+             Phys. Chem. Chem. Phys.,             
+             2, (2000), 2075.                     
+           cite MR-MP/34 work as:                 
+             S.Grimme & M. Parac & M.Waletzke,    
+             Chem. Phys. Lett., 334 (2001), 99.   
+           cite MR-MPn work as:                   
+             S.Grimme & M. Parac & M.Waletzke     
+             unpublished.                         
+ 
+ 
+ current program limitations:
+ maximum # open shells          10
+           8 -tuple excitations rel. to HF/DFT determinant
+ 
+         input keywords: 
+ $end
+         end of input file
+ 
+ $orca
+        use ORCA input instead of Turbomole-style
+ $interface
+        convert ORCA input to Turbomole-style and exit
+ $method <string>
+         <string> may be one of the following options:
+         none
+         srmp2
+         dftci
+         refgen <string2>
+         mp2 <string2>
+         mp3 <string2>
+         mp4 <string2>
+         mp=<integer> <string2>
+         ci
+         <string2> selects a fockoperator for mrmp.
+         possible choices are:
+             g0 (recommended)
+             g1
+             g3
+ $hamiltonian <string>
+       <string> selects the dftci operator
+       possible choices are:
+          original (default if not specified) 
+            original parametrization by S. Grimme
+            singlet and triplet only!
+          R2016
+            redesigned hamiltonian by I. Lyskov
+            singlet, triplet and quintet!
+          R2017
+            redesigned hamiltonian by A. Heil 2017
+            singlet, doublet, triplet, quartet and quintet!
+          R2018
+            redesigned hamiltonian by A. Heil 2018
+            singlet, doublet, triplet, quartet and quintet!
+       see documentation for details of the hamiltonians
+ $dftparam <string>
+       specify parameters for dftci hamiltonian    
+       possible choices are:
+           standard (default) 
+             for standard selection ($esel=1.0)
+           short
+             for short selection ($esel=0.8)
+           manual
+            explicit specification of parameters
+            5 parameters c1-c5 (free-format floats)
+            are required in the next line!
+ $esel=<real>
+       Energy cut-off in H if $selector eps.
+       Selection threshold in muH if $selector mp2 ..
+       MP2 amplitude threshold if $method refgen ..
+       The default is $esel=1.
+ $esel  <string>
+       Alternative specification of energy cut-off
+       possible choices are:
+           standard
+             (equivalent to $esel=1.0)
+           short
+             (equivalent to $esel=0.8)
+ $selector <string>
+       Configuration selector type.
+    <string>=eps (default) an orbital energy gap type
+       selection as described in the JCP paper is
+       used. The cutoff is $esel H above the highest
+       root in the reference space.
+    <string>=eps ground, similar but cutoff is 
+       applied above the ground state
+       Full MR-SD spaces should be generated
+       with <string>=eps and $esel=<big number>.
+    <string>=mp2 g0, mp2 g1 or mp2 g3
+       the old MRDCI type selector
+       with MP2 diagonal elements instead of Epstein-
+       Nesbet is used.
+ $roots <integer(s)> 
+       # of roots in irreps n1 n2 n3 ... n8
+ $mul=<integer>
+       Multiplicity (s=1, d=2, t=3, q=4...). Default=1
+ $ciref <integer1> <integer3> <integer3>
+       Do a CI reference space with <integer1> e- in
+       in <integer2> orbitals and a maximum <integer3>
+       excitations. If the next card does not
+       contain a set of <integer2> mo numbers, the
+       frontier orbitals are taken.
+ $nref=<integer>
+      # of reference configurations. The
+       configurations follow on next nn cards.
+       Must be the final input statement !!
+       Optional statement (not needed with $ciref)
+ $freeze <core energy thresh> <anticore energy thresh>
+       Freezes occupied and virtual electrons, in a.u.
+       Default: -3.0,  2.0
+       Needs ORCA input
+ $efreeze
+  <orb1>,<orb2>-<orb5>,...
+       Freezes orbitals explicitly. Separate orbitals
+       by comma or more than one with dash
+       For core and anticore orbitals. ORCA inp. req.
+ $charge=<integer>
+       Add or remove electrons from the base
+       determinant occupation.
+ $confinput <string>
+       If <string>=mrdci: mrdci input (recommended).
+       If <string>=occ: occupation number input style.
+ $lshift=<real>
+       Level shift in MR-MP2 in au.
+ $startvector <string>
+       Startvector for davidson.
+       if <string>=previous, the converged vector
+       from a previous (e.g. mp2) run is taken.
+       Default (i.e. no input) is a mren2 procedure.
+ $memint=<integer>
+       Use memory (in Mb) for precalculated
+       four-index integrals (default=256 Mb).
+ $memvec=<integer>
+       Use memory (in Mb) for vectors 
+       (default=30000 Mb).
+ $dmat
+       <string>
+       Calculate all densities and the t-densities
+       between the reference state and all other
+       states. The reference state is specified 
+       by <string> (e.g. 1a1, 2b2u). The default
+       (i.e. if <string> is missing) is the first 
+       totally symmetric state.
+ $nos 
+       Calculate average natural orbitals which
+       are written to file <nos>.
+ $direct
+       Direct calculation of H*c in CI.
+       (default for #csf > 50000).
+ $maxsafdisk=<integer>
+       in CI: direct calculation if
+       #SAF .gt. <integer>, otherwise disk
+       (default:       200000 )
+ $acthr=<real>
+       Discard high-lying mos with eps > <real>
+       (default=10.0/2.0 H).
+ $sthr=<real>
+       Print threshhold for important configurations.
+ $rthr=<real>
+       Select those reference configurations from the
+       reference space which have a sum of weigths
+       over all roots > <real>.
+ $ncore=<integer>
+       # of mos which are not specified in occ.number
+       input.
+ $prec=<real>
+       Overall numerical precision (default=1).
+       0.1 means higher, 10 lower precision.
+ $print
+       Print results from previous calculation.
+ $mergerefsp <integer(s)> <stop>
+       read the referemce spaces of calculations,
+       done for other multiplicities,
+       and ensure, that in all calculations,
+       MO-odering and internal/external separation
+       are consistent.
+       if "stop" is given as last argument:
+       stop after generating mosort info for merge
+ $soselect <string1> [, <string2>, ...]
+       additional selection of single excitations 
+       <string> = off : no additional singles
+                        (default)
+       <string> = all : automatic selection of all
+                        single excitations
+       <string> = same: automatic selection of
+                        single excitations with same
+                        symmetry as the reference
+       <string> = hso : automatic selection of
+                        single excitations connected
+                        by H_SO to a reference
+       <string> = dipol:automatic selection of
+                        single excitations connected
+                        by a dipole (x,y,z-)operator
+       <string> = int : single excitations into
+                        internal orbitals only
+                        (default)
+       <string> = ext : single excitations into
+                        all (internal and external)
+                        orbitals
+ $hfcis
+        select all single excitations wrt. hf ref
+        (implemented only for eps selector)
+ $debugref [<int1> <int2> ...]
+          reference CI vectors are printed.
+          int1, int2, ... are the number of roots
+          to be printed  (may be omitted -
+          default: same as $roots)
+ $phaser  WF phase will be adjusted: 
+          largest coefficient is set positive.
+          if 2 ore more coeffs. are within THRESH,
+          the first one is chosen.
+          THRESH may be given in the next line.
+          default:   1.000000000000000E-005
+ 
+ 
+ running on LIN-CMFP2-1.LUNET.LBORO.AC.UK                                   
+ 
+  ------------- INPUT (standard io) -------------------
+  the run will be performed with the following options:
+  -----------------------------------------------------
+ opt dmat direct pronly cfinpocc lnos auto imethod
+ F T F F F F F          42
+ imul imethod iorder ifockop istartvec nspref ncore
+           1          42           0           0           0          69
+           0
+ memijkl ilowdir ilowdnr iseltype icharge
+         256           1           1           0           0
+ tsel acthr sthr rsel accfac lshift
+   1.00   2.00   0.00  -1.00   1.00   0.00
+  -----------------------------------------------------
+  -----------------------------------------------------
+ loading dftparams R2018 standard
+ c1-c5 :   0.558411   0.508918   0.362362   4.471650   0.000000
+ =====================================================
+ title: 
+ DFT/MRCI run with ORCA integral input                                          
+  
+ =====================================================
+ 
+          ******************************************
+          *            integral read               *
+          ******************************************
+
+ naux               240
+ nmo                 76
+ loading binary eta array from file
+ /PhotoChem/programs/DFT-MRCI/mrci-2018-11-14/kscihome/etafeldb.singlet         
+  
+ bijk needs                      2  Mb
+          76
+        2926          76
+ 
+ loading RI-integrals from ORCA file orca.bkji
+ read ORCA  : done          76          16          60          32
+ 
+ read bkji  : done
+ 
+ mrdci style configuration input !
+ mergerefsp =  F
+ 
+          ******************************************
+          *         properties of MOs and          *
+          *            base determinant            *
+          ******************************************
+
+  lowest external mo          :          23
+  anti-core neglect threshold :   2.00000000000000     
+
+ typ nr (CI/TM) irrep   occ            <i|KS|i> (au/eV)
+ D int   1  52   b2     2.0    -19.70110     -536.09
+ D int   2   1   a1     2.0    -19.70108     -536.09
+ D int   3  53   b2     2.0    -10.69643     -291.06
+ D int   4   2   a1     2.0    -10.69640     -291.06
+ D int   5   3   a1     2.0     -1.19680      -32.57
+ D int   6  54   b2     2.0     -1.19579      -32.54
+ D int   7   4   a1     2.0     -0.72961      -19.85
+ D int   8  55   b2     2.0     -0.72582      -19.75
+ V int   9  39   b1     2.0     -0.58875      -16.02
+ V int  10  26   a2     2.0     -0.58624      -15.95
+ V int  11   5   a1     2.0     -0.53855      -14.65
+ V int  12  56   b2     2.0     -0.53701      -14.61
+ V int  13   6   a1     2.0     -0.47624      -12.96
+ V int  14  57   b2     2.0     -0.45948      -12.50
+ V int  15  40   b1     2.0     -0.34347       -9.35
+ V int  16  27   a2     2.0     -0.34143       -9.29
+ V int  17   7   a1     0.0      0.00072        0.02
+ V int  18  58   b2     0.0      0.03038        0.83
+ V int  19   8   a1     0.0      0.09253        2.52
+ V int  20  59   b2     0.0      0.12776        3.48
+ V int  21  41   b1     0.0      0.15518        4.22
+ V int  22  28   a2     0.0      0.19234        5.23
+   ext  23   9   a1     0.0      0.21426        5.83
+   ext  24  60   b2     0.0      0.27445        7.47
+   ext  25  10   a1     0.0      0.41491       11.29
+   ext  26  61   b2     0.0      0.50308       13.69
+   ext  27  11   a1     0.0      0.51009       13.88
+   ext  28  42   b1     0.0      0.58286       15.86
+   ext  29  29   a2     0.0      0.64522       17.56
+   ext  30  12   a1     0.0      0.66287       18.04
+   ext  31  43   b1     0.0      0.68603       18.67
+   ext  32  62   b2     0.0      0.68678       18.69
+   ext  33  30   a2     0.0      0.71483       19.45
+   ext  34  63   b2     0.0      0.75664       20.59
+   ext  35  13   a1     0.0      0.76234       20.74
+   ext  36  64   b2     0.0      0.78359       21.32
+   ext  37  14   a1     0.0      0.96214       26.18
+   ext  38  65   b2     0.0      0.97709       26.59
+         .
+         .
+         .
+frozen  66  36   a2     0.0      2.76313       75.19
+frozen  67  37   a2     0.0      2.83567       77.16
+frozen  68  50   b1     0.0      2.83568       77.16
+frozen  69  23   a1     0.0      3.07077       83.56
+frozen  70  74   b2     0.0      3.10917       84.60
+frozen  71  24   a1     0.0      3.28447       89.38
+frozen  72  75   b2     0.0      3.29766       89.73
+frozen  73  51   b1     0.0      3.57804       97.36
+frozen  74  38   a2     0.0      3.57930       97.40
+frozen  75  25   a1     0.0      3.73464      101.62
+frozen  76  76   b2     0.0      3.74318      101.86
+ 
+ sorting bijk ....
+ total (read)    energy =   -228.692794098932     
+
+
+          ******************************************
+          *        reference configurations        *
+          ******************************************
+
+ref   1:  0   1-6,26-27,39-40,52-57 
+ref   2:  4 6 7 57 58   1-5,26-27,39-40,52-56 
+ref   3:  0   1-7,26-27,39-40,52-56 
+ref   4:  0   1-5,7,26-27,39-40,52-57 
+ref   5:  0   1-6,26-27,39-40,52-56,58 
+ref   6:  4 7 27 40 58   1-6,26,39,52-57 
+ref   7:  4 6 27 40 58   1-5,7,26,39,52-57 
+ref   8:  4 7 27 40 57   1-6,26,39,52-56,58 
+ref   9:  4 7 26 40 58   1-6,27,39,52-57 
+ref  10:  4 7 27 39 58   1-6,26,40,52-57 
+ref  11:  4 7 27 40 59   1-6,26,39,52-57 
+ref  12:  4 8 27 40 58   1-6,26,39,52-57 
+ref  13:  0   1-7,26,39-40,52-57 
+ref  14:  0   1-7,26-27,39,52-57 
+ref  15:  0   1-6,26,39-40,52-58 
+ref  16:  0   1-6,26-27,39,52-58 
+ref  17:  2 7 27   1-6,26,39-40,52-57 
+ref  18:  2 40 58   1-6,26-27,39,52-57 
+ref  19:  4 6 7 40 58   1-5,26-27,39,52-57 
+ref  20:  4 7 27 57 58   1-6,26,39-40,52-56 
+ref  21:  2 7 26   1-6,27,39-40,52-57 
+ref  22:  2 40 57   1-7,26-27,39,52-56 
+ref  23:  2 39 58   1-6,26-27,40,52-57 
+ref  24:  2 6 27   1-5,7,26,39-40,52-57 
+ref  25:  2 40 57   1-6,26-27,39,52-56,58 
+ref  26:  2 6 27   1-5,26,39-40,52-58 
+ref  27:  2 40 59   1-6,26-27,39,52-57 
+ref  28:  2 8 27   1-6,26,39-40,52-57 
+ref  29:  4 7 27 40 41   1-6,26,39,52-57 
+ref  30:  4 7 26 57 58   1-6,27,39-40,52-56 
+ref  31:  4 6 7 27 58   1-5,26,39-40,52-57 
+ref  32:  4 7 40 57 58   1-6,26-27,39,52-56 
+ref  33:  2 7 39   1-6,26-27,40,52-57 
+ref  34:  2 26 58   1-6,27,39-40,52-57 
+ref  35:  2 27 57   1-7,26,39-40,52-56 
+ref  36:  2 6 40   1-5,7,26-27,39,52-57 
+ref  37:  2 27 57   1-6,26,39-40,52-56,58 
+ref  38:  2 6 40   1-5,26-27,39,52-58 
+ref  39:  2 8 40   1-6,26-27,39,52-57 
+ref  40:  2 27 59   1-6,26,39-40,52-57 
+ref  41:  4 27 40 41 58   1-6,26,39,52-57 
+ref  42:  4 7 27 28 40   1-6,26,39,52-57 
+ref  43:  2 7 41   1-6,26,39-40,52-57 
+ref  44:  4 7 39 57 58   1-6,26-27,40,52-56 
+ref  45:  2 7 40   1-6,26-27,39,52-57 
+ref  46:  2 27 58   1-6,26,39-40,52-57 
+ref  47:  2 27 40   1-7,26,39,52-57 
+ref  48:  2 7 58   1-6,26,39-40,52-57 
+ref  49:  2 7 58   1-6,26-27,39,52-57 
+ref  50:  2 27 40   1-6,26,39,52-58 
+ref  51:  2 7 57   1-6,26-27,39-40,52-56 
+ref  52:  2 26 39   1-7,27,40,52-57 
+ref  53:  2 6 58   1-5,26-27,39-40,52-57 
+ref  54:  4 7 39 40 58   1-6,26-27,52-57 
+ref  55:  2 27 41   1-6,26,39-40,52-57 
+ref  56:  4 7 26 27 58   1-6,39-40,52-57 
+ref  57:  2 26 40   1-7,27,39,52-57 
+ref  58:  4 7 8 27 40   1-6,26,39,52-57 
+ref  59:  2 7 59   1-6,26-27,39,52-57 
+ref  60:  4 27 40 58 59   1-6,26,39,52-57 
+ref  61:  2 7 59   1-6,26,39-40,52-57 
+ref  62:  2 7 56   1-6,26-27,39-40,52-55,57 
+ref  63:  2 5 58   1-4,6,26-27,39-40,52-57 
+ref  64:  4 7 56 57 58   1-6,26-27,39-40,52-55 
+ref  65:  4 5 6 7 58   1-4,26-27,39-40,52-57 
+ref  66:  2 5 57   1-4,6-7,26-27,39-40,52-56 
+ref  67:  2 6 56   1-5,7,26-27,39-40,52-55,57 
+ref  68:  2 5 57   1-4,6,26-27,39-40,52-56,58 
+ref  69:  2 6 56   1-5,26-27,39-40,52-55,57-58 
+ 
+          ******************************************
+          *         (T) D E N S I T I E S          *
+          ******************************************
+
+ writing binary file <mrci.cidens>
+ 
+ Processing <a1  |a1  > ...
+ nr,imemhave           2       30000
+ nrsame,imemneed           1           0          38         559
+ nrsame,imemneed           1           0
+ nrsame,imemneed           2           0          38         559
+ nrsame,imemneed           2           0
+   root  1(a1  ) * root  1(a1  )
+   root  2(a1  ) * root  2(a1  )
+   root  1(a1  ) * root  2(a1  )
+... finished in     0.000 s
+ Processing <a1  |a2  > ...
+   root  1(a1  ) * root  1(a2  )
+   root  1(a1  ) * root  2(a2  )
+... finished in     0.000 s
+ Processing <a1  |b1  > ...
+   root  1(a1  ) * root  1(b1  )
+   root  1(a1  ) * root  2(b1  )
+... finished in     0.010 s
+ Processing <a1  |b2  > ...
+   root  1(a1  ) * root  1(b2  )
+   root  1(a1  ) * root  2(b2  )
+... finished in     0.000 s
+ Processing <a2  |a2  > ...
+ nr,imemhave           2       30000
+ nrsame,imemneed           1           0          38         493
+ nrsame,imemneed           1           0
+ nrsame,imemneed           2           0          38         493
+ nrsame,imemneed           2           0
+   root  1(a2  ) * root  1(a2  )
+   root  2(a2  ) * root  2(a2  )
+... finished in     0.000 s
+ Processing <b1  |b1  > ...
+ nr,imemhave           2       30000
+ nrsame,imemneed           1           0          38         491
+ nrsame,imemneed           1           0
+ nrsame,imemneed           2           0          38         491
+ nrsame,imemneed           2           0
+   root  1(b1  ) * root  1(b1  )
+   root  2(b1  ) * root  2(b1  )
+... finished in     0.010 s
+ Processing <b2  |b2  > ...
+ nr,imemhave           2       30000
+ nrsame,imemneed           1           0          38         538
+ nrsame,imemneed           1           0
+ nrsame,imemneed           2           0          38         538
+ nrsame,imemneed           2           0
+   root  1(b2  ) * root  1(b2  )
+   root  2(b2  ) * root  2(b2  )
+... finished in     0.000 s

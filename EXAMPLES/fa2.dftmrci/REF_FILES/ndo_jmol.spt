@@ -1,0 +1,73 @@
+load orca.molden.input FILTER "nosort"
+mo titleformat ""
+
+background white
+mo fill
+mo cutoff 0.04
+
+mo [ 0.997 15]
+write image pngt "detach_2a1_1_1.00.png"
+mo [ -0.997 16]
+write image pngt "detach_2a1_2_1.00.png"
+mo [ -0.985 17]
+write image pngt "attach_2a1_1_1.04.png"
+mo [ 0.987 18]
+write image pngt "attach_2a1_2_1.04.png"
+
+mo [ -0.993 16]
+write image pngt "detach_1a2_1_0.60.png"
+mo [ -0.991 15]
+write image pngt "detach_1a2_2_0.39.png"
+mo [ -0.986 17]
+write image pngt "attach_1a2_1_0.64.png"
+mo [ 0.972 18 -0.220 14]
+write image pngt "attach_1a2_2_0.42.png"
+
+mo [ -0.993 15]
+write image pngt "detach_2a2_1_0.59.png"
+mo [ 0.997 16]
+write image pngt "detach_2a2_2_0.43.png"
+mo [ 0.925 14 0.264 18 0.252 20]
+write image pngt "detach_2a2_3_0.10.png"
+mo [ 0.964 18 -0.260 14]
+write image pngt "attach_2a2_1_0.65.png"
+mo [ -0.977 17]
+write image pngt "attach_2a2_2_0.44.png"
+
+mo [ -0.993 15]
+write image pngt "detach_1b1_1_0.59.png"
+mo [ -0.991 16]
+write image pngt "detach_1b1_2_0.41.png"
+mo [ -0.985 17]
+write image pngt "attach_1b1_1_0.62.png"
+mo [ 0.974 18 -0.213 14]
+write image pngt "attach_1b1_2_0.44.png"
+
+mo [ -0.996 16]
+write image pngt "detach_2b1_1_0.58.png"
+mo [ -0.991 15]
+write image pngt "detach_2b1_2_0.44.png"
+mo [ 0.926 14 0.264 18 0.243 20]
+write image pngt "detach_2b1_3_0.10.png"
+mo [ 0.964 18 -0.262 14]
+write image pngt "attach_2b1_1_0.64.png"
+mo [ 0.980 17]
+write image pngt "attach_2b1_2_0.45.png"
+
+mo [ -0.997 16]
+write image pngt "detach_1b2_1_0.97.png"
+mo [ -0.997 15]
+write image pngt "detach_1b2_2_0.92.png"
+mo [ -0.998 17]
+write image pngt "attach_1b2_1_1.25.png"
+mo [ -0.995 18]
+write image pngt "attach_1b2_2_0.70.png"
+
+mo [ -0.988 12]
+write image pngt "detach_2b2_1_0.60.png"
+mo [ -0.998 11]
+write image pngt "detach_2b2_2_0.39.png"
+mo [ -0.980 17]
+write image pngt "attach_2b2_1_0.64.png"
+mo [ 0.961 18 -0.266 14]
+write image pngt "attach_2b2_2_0.44.png"
