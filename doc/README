@@ -5,6 +5,7 @@ TheoDORE 2.1
 - Support for DFT/MRCI
 - De-excitation measure (Phe)
 - Improvements in plot_Om_bars.py
+- Natural orbital analysis
 
 TheoDORE 2.0.2
 - Fix for runs without openbabel

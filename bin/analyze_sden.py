@@ -46,6 +46,7 @@ sdena = lib_sden.sden_ana(ioptions)
 if 'mo_file' in ioptions: sdena.read_mos()
 sdena.read_dens()
 
+if ioptions['NO_ana']:  sdena.compute_all_NO()
 if ioptions['AD_ana']:  sdena.compute_all_AD()
 if ioptions['BO_ana']:  sdena.compute_all_BO()
 

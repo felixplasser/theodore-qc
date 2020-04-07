@@ -63,7 +63,6 @@ class sden_ana(dens_ana_base.dens_ana_base):
     def print_all_BO(self, lvprt=2):
         """
         Print out bond order/valence information for all states.
-        TODO: add individual bond orders
         """
         title  = "Valence information"
         title += "\n Total valence (V_A)"
@@ -125,6 +124,69 @@ class sden_ana(dens_ana_base.dens_ana_base):
 
         return state[mp_name]
 
+#--- Natural orbital analysis
+    def compute_all_NO(self):
+        """
+        Analysis of natural orbitals.
+        """
+        if len(self.state_list) <= 1: return
+        if not 'sden' in self.state_list[0]: return
+        if 'nu' in self.state_list[0]: return
+
+        jmol_orbs = self.ioptions.get('jmol_orbitals')
+        if jmol_orbs:
+            jmolNO = lib_mo.jmol_MOs("no")
+            jmolNO.pre(ofile=self.ioptions['mo_file'])
+
+        for state in self.state_list:
+            print("NO analysis for %s"%state['name'])
+            (pop, U) = self.ret_NO(state)
+
+            if jmol_orbs:
+                self.export_NOs_jmol(state, jmolNO, pop, U, minp=self.ioptions['min_occ'])
+
+            if self.ioptions['molden_orbitals']:
+                self.export_NOs_molden(state, pop, U, minp=self.ioptions['min_occ'])
+
+        if jmol_orbs:
+            jmolNO.post()
+
+    def ret_NO(self, state):
+        (pop,U) = numpy.linalg.eigh(state['sden'])
+
+        if self.ioptions['unpaired_ana']:
+            nu_v = numpy.where(pop < 1., pop, 2.-pop)
+            state['nu'] = sum(nu_v)
+            state['nu_den'] = numpy.dot(U,
+                numpy.dot(numpy.diag(nu_v), U.T) )
+
+            nunl_v = pop * pop * (2-pop) * (2-pop)
+            state['nunl'] = sum(nunl_v)
+            state['nunl_den'] = numpy.dot(U,
+                numpy.dot(numpy.diag(nunl_v), U.T) )
+
+        return pop, U
+
+    def export_NOs_jmol(self, state, jmolNO, pop, U, mincoeff=0.2, minp=0.05):
+        Ut = U.T
+
+        jmolNO.next_set(state['name'])
+        for i, pi in enumerate(pop):
+            if pi < minp: break
+
+            jmolI = 'mo ['
+            for occind in (-abs(Ut[i])**2).argsort():
+                occ = Ut[i][occind]
+                if abs(occ) < mincoeff: break
+                jmolI += ' %.3f %i'%(occ,occind+1)
+
+            jmolI += ']\n'
+            jmolNO.add_mo(jmolI, "no_%s_%i"%(state['name'],i+1), di)
+
+    def export_NOs_molden(self, state, pop, U, minp=0.05):
+        self.mos.export_MO(pop, pop, U, 'no_%s.mld'%state['name'],
+                           cfmt=self.ioptions['mcfmt'], occmin=minp, alphabeta=self.ioptions['alphabeta'])
+
 #--- Attachment / Detachment analysis
 
     def compute_all_AD(self):
@@ -150,7 +212,7 @@ class sden_ana(dens_ana_base.dens_ana_base):
                 self.export_NDOs_molden(state, ad, W, minad=self.ioptions['min_occ'])
 
             if self.ioptions.get('cube_orbitals'):
-                print("Calculating NTOs as cube files with orbkit.")
+                print("Calculating NDOs as cube files with orbkit.")
                 oi = orbkit_interface.ok()
                 oi.cube_file_creator(state, ad, W, self.mos, minlam=self.ioptions['min_occ'])
 

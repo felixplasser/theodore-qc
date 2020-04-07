@@ -417,6 +417,7 @@ class dens_ana_options(read_options):
         # sden analysis
         self['pop_ana'] = True
         self['unpaired_ana'] = True
+        self['NO_ana'] = True
         self['AD_ana'] = True
         self['BO_ana'] = True
         self['min_BO'] = 0.5 # minimal bond order to print

@@ -80,6 +80,7 @@ class dens_ana_base:
         elif rtype=='dftmrci':
             self.state_list = file_parser.file_parser_dftmrci(self.ioptions).read(self.mos)
         elif rtype == 'nos':
+            self.ioptions['NO_ana'] = False # Do not do explicit NO analysis
             self.state_list = file_parser.file_parser_nos(self.ioptions).read(self.mos)
         elif rtype in ['cclib', 'gamess', 'orca']:
             # these are parsed with the external cclib library
