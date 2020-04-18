@@ -1,8 +1,8 @@
 Download the newest TheoDORE release and tutorial.
 
 TheoDORE 2.1
-- Support for Q-Chem 5.2/5.3
 - Support for DFT/MRCI
+- Support for Q-Chem 5.2/5.3
 - De-excitation measure (Phe)
 - Improvements in plot_Om_bars.py
 - Natural orbital analysis

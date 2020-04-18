@@ -85,10 +85,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %\subject{\Large A Tutorial for \theo}
-\title{\LARGE A Tutorial for \theo~2.0.2}
+\title{\LARGE A Tutorial for \theo~2.1}
 \author{\large Felix~Plasser, \large Patrick Kimber}
 \publishers{\small \textit{Department of Chemistry -- Loughborough University}}
-\date{\large Loughborough, 2019\\[3em]}
+\date{\large Loughborough, 2020\\[3em]}
 
 \begin{document}
 
@@ -1172,7 +1172,10 @@ The results of the decomposition are as shown:\\
 \clearpage
 
 \section{Domain NTO and conditional density analysis}
-It is possible to visualise excited state correlation using \theo{}. This is done by plotting domain NTOs and conditional densities. The idea is the consider the excited state using an 'electron-hole' picture. A hole is fixed on a fragment of the molecule and the resulting conditional electron density is observed. Further explanation can be found in Ref~\cite{ExcCorr}. This procedure requires \texttt{ORBKIT} which is not installed by default but is available from \url{https://github.com/orbkit/orbkit.}
+It is possible to visualise excited state correlation using \theo{}. This is done by plotting domain NTOs and conditional densities. The idea is the consider the excited state using an 'electron-hole' picture.
+A hole is fixed on a fragment of the molecule and the resulting conditional electron density is observed. Further explanation can be found in Ref~\cite{ExcCorr}. 
+This procedure generally works if it is possible to run \texttt{analyze\_tden.py} and there is a Molden file with orbital information.
+Exporting the densities as cube files requires \texttt{ORBKIT} which is not installed by default but is available from \url{https://github.com/felixplasser/orbkit.}
 
 Get the input files from the \texttt{EXAMPLES} directory\\
 \comm{cp -r \$THEODIR/EXAMPLES/naphth.fchk/QC\_FILES/ naphth.fchk.tutorial}
@@ -1290,7 +1293,7 @@ Choice: [0] \redl{1 <ENTER>} \comment{! We are choosing to fix the hole on each 
 
 Write conditional densities to fchk file
  0 - no, 1 - hole, 2 - electron, 3 - both (fchk_dnto_dens):
-Choice: [0] \redl{1 <ENTER>}
+Choice: [0] \redl{1 <ENTER>} \comment{! Use this option if you want to view the result in IQMol}
 
 Calculation of transition densities between ground state and excited states (requires orbkit) (comp_rho0n):
 Choice (y/n): [n] \rede{}
