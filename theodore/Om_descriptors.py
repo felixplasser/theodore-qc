@@ -141,6 +141,6 @@ class Om_desc_coll:
                 
         #hpop = numpy.sum(OmFrag, 1)
         epop = numpy.sum(self.OmFrag, 0)
-        self.descriptors['SIEL'] = -epop[1] + 0.5 * numpy.sum(epop[2:])
+        self.descriptors['SIEL'] = -epop[1] + 1./(self.numFrag-2.) * numpy.sum(epop[2:])
 
             

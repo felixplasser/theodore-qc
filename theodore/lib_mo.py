@@ -139,9 +139,29 @@ class MO_set:
     def ret_ihomo(self):
         """
         Return the HOMO index (starting with 0).
-        This only works if no fractional occupation numbers are present!
+        This only works if no fractional occupation numbers are present and only
+           for spin-restricted orbitals.
         """
         return self.occs.index(0.) - 1
+
+    def ret_FMO_energy(self, occ=True, offset=0):
+        """
+        Return the energy of frontier MOs (no assumption about ordering).
+        To get the HOMO-2: set occ=True, offset=2
+        """
+        self.sort_ens = []
+        if occ:
+            for ien, en in enumerate(self.ens):
+                if self.occs[ien] >= 1:
+                    self.sort_ens.append(en)
+            self.sort_ens.sort()
+            return self.sort_ens[-offset-1]
+        else:
+            for ien, en in enumerate(self.ens):
+                if self.occs[ien] < 1.:
+                    self.sort_ens.append(en)
+            self.sort_ens.sort()
+            return self.sort_ens[offset]
 
     def ret_num_mo(self):
         return len(self.mo_mat[0])
