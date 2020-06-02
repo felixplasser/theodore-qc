@@ -80,6 +80,8 @@ class file_parser_cclib(file_parser.file_parser_base):
         else:
             self.tden_cclib(state_list, mos, rect_dens)
 
+        self.check_RKS()
+
         return state_list
 
     def tden_cclib(self, state_list, mos, rect_dens):
@@ -91,6 +93,12 @@ class file_parser_cclib(file_parser.file_parser_base):
             state['tden'] = self.init_den(mos, rect=rect_dens)
             for conf in self.data.etsecs[ist]:
                 [(iocc, spocc), (ivirt, spvirt), coeff] = conf
+                if self.ioptions['spin'] >= 0:
+                    if spocc == 1:
+                        continue
+                if self.ioptions['spin'] == -1:
+                    if spocc == 0:
+                        continue
                 assert(iocc < ivirt) # de-excitations cannot be handled at this point
                 state['tden'][iocc, ivirt] = coeff
 
@@ -212,9 +220,10 @@ class file_parser_cclib(file_parser.file_parser_base):
         else:
             restr=True
 
-        do_Alpha = self.ioptions['do_alpha_spin']
         if restr:
-          do_Alpha = True
+            do_Alpha = True
+        else:
+            do_Alpha = (self.ioptions['spin'] >= 0)
         print("! Reading %s coefficients ..." % (["BETA","ALPHA"][do_Alpha]))
 
         NFA = header[0]
@@ -320,20 +329,12 @@ class file_parser_cclib(file_parser.file_parser_base):
 
         for attr in ['mocoeffs', 'atombasis', 'natom', 'homos', 'moenergies', 'etenergies', 'etsyms', 'etsecs']:
             chk = hasattr(self.data, attr)
-            if not chk: errcode = 2
+            if not chk: errcode = 3
 
             if lvprt >= 1:
                 print(('%15s ... %s'%(attr, chk)))
             if chk and lvprt >= 2:
                 print(getattr(self.data, attr))
-
-        if hasattr(self.data, 'homos'):
-            chk = len(self.data.homos) == 1
-            if not chk: errcode = 2
-
-            if lvprt >= 1:
-                print("\nCurrently only RHF/RKS is supported. Checking:")
-                print(('%15s ... %s'%('RHF/RKS', chk)))
 
         if lvprt >= 1:
             print("\nOptional attributes:")
@@ -367,6 +368,26 @@ class file_parser_cclib(file_parser.file_parser_base):
 
         return errcode
 
+    def check_RKS(self, lvprt=1):
+        """
+        Check if this is an RKS job.
+        """
+        chk = (len(self.data.mocoeffs) == 1)
+            #if not chk: errcode = 2
+
+        if chk:
+            if lvprt >= 1:
+                print("\n Detected RHF/RKS calculation.")
+            if self.ioptions['spin'] != 0:
+                raise error_handler.MsgError("RHF/RKS calculation")
+        else:
+            if lvprt >= 1:
+                print("\nWARNING: experimental UHF/UKS mode.")
+            if self.ioptions['spin'] == 0:
+                raise error_handler.MsgError("Use analyze_UKS.py for unrestricted calculations.")
+            
+        return chk
+
     def read_mos(self):
         """
         Return an MO_set object in TheoDORE format.
@@ -377,7 +398,7 @@ class file_parser_cclib(file_parser.file_parser_base):
         else:
             mos = MO_set_cclib(file = None)
 
-        do_Alpha = self.ioptions['do_alpha_spin']
+        do_Alpha = (self.ioptions['spin'] >= 0)
         mos.read(self.data, lvprt=2, do_Alpha=do_Alpha)
 
         return mos
@@ -394,8 +415,6 @@ class MO_set_cclib(lib_mo.MO_set_molden):
         Read cclib data and convert to TheoDORE format.
         """
 
-        
-
         if do_Alpha:
           self.mo_mat = data.mocoeffs[0].transpose()
           print("! Reading %s orbitals ..." % (["BETA","ALPHA"][do_Alpha]))
@@ -404,8 +423,7 @@ class MO_set_cclib(lib_mo.MO_set_molden):
             self.mo_mat = data.mocoeffs[1].transpose()
             print("! Reading %s orbitals ..." % (["BETA","ALPHA"][do_Alpha]))
           else:
-            self.mo_mat = data.mocoeffs[0].transpose()
-            print("! Reading %s orbitals ..." % (["BETA","ALPHA"][1]))
+            raise error_handler.MsgError("No beta MO-coefficients available")
         if lvprt >= 1:
             print(("MO-matrix read from cclib, dimension: %i x %i"%(len(self.mo_mat), len(self.mo_mat[0]))))
 

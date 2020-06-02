@@ -394,9 +394,10 @@ class MO_set_molden(MO_set):
 
         return outstr
 
-    def read(self, lvprt=1):
+    def read(self, lvprt=1, spin=0):
         """
         Read in MO coefficients from a molden File.
+        spin: 0 - read all coefficients, 1 - only alpha, -1 - only beta
         """
         MO = False
         GTO = False
@@ -418,6 +419,8 @@ class MO_set_molden(MO_set):
 
         num_orb=0
         curr_at=-1
+        tmp_data = [None, None, None]
+        spin_flag = True
 
         self.header = ''
 
@@ -436,7 +439,13 @@ class MO_set_molden(MO_set):
 
         fileh.seek(0) # rewind the file
 
-        for line in fileh:
+        while True:
+            try:
+                line = next(fileh)
+            except StopIteration:
+                print("Finished parsing %s"%fileh.name)
+                break
+
             words = line.replace('=',' ').split()
 
             if 'molden format' in line.lower():
@@ -460,23 +469,42 @@ class MO_set_molden(MO_set):
                 GTO = False
             # extract the information in that section
             elif MO:
+                if '=' in line:
+                    if 'ene' in line.lower():
+                        tmp_data[0] = float(words[-1])
+                    elif 'sym' in line.lower():
+                        tmp_data[1] = words[-1]
+                    elif 'occ' in line.lower():
+                        tmp_data[2] = float(words[-1])
+                    elif 'spin' in line.lower():
+                        tmp_spin = words[-1].lower()
+                        if spin == -1 and tmp_spin == 'alpha':
+                            spin_flag = False
+                        elif spin == 1 and tmp_spin == 'beta':
+                            spin_flag = False
+                        else:
+                            spin_flag = True
                 if not '=' in line:
                     try:
-                        mo_vecs[-1].append(float(words[1]))
+                        tmp_vec = [float(words[1])]
                     except:
                         if words==[]: break # stop parsing the file if an empty line is found
 
                         print(" ERROR in lib_mo, parsing the following line:")
                         print(line)
                         raise
-                elif 'ene' in line.lower():
-                    mo_ind += 1
-                    mo_vecs.append([])
-                    self.ens.append(float(words[-1]))
-                elif 'sym' in line.lower():
-                    self.syms.append(words[-1])
-                elif 'occ' in line.lower():
-                    self.occs.append(float(words[-1]))
+
+                    for ibas in range(num_orb-1):
+                        line = next(fileh)
+                        words = line.split()
+                        tmp_vec.append(float(words[1]))
+
+                    if spin_flag:
+                        mo_ind += 1
+                        mo_vecs.append(tmp_vec)
+                        self.ens.append(tmp_data[0])
+                        self.syms.append(tmp_data[1])
+                        self.occs.append(tmp_data[2])
 
             elif ('[GTO]' in line):
                 GTO = True
@@ -537,11 +565,14 @@ class MO_set_molden(MO_set):
            raise
 
 class MO_set_tddftb(MO_set):
-    def read(self, lvprt=1):
+    def read(self, lvprt=1, spin=0):
         """
         Read in MO coefficients from eigenvec.out file.
         Author: Ljiljana Stojanovic
         """
+        if not spin==0:
+            raise error_handler.MsgError("Only spin=0 implemented")
+
         MO = False
         mo_vecs = []
         mo_ind = 0

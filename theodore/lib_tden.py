@@ -56,7 +56,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
 
     def print_all_OmFrag(self, lvprt=2):
         """
-        Print out Omega matrices with respect to atoms.
+        Print out Omega matrices with respect to fragments.
         """
         title = "Omega matrices with respect to fragments"
         function = self.print_OmFrag

@@ -18,7 +18,7 @@ class dens_ana_base:
 # Input
 #--------------------------------------------------------------------------#
 
-    def read_mos(self, lvprt=1):
+    def read_mos(self, lvprt=1, spin=0):
         """
         Read MOs from a separate file, which is given in Molden format.
         """
@@ -27,7 +27,7 @@ class dens_ana_base:
            self.mos = lib_mo.MO_set_tddftb(file=self.ioptions.get('mo_file'))
         else:
            self.mos = lib_mo.MO_set_molden(file=self.ioptions.get('mo_file'))
-        self.mos.read(lvprt=lvprt)
+        self.mos.read(lvprt=lvprt, spin=spin)
         self.read2_mos(lvprt)
 
     def read2_mos(self, lvprt=1):

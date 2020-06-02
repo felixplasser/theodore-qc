@@ -452,6 +452,9 @@ class dens_ana_options(read_options):
         self['coor_file'] = None
         self['coor_format'] = None
 
+        # Internal switches (these should not be set in the input file)
+        self['spin'] = 0 # 0 - RHF orbitals, 1 - alpha spin, -1 - beta spin
+
         # Program specific options
         self['TDA'] = False
 
