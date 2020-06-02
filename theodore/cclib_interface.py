@@ -372,8 +372,7 @@ class file_parser_cclib(file_parser.file_parser_base):
         """
         Check if this is an RKS job.
         """
-        chk = (len(self.data.mocoeffs) == 1)
-            #if not chk: errcode = 2
+        chk = (len(self.data.homos) == 1)
 
         if chk:
             if lvprt >= 1:
