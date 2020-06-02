@@ -384,8 +384,8 @@ class file_parser_cclib(file_parser.file_parser_base):
             if lvprt >= 1:
                 print("\nWARNING: experimental UHF/UKS mode.")
             if self.ioptions['spin'] == 0:
-                raise error_handler.MsgError("Use analyze_UKS.py for unrestricted calculations.")
-            
+                raise error_handler.MsgError("Use analyze_tden_unr.py for unrestricted calculations.")
+
         return chk
 
     def read_mos(self):

@@ -21,7 +21,7 @@ from theodore import theo_header, lib_tden, lib_exciton, input_options, error_ha
 (tc, tt) = (process_time(), perf_counter())
 
 def ihelp():
-    print(" analyze_UKS.py")
+    print(" analyze_tden_unr.py")
     print(" Command line options:")
     print("  -h, -H, -help: print this help")
     print("  -ifile, -f [dens_ana.in]: name of the input file")
@@ -54,7 +54,7 @@ theo_header.print_header('Transition density matrix analysis (UHF/UKS)', ioption
 ioptions['jmol_orbitals'] = False
 
 # ALPHA spin
-print("\nRunning alph-spin analysis in directory ALPHA")
+print("\nRunning alpha-spin analysis in directory ALPHA")
 ioptions['spin'] = 1
 
 tdena_alpha = lib_tden.tden_ana(ioptions)
@@ -103,7 +103,8 @@ print("Starting spin-summed analysis")
 for i, state in enumerate(tdena_beta.state_list):
     # Add the things that are additive
     for aprop in ['Om', 'OmAt', 'OmFrag', 'S_HE']:
-        state[aprop] += tdena_alpha.state_list[i][aprop]
+        if aprop in state:
+            state[aprop] += tdena_alpha.state_list[i][aprop]
     # Delete the things that are non-additive
     for dprop in ['tden', 'PRNTO', 'Z_HE', 'Om_desc']:
         if dprop in state:
