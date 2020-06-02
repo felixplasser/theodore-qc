@@ -206,21 +206,53 @@ class file_parser_cclib(file_parser.file_parser_base):
         # [7] index of last  beta  virt, for restricted equal to -1
 
         if any( [ header[i]!=-1 for i in range(4,8) ] ):
-            raise error_handler.MsgError("No support for unrestricted MOs")
+            #raise error_handler.MsgError("No support for unrestricted MOs")
+            print("Detected unrestricted calculation!")
+            restr=False
+        else:
+            restr=True
 
-        nfrzc = header[0]
-        nocc = header[1] + 1
-        nact = nocc - nfrzc
-        nmo = header[3] + 1
-        nvir = nmo - header[2]
-        lenci = nact*nvir
+        do_Alpha = self.ioptions['do_alpha_spin']
+        if restr:
+          do_Alpha = True
+        print("! Reading %s coefficients ..." % (["BETA","ALPHA"][do_Alpha]))
+
+        NFA = header[0]
+        NOA = header[1] - header[0] + 1
+        NVA = header[3] - header[2] + 1
+        NFB = header[4]
+        NOB = header[5] - header[4] + 1
+        NVB = header[7] - header[6] + 1
+
+        if do_Alpha:
+          nfrzc = NFA
+          nocc  = NFA + NOA
+          nact  = NOA
+          nvir  = NVA
+          nmo   = NFA + NOA + NVA
+          lenci = NOA * NVA
+          if restr:
+            skipci = 0
+          else:
+            skipci = NOB * NVB
+        else:
+          nfrzc = NFB
+          nocc  = NFB + NOB
+          nact  = NOB
+          nvir  = NVB
+          nmo   = NFB + NOB + NVB
+          lenci = NOB * NVB
+          skipci = NOA * NVA
+
         print('  nmo: %i , nocc: %i , nact: %i , nvir: %i'%(nmo,nocc,nact,nvir))
-        if header[3] + 1 != mos.ret_num_mo():
+        if nmo != mos.ret_num_mo():
             raise error_handler.MsgError("Inconsistent number of MOs")
 
         # loop over states
         # for non-TDA order is: X+Y of 1, X-Y of 1, X+Y of 2, X-Y of 2, ...
         # triplets come after singlets, observe the multiplicity!
+        # for unrestricted: each vector has first alpha part, then beta part
+        # so if we only analyze one spin, then we have to skip the other
         rootinfo=[]
         istate = -1
         iroot2 = -1
@@ -237,10 +269,15 @@ class file_parser_cclib(file_parser.file_parser_base):
             # -> energy does not look consistent
 
             # then comes nact * nvirt 8-byte doubles with the coefficients
+            if not restr and not do_Alpha:
+              CCfile.read(skipci*8)
             coeff = struct.unpack(lenci*'d', CCfile.read(lenci*8))
+            if not restr and do_Alpha:
+              CCfile.read(skipci*8)
 
             if ivec==1 and (mult,iroot)==rootinfo[0]:
               TDA=False
+              print("Detected a non-TDA calculation!")
 
             if ivec>=1 and mult!=rootinfo[-2][0]:
               triplets=True
@@ -340,7 +377,8 @@ class file_parser_cclib(file_parser.file_parser_base):
         else:
             mos = MO_set_cclib(file = None)
 
-        mos.read(self.data, lvprt=2)
+        do_Alpha = self.ioptions['do_alpha_spin']
+        mos.read(self.data, lvprt=2, do_Alpha=do_Alpha)
 
         return mos
 
@@ -351,11 +389,23 @@ class file_parser_cclib(file_parser.file_parser_base):
         return struc
 
 class MO_set_cclib(lib_mo.MO_set_molden):
-    def read(self, data, lvprt=1):
+    def read(self, data, lvprt=1, do_Alpha=True):
         """
         Read cclib data and convert to TheoDORE format.
         """
-        self.mo_mat = data.mocoeffs[0].transpose()
+
+        
+
+        if do_Alpha:
+          self.mo_mat = data.mocoeffs[0].transpose()
+          print("! Reading %s orbitals ..." % (["BETA","ALPHA"][do_Alpha]))
+        else:
+          if len(data.mocoeffs)>1:
+            self.mo_mat = data.mocoeffs[1].transpose()
+            print("! Reading %s orbitals ..." % (["BETA","ALPHA"][do_Alpha]))
+          else:
+            self.mo_mat = data.mocoeffs[0].transpose()
+            print("! Reading %s orbitals ..." % (["BETA","ALPHA"][1]))
         if lvprt >= 1:
             print(("MO-matrix read from cclib, dimension: %i x %i"%(len(self.mo_mat), len(self.mo_mat[0]))))
 

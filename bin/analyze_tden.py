@@ -32,6 +32,7 @@ def ihelp():
 
 ifile = 'dens_ana.in'
 
+do_alpha=True
 arg=sys.argv.pop(0)
 while len(sys.argv)>0:
     arg = sys.argv.pop(0)
@@ -39,6 +40,10 @@ while len(sys.argv)>0:
         ihelp()
     elif arg == '-ifile' or arg == '-f':
         ifile = sys.argv.pop(0)
+    elif arg == '-alpha':
+        do_alpha=True
+    elif arg == '-beta':
+        do_alpha=False
     else:
         raise error_handler.ElseError(arg, 'command line option')
 
@@ -49,6 +54,7 @@ if not os.path.exists(ifile):
 
 ioptions = input_options.tden_ana_options(ifile)
 theo_header.print_header('Transition density matrix analysis', ioptions=ioptions)
+ioptions['do_alpha_spin'] = do_alpha
 
 tdena = lib_tden.tden_ana(ioptions)
 if 'mo_file' in ioptions: tdena.read_mos()
