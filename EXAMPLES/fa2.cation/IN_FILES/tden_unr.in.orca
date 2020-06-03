@@ -1,0 +1,14 @@
+rtype='orca'
+rfile='orca.out'
+read_binary=True
+mo_file='orca.molden.input'
+at_lists=[[1, 3, 5, 7], [2, 4, 6, 8]]
+Om_formula=2
+eh_pop=0
+comp_ntos=True
+comp_dntos=False
+jmol_orbitals=False
+molden_orbitals=True
+prop_list=['Om', 'POS', 'PR', 'CT', 'COH', 'CTnt', 'PRNTO', 'Z_HE']
+output_prec=(10,6)
+output_file='orca_summ.txt'

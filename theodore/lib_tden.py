@@ -486,7 +486,8 @@ class tden_ana(dens_ana_base.dens_ana_base):
         lam = sqrlam * sqrlam
         lams = lam.sum()
 
-        state['PRNTO'] = lams * lams / (lam*lam).sum()
+        if state['Om'] > 1.e-6:
+            state['PRNTO'] = lams * lams / (lam*lam).sum()
 
         # entanglement entropy
         #   take out the zeros since 0*log(0)=0

@@ -548,7 +548,10 @@ class MO_set_molden(MO_set):
 
         if len(mo_vecs[0])!=num_orb:
             raise error_handler.MsgError('Inconsistent number of basis functions!')
-            #print 'WARNING: Inconsistent number of basis functions!'
+
+        if len(mo_vecs) > 1.8 * num_orb:
+            print("""\n   WARNING: There are twice as many MOs as basis functions!
+   If this is an unrestricted calculation use analyze_tden_unr.py\n""")
 
         if len(mo_vecs[-1]) == 0:
             lv = [len(mo_vec) for mo_vec in mo_vecs]
@@ -692,7 +695,6 @@ class MO_set_tddftb(MO_set):
             print('Dimension: %i,%i,...,%i'%(len(mo_vecs[0]),len(mo_vecs[1]),len(mo_vecs[-1])))
             print('Number of basis functions parsed: ', num_orb)
 
-        #print (mo_vecs[0])
         if len(mo_vecs[0])!=num_orb:
             raise error_handler.MsgError('Inconsistent number of basis functions!')
 

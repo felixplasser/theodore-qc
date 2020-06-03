@@ -63,7 +63,7 @@ tdena_alpha.read_dens()
 
 try:
     os.mkdir('ALPHA')
-except FileExistsError:
+except OSError:
     pass
 os.chdir('ALPHA')
 if 'at_lists' in ioptions:
@@ -85,7 +85,7 @@ tdena_beta.read_dens()
 
 try:
     os.mkdir('BETA')
-except FileExistsError:
+except OSError:
     pass
 os.chdir('BETA')
 if 'at_lists' in ioptions:
@@ -105,8 +105,10 @@ for i, state in enumerate(tdena_beta.state_list):
     for aprop in ['Om', 'OmAt', 'OmFrag', 'S_HE']:
         if aprop in state:
             state[aprop] += tdena_alpha.state_list[i][aprop]
+    state['Z_HE'] = 2.**(state['S_HE'])
+
     # Delete the things that are non-additive
-    for dprop in ['tden', 'PRNTO', 'Z_HE', 'Om_desc']:
+    for dprop in ['tden', 'PRNTO', 'Om_desc']:
         if dprop in state:
             del state[dprop]
 
