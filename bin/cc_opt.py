@@ -9,7 +9,7 @@ import sys
 from theodore import theo_header, cclib_interface, input_options, error_handler, units
 import openbabel
 
-theo_header.print_header('Analysis of a geometry optimization')
+theo_header.print_header('Analysis of a geometry optimization or relaxed scan')
 
 def ihelp():
     print(" cc_opt.py <logfile>")
@@ -17,6 +17,7 @@ def ihelp():
     print("  -h, -H, --help: print this help")
     print("  -s, --scan: Analyze a relaxed scan")
     print("  -t, --thresh: Discontinuity threshold for scan")
+    print("  -o, --output: Name (and path) of output file")
     exit(0)
 
 logfile = None
@@ -31,11 +32,15 @@ while len(sys.argv)>0:
         ihelp()
     elif arg in ["-s", "--scan"]:
         scan = True
-        fname = "cc_scan.xyz"
+        if fname == "cc_opt.xyz":
+            fname = "cc_scan.xyz"
     elif arg in ["-t", "--thresh"]:
         scan = True
-        fname = "cc_scan.xyz"
+        if fname == "cc_opt.xyz":
+            fname = "cc_scan.xyz"
         scan_thresh = float(sys.argv.pop(0))
+    elif arg in ["-o", "--output"]:
+        fname = sys.argv.pop(0)
     else:
         logfile = arg
 
