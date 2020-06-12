@@ -7,7 +7,7 @@ TheoDORE 2.2
 TheoDORE 2.1
 - Support for DFT/MRCI
 - Support for Q-Chem 5.2/5.3
-- De-excitation measure (Phe)
+- De-excitation measure (Phe) [DOI: 10.1039/D0CP00369G]
 - Improvements in plot_Om_bars.py
 - Natural orbital analysis
 

@@ -151,7 +151,7 @@ class write_options_theo(input_options.write_options):
 
         # switch for libwfa
         if self['rtype'] in ['qctddft']:
-            if self.read_yn('Did you run "state_analysis=True"?', 'read_libwfa', False):
+            if self.read_yn('Did you run "state_analysis=True"?', 'read_libwfa', True):
                 self['mo_file'] = None
         elif self['rtype'] in ['rassi']:
             if self.read_yn('Did you use &WFA?', 'read_libwfa', True):
@@ -332,9 +332,10 @@ class write_options_theo(input_options.write_options):
     def exciton_ana(self):
         if self.ret_yn('Compute approximate exciton size?', True):
             self['prop_list'] += ['RMSeh']
-            #if not self['rtype'] in ['orca', 'cclib', 'adf']:
-            #    print("\nMolecular coordinates for exciton analysis:")
-            #    self.coor_file()
+            if not self['rtype'] in ['orca', 'cclib', 'adf']:
+                if not 'mo_file' in self:
+                    print("\nMolecular coordinates for exciton analysis:")
+                    self.coor_file()
 
         if self['read_libwfa']:
             if self.ret_yn('Parse exciton information from libwfa analysis?', False):
