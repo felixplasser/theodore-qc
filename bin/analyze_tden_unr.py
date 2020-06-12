@@ -23,7 +23,7 @@ from theodore import theo_header, lib_tden, lib_exciton, input_options, error_ha
 def ihelp():
     print(" analyze_tden_unr.py")
     print(" Command line options:")
-    print("  -h, -H, -help: print this help")
+    print("  -h, -H, --help: print this help")
     print("  -ifile, -f [dens_ana.in]: name of the input file")
     exit(0)
 
@@ -36,7 +36,7 @@ ifile = 'dens_ana.in'
 arg=sys.argv.pop(0)
 while len(sys.argv)>0:
     arg = sys.argv.pop(0)
-    if arg in ["-h", "-H", "-help"]:
+    if arg in ["-h", "-H", "--help"]:
         ihelp()
     elif arg == '-ifile' or arg == '-f':
         ifile = sys.argv.pop(0)

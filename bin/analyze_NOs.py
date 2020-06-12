@@ -14,7 +14,7 @@ theo_header.print_header('NO file analysis')
 def ihelp():
     print(" analyze_NOs.py <MO_file> [<NO_file_ref> <NO_file2> ...]\n")
     print(" Command line options:")
-    print("  -h, -H, -help: print this help")
+    print("  -h, -H, --help: print this help")
     print("  -ifile [dens_ana.in]: name of the input file")
     exit(0)
 
@@ -29,7 +29,7 @@ no_files = []
 ifile = 'dens_ana.in'
 while len(sys.argv)>0:
     arg = sys.argv.pop(0)
-    if arg in ["-h", "-H", "-help"]:
+    if arg in ["-h", "-H", "--help"]:
         ihelp()
     elif arg == '-ifile':
         ifile = sys.argv.pop(0)

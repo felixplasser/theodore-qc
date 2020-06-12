@@ -13,7 +13,7 @@ theo_header.print_header('State density matrix analysis')
 def ihelp():
     print(" analyze_sden.py\n")
     print(" Command line options:")
-    print("  -h, -H, -help: print this help")
+    print("  -h, -H, --help: print this help")
     print("  -ifile, -f  [dens_ana.in]: name of the input file")
     exit(0)
 
@@ -26,7 +26,7 @@ tmp = sys.argv.pop(0)
 ifile = 'dens_ana.in'
 while len(sys.argv)>0:
     arg = sys.argv.pop(0)
-    if arg in ["-h", "-H", "-help"]:
+    if arg in ["-h", "-H", "--help"]:
         ihelp()
     elif arg == '-ifile' or arg == '-f':
         ifile = sys.argv.pop(0)
