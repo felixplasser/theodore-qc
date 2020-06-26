@@ -631,6 +631,19 @@ class MO_set_tddftb(MO_set):
                 self.occs.append(float(line))
         filemosec.close()
 
+        if len(self.occs) == 0:
+            self.ens = []
+            self.syms = []
+            print(" WARNING: Parsing of detailed.out failed - using band.out instead")
+            ft = open('band.out', 'r')
+            for line in ft.readlines()[1:]:
+                words = line.split()
+                if len(words) == 0:
+                    break
+                self.ens.append(float(words[1]))
+                self.occs.append(float(words[2]))
+            ft.close()
+
         at_symb = []
 
         filegeom = open('geom.xyz','r')
