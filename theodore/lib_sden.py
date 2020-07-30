@@ -224,6 +224,17 @@ class sden_ana(dens_ana_base.dens_ana_base):
         if jmol_orbs:
             jmolNDO.post()
 
+    def compute_rho(self):
+        """
+        Computation of densities.
+        TODO: unpaired densities.
+        """
+        if len(self.state_list) == 0: return
+        if not 'sden' in self.state_list[0]: return
+
+        lib_orbkit = orbkit_interface.lib_orbkit()
+        cube_ids = lib_orbkit.compute_rho(self.state_list,self.mos,numproc=self.ioptions['numproc'])
+
     def compute_a_d_dens(self):
         # TODO: This should use NDOs
         raise error_handler.MsgError("I do not think this is correct (Felix)")

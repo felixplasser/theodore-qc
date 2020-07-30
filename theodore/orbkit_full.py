@@ -153,6 +153,34 @@ class lib_orbkit:
 
         return cube_fids
 
+    def compute_rho(self,state_list,mos,numproc=4):
+        """
+        Compute the density of the states using orbkit.
+        """
+        # Data conversion from TheoDORE to orbkit
+        qc = self.orbkit_geo_ao_conversion(mos)
+        qc = self.orbkit_mo_conversion(mos,qc)
+
+        # Calculate MOs
+        print("Preparing density evaluations on a grid ...")
+        molist = self.compute_MOs(qc)
+        zero = [[],[]]
+        cube_fids = []
+        for i in range(len(state_list)):
+            sing = [[],[]]
+            print("Computing density of state %s" % (state_list[i]['name']))
+            for j in range(state_list[i]['sden'].shape[0]):
+                for k in range(state_list[i]['sden'].shape[1]):
+                  if abs(state_list[i]['sden'][j,k]) >= 1e-8:
+                    sing[0].append(state_list[i]['sden'][j,k])
+                    sing[1].append([j,k])
+            rho = ci_core.rho(zero,sing,molist,slice_length=self.slice_length,numproc=numproc)
+            fid = 'rho_%s' % (state_list[i]['name'].replace('(', '-').replace(')', '-'))
+            output.cube_creator(rho,fid,qc.geo_info,qc.geo_spec)
+            cube_fids.append(fid)
+
+        return cube_fids
+
     def cube_file_creator(self,state, U, lam, Vt, mos, minlam=1e-3, numproc=4):
 
         print(("Calculating NTOs as cube files with orbkit for state %s" % (state['name'])))

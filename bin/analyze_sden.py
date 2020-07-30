@@ -50,6 +50,8 @@ if ioptions['NO_ana']:  sdena.compute_all_NO()
 if ioptions['AD_ana']:  sdena.compute_all_AD()
 if ioptions['BO_ana']:  sdena.compute_all_BO()
 
+if ioptions['comp_rho']: sdena.compute_rho()
+
 #--------------------------------------------------------------------------#
 # Print out
 #--------------------------------------------------------------------------#
