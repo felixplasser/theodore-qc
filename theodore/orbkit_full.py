@@ -138,16 +138,16 @@ class lib_orbkit:
 
         zero = [[],[]]
         cube_fids = []
-        for i in range(len(state_list)):
+        for state in state_list:
             sing = [[],[]]
-            print(("Transition density between ground state and excited state %s" % (state_list[i]['name'])))
-            for j in range(state_list[i]['tden'].shape[0]):
-                for k in range(state_list[i]['tden'].shape[1]):
-                  if abs(state_list[i]['tden'][j,k]) >= 1e-8:
-                    sing[0].append(state_list[i]['tden'][j,k])
+            print(("Transition density between ground state and excited state %s" % (state['name'])))
+            for j in range(state['tden'].shape[0]):
+                for k in range(state['tden'].shape[1]):
+                  if abs(state['tden'][j,k]) >= 1e-8:
+                    sing[0].append(state['tden'][j,k])
                     sing[1].append([j,k])
             rho0n = ci_core.rho(zero,sing,molist,slice_length=self.slice_length,numproc=numproc)
-            fid = 'rho_0_%s' % (state_list[i]['name'].replace('(', '-').replace(')', '-'))
+            fid = 'rho_0_%s' % (state['name'].replace('(', '-').replace(')', '-'))
             output.cube_creator(rho0n,fid,qc.geo_info,qc.geo_spec)
             cube_fids.append(fid)
 
@@ -156,6 +156,7 @@ class lib_orbkit:
     def compute_rho(self,state_list,mos,numproc=4):
         """
         Compute the density of the states using orbkit.
+        Also compute unpaired densities if they are available.
         """
         # Data conversion from TheoDORE to orbkit
         qc = self.orbkit_geo_ao_conversion(mos)
@@ -167,17 +168,20 @@ class lib_orbkit:
         zero = [[],[]]
         cube_fids = []
         for state in state_list:
-            sing = [[],[]]
-            print("Computing density of state %s" % (state['name']))
-            for j in range(state['sden'].shape[0]):
-                for k in range(state['sden'].shape[1]):
-                  if abs(state['sden'][j,k]) >= 1e-8:
-                    sing[0].append(state['sden'][j,k])
-                    sing[1].append([j,k])
-            rho = ci_core.rho(zero,sing,molist,slice_length=self.slice_length,numproc=numproc)
-            fid = 'rho_%s' % (state['name'].replace('(', '-').replace(')', '-'))
-            output.cube_creator(rho,fid,qc.geo_info,qc.geo_spec)
-            cube_fids.append(fid)
+            print("Computing densities for state %s" % (state['name']))
+            for dtyp in ['sden', 'nu_den', 'nunl_den']:
+                if not dtyp in state:
+                    continue
+                sing = [[],[]]
+                for j in range(state[dtyp].shape[0]):
+                    for k in range(state[dtyp].shape[1]):
+                      if abs(state[dtyp][j,k]) >= 1e-8:
+                        sing[0].append(state[dtyp][j,k])
+                        sing[1].append([j,k])
+                rho = ci_core.rho(zero,sing,molist,slice_length=self.slice_length,numproc=numproc)
+                fid = '%s_%s' % (dtyp, state['name'].replace('(', '-').replace(')', '-'))
+                output.cube_creator(rho,fid,qc.geo_info,qc.geo_spec)
+                cube_fids.append(fid)
 
         return cube_fids
 
