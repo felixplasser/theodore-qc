@@ -1,5 +1,7 @@
 Download the newest TheoDORE release and tutorial.
 
+- Compute (unpaired) densities using orbkit
+
 TheoDORE 2.2
 - Unrestricted computations in Orca (Sebastian Mai)
 - Substituent-induced electron localization (SIEL) [DOI: 10.1039/D0SC01684E]

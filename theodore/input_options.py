@@ -433,7 +433,7 @@ class dens_ana_options(read_options):
         self['comp_rho0n'] = False
         self['vmd_rho0n'] = False
         self['vmd_rho0n_iv'] = 0.01
-        self['comp_rho'] = False
+        self['comp_rho'] = False # compute densities and unpaired densities
         self['numproc'] = 1
         self['comp_dnto_dens'] = 0 # compute cube files for DNTO densities
             # 0 - none, 1 - only hole, 2 - only electron, 3 - both

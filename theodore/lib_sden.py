@@ -167,7 +167,7 @@ class sden_ana(dens_ana_base.dens_ana_base):
 
         return pop, U
 
-    def export_NOs_jmol(self, state, jmolNO, pop, U, mincoeff=0.2, minp=0.05):
+    def export_NOs_jmol(self, state, jmolNO, pop, U, mincoeff=0.2, minp=0.01):
         Ut = U.transpose()
 
         jmolNO.next_set(state['name'])
@@ -185,7 +185,7 @@ class sden_ana(dens_ana_base.dens_ana_base):
             jmolI += ']\n'
             jmolNO.add_mo(jmolI, "no_%s_%i"%(state['name'],i+1), pi)
 
-    def export_NOs_molden(self, state, pop, U, minp=0.05):
+    def export_NOs_molden(self, state, pop, U, minp=0.01):
         self.mos.export_MO(pop, pop, U, 'no_%s.mld'%state['name'],
                            cfmt=self.ioptions['mcfmt'], occmin=minp, alphabeta=self.ioptions['alphabeta'])
 
