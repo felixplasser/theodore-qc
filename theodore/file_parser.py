@@ -835,7 +835,7 @@ class file_parser_qctddft(file_parser_libwfa):
         """
         state_list = []
         exc_diff = exc_1TDM = tdread = libwfa = False
-        istate = 1
+        istate = 0
 
         self.state_list_om = self.rmatfile_one()
 
@@ -879,7 +879,7 @@ class file_parser_qctddft(file_parser_libwfa):
 
                 state_list = []
                 exc_diff = exc_1TDM = tdread = libwfa = False
-                istate = 1
+                istate = 0
 
             if tdread:
                 words = line.replace(':','').split()
