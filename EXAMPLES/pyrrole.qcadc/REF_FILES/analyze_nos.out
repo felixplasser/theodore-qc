@@ -1,8 +1,10 @@
 ================================================================================
-|                                 TheoDORE 1.7                                 |
+|                                 TheoDORE 2.2                                 |
 |         Theoretical Density, Orbital Relaxation and Exciton analysis         |
+|                                                                              |
 |                            Author: Felix Plasser                             |
-|            Contributions by: Ljiljana Stojanovic, Gunter Hermann             |
+|             Contributions by: L. Stojanovic, G. Hermann, S. Mai,             |
+|                          M.F.S.J. Menger, P. Kimber                          |
 --------------------------------------------------------------------------------
 |                       References for the modules used                        |
 |        (see also http://theodore-qc.sourceforge.net/literature.html)         |
@@ -16,13 +18,12 @@
 |     J. Chem. Phys. (2014), 141, 024106.                                      |
 |                                                                              |
 |   Program citation:                                                          |
-|     F. Plasser "TheoDORE 1.7: a package for theoretical density, orbital     |
-|     relaxation, and exciton analysis"; available from                        |
-|     http://theodore-qc.sourceforge.net                                       |
+|     F. Plasser, J. Chem. Phys. (2020), 152, 084108.                          |
 --------------------------------------------------------------------------------
 |                        State density matrix analysis                         |
 ================================================================================
 
+Finished parsing qchem.mld
 
 MO file qchem.mld parsed.
 Number of atoms: 10
@@ -30,6 +31,7 @@ Number of MOs read in: 95
 Dimension: 95,95,...,95
 Number of basis functions parsed:  95
  ... inverting C
+Finished parsing NOs/mp2_gs_no.mo
 
 MO file NOs/mp2_gs_no.mo parsed.
 Number of atoms: 10
@@ -38,6 +40,7 @@ Dimension: 95,95,...,95
 Number of basis functions parsed:  95
 MO-matrix not square: 95 x 36
   Using the Moore-Penrose pseudo inverse.
+Finished parsing NOs/triplet_0_1_no.mo
 
 MO file NOs/triplet_0_1_no.mo parsed.
 Number of atoms: 10
@@ -46,6 +49,7 @@ Dimension: 95,95,...,95
 Number of basis functions parsed:  95
 MO-matrix not square: 95 x 36
   Using the Moore-Penrose pseudo inverse.
+Finished parsing NOs/singlet_0_1_no.mo
 
 MO file NOs/singlet_0_1_no.mo parsed.
 Number of atoms: 10
@@ -54,6 +58,7 @@ Dimension: 95,95,...,95
 Number of basis functions parsed:  95
 MO-matrix not square: 95 x 36
   Using the Moore-Penrose pseudo inverse.
+Finished parsing NOs/triplet_1_1_no.mo
 
 MO file NOs/triplet_1_1_no.mo parsed.
 Number of atoms: 10
@@ -62,6 +67,7 @@ Dimension: 95,95,...,95
 Number of basis functions parsed:  95
 MO-matrix not square: 95 x 36
   Using the Moore-Penrose pseudo inverse.
+Finished parsing NOs/singlet_1_1_no.mo
 
 MO file NOs/singlet_1_1_no.mo parsed.
 Number of atoms: 10
@@ -70,6 +76,7 @@ Dimension: 95,95,...,95
 Number of basis functions parsed:  95
 MO-matrix not square: 95 x 36
   Using the Moore-Penrose pseudo inverse.
+Finished parsing NOs/singlet_2_1_no.mo
 
 MO file NOs/singlet_2_1_no.mo parsed.
 Number of atoms: 10
@@ -78,6 +85,7 @@ Dimension: 95,95,...,95
 Number of basis functions parsed:  95
 MO-matrix not square: 95 x 36
   Using the Moore-Penrose pseudo inverse.
+Finished parsing NOs/triplet_3_1_no.mo
 
 MO file NOs/triplet_3_1_no.mo parsed.
 Number of atoms: 10
@@ -86,6 +94,7 @@ Dimension: 95,95,...,95
 Number of basis functions parsed:  95
 MO-matrix not square: 95 x 36
   Using the Moore-Penrose pseudo inverse.
+Finished parsing NOs/triplet_1_2_no.mo
 
 MO file NOs/triplet_1_2_no.mo parsed.
 Number of atoms: 10
@@ -94,6 +103,7 @@ Dimension: 95,95,...,95
 Number of basis functions parsed:  95
 MO-matrix not square: 95 x 36
   Using the Moore-Penrose pseudo inverse.
+Finished parsing NOs/singlet_1_2_no.mo
 
 MO file NOs/singlet_1_2_no.mo parsed.
 Number of atoms: 10
@@ -132,7 +142,8 @@ A/D analysis for singlet_1_2_no
  WARNING: pA + pD = -0.00863100 != 0.
 Computing A/D densities ...
 
-Jmol input file ndo.jmol and ndo.html written
+Jmol input file ndo_jmol.spt and ndo.html written
+   Run as: jmol -n ndo_jmol.spt
 
 Mulliken populations
 mp2_gs_no

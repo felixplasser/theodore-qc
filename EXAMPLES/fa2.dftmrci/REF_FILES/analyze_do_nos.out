@@ -1,5 +1,5 @@
 ================================================================================
-|                                TheoDORE 2.0.2                                |
+|                                 TheoDORE 2.2                                 |
 |         Theoretical Density, Orbital Relaxation and Exciton analysis         |
 |                                                                              |
 |                            Author: Felix Plasser                             |
@@ -23,6 +23,7 @@
 |                        State density matrix analysis                         |
 ================================================================================
 
+Finished parsing orca.molden.input
 
 MO file orca.molden.input parsed.
 Number of atoms: 8
