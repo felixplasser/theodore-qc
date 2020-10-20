@@ -86,7 +86,7 @@ do
     for rfile in `ls "$sdir/REF_FILES"`
     do
         echo "  -> $rfile"
-        diff -w -I 'TheoDORE\|python-openbabel\|emulation\|wall time\|Contributions|not found\|' "$sdir/REF_FILES/$rfile" $rfile
+        diff -w -I 'TheoDORE\|python-openbabel\|emulation\|wall time\|Contributions|not found|' "$sdir/REF_FILES/$rfile" $rfile
         chk=$((chk+$?))
     done
 
