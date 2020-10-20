@@ -1,8 +1,10 @@
 ================================================================================
-|                                 TheoDORE 1.7                                 |
+|                                 TheoDORE 2.2                                 |
 |         Theoretical Density, Orbital Relaxation and Exciton analysis         |
+|                                                                              |
 |                            Author: Felix Plasser                             |
-|            Contributions by: Ljiljana Stojanovic, Gunter Hermann             |
+|             Contributions by: L. Stojanovic, G. Hermann, S. Mai,             |
+|                          M.F.S.J. Menger, P. Kimber                          |
 --------------------------------------------------------------------------------
 |                       References for the modules used                        |
 |        (see also http://theodore-qc.sourceforge.net/literature.html)         |
@@ -24,25 +26,36 @@
 |     Phys. Chem. Chem. Phys. (2016), 18, 2548.                                |
 |                                                                              |
 |   Program citation:                                                          |
-|     F. Plasser "TheoDORE 1.7: a package for theoretical density, orbital     |
-|     relaxation, and exciton analysis"; available from                        |
-|     http://theodore-qc.sourceforge.net                                       |
+|     F. Plasser, J. Chem. Phys. (2020), 152, 084108.                          |
 --------------------------------------------------------------------------------
 |                      Transition density matrix analysis                      |
 ================================================================================
 
+WARNING: Using old mode of reading .om files
+Reading: ./S_1_ctnum_atomic.om ...
+ All values read in
+Reading: ./S_2_ctnum_atomic.om ...
+ All values read in
+Reading: ./S_3_ctnum_atomic.om ...
+ All values read in
+Reading: ./S_4_ctnum_atomic.om ...
+ All values read in
+Reading: ./S_5_ctnum_atomic.om ...
+ All values read in
+Reading: ./S_6_ctnum_atomic.om ...
+ All values read in
 Parsing qchem.out.new for TDDFT Excitation Energies ...
-Reading: es_1_ctnum_atomic.om ...
+Reading: S_1_ctnum_atomic.om ...
  All values read in
-Reading: es_2_ctnum_atomic.om ...
+Reading: S_2_ctnum_atomic.om ...
  All values read in
-Reading: es_3_ctnum_atomic.om ...
+Reading: S_3_ctnum_atomic.om ...
  All values read in
-Reading: es_4_ctnum_atomic.om ...
+Reading: S_4_ctnum_atomic.om ...
  All values read in
-Reading: es_5_ctnum_atomic.om ...
+Reading: S_5_ctnum_atomic.om ...
  All values read in
-Reading: es_6_ctnum_atomic.om ...
+Reading: S_6_ctnum_atomic.om ...
  All values read in
 Finished parsing file qchem.out.new
 
@@ -54,7 +67,7 @@ Composition: C9 H12 Ir N3
 *** Electron/hole population analysis ***
 
 Decomposition over fragments
-es_1(S)
+S_1
 -------------------------------------------------------
        Fragment        h+        e-       sum      diff
 -------------------------------------------------------
@@ -66,7 +79,7 @@ es_1(S)
                   1.01198   1.01198   2.02397  -0.00000
 -------------------------------------------------------
 
-es_2(S)
+S_2
 -------------------------------------------------------
        Fragment        h+        e-       sum      diff
 -------------------------------------------------------
@@ -78,7 +91,7 @@ es_2(S)
                   1.01252   1.01252   2.02503   0.00000
 -------------------------------------------------------
 
-es_3(S)
+S_3
 -------------------------------------------------------
        Fragment        h+        e-       sum      diff
 -------------------------------------------------------
@@ -90,7 +103,7 @@ es_3(S)
                   1.01249   1.01249   2.02497   0.00000
 -------------------------------------------------------
 
-es_4(S)
+S_4
 -------------------------------------------------------
        Fragment        h+        e-       sum      diff
 -------------------------------------------------------
@@ -102,7 +115,7 @@ es_4(S)
                   1.00422   1.00422   2.00843  -0.00000
 -------------------------------------------------------
 
-es_5(S)
+S_5
 -------------------------------------------------------
        Fragment        h+        e-       sum      diff
 -------------------------------------------------------
@@ -114,7 +127,7 @@ es_5(S)
                   1.00406   1.00406   2.00813   0.00000
 -------------------------------------------------------
 
-es_6(S)
+S_6
 -------------------------------------------------------
        Fragment        h+        e-       sum      diff
 -------------------------------------------------------
@@ -130,12 +143,12 @@ File ehFrag.txt with information about e/h populations written.
 
 state          dE(eV)       f        Om      POSi      POSf        PR        CT        MC        LC      MLCT      LMCT      LLCT     RMSeh      dexc
 ------------------------------------------------------------------------------------------------------------------------------------------------------
-es_1(S)     3.947800  0.030700  1.011984  1.889220  2.852287  3.058199  0.646006  0.043337  0.310657  0.513422  0.034467  0.098117  2.397504  2.871033
-es_2(S)     3.999400  0.035200  1.012516  1.948362  2.910157  2.653145  0.585625  0.098049  0.316326  0.464794  0.051979  0.068852  2.249310  2.738863
-es_3(S)     4.000000  0.035100  1.012485  1.796588  2.481897  2.633457  0.585818  0.098157  0.316025  0.464923  0.051941  0.068954  2.249639  2.739122
-es_4(S)     4.408400  0.040100  1.004215  1.650394  2.435727  2.497945  0.788440  0.075387  0.136173  0.569258  0.032057  0.187125  2.684538  3.139164
-es_5(S)     4.409700  0.040500  1.004064  1.771659  3.154281  2.474494  0.788754  0.075280  0.135966  0.569298  0.032209  0.187246  2.685303  3.139974
-es_6(S)     4.425600  0.008300  1.004081  1.705210  2.651011  3.010619  0.753471  0.112461  0.134068  0.534724  0.052623  0.166124  2.620972  3.101393
+S_1         3.947800  0.030700  1.011984  1.889220  2.852287  3.058199  0.646006  0.043337  0.310657  0.513422  0.034467  0.098117  2.397504  2.871033
+S_2         3.999400  0.035200  1.012516  1.948362  2.910157  2.653145  0.585625  0.098049  0.316326  0.464794  0.051979  0.068852  2.249310  2.738863
+S_3         4.000000  0.035100  1.012485  1.796588  2.481897  2.633457  0.585818  0.098157  0.316025  0.464923  0.051941  0.068954  2.249639  2.739122
+S_4         4.408400  0.040100  1.004215  1.650394  2.435727  2.497945  0.788440  0.075387  0.136173  0.569258  0.032057  0.187125  2.684538  3.139164
+S_5         4.409700  0.040500  1.004064  1.771659  3.154281  2.474494  0.788754  0.075280  0.135966  0.569298  0.032209  0.187246  2.685303  3.139974
+S_6         4.425600  0.008300  1.004081  1.705210  2.651011  3.010619  0.753471  0.112461  0.134068  0.534724  0.052623  0.166124  2.620972  3.101393
 
 Final output copied to tden_summ_libwfa.txt
-CPU time:  0.1 s, wall time: 0.1 s
+CPU time:  0.2 s, wall time: 0.9 s
