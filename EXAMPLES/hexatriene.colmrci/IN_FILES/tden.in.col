@@ -6,6 +6,6 @@ comp_ntos=True
 jmol_orbitals=True
 coor_file='geom'
 coor_format='col'
-prop_list=['Om', 'Ombar', 'POS', 'PR', 'CT', 'COH', 'CTnt', 'PRNTO', 'RMSeh']
+prop_list=['Om', 'Phe', 'POS', 'PR', 'CT', 'COH', 'CTnt', 'PRNTO', 'RMSeh']
 output_prec=(10,6)
 s_or_t='t'
