@@ -145,12 +145,6 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
         self.af.write('draw sphere ')
         self.af.write('{% .3f % .3f % .3f} '%(-ifac * x, -ifac * y, -ifac * z))
         self.af.write('radius % .3f\n'%(3*rad))
-        # self.af.write('draw cone ')
-        # self.vmd_coors( .4 * fac,  .6 * fac, coor[0, mu], coor[1, mu], coor[2, mu])
-        # self.af.write('radius % .3f\n'%(2*self['2P_rad']))
-        # self.af.write('draw cone ')
-        # self.vmd_coors(-.4 * fac, -.6 * fac, coor[0, mu], coor[1, mu], coor[2, mu])
-        # self.af.write('radius % .3f\n'%(2*self['2P_rad']))
 
     def vmd_coors(self, fac1, fac2, x, y, z):
         self.af.write('{% .3f % .3f % .3f} '%(fac1 * x, fac1 * y, fac1 * z))
