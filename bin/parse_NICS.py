@@ -9,3 +9,4 @@ logfile = 'gaussian.log'
 
 nv = lib_NICS.NICS_parser_g09(logfile)
 nv.print_data()
+nv.vmd_tensors()
