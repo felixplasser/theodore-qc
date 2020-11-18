@@ -860,9 +860,10 @@ class file_parser_qctddft(file_parser_libwfa):
 
             if ststr in line or ststr2 in line:
                 tdread = True
+                line = next(rfileh)
             elif 'TDDFT calculation will be performed' in line:
                 tdread = False
-            elif 'Timing summary' in line:
+            elif '-----' in line:
                 tdread = False
             elif 'Excited State Analysis' in line:
                 tdread = False

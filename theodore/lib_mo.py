@@ -402,6 +402,7 @@ class MO_set_molden(MO_set):
         MO = False
         GTO = False
         ATOMS = False
+        coor_unit = 1.
         mo_vecs = []
         mo_ind = 0
         self.syms = [] # list with the orbital descriptions. they are entered after Sym in the molden file.
@@ -528,9 +529,11 @@ class MO_set_molden(MO_set):
 
             elif '[atoms]' in line.lower():
                 ATOMS = True
+                if 'au' in line.lower():
+                    coor_unit = units.length['A']
             elif ATOMS:
                 words = line.split()
-                self.at_dicts.append({'Z':int(words[2]), 'x':float(words[3]), 'y':float(words[4]), 'z':float(words[5])})
+                self.at_dicts.append({'Z':int(words[2]), 'x':float(words[3])*coor_unit, 'y':float(words[4])*coor_unit, 'z':float(words[5])*coor_unit})
 
             if not MO:
                 self.header += line

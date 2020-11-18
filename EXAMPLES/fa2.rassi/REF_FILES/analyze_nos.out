@@ -1,8 +1,10 @@
 ================================================================================
-|                                 TheoDORE 1.7                                 |
+|                                 TheoDORE 2.2                                 |
 |         Theoretical Density, Orbital Relaxation and Exciton analysis         |
+|                                                                              |
 |                            Author: Felix Plasser                             |
-|            Contributions by: Ljiljana Stojanovic, Gunter Hermann             |
+|             Contributions by: L. Stojanovic, G. Hermann, S. Mai,             |
+|                          M.F.S.J. Menger, P. Kimber                          |
 --------------------------------------------------------------------------------
 |                       References for the modules used                        |
 |        (see also http://theodore-qc.sourceforge.net/literature.html)         |
@@ -16,13 +18,12 @@
 |     J. Chem. Phys. (2014), 141, 024106.                                      |
 |                                                                              |
 |   Program citation:                                                          |
-|     F. Plasser "TheoDORE 1.7: a package for theoretical density, orbital     |
-|     relaxation, and exciton analysis"; available from                        |
-|     http://theodore-qc.sourceforge.net                                       |
+|     F. Plasser, J. Chem. Phys. (2020), 152, 084108.                          |
 --------------------------------------------------------------------------------
 |                        State density matrix analysis                         |
 ================================================================================
 
+Finished parsing molcas.rasscf.molden
 
 MO file molcas.rasscf.molden parsed.
 Number of atoms: 8
@@ -32,38 +33,53 @@ Number of basis functions parsed:  44
  ... inverting C
  WARNING: the header may not be understood by Jmol:
  [MOLDEN FORMAT]
- This has to be changed to:
+  This has to be changed to:
  [Molden Format]
+Finished parsing ./MOLDEN.1
 
 MO file ./MOLDEN.1 parsed.
 Number of atoms: 8
 Number of MOs read in: 88
 Dimension: 44,44,...,44
 Number of basis functions parsed:  44
+
+   WARNING: There are twice as many MOs as basis functions!
+   If this is an unrestricted calculation use analyze_tden_unr.py
+
 MO-matrix not square: 44 x 88
   Using the Moore-Penrose pseudo inverse.
  WARNING: the header may not be understood by Jmol:
  [MOLDEN FORMAT]
- This has to be changed to:
+  This has to be changed to:
  [Molden Format]
+Finished parsing ./MOLDEN.2
 
 MO file ./MOLDEN.2 parsed.
 Number of atoms: 8
 Number of MOs read in: 88
 Dimension: 44,44,...,44
 Number of basis functions parsed:  44
+
+   WARNING: There are twice as many MOs as basis functions!
+   If this is an unrestricted calculation use analyze_tden_unr.py
+
 MO-matrix not square: 44 x 88
   Using the Moore-Penrose pseudo inverse.
  WARNING: the header may not be understood by Jmol:
  [MOLDEN FORMAT]
- This has to be changed to:
+  This has to be changed to:
  [Molden Format]
+Finished parsing ./MOLDEN.3
 
 MO file ./MOLDEN.3 parsed.
 Number of atoms: 8
 Number of MOs read in: 88
 Dimension: 44,44,...,44
 Number of basis functions parsed:  44
+
+   WARNING: There are twice as many MOs as basis functions!
+   If this is an unrestricted calculation use analyze_tden_unr.py
+
 MO-matrix not square: 44 x 88
   Using the Moore-Penrose pseudo inverse.
 
@@ -78,7 +94,8 @@ A/D analysis for MOLDEN.3
  WARNING: pA + pD = -0.00004002 != 0.
 Computing A/D densities ...
 
-Jmol input file ndo.jmol and ndo.html written
+Jmol input file ndo_jmol.spt and ndo.html written
+   Run as: jmol -n ndo_jmol.spt
 Computation of the bond order matrix ...
 Computation of the bond order matrix ...
 Computation of the bond order matrix ...

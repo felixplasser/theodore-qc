@@ -1,8 +1,10 @@
 ================================================================================
-|                                 TheoDORE 1.7                                 |
+|                                 TheoDORE 2.2                                 |
 |         Theoretical Density, Orbital Relaxation and Exciton analysis         |
+|                                                                              |
 |                            Author: Felix Plasser                             |
-|            Contributions by: Ljiljana Stojanovic, Gunter Hermann             |
+|             Contributions by: L. Stojanovic, G. Hermann, S. Mai,             |
+|                          M.F.S.J. Menger, P. Kimber                          |
 --------------------------------------------------------------------------------
 |                       References for the modules used                        |
 |        (see also http://theodore-qc.sourceforge.net/literature.html)         |
@@ -16,13 +18,12 @@
 |     J. Chem. Phys. (2014), 141, 024106.                                      |
 |                                                                              |
 |   Program citation:                                                          |
-|     F. Plasser "TheoDORE 1.7: a package for theoretical density, orbital     |
-|     relaxation, and exciton analysis"; available from                        |
-|     http://theodore-qc.sourceforge.net                                       |
+|     F. Plasser, J. Chem. Phys. (2020), 152, 084108.                          |
 --------------------------------------------------------------------------------
 |                        State density matrix analysis                         |
 ================================================================================
 
+Finished parsing molcas.rasscf.molden
 
 MO file molcas.rasscf.molden parsed.
 Number of atoms: 8

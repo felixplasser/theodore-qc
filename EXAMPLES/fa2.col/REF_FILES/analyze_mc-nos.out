@@ -1,8 +1,10 @@
 ================================================================================
-|                                TheoDORE 1.5.1                                |
+|                                 TheoDORE 2.2                                 |
 |         Theoretical Density, Orbital Relaxation and Exciton analysis         |
+|                                                                              |
 |                            Author: Felix Plasser                             |
-|            Contributions by: Ljiljana Stojanovic, Gunter Hermann             |
+|             Contributions by: L. Stojanovic, G. Hermann, S. Mai,             |
+|                          M.F.S.J. Menger, P. Kimber                          |
 --------------------------------------------------------------------------------
 |                       References for the modules used                        |
 |        (see also http://theodore-qc.sourceforge.net/literature.html)         |
@@ -16,13 +18,12 @@
 |     J. Chem. Phys. (2014), 141, 024106.                                      |
 |                                                                              |
 |   Program citation:                                                          |
-|     F. Plasser "TheoDORE 1.5.1: a package for theoretical density, orbital   |
-|     relaxation, and exciton analysis"; available from                        |
-|     http://theodore-qc.sourceforge.net                                       |
+|     F. Plasser, J. Chem. Phys. (2020), 152, 084108.                          |
 --------------------------------------------------------------------------------
 |                        State density matrix analysis                         |
 ================================================================================
 
+Finished parsing MOLDEN/molden_mo_mc.sp
 
 MO file MOLDEN/molden_mo_mc.sp parsed.
 Number of atoms: 8
@@ -30,6 +31,7 @@ Number of MOs read in: 44
 Dimension: 44,44,...,44
 Number of basis functions parsed:  44
  ... inverting C
+Finished parsing MOLDEN/molden_no_mc.drt1.st01.sp
 
 MO file MOLDEN/molden_no_mc.drt1.st01.sp parsed.
 Number of atoms: 8
@@ -37,6 +39,7 @@ Number of MOs read in: 44
 Dimension: 44,44,...,44
 Number of basis functions parsed:  44
  ... inverting C
+Finished parsing MOLDEN/molden_no_mc.drt1.st02.sp
 
 MO file MOLDEN/molden_no_mc.drt1.st02.sp parsed.
 Number of atoms: 8
@@ -44,6 +47,7 @@ Number of MOs read in: 44
 Dimension: 44,44,...,44
 Number of basis functions parsed:  44
  ... inverting C
+Finished parsing MOLDEN/molden_no_mc.drt1.st03.sp
 
 MO file MOLDEN/molden_no_mc.drt1.st03.sp parsed.
 Number of atoms: 8
@@ -190,7 +194,7 @@ mc.D1.st03
   2-6  : 0.9077
   2-8  : 0.9077
 
-state       dE(eV)     f        nu      nunl         p
+state          dE(eV)       f        nu      nunl         p
 ------------------------------------------------------------
 mc.D1.st01  1.000000         -  0.411269  0.150966         -
 mc.D1.st02  2.000000         -  2.351073  2.554457  1.100589
