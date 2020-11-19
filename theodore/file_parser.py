@@ -860,9 +860,10 @@ class file_parser_qctddft(file_parser_libwfa):
 
             if ststr in line or ststr2 in line:
                 tdread = True
+                line = next(rfileh)
             elif 'TDDFT calculation will be performed' in line:
                 tdread = False
-            elif 'Timing summary' in line:
+            elif '-----' in line:
                 tdread = False
             elif 'Excited State Analysis' in line:
                 tdread = False
@@ -1686,59 +1687,11 @@ class file_parser_nos(file_parser_base):
 class file_parser_rassi(file_parser_libwfa):
     def read(self, mos):
 
-        (energies, oscs, tmp_state_list) = self.read_rassi_output(self.ioptions['rfile'])
+        if not (self.ioptions['read_libwfa']):
+            raise error_handler.MsgError("Please run &WFA within OpenMolcas")
 
-    #    if not (self.ioptions['read_libwfa'] or os.path.exists('TRD')):
-    #        errmsg= """read_libwfa=False and no TRD directory present!
-    #To run the job you have to:
-    #1. Run &RASSI specifying the TRD1 keyword
-    #2. Run &WFA
-    #3. set read_libwfa=True in dens_ana.in
-    #
-    #or
-    #1. Run &RASSI specifying the TRD1 keyword
-    #2. call 'mkdir TRD && cp $WorkDir/TRD2* TRD'"""
-    #
-    #        raise error_handler.MsgError(errmsg)
+        (energies, oscs, state_list) = self.read_rassi_output(self.ioptions['rfile'])
 
-        if (self.ioptions['read_libwfa']):
-            state_list = tmp_state_list
-        else:
-            print("""Analyzing RASSI job without libwfa.
-   WARNING: this only works if all states derive from the same RASSCF calculation!\n""")
-
-            state_list = []
-            for lfile in self.ioptions['ana_files']:
-                words = lfile.split('_')
-                (st1, st2) = (int(words[1]), int(words[2]))
-
-                if self.ioptions['s_or_t'] == 't':
-                    if st1 == st2: continue
-
-                    print("Reading %s ..."%lfile)
-                    state_list.append({})
-
-                    state_list[-1]['name'] = 'R%i.%i'%(st1, st2)
-                    state_list[-1]['exc_en'] = (energies[st1-1] - energies[st2-1]) * units.energy['eV']
-                    try:
-                        state_list[-1]['osc_str'] = oscs[(st2, st1)]
-                    except:
-                        print("No osc. strength found for transition %i -> %i"%(st2, st1))
-                    state_list[-1]['tden'] = self.init_den(mos)
-
-                    self.read_rassi_den(state_list[-1]['tden'], mos, lfile)
-
-                elif self.ioptions['s_or_t'] == 's':
-                    if st1 != st2: continue
-
-                    print("Reading %s ..."%lfile)
-                    state_list.append({})
-
-                    state_list[-1]['name'] = 'RASSI_%i'%st1
-                    state_list[-1]['exc_en'] = (energies[st1-1] - energies[0]) * units.energy['eV']
-                    state_list[-1]['sden'] = self.init_den(mos)
-
-                    self.read_rassi_den(state_list[-1]['sden'], mos, lfile, sden=True)
         return state_list
 
     def read_rassi_output(self, filen):
@@ -1835,68 +1788,3 @@ class file_parser_rassi(file_parser_libwfa):
         rfile.close()
 
         return energies, oscs, state_list
-
-    def read_rassi_den(self, dens, mos, filen, sden=False):
-        """
-        Read the output of RASSI generated with TRD1.
-        No support for symmetry (yet).
-        """
-        trd1 = False
-        imo = -1
-        jmo = -1
-        rfile = open(filen,'r')
-        TRD_string = 'Active TRD1'
-        while True:
-            try:
-                line = next(rfile)
-            except StopIteration:
-                break
-
-            if 'Multiplicities' in line:
-                words = next(rfile).split()
-                mult1 = int(words[0])
-                mult2 = int(words[1])
-                print('Multiplicities: %i, %i'%(mult1, mult2))
-
-                # Read the spin-traced TDM if the multiplicities are the same
-                #   and the spin-difference TDM otherwise
-                if mult1 == mult2:
-                    TRD_string = 'Active TRD1'
-                else:
-                    TRD_string = 'Active Spin TRD1'
-            elif 'Basis functions' in line:
-                nbas = int(next(rfile).split()[0])
-                assert(nbas == mos.ret_num_mo())
-            elif 'Inactive orbitals' in line:
-                ninact = int(next(rfile).split()[0])
-
-                if sden:
-                    for imo in range(ninact): dens[imo, imo] = 2.0
-                imo = ninact
-                jmo = ninact
-            elif 'Active orbitals' in line:
-                nact = int(next(rfile).split()[0])
-            elif TRD_string in line:
-                line = next(rfile)
-                trd1 = True
-            elif trd1:
-                strl = len(line) // 5
-                for i in range(5):
-                    val = float(line[i*strl:(i+1)*strl].replace('D','E'))
-                    dens[jmo, imo] = val
-                    if 0.2 < abs(val) < 1.9999: print("(i,j)=(%2i,%2i), val=%6.3f"%(imo,jmo,val))
-
-                    jmo += 1
-                    if jmo == ninact + nact:
-                        jmo = ninact
-                        imo += 1
-
-                        if imo == ninact + nact:
-                            #print "Finished parsing"
-                            trd1 = False
-                            break
-        rfile.close()
-        if trd1:
-            raise error_handler.MsgError('Parsing of RASSI output')
-        if not sden:
-            dens *= 2**(-.5)

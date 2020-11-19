@@ -3,7 +3,9 @@
 PDIR=`pwd`
 
 echo "theo_test.bash [<module> [<py_interp>]]"
-echo "  available modules: standard, all, openbabel, cclib, adf, noadf"
+echo "  available modules: standard, cclib"
+echo "     with openbabel installation: openbabel, noadf"
+echo "     with ADF installation: adf, all"
 echo "  py_interp: python2, python3, ..."
 
 echo "Starting theo_test.bash"
@@ -14,10 +16,11 @@ if [ -z "$THEODIR" ]; then
    exit 1
 fi
 
-stddirs="pyrrole.qcadc hexatriene.colmrci fa2.ricc2 pv2p.escf pv2p.qctddft pyridine.ricc2 fa2.col fa2.rassi fa2.rassi-libwfa fa2.terachem fa2.dftmrci fa2.cation tyrosine.ricc2-es2es biphenyl.tddftb naphth.fchk water.ricc2"
+stddirs="pyrrole.qcadc hexatriene.colmrci fa2.ricc2 pv2p.escf pv2p.qctddft pyridine.ricc2 fa2.col fa2.rassi-libwfa fa2.terachem fa2.dftmrci fa2.cation tyrosine.ricc2-es2es biphenyl.tddftb naphth.fchk water.ricc2"
 obdirs="ir_c3n3.qctddft"
 cclibdirs="fa2.cclib SnH4-ecp.firefly H2S.orca"
 adfdirs="fa2.adf"
+faildirs="fa2.rassi"
 
 if [ $# == 0 ]
 then
@@ -37,7 +40,7 @@ if [ $# == 2 ]
 then
     PYTHON=$2
 else
-    PYTHON=python
+    PYTHON=python3
 fi
 
 rm -r RUN_THEO_TEST
@@ -86,7 +89,9 @@ do
     for rfile in `ls "$sdir/REF_FILES"`
     do
         echo "  -> $rfile"
-        diff -w -I 'TheoDORE\|python-openbabel\|emulation\|wall time\|Contributions|not found\|' "$sdir/REF_FILES/$rfile" $rfile
+        # Careful: the -I statement should not stop with \| !!
+        #    Otherwise, everything is ignored
+        diff -wB -I 'TheoDORE\|python-openbabel\|emulation\|wall time\|Contributions\|rbkit' "$sdir/REF_FILES/$rfile" $rfile
         chk=$((chk+$?))
     done
 
