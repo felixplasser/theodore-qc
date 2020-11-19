@@ -113,25 +113,68 @@ class NICS_point:
     def vmd_tensor(self, af):
         """
         Create a graphical representation of the NICS tensor to be plotted in VMD.
-        TODO: check axes of the matrix
            Should one take the left or right eigenvectors?
-           What to do about complex eigenvalues?
+             -> The rigorous way would probably be an SVD to represent the non-symmetric matrix
+           Maybe show as tensor glyph -> ellipsoid
         """
         self.af = af
 
         (evals, coor) = numpy.linalg.eig(self.NICS_tensor)
 
+        if not numpy.isreal(evals).all():
+            # If there are complex eigenvalues, then these have to be transformed
+            #   Form linear combinations of the associated eigenvectors to get a 2-dim irrep
+            print("""
+*** WARNING: Transforming complex eigenvectors of NICS tensor
+      into a real representation""")
+            print("NICS Tensor")
+            print(self.NICS_tensor)
+            print("Eigenvalues")
+            print(evals)
+            print("Eigenvectors")
+            print(coor)
+
+            compl_inds = []
+            real_inds  = []
+            for i in range(3):
+                if numpy.isreal(evals[i]):
+                    real_inds.append(i)
+                else:
+                    compl_inds.append(i)
+            assert(len(compl_inds)==2)
+            assert(numpy.conj(evals[compl_inds[0]]) == evals[compl_inds[1]])
+
+            coor_new = numpy.zeros([3,3])
+            coor_new[:, real_inds[0]]  = numpy.real(coor[:, real_inds[0]])
+            coor_new[:, compl_inds[0]] = 2**(.5) * numpy.real(coor[:, compl_inds[0]])
+            coor_new[:, compl_inds[1]] = 2**(.5) * numpy.imag(coor[:, compl_inds[0]])
+            coor = coor_new
+
+            print("Real transformation matrix")
+            print(coor)
+            print("Transformed NICS tensor")
+            tmp = numpy.dot(numpy.dot(numpy.linalg.inv(coor), self.NICS_tensor), coor)
+            print(tmp)
+            evals = numpy.diag(tmp)
+
         for mu in range(3):
             # The eigenvector is in a column
-            # print("A v", mu)
-            # Av = numpy.dot(self.NICS_tensor, coor[:, mu])
-            # print(coor[:, mu], Av, Av / evals[mu])
+            #print("A v", mu)
+            # Check if the eigenvectors are correct -> yes
+              # Av = numpy.dot(self.NICS_tensor, coor[:, mu])
+              # print(coor[:, mu], Av, Av / evals[mu])
+            #print("Abs")
+            #print(abs(coor[:, mu]))
 
-            if self.vmd_color(evals[mu], eps=0.1):
-                fac = 0.2 * abs(evals[mu])
-                self.plot_quad_comp(fac, self.orig, coor[:, mu], 0.1)
+            if self.vmd_color(evals[mu], eps=1.):
+                fac = 0.1 * abs(evals[mu])
+                self.plot_quad_comp(fac, self.orig, coor[:, mu], 0.1 * fac**.5)
+                #self.plot_quad_cone(fac, self.orig, coor[:, mu], 0.5 * fac)
 
     def plot_quad_comp(self, fac, orig, vec, rad):
+        """
+        Plot component of quadrupole moment.
+        """
         self.af.write('draw cylinder ')
         self.vmd_coors(orig - fac*vec)
         self.vmd_coors(orig + fac*vec)
@@ -139,11 +182,25 @@ class NICS_point:
 
         self.af.write('draw sphere ')
         self.vmd_coors(orig + fac * vec)
-        self.af.write('radius % .3f\n'%(3*rad))
+        self.af.write('radius % .3f\n'%(2*rad))
 
         self.af.write('draw sphere ')
         self.vmd_coors(orig - fac * vec)
-        self.af.write('radius % .3f\n'%(3*rad))
+        self.af.write('radius % .3f\n'%(2*rad))
+
+    def plot_quad_cone(self, fac, orig, vec, rad):
+        """
+        Plot component of quadrupole moment as cone.
+        """
+        self.af.write('draw cone ')
+        self.vmd_coors(orig - fac*vec)
+        self.vmd_coors(orig)
+        self.af.write('radius % .3f\n'%rad)
+
+        self.af.write('draw cone ')
+        self.vmd_coors(orig + fac*vec)
+        self.vmd_coors(orig)
+        self.af.write('radius % .3f\n'%rad)
 
     def vmd_coors(self, coor):
         self.af.write('{% .3f % .3f % .3f} '%(coor[0], coor[1], coor[2]))
