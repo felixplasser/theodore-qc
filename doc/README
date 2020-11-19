@@ -1,6 +1,10 @@
 Download the newest TheoDORE release and tutorial.
 
+TheoDORE 2.3
 - Compute (unpaired) densities using orbkit
+- Fix for theo_test.bash
+- Fix for ORCA osc. strengths
+- Old RASSI interface removed (was not working properly)
 
 TheoDORE 2.2
 - Unrestricted computations in Orca (Sebastian Mai)
