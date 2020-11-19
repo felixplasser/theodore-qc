@@ -105,7 +105,10 @@ for i, state in enumerate(tdena_beta.state_list):
     for aprop in ['Om', 'OmAt', 'OmFrag', 'S_HE']:
         if aprop in state:
             state[aprop] += tdena_alpha.state_list[i][aprop]
-    state['Z_HE'] = 2.**(state['S_HE'])
+    try:
+        state['Z_HE'] = 2.**(state['S_HE'])
+    except KeyError:
+        pass
 
     # Delete the things that are non-additive
     for dprop in ['tden', 'PRNTO', 'Om_desc']:
