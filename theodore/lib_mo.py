@@ -608,7 +608,7 @@ class MO_set_tddftb(MO_set):
         filemo.close()
 
         try:
-           mo_array = numpy.array(mo_vecs, order=2)
+           mo_array = numpy.array(mo_vecs)
            self.mo_mat = numpy.array(mo_array).transpose()
         except ValueError:
            print("\n *** Unable to construct MO matrix! ***")
