@@ -31,7 +31,7 @@ class file_parser_fchk(file_parser.file_parser_base):
                 print(line.strip())
                 state_list.append({})
                 state = state_list[-1]
-                words = line.split()
+                words = line.replace('let ', 'let').replace('Excited State ', 'ES').split()
 
                 state['name']    = words[0].lower().replace('singlet','S').replace('triplet','T').replace("'", '1').replace('"', '11')
                 try:
