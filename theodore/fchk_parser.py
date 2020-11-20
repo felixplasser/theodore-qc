@@ -187,7 +187,7 @@ class MO_set_fchk(lib_mo.MO_set_molden):
         Read information about basis functions and prepare header of Molden file.
         """
         d5, f7, g9 = False, False, False
-        num_bas={0:1, -1:3, 1:3, -2:5, 2:6, -3:7, 3:10, -4:9, 4:15}
+        num_bas={0:1, -1:4, 1:3, -2:5, 2:6, -3:7, 3:10, -4:9, 4:15}
         llab = ['S','P','D','F','G']
         self.header+= "[GTO]"
 
