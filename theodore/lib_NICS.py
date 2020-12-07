@@ -47,10 +47,19 @@ display depthcue off
 color Display Background white
 menu graphics on
 mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
+# Use this for rings
+mol addrep 0
+mol modstyle 1 0 PaperChain 0.050000 10.000000
+mol modmaterial 1 0 Glass3
+draw delete all
+
 """)
 
-        for point in self.NICS_data:
+        for ipoint, point in enumerate(self.NICS_data):
             point.vmd_tensor(af)
+            af.write("# render TachyonInternal P%i.tga\n"%ipoint)
+            af.write("# draw delete all\n")
+            af.write("\n")
 
         af.close()
         print("VMD input written to %s"%af.name)
@@ -110,7 +119,7 @@ class NICS_point:
         return outstr + '\n'
 
     # VMD part - maybe this should be moved into a separate library
-    def vmd_tensor(self, af):
+    def vmd_tensor(self, af, rightEV=True):
         """
         Create a graphical representation of the NICS tensor to be plotted in VMD.
            Should one take the left or right eigenvectors?
@@ -119,7 +128,11 @@ class NICS_point:
         """
         self.af = af
 
-        (evals, coor) = numpy.linalg.eig(self.NICS_tensor)
+        # Compute left or right eigenvectors
+        if rightEV:
+            (evals, coor) = numpy.linalg.eig(self.NICS_tensor)
+        else:
+            (evals, coor) = numpy.linalg.eig(self.NICS_tensor.T)
 
         if not numpy.isreal(evals).all():
             # If there are complex eigenvalues, then these have to be transformed
@@ -152,7 +165,7 @@ class NICS_point:
 
             print("Real transformation matrix")
             print(coor)
-            print("Transformed NICS tensor")
+            print("Transformed NICS tensor (should be the same as original)")
             tmp = numpy.dot(numpy.dot(numpy.linalg.inv(coor), self.NICS_tensor), coor)
             print(tmp)
             evals = numpy.diag(tmp)
@@ -178,7 +191,8 @@ class NICS_point:
         self.af.write('draw cylinder ')
         self.vmd_coors(orig - fac*vec)
         self.vmd_coors(orig + fac*vec)
-        self.af.write('radius % .3f\n'%rad)
+        #self.af.write('radius % .3f\n'%rad)
+        self.af.write('radius 0.1\n')
 
         self.af.write('draw sphere ')
         self.vmd_coors(orig + fac * vec)
