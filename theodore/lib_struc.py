@@ -224,6 +224,23 @@ class structure:
 
         return xyz / tmass
 
+    def ret_normal_vector(self, at_list):
+        """
+        Return a normalised vector perpendicular to the plane spanned by
+        the three atoms in at_list.
+        """
+        assert(len(at_list)==3)
+
+        atom = self.mol.GetAtom(at_list[0])
+        xyz1  = numpy.array([atom.x(), atom.y(), atom.z()])
+        atom = self.mol.GetAtom(at_list[1])
+        xyz2  = numpy.array([atom.x(), atom.y(), atom.z()])
+        atom = self.mol.GetAtom(at_list[2])
+        xyz3  = numpy.array([atom.x(), atom.y(), atom.z()])
+
+        vec = numpy.cross(xyz2-xyz1, xyz3-xyz1)
+        return vec / numpy.linalg.norm(vec)
+
     def ret_moved_structure(self, add_vec, name=''):
         """
         Move the structure by <add_vec>.
