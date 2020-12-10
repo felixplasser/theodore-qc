@@ -75,11 +75,15 @@ class NICS_point:
         self.orig = numpy.array([x, y, z], float)
         self.NICS_iso = None
         self.NICS_tensor = None
+        self.evals = None
+        self.coor = None
 
     def __str__(self):
         outstr = "NICS value at (% .5f, % .5f, % .5f)"%(self.x, self.y, self.z)
         if not self.NICS_iso is None:
-            outstr += ": %.5f"%self.NICS_iso
+            outstr += ": % 9.5f"%self.NICS_iso
+        if not self.evals is None:
+            outstr += " = ( % 9.5f %+9.5f %+9.5f )/3"%(self.evals[0], self.evals[1], self.evals[2])
         return outstr
 
     def set_iso(self, NICS_iso):
@@ -118,16 +122,10 @@ class NICS_point:
             outstr += "   s_XX     s_YX      s_ZX       s_XY      s_YY      s_ZY     s_XZ       s_YZ      s_ZZ"
         return outstr + '\n'
 
-    # VMD part - maybe this should be moved into a separate library
-    def vmd_tensor(self, af, rightEV=True):
+    def diag(self, rightEV=True):
         """
-        Create a graphical representation of the NICS tensor to be plotted in VMD.
-           Should one take the left or right eigenvectors?
-             -> The rigorous way would probably be an SVD to represent the non-symmetric matrix
-           Maybe show as tensor glyph -> ellipsoid
+        Diagonalise the NICS tensor.
         """
-        self.af = af
-
         # Compute left or right eigenvectors
         if rightEV:
             (evals, coor) = numpy.linalg.eig(self.NICS_tensor)
@@ -157,18 +155,36 @@ class NICS_point:
             assert(len(compl_inds)==2)
             assert(numpy.conj(evals[compl_inds[0]]) == evals[compl_inds[1]])
 
+            # Use the real and imaginary parts of the complex-conjugate eigenvectors
+            #    to create an invariant subspace
             coor_new = numpy.zeros([3,3])
             coor_new[:, real_inds[0]]  = numpy.real(coor[:, real_inds[0]])
-            coor_new[:, compl_inds[0]] = 2**(.5) * numpy.real(coor[:, compl_inds[0]])
-            coor_new[:, compl_inds[1]] = 2**(.5) * numpy.imag(coor[:, compl_inds[0]])
-            coor = coor_new
+            #coor_new[:, real_inds[0]] /= numpy.linalg.norm(coor_new[:, real_inds[0]]) # already unit "length"
+
+            coor_new[:, compl_inds[0]] = numpy.real(coor[:, compl_inds[0]])
+            coor_new[:, compl_inds[0]] /= numpy.linalg.norm(coor_new[:, compl_inds[0]])
+
+            coor_new[:, compl_inds[1]] = numpy.imag(coor[:, compl_inds[0]])
+            coor_new[:, compl_inds[1]] /= numpy.linalg.norm(coor_new[:, compl_inds[1]])
+            self.coor = coor_new
 
             print("Real transformation matrix")
             print(coor)
-            print("Transformed NICS tensor (should be the same as original)")
+            print("Transformed NICS tensor (should be block-diagonal\n with real parts of EVs in diagonal)")
             tmp = numpy.dot(numpy.dot(numpy.linalg.inv(coor), self.NICS_tensor), coor)
             print(tmp)
-            evals = numpy.diag(tmp)
+            self.evals = numpy.real(evals)
+            print("EVs: ", evals, "=", numpy.diag(tmp))
+        else:
+            self.evals = evals
+            self.coor  = coor
+
+    # VMD part - maybe this should be moved into a separate library
+    def vmd_tensor(self, af):
+        """
+        Create a graphical representation of the NICS tensor to be plotted in VMD.
+        """
+        self.af = af
 
         for mu in range(3):
             # The eigenvector is in a column
@@ -179,9 +195,9 @@ class NICS_point:
             #print("Abs")
             #print(abs(coor[:, mu]))
 
-            if self.vmd_color(evals[mu], eps=1.):
-                fac = 0.1 * abs(evals[mu])
-                self.plot_quad_comp(fac, self.orig, coor[:, mu], 0.1 * fac**.5)
+            evmu = self.evals[mu]
+            if self.vmd_color(evmu, eps=1.):
+                self.plot_quad_comp(0.3 * abs(evmu)**.5, self.orig, self.coor[:, mu], 0.03 * abs(evmu)**.5)
                 #self.plot_quad_cone(fac, self.orig, coor[:, mu], 0.5 * fac)
 
     def plot_quad_comp(self, fac, orig, vec, rad):
@@ -241,9 +257,6 @@ class NICS_parser_g09(NICS_parser):
                     line = next(f)
                 except StopIteration:
                     print("Finished parsing %s"%logfile)
-                    if lvprt >= 1:
-                        for point in self.NICS_data:
-                            print(point)
                     break
 
                 if line[0:4] == ' Bq ':
@@ -259,5 +272,11 @@ class NICS_parser_g09(NICS_parser):
                         words = next(f).split()
                         tensor.append([float(words[1]), float(words[3]), float(words[5])])
                     self.NICS_data[Bqind].set_tensor(tensor)
+                    self.NICS_data[Bqind].diag()
 
                     Bqind += 1
+
+        if lvprt >= 1:
+            print(" *** Printing NICS and eigenvalues ***")
+            for point in self.NICS_data:
+                print(point)
