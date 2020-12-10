@@ -218,7 +218,10 @@ class structure:
         xyz = numpy.zeros(3, float)
         for i in at_list:
             atom = self.mol.GetAtom(i)
-            mass = atom.GetExactMass()**masswt
+            if masswt == 0:
+                mass = 1
+            else:
+                mass = atom.GetExactMass()**masswt
             tmass += mass
             xyz += mass * numpy.array([atom.x(), atom.y(), atom.z()])
 
