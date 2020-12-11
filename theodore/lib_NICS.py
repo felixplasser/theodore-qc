@@ -79,11 +79,15 @@ class NICS_point:
         self.coor = None
 
     def __str__(self):
+        """
+        Print the NICS values using the usual convention that their sign is
+        reversed with respect to the shielding tensor.
+        """
         outstr = "NICS value at (% .5f, % .5f, % .5f)"%(self.x, self.y, self.z)
         if not self.NICS_iso is None:
-            outstr += ": % 9.5f"%self.NICS_iso
+            outstr += ": % 6.2f"%(-self.NICS_iso)
         if not self.evals is None:
-            outstr += " = ( % 9.5f %+9.5f %+9.5f )/3"%(self.evals[0], self.evals[1], self.evals[2])
+            outstr += " = ( % 6.2f %+6.2f %+6.2f )/3"%(-self.evals[0], -self.evals[1], -self.evals[2])
         return outstr
 
     def set_iso(self, NICS_iso):
@@ -169,12 +173,12 @@ class NICS_point:
             self.coor = coor_new
 
             print("Real transformation matrix")
-            print(coor)
+            print(self.coor)
             print("Transformed NICS tensor (should be block-diagonal\n with real parts of EVs in diagonal)")
-            tmp = numpy.dot(numpy.dot(numpy.linalg.inv(coor), self.NICS_tensor), coor)
+            tmp = numpy.dot(numpy.dot(numpy.linalg.inv(self.coor), self.NICS_tensor), self.coor)
             print(tmp)
             self.evals = numpy.real(evals)
-            print("EVs: ", evals, "=", numpy.diag(tmp))
+            print("EVs: ", self.evals, "=", numpy.diag(tmp))
         else:
             self.evals = evals
             self.coor  = coor
@@ -208,7 +212,9 @@ class NICS_point:
         self.vmd_coors(orig - fac*vec)
         self.vmd_coors(orig + fac*vec)
         #self.af.write('radius % .3f\n'%rad)
+
         self.af.write('radius 0.1\n')
+        if rad < 0.05: rad = 0.05
 
         self.af.write('draw sphere ')
         self.vmd_coors(orig + fac * vec)
@@ -278,5 +284,5 @@ class NICS_parser_g09(NICS_parser):
 
         if lvprt >= 1:
             print(" *** Printing NICS and eigenvalues ***")
-            for point in self.NICS_data:
-                print(point)
+            for ipoint, point in enumerate(self.NICS_data):
+                print("P%i ->"%ipoint, point)
