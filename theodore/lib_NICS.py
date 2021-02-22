@@ -34,9 +34,11 @@ class NICS_parser:
             for point in self.NICS_data:
                 f.write(point.get_data())
 
-    def vmd_tensors(self, filen='NICS.vmd'):
+    def vmd_tensors(self, filen='VIST.vmd', vlist=None):
         """
         Draw VMD tensors for all the NICS values parsed.
+        filen - name of output file
+        vlist - list of dummy atoms to consider
         """
         af = open(filen, 'w')
         self.af = af
@@ -56,10 +58,11 @@ draw delete all
 """)
 
         for ipoint, point in enumerate(self.NICS_data):
-            point.vmd_tensor(af)
-            af.write("# render TachyonInternal P%i.tga\n"%ipoint)
-            af.write("# draw delete all\n")
-            af.write("\n")
+            if vlist is None or ipoint in vlist:
+                point.vmd_tensor(af)
+                af.write("# render TachyonInternal P%i.tga\n"%ipoint)
+                af.write("# draw delete all\n")
+                af.write("\n")
 
         af.close()
         print("VMD input written to %s"%af.name)
