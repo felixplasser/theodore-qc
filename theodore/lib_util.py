@@ -139,3 +139,14 @@ class cube_file:
         lc = [c * val + d * other.vals[ival] for ival, val in enumerate(self.vals)]
 
         return cube_file(outfile, self.header, lc, self.inc)
+
+    def mult(self, other, outfile, lvprt=0):
+        """
+        Multiply self * other
+           for transition densities
+        """
+        self.prep(other, lvprt)
+
+        prod = [val * other.vals[ival] for ival, val in enumerate(self.vals)]
+
+        return cube_file(outfile, self.header, prod, self.inc)

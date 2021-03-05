@@ -19,6 +19,7 @@ class NICS_parser:
     """
     def __init__(self, logfile=None):
         self.NICS_data = []
+        self.mol_ind = 0
         if not logfile is None:
             self.read(logfile)
 
@@ -34,13 +35,14 @@ class NICS_parser:
             for point in self.NICS_data:
                 f.write(point.get_data())
 
-    def vmd_tensors(self, filen='VIST.vmd', vlist=None):
+    def vmd_tensors(self, filen='VIST.vmd', vlist=None, scale=1.):
         """
         Draw VMD tensors for all the NICS values parsed.
         filen - name of output file
         vlist - list of dummy atoms to consider
+        scale - scale factor for dumb bells
         """
-        af = open(filen, 'w')
+        af = open(filen, 'a')
         self.af = af
         af.write(\
 """axes location Off
@@ -48,24 +50,25 @@ display projection Orthographic
 display depthcue off
 color Display Background white
 menu graphics on
-mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
+mol modstyle 0 %i Licorice 0.100000 30.000000 30.000000
 # Use this for rings
-mol addrep 0
-mol modstyle 1 0 PaperChain 0.050000 10.000000
-mol modmaterial 1 0 Glass3
+mol addrep %i
+mol modstyle 1 %i PaperChain 0.050000 10.000000
+mol modmaterial 1 %i Glass3
 draw delete all
 
-""")
+"""%(self.mol_ind, self.mol_ind, self.mol_ind, self.mol_ind))
 
         for ipoint, point in enumerate(self.NICS_data):
             if vlist is None or ipoint in vlist:
-                point.vmd_tensor(af)
+                point.vmd_tensor(af, scale=scale)
                 af.write("# render TachyonInternal P%i.tga\n"%ipoint)
                 af.write("# draw delete all\n")
                 af.write("\n")
 
         af.close()
-        print("VMD input written to %s"%af.name)
+        print("VMD input appended to %s"%af.name)
+        self.mol_ind += 1
 
 class NICS_point:
     """
@@ -187,7 +190,7 @@ class NICS_point:
             self.coor  = coor
 
     # VMD part - maybe this should be moved into a separate library
-    def vmd_tensor(self, af):
+    def vmd_tensor(self, af, scale=1.):
         """
         Create a graphical representation of the NICS tensor to be plotted in VMD.
         """
@@ -204,7 +207,9 @@ class NICS_point:
 
             evmu = self.evals[mu]
             if self.vmd_color(evmu, eps=1.):
-                self.plot_quad_comp(0.3 * abs(evmu)**.5, self.orig, self.coor[:, mu], 0.03 * abs(evmu)**.5)
+                fac = scale * 0.3 * abs(evmu)**.5
+                rad = scale * 0.03 * abs(evmu)**.5
+                self.plot_quad_comp(fac, self.orig, self.coor[:, mu], rad)
                 #self.plot_quad_cone(fac, self.orig, coor[:, mu], 0.5 * fac)
 
     def plot_quad_comp(self, fac, orig, vec, rad):
@@ -217,7 +222,7 @@ class NICS_point:
         #self.af.write('radius % .3f\n'%rad)
 
         self.af.write('radius 0.1\n')
-        if rad < 0.05: rad = 0.05
+        if rad < 0.05: rad = 0.05 # make sure there is at least a cap at the end
 
         self.af.write('draw sphere ')
         self.vmd_coors(orig + fac * vec)
@@ -259,6 +264,7 @@ class NICS_parser_g09(NICS_parser):
     Parse Gaussian NICS calculations.
     """
     def read(self, logfile, lvprt=1):
+        self.NICS_data = []
         with open(logfile, 'r') as f:
             Bqind = 0
             while True:
