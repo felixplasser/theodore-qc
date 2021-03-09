@@ -207,29 +207,27 @@ class NICS_point:
 
             evmu = self.evals[mu]
             if self.vmd_color(evmu, eps=1.):
-                fac = scale * 0.3 * abs(evmu)**.5
-                rad = scale * 0.03 * abs(evmu)**.5
-                self.plot_quad_comp(fac, self.orig, self.coor[:, mu], rad)
+                vec = scale * 0.3 * abs(evmu)**.5 * self.coor[:, mu]
+                stick = scale * 0.1
+                rad = max(scale * 0.03 * abs(evmu)**.5, 0.5 * stick)
+                self.plot_quad_comp(self.orig, vec, rad, stick)
                 #self.plot_quad_cone(fac, self.orig, coor[:, mu], 0.5 * fac)
 
-    def plot_quad_comp(self, fac, orig, vec, rad):
+    def plot_quad_comp(self, orig, vec, rad, stick=0.1):
         """
         Plot component of quadrupole moment.
         """
         self.af.write('draw cylinder ')
-        self.vmd_coors(orig - fac*vec)
-        self.vmd_coors(orig + fac*vec)
-        #self.af.write('radius % .3f\n'%rad)
-
-        self.af.write('radius 0.1\n')
-        if rad < 0.05: rad = 0.05 # make sure there is at least a cap at the end
+        self.vmd_coors(orig - vec)
+        self.vmd_coors(orig + vec)
+        self.af.write('radius % .3f\n'%stick)
 
         self.af.write('draw sphere ')
-        self.vmd_coors(orig + fac * vec)
+        self.vmd_coors(orig + vec)
         self.af.write('radius % .3f\n'%(2*rad))
 
         self.af.write('draw sphere ')
-        self.vmd_coors(orig - fac * vec)
+        self.vmd_coors(orig - vec)
         self.af.write('radius % .3f\n'%(2*rad))
 
     def plot_quad_cone(self, fac, orig, vec, rad):
