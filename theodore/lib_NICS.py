@@ -35,7 +35,7 @@ class NICS_parser:
             for point in self.NICS_data:
                 f.write(point.get_data())
 
-    def vmd_tensors(self, filen='VIST.vmd', vlist=None, scale=1.):
+    def vmd_tensors(self, filen='VIST.vmd', vlist=None, scale=1., plot_all=False):
         """
         Draw VMD tensors for all the NICS values parsed.
         filen - name of output file
@@ -51,19 +51,23 @@ display depthcue off
 color Display Background white
 menu graphics on
 mol modstyle 0 %i Licorice 0.100000 30.000000 30.000000
+# Uncomment to hide hydrogens
+# mol modselect 0 %i not element H
+
 # Use this for rings
 mol addrep %i
 mol modstyle 1 %i PaperChain 0.050000 10.000000
 mol modmaterial 1 %i Glass3
 draw delete all
 
-"""%(self.mol_ind, self.mol_ind, self.mol_ind, self.mol_ind))
+"""%(self.mol_ind, self.mol_ind, self.mol_ind, self.mol_ind, self.mol_ind))
 
         for ipoint, point in enumerate(self.NICS_data):
             if vlist is None or ipoint in vlist:
                 point.vmd_tensor(af, scale=scale)
-                af.write("# render TachyonInternal P%i.tga\n"%ipoint)
-                af.write("# draw delete all\n")
+                if plot_all:
+                    af.write("render TachyonInternal P%i.tga\n"%ipoint)
+                    af.write("draw delete all\n")
                 af.write("\n")
 
         af.close()

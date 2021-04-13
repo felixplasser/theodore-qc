@@ -26,7 +26,7 @@ class structure:
     """
     def __init__(self, name=''):
         self.name = name
-        self.new_types = ['txyz2','col','colr','nx'] # these are defined here
+        self.new_types = ['txyz2', 'Bqxyz','col','colr','nx'] # these are defined here
 
     def read_file(self, file_path, file_type=None):
         """
@@ -500,6 +500,24 @@ class structure:
             for extr in self.tinker_extra[ind-1]:
                 outstr += ' %6s'%extr
             outfile.write(outstr+'\n')
+        elif file_type == 'Bqxyz':
+            # xyz file, removing Gaussian dummy atoms 'Bq'
+            num_at = self.mol.NumAtoms()
+
+            outstr = ''
+            for ind in range(1, num_at+1):
+                obatom  = self.mol.GetAtom(ind)
+                Z = obatom.GetAtomicNum()
+                if Z == 0:
+                    num_at -= 1
+                    #print("Skipping dummy atom")
+                else:
+                    outstr += '%2s'%Z_symbol_dict[Z]
+                    outstr += '% 14.8f'%(obatom.x())
+                    outstr += '% 14.8f'%(obatom.y())
+                    outstr += '% 14.8f\n'%(obatom.z())
+            outfile.write('%i\n\n'%num_at)
+            outfile.write(outstr)
         elif file_type == 'col':
           for ind in range(1, num_at+1):
             obatom  = self.mol.GetAtom(ind)
