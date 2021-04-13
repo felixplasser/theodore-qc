@@ -38,7 +38,7 @@ while len(sys.argv)>0:
         scale = float(sys.argv.pop(0))
     elif arg in ["-c", "--coor"]:
         coorfiles.append(sys.argv.pop(0))
-    elif "-" in arg:
+    elif arg[0] == "-":
         raise error_handler.ElseError(arg, 'command line option')
     else:
         logfiles.append(arg)
