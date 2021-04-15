@@ -3,3 +3,4 @@ lib/cclib
 lib/orbkit
 DOXYGEN
 *.komodoproject
+EXAMPLES/*/RUN
