@@ -7,12 +7,12 @@ import sys
 from theodore import theo_header, lib_NICS, error_handler, cclib_interface, input_options
 
 def ihelp():
-    print(" parse_NICS.py [options] <logfile1> <logfile2>")
+    print(" plot_VIST.py [options] <logfile1> <logfile2>")
     print(" Command line options:")
     print("  -h, -H, --help: print this help")
-    print("  -v, --vist    : VIST for only these dummy atoms, e.g. -i '0 3 5'")
+    print("  -v, --vist    : VIST for only these dummy atoms, e.g. -v '0 3 5'")
     print("  -o            : Name of output file (for VMD)")
-    print("  -s, --scale   : Scale factor VIST dumb-bells")
+    print("  -s, --scale   : Scale factor for VIST dumb-bells")
     print("  -c, --coor    : Create coordinate files (using cclib)")
     print("  -p            : Render and plot all tensors separately")
     exit(0)
@@ -68,3 +68,16 @@ for ilog, logfile in enumerate(logfiles):
         struc.make_coord_file(file_path=coorf,file_type='Bqxyz')
         open(ofile, 'a').write("mol new %s\n"%coorf)
     nv.vmd_tensors(ofile, vlist, scale, plot_all)
+
+# Instructions for VMD
+if do_coor:
+    print("""
+Input file for VMD and coordinate file(s) created. Now run:
+   vmd -e %s
+    """%ofile)
+else:
+    print("""
+Input file for VMD created. Now do the following:
+1. Open VMD and load coordinate file
+2.   File - Load Visualization State - %s
+    """%ofile)
