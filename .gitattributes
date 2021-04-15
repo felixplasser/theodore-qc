@@ -1,4 +1,6 @@
 EXAMPLES/* linguist-language=data
+EXAMPLES/*/* linguist-language=data
+EXAMPLES/*/*/* linguist-language=data
 EXAMPLES/*/*/*/* linguist-language=data
 *.mo linguist-language=data
 external/* linguist-vendored
