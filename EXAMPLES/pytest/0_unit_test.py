@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+"""
+Unit tests for TheoDORE.
+Activate this by running pytest [-v/-s] in the EXAMPLES directory.
+"""
+
 import pytest
 import os
 
@@ -8,7 +13,7 @@ def test_header():
     
     # TODO: make sure this is using the correct version here
     print
-    theo_header.print_header('Unit tests')
+    #theo_header.print_header('Unit tests')
     print("THEODIR: ", os.environ["THEODIR"])
 
 class Test1:
@@ -26,6 +31,7 @@ class Test1:
         from theodore import lib_exciton
         from theodore import lib_file
         from theodore import lib_mo
+        from theodore import lib_NICS
         from theodore import lib_plot
         from theodore import lib_sden
         from theodore import lib_soc
