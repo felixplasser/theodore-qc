@@ -7,6 +7,7 @@ Activate this by running pytest [-v/-s] in the EXAMPLES directory.
 
 # TODO: Parts of this can be moved into its own library later
 
+from theodore import theo_header, lib_struc
 import os, shutil, sys, subprocess, difflib, warnings
 
 stddirs="pyrrole.qcadc hexatriene.colmrci fa2.ricc2 pv2p.escf pv2p.qctddft pyridine.ricc2 fa2.col fa2.rassi-libwfa fa2.terachem fa2.dftmrci fa2.cation tyrosine.ricc2-es2es biphenyl.tddftb naphth.fchk water.ricc2"
@@ -21,8 +22,6 @@ failed = []
 
 class Test2:
     def test_header(self):
-        from theodore import theo_header
-        
         # TODO: use local path rather than THEODIR
         theo_header.print_header('TheoDORE tests')
         warnings.warn("THEODIR: " + os.environ["THEODIR"])
@@ -44,25 +43,28 @@ class Test2:
     def test_openbabel(self):
         try:
             import openbabel
-        except ImportError:
+            print("obabel imported")
+        except:
             warnings.warn("\n python-openbabel not found - skipping openbabel tests")
             skipped.append(obdirs)
-        else:
-            self.run(obdirs)
+            return
+
+        print("Avail: ", lib_struc.obabel_avail)
+        assert lib_struc.obabel_avail
+        self.run(obdirs)
 
     def test_adf(self):
         try:
             from scm.plams import KFFile
-        except ModuleNotFoundError:
+        except:
             try:
                 from kf import kffile as KFFile
-            except ModuleNotFoundError:
+            except:
                 warnings.warn("\n ADF not found - skipping ADF tests")
                 skipped.append(adfdirs)
-            else:
-                self.run(adfdirs)
-        else:
-            self.run(adfdirs)
+                return
+
+        self.run(adfdirs)
 
     def test_summary(self):
         """
@@ -116,7 +118,7 @@ class tjob:
         Check if the files are different.
          line-by-line treatment for txt files, otherwise general diff.
         """
-        errname = "%s/%s"%(self.rdir, runf)
+        wstring = "\n"
         
         ref = open(reff).readlines()
         run = open(runf).readlines()
@@ -125,25 +127,23 @@ class tjob:
             for iline, line in enumerate(ref):
                 if not line == run[iline]:
                     # TODO: one could add numerical thresholds here
-                    # TODO: combine to one warning
-                    warnings.warn("- " + line)
-                    warnings.warn("+ " + run(iline))
-                    if not errname in failed:
-                        failed.append(errname)
+                    wstring += "- " + line
+                    wstring += "+ " + run[iline]
         else:
             diffl = list(difflib.unified_diff(self.diff_ignore(ref), self.diff_ignore(run), fromfile=reff, tofile=runf))
             if len(diffl) > 0:
                 wstring = "\n"
                 for line in diffl:
                     wstring += line
-                warnings.warn(wstring)
-                if not errname in failed:
-                    failed.append(errname)
                  #assert(len(diffl) == 0)
+
+            if not wstring.strip() == '':
+                failed.append("%s/%s"%(self.rdir, runf))
+                warnings.warn(wstring)
 
     def diff_ignore(self, dlist):
         outl = []
-        iglist = ["TheoDORE", "time", "rbkit"]
+        iglist = ["TheoDORE", "time", "rbkit", "openbabel", "capabilities"]
         for line in dlist:
             for ig in iglist:
                 if ig in line:
@@ -163,7 +163,7 @@ class tjob:
         os.chdir(self.path + '/RUN')
         for ifile in sorted(os.listdir('../IN_FILES')):
             print(ifile)
-            shutil.copy("../IN_FILES/"+ifile, 'dens_ana.in')
+            shutil.copy("../IN_FILES/"+ifile, ifile)
             
             finfo = ifile.split('.')
             dtype = finfo[0]
@@ -171,7 +171,7 @@ class tjob:
             comm="analyze_%s.py"%dtype
             
             with open("analyze_%s.out"%atype, 'w') as outf:
-                subprocess.call(comm, stdout=outf)
+                subprocess.check_call([comm, "-f", ifile], stdout=outf)
             # if dtype == 'tden':
             #     sys.argv = ['analyze_tden.py']
             #     import analyze_tden
