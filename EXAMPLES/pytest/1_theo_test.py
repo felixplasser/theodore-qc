@@ -171,7 +171,7 @@ class tjob:
             comm="analyze_%s.py"%dtype
             
             with open("analyze_%s.out"%atype, 'w') as outf:
-                subprocess.run(comm, stdout=outf)
+                subprocess.call(comm, stdout=outf)
             # if dtype == 'tden':
             #     sys.argv = ['analyze_tden.py']
             #     import analyze_tden
