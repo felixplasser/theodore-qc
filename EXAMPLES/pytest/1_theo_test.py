@@ -7,12 +7,17 @@ Activate this by running pytest [-v/-s] in the EXAMPLES directory.
 
 # TODO: Parts of this can be moved into its own library later
 
-import os, shutil, sys, subprocess, difflib
+import os, shutil, sys, subprocess, difflib, warnings
 
-stddirs="pyrrole.qcadc hexatriene.colmrci fa2.ricc2 pv2p.escf pv2p.qctddft pyridine.ricc2 fa2.col fa2.rassi fa2.rassi-libwfa fa2.terachem fa2.dftmrci fa2.cation tyrosine.ricc2-es2es biphenyl.tddftb naphth.fchk water.ricc2"
+stddirs="pyrrole.qcadc hexatriene.colmrci fa2.ricc2 pv2p.escf pv2p.qctddft pyridine.ricc2 fa2.col fa2.rassi-libwfa fa2.terachem fa2.dftmrci fa2.cation tyrosine.ricc2-es2es biphenyl.tddftb naphth.fchk water.ricc2"
 obdirs="ir_c3n3.qctddft"
 cclibdirs="fa2.cclib SnH4-ecp.firefly H2S.orca"
 adfdirs="fa2.adf"
+faildirs="fa2.rassi"
+
+num_run = 0
+skipped = []
+failed = []
 
 def test_header():
     from theodore import theo_header
@@ -32,13 +37,34 @@ def run(rdirs):
 def test_cclib():
     run(cclibdirs)
 
-def test_standard():
-    run(stddirs)
+# def test_standard():
+#     run(stddirs)
+
+def test_summary():
+    """
+    Print the final summary. This is printed as a warning to make it visible.
+    """
+    summ_str = "\n*** Integration tests finished. ***\n"
+    summ_str += "Number of tests run: %i\n"%num_run
+    if len(skipped) == 0:
+        summ_str += "No tests skipped"
+    else:
+        print("Skipped tests:")
+        for skip in skipped:
+            summ_str += skipped + "\n"
+    if len(failed) == 0:
+        summ_str += "No tests failed"
+    else:
+        print("Failed tests:")
+        for fail in failed:
+            summ_str += failed + "\n"
+    warnings.warn(summ_str)
 
 ###
 
 class tjob:
     def __init__(self, rdir):
+        self.rdir = rdir
         self.path = "%s/EXAMPLES/%s"%(os.environ["THEODIR"],rdir)
 
     def prep(self):
@@ -52,12 +78,33 @@ class tjob:
         print("Checking primary output files")
         for rfile in os.listdir('../REF_FILES'):
             print("  -> " + rfile)
-            ref = open('../REF_FILES/'+rfile).readlines()
-            run = open(rfile).readlines()
-            diffl = list(difflib.unified_diff(ref, run, fromfile='Reference', tofile='Current run'))
-            for line in diffl:
-                print(line, end="")
-            assert(len(diffl) == 0)
+            self.file_diff('../REF_FILES/'+rfile, rfile)
+
+    def file_diff(self, reff, runf):
+        """
+        Check if the files are different.
+         line-by-line treatment for txt files, otherwise general diff.
+        """
+        errname = "%s/%s"%(self.rdir, runf)
+        
+        ref = open(reff).readlines()
+        run = open(runf).readlines()
+        suffix = runf.split('.')[-1]
+        if suffix == 'txt':
+            for iline, line in enumerate(ref):
+                if not line == run[iline]:
+                    print("- ", line, end="")
+                    print("+ ", run(iline), end="")
+                    if not errname in failed:
+                        failed.append(errname)
+        else:
+            diffl = list(difflib.unified_diff(ref, run, fromfile='%s (Ref.)'%rfile, tofile='%s (current)'%rfile))
+            if len(diffl) > 0:
+                for line in diffl:
+                    print(line, end="")
+                if not errname in failed:
+                    failed.append(errname)
+                 #assert(len(diffl) == 0)
 
     def run_standard(self):
         """
@@ -66,11 +113,13 @@ class tjob:
         self.prep()
         #shutil.copytree('IN_FILES', 'RUN')
         os.chdir(self.path + '/RUN')
-        for ifile in os.listdir('../IN_FILES'):
+        for ifile in sorted(os.listdir('../IN_FILES')):
             print(ifile)
             shutil.copy("../IN_FILES/"+ifile, 'dens_ana.in')
             
-            (dtype, dummy, atype) = ifile.split('.')
+            finfo = ifile.split('.')
+            dtype = finfo[0]
+            atype = finfo[2]
             comm="analyze_%s.py"%dtype
             
             with open("analyze_%s.out"%atype, 'w') as outf:
