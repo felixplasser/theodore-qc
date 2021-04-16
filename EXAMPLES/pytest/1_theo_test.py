@@ -15,50 +15,81 @@ cclibdirs="fa2.cclib SnH4-ecp.firefly H2S.orca"
 adfdirs="fa2.adf"
 faildirs="fa2.rassi"
 
-num_run = 0
+tests_run = []
 skipped = []
 failed = []
 
-def test_header():
-    from theodore import theo_header
-    
-    # TODO: make sure this is using the correct version here
-    print
-    #theo_header.print_header('TheoDORE tests')
-    print("THEODIR: ", os.environ["THEODIR"])
-    sys.path.append(os.environ["THEODIR"] + "/bin")
+class Test2:
+    def test_header(self):
+        from theodore import theo_header
+        
+        # TODO: use local path rather than THEODIR
+        theo_header.print_header('TheoDORE tests')
+        warnings.warn("THEODIR: " + os.environ["THEODIR"])
+        sys.path.append(os.environ["THEODIR"] + "/bin")
 
-def run(rdirs):
-    print
-    for rdir in rdirs.split():
-        print(" *** Starting test %s ..."%rdir)
-        tjob(rdir).run_standard()
+    def run(self, rdirs):
+        print
+        for rdir in rdirs.split():
+            tests_run.append(rdir)
+            print(" *** Starting test %s ..."%rdir)
+            tjob(rdir).run_standard()
 
-def test_cclib():
-    run(cclibdirs)
+    def test_cclib(self):
+        self.run(cclibdirs)
 
-# def test_standard():
-#     run(stddirs)
+    def test_standard(self):
+        self.run(stddirs)
 
-def test_summary():
-    """
-    Print the final summary. This is printed as a warning to make it visible.
-    """
-    summ_str = "\n*** Integration tests finished. ***\n"
-    summ_str += "Number of tests run: %i\n"%num_run
-    if len(skipped) == 0:
-        summ_str += "No tests skipped"
-    else:
-        print("Skipped tests:")
-        for skip in skipped:
-            summ_str += skipped + "\n"
-    if len(failed) == 0:
-        summ_str += "No tests failed"
-    else:
-        print("Failed tests:")
-        for fail in failed:
-            summ_str += failed + "\n"
-    warnings.warn(summ_str)
+    def test_openbabel(self):
+        try:
+            import openbabel
+        except ImportError:
+            warnings.warn("\n python-openbabel not found - skipping openbabel tests")
+            skipped.append(obdirs)
+        else:
+            self.run(obdirs)
+
+    def test_adf(self):
+        try:
+            from scm.plams import KFFile
+        except ModuleNotFoundError:
+            try:
+                from kf import kffile as KFFile
+            except ModuleNotFoundError:
+                warnings.warn("\n ADF not found - skipping ADF tests")
+                skipped.append(adfdirs)
+            else:
+                self.run(adfdirs)
+        else:
+            self.run(adfdirs)
+
+    def test_summary(self):
+        """
+        Print the final summary. This is printed to pytest.out.
+        """
+        summ_str = "*** Integration tests finished. ***\n"
+        summ_str += "Number of tests run: %i\n"%len(tests_run)
+        if len(skipped) == 0:
+            summ_str += "No tests skipped.\n"
+        else:
+            summ_str += " -> Skipped tests:\n"
+            for skip in skipped:
+                summ_str += skip + "\n"
+        if len(failed) == 0:
+            summ_str += "No tests failed.\n"
+        else:
+            summ_str += " -> Failed tests:\n"
+            for fail in failed:
+                summ_str += fail + "\n"
+        with open("%s/EXAMPLES/pytest.out"%(os.environ["THEODIR"]), 'w') as pout:
+            pout.write(summ_str)
+
+    def test_failed(self):
+        """
+        Raise an error messages if there were differences in any tests.
+        """
+        assert len(failed) == 0
 
 ###
 
@@ -93,25 +124,42 @@ class tjob:
         if suffix == 'txt':
             for iline, line in enumerate(ref):
                 if not line == run[iline]:
-                    print("- ", line, end="")
-                    print("+ ", run(iline), end="")
+                    # TODO: one could add numerical thresholds here
+                    # TODO: combine to one warning
+                    warnings.warn("- " + line)
+                    warnings.warn("+ " + run(iline))
                     if not errname in failed:
                         failed.append(errname)
         else:
-            diffl = list(difflib.unified_diff(ref, run, fromfile='%s (Ref.)'%rfile, tofile='%s (current)'%rfile))
+            diffl = list(difflib.unified_diff(self.diff_ignore(ref), self.diff_ignore(run), fromfile=reff, tofile=runf))
             if len(diffl) > 0:
+                wstring = "\n"
                 for line in diffl:
-                    print(line, end="")
+                    wstring += line
+                warnings.warn(wstring)
                 if not errname in failed:
                     failed.append(errname)
                  #assert(len(diffl) == 0)
 
+    def diff_ignore(self, dlist):
+        outl = []
+        iglist = ["TheoDORE", "time", "rbkit"]
+        for line in dlist:
+            for ig in iglist:
+                if ig in line:
+                    break
+                elif line.strip() == "":
+                    break
+            else:
+                outl.append(line)
+        return outl
+
     def run_standard(self):
         """
         Run tests in standard format.
+        TODO: one can include custom bash files here
         """
         self.prep()
-        #shutil.copytree('IN_FILES', 'RUN')
         os.chdir(self.path + '/RUN')
         for ifile in sorted(os.listdir('../IN_FILES')):
             print(ifile)
