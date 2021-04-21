@@ -1,0 +1,131 @@
+axes location Off
+display projection Orthographic
+display depthcue off
+color Display Background white
+menu graphics on
+mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
+# Uncomment to hide hydrogens
+# mol modselect 0 0 not element H
+
+# Use this for rings
+mol addrep 0
+mol modstyle 1 0 PaperChain 0.050000 10.000000
+mol modmaterial 1 0 Glass3
+draw delete all
+
+draw color blue
+draw cylinder {-0.659  0.000  0.000} { 0.659  0.000  0.000} radius  0.100
+draw sphere { 0.659  0.000  0.000} radius  0.132
+draw sphere {-0.659  0.000  0.000} radius  0.132
+draw color blue
+draw cylinder { 0.000 -0.659  0.000} { 0.000  0.659  0.000} radius  0.100
+draw sphere { 0.000  0.659  0.000} radius  0.132
+draw sphere { 0.000 -0.659  0.000} radius  0.132
+draw color red
+draw cylinder { 0.000  0.000 -0.994} { 0.000  0.000  0.994} radius  0.100
+draw sphere { 0.000  0.000  0.994} radius  0.199
+draw sphere { 0.000  0.000 -0.994} radius  0.199
+render TachyonInternal P0.tga
+draw delete all
+
+draw color blue
+draw cylinder {-0.239  0.553  1.000} { 0.239 -0.553  1.000} radius  0.100
+draw sphere { 0.239 -0.553  1.000} radius  0.120
+draw sphere {-0.239  0.553  1.000} radius  0.120
+draw color blue
+draw cylinder {-0.208 -0.518  1.000} { 0.208  0.518  1.000} radius  0.100
+draw sphere { 0.208  0.518  1.000} radius  0.112
+draw sphere {-0.208 -0.518  1.000} radius  0.112
+draw color red
+draw cylinder { 0.000  0.000  0.094} { 0.000  0.000  1.906} radius  0.100
+draw sphere { 0.000  0.000  1.906} radius  0.181
+draw sphere { 0.000  0.000  0.094} radius  0.181
+render TachyonInternal P1.tga
+draw delete all
+
+draw color blue
+draw cylinder { 0.518 -0.208 -1.000} {-0.518  0.208 -1.000} radius  0.100
+draw sphere {-0.518  0.208 -1.000} radius  0.112
+draw sphere { 0.518 -0.208 -1.000} radius  0.112
+draw color blue
+draw cylinder { 0.553  0.239 -1.000} {-0.553 -0.239 -1.000} radius  0.100
+draw sphere {-0.553 -0.239 -1.000} radius  0.120
+draw sphere { 0.553  0.239 -1.000} radius  0.120
+draw color red
+draw cylinder { 0.000  0.000 -1.906} { 0.000  0.000 -0.094} radius  0.100
+draw sphere { 0.000  0.000 -0.094} radius  0.181
+draw sphere { 0.000  0.000 -1.906} radius  0.181
+render TachyonInternal P2.tga
+draw delete all
+
+draw color blue
+draw cylinder { 1.375  2.473 -0.087} { 2.267  4.068 -0.076} radius  0.100
+draw sphere { 2.267  4.068 -0.076} radius  0.183
+draw sphere { 1.375  2.473 -0.087} radius  0.183
+draw color blue
+draw cylinder { 1.079  3.680 -0.076} { 2.563  2.862 -0.088} radius  0.100
+draw sphere { 2.563  2.862 -0.088} radius  0.169
+draw sphere { 1.079  3.680 -0.076} radius  0.169
+draw color blue
+draw cylinder { 1.832  3.295 -0.513} { 1.810  3.247  0.350} radius  0.100
+draw sphere { 1.810  3.247  0.350} radius  0.100
+draw sphere { 1.832  3.295 -0.513} radius  0.100
+render TachyonInternal P3.tga
+draw delete all
+
+draw color blue
+draw cylinder { 2.055  3.597  0.042} { 0.921  1.951 -1.809} radius  0.100
+draw sphere { 0.921  1.951 -1.809} radius  0.272
+draw sphere { 2.055  3.597  0.042} radius  0.272
+draw color blue
+draw cylinder { 1.932  2.500 -0.907} { 1.045  3.049 -0.860} radius  0.100
+draw sphere { 1.045  3.049 -0.860} radius  0.104
+draw sphere { 1.932  2.500 -0.907} radius  0.104
+render TachyonInternal P4.tga
+draw delete all
+
+draw color blue
+draw cylinder { 2.725  4.615  1.783} { 1.582  2.920 -0.343} radius  0.100
+draw sphere { 1.582  2.920 -0.343} radius  0.295
+draw sphere { 2.725  4.615  1.783} radius  0.295
+draw color blue
+draw cylinder { 2.598  3.456  0.727} { 1.708  4.079  0.713} radius  0.100
+draw sphere { 1.708  4.079  0.713} radius  0.109
+draw sphere { 2.598  3.456  0.727} radius  0.109
+draw color blue
+draw cylinder { 2.319  4.027  0.461} { 1.987  3.508  0.979} radius  0.100
+draw sphere { 1.987  3.508  0.979} radius  0.100
+draw sphere { 2.319  4.027  0.461} radius  0.100
+render TachyonInternal P5.tga
+draw delete all
+
+draw color red
+draw cylinder { 3.447  0.737 -1.620} { 3.517  1.215  1.397} radius  0.100
+draw sphere { 3.517  1.215  1.397} radius  0.306
+draw sphere { 3.447  0.737 -1.620} radius  0.306
+draw color blue
+draw cylinder { 2.859  0.859 -0.070} { 4.105  1.093 -0.152} radius  0.100
+draw sphere { 4.105  1.093 -0.152} radius  0.127
+draw sphere { 2.859  0.859 -0.070} radius  0.127
+draw color blue
+draw cylinder { 3.241  1.807 -0.089} { 3.723  0.145 -0.133} radius  0.100
+draw sphere { 3.723  0.145 -0.133} radius  0.173
+draw sphere { 3.241  1.807 -0.089} radius  0.173
+render TachyonInternal P6.tga
+draw delete all
+
+draw color red
+draw cylinder {-3.517 -1.215  1.397} {-3.447 -0.737 -1.620} radius  0.100
+draw sphere {-3.447 -0.737 -1.620} radius  0.306
+draw sphere {-3.517 -1.215  1.397} radius  0.306
+draw color blue
+draw cylinder {-4.105 -1.093 -0.152} {-2.859 -0.859 -0.070} radius  0.100
+draw sphere {-2.859 -0.859 -0.070} radius  0.127
+draw sphere {-4.105 -1.093 -0.152} radius  0.127
+draw color blue
+draw cylinder {-3.241 -1.807 -0.089} {-3.723 -0.145 -0.133} radius  0.100
+draw sphere {-3.723 -0.145 -0.133} radius  0.173
+draw sphere {-3.241 -1.807 -0.089} radius  0.173
+render TachyonInternal P7.tga
+draw delete all
+

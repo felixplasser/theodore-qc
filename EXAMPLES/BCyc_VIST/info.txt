@@ -1,3 +1,4 @@
 Test for the VIST method on paracyclophane-tetraene
-command:
+commands:
+  plot_VIST.py -p -o simple.vmd neutral.log > run_simple.out
   plot_VIST.py -c -v '0 4' neutral.log triplet.log 2M.log > run_VIST.out
