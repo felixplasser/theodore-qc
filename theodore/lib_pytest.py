@@ -54,7 +54,7 @@ class pytest_job:
             self.file_diff('../REF_FILES/'+rfile, rfile)
 
         if len(self.wstring) > 0:
-            raise pytestDiffError(self.wstring)
+            raise pytestDiffError(self.epath + '\n\n' + self.wstring)
 
     def file_diff(self, reff, runf):
         """
@@ -65,13 +65,16 @@ class pytest_job:
         
         ref = open(reff).readlines()
         run = open(runf).readlines()
-        suffix = runf.split('.')[-1]
-        if suffix == 'txt':
+#        suffix = runf.split('.')[-1]
+
+        # These files should match line-by-line
+        if '.txt' in runf:
             for iline, line in enumerate(ref):
                 if not line == run[iline]:
                     # TODO: one could add numerical thresholds here
                     self.wstring += "- " + line
                     self.wstring += "+ " + run[iline]
+        # Use a general diff here
         else:
             diffl = list(difflib.unified_diff(self.diff_ignore(ref), self.diff_ignore(run), fromfile=reff, tofile=runf))
             if len(diffl) > 0:
