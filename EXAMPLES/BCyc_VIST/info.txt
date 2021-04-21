@@ -1,0 +1,3 @@
+Test for the VIST method on paracyclophane-tetraene
+command:
+  plot_VIST.py -c -v '0 4' neutral.log triplet.log 2M.log > run_VIST.out
