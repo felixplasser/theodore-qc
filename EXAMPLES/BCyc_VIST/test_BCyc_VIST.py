@@ -4,7 +4,7 @@ import os, subprocess
 from theodore import lib_pytest
 
 def test_BCyc_VIST():
-    pjob = lib_pytest.pytest_job("BCyc_VIST")
+    pjob = lib_pytest.pytest_job(__file__)
 
     with open("run_simple.out", 'w') as outf:
         comm = ['plot_VIST.py', '-p', '-o', 'simple.vmd', 'neutral.log']
