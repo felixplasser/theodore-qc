@@ -7,8 +7,8 @@ Activate this by running pytest [-v/-s] in the EXAMPLES directory.
 
 # TODO: Parts of this can be moved into its own library later
 
-from theodore import theo_header, lib_struc
-import os, shutil, sys, subprocess, difflib, warnings
+from theodore import theo_header, lib_struc, lib_pytest
+import os, sys, warnings
 
 stddirs="pyrrole.qcadc hexatriene.colmrci fa2.ricc2 pv2p.escf pv2p.qctddft pyridine.ricc2 fa2.col fa2.rassi-libwfa fa2.terachem fa2.dftmrci fa2.cation tyrosine.ricc2-es2es biphenyl.tddftb naphth.fchk water.ricc2"
 obdirs="ir_c3n3.qctddft"
@@ -28,18 +28,19 @@ class Test2:
         sys.path.append(os.environ["THEODIR"] + "/bin")
 
     def run(self, rdirs):
-        print
+        pjob = lib_pytest.pytest_job()
         for rdir in rdirs.split():
             tests_run.append(rdir)
             print(" *** Starting test %s ..."%rdir)
-            tjob(rdir).run_standard()
+            pjob.run_standard(rdir)
+        pjob.finalise()
 
     def test_cclib(self):
         self.run(cclibdirs)
 
     def test_standard(self):
         self.run(stddirs)
-
+    
     def test_openbabel(self):
         try:
             import openbabel
@@ -48,9 +49,7 @@ class Test2:
             warnings.warn("\n python-openbabel not found - skipping openbabel tests")
             skipped.append(obdirs)
             return
-
-        print("Avail: ", lib_struc.obabel_avail)
-        assert lib_struc.obabel_avail
+    
         self.run(obdirs)
 
     def test_adf(self):
@@ -92,88 +91,3 @@ class Test2:
         Raise an error messages if there were differences in any tests.
         """
         assert len(failed) == 0
-
-###
-
-class tjob:
-    def __init__(self, rdir):
-        self.rdir = rdir
-        self.path = "%s/EXAMPLES/%s"%(os.environ["THEODIR"],rdir)
-
-    def prep(self):
-        os.chdir(self.path)
-        if os.path.exists('RUN'):
-            shutil.rmtree('RUN')
-        shutil.copytree('QC_FILES', 'RUN')
-
-    def check(self):
-        os.chdir(self.path + '/RUN')
-        print("Checking primary output files")
-        for rfile in os.listdir('../REF_FILES'):
-            print("  -> " + rfile)
-            self.file_diff('../REF_FILES/'+rfile, rfile)
-
-    def file_diff(self, reff, runf):
-        """
-        Check if the files are different.
-         line-by-line treatment for txt files, otherwise general diff.
-        """
-        wstring = "\n"
-        
-        ref = open(reff).readlines()
-        run = open(runf).readlines()
-        suffix = runf.split('.')[-1]
-        if suffix == 'txt':
-            for iline, line in enumerate(ref):
-                if not line == run[iline]:
-                    # TODO: one could add numerical thresholds here
-                    wstring += "- " + line
-                    wstring += "+ " + run[iline]
-        else:
-            diffl = list(difflib.unified_diff(self.diff_ignore(ref), self.diff_ignore(run), fromfile=reff, tofile=runf))
-            if len(diffl) > 0:
-                wstring = "\n"
-                for line in diffl:
-                    wstring += line
-                 #assert(len(diffl) == 0)
-
-            if not wstring.strip() == '':
-                failed.append("%s/%s"%(self.rdir, runf))
-                warnings.warn(wstring)
-
-    def diff_ignore(self, dlist):
-        outl = []
-        iglist = ["TheoDORE", "time", "rbkit", "openbabel", "capabilities"]
-        for line in dlist:
-            for ig in iglist:
-                if ig in line:
-                    break
-                elif line.strip() == "":
-                    break
-            else:
-                outl.append(line)
-        return outl
-
-    def run_standard(self):
-        """
-        Run tests in standard format.
-        TODO: one can include custom bash files here
-        """
-        self.prep()
-        os.chdir(self.path + '/RUN')
-        for ifile in sorted(os.listdir('../IN_FILES')):
-            print(ifile)
-            shutil.copy("../IN_FILES/"+ifile, ifile)
-            
-            finfo = ifile.split('.')
-            dtype = finfo[0]
-            atype = finfo[2]
-            comm="analyze_%s.py"%dtype
-            
-            with open("analyze_%s.out"%atype, 'w') as outf:
-                subprocess.check_call([comm, "-f", ifile], stdout=outf)
-            # if dtype == 'tden':
-            #     sys.argv = ['analyze_tden.py']
-            #     import analyze_tden
-
-        self.check()
