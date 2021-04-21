@@ -8,19 +8,19 @@ class pytest_job:
     """
     Run and check job in EXAMPLES directory using pytest.
     """
-    def __init__(self):
+    def __init__(self, rdir=None):
         self.wstring = ''
+        self.theodir = "%s/EXAMPLES"%os.environ["THEODIR"]
+        if not rdir is None:
+            self.prep(rdir)
 
     def run_standard(self, rdir):
         """
         Run tests in standard format.
         TODO: one can include custom bash files here
         """
-        epath = "%s/EXAMPLES/%s"%(os.environ["THEODIR"],rdir)
+        self.prep(rdir)
 
-        self.prep(epath)
-
-        os.chdir(epath + '/RUN')
         for ifile in sorted(os.listdir('../IN_FILES')):
             print(ifile)
             shutil.copy("../IN_FILES/"+ifile, ifile)
@@ -36,7 +36,7 @@ class pytest_job:
             #     sys.argv = ['analyze_tden.py']
             #     import analyze_tden
 
-        self.check(epath)
+        self.check()
 
     def finalise(self):
         """
@@ -45,18 +45,29 @@ class pytest_job:
         if len(self.wstring) > 0:
             raise pytestDiffError(self.wstring)
 
-    def prep(self, epath):
-        os.chdir(epath)
+    def prep(self, rdir):
+        self.epath = os.path.join(self.theodir, rdir)
+        os.chdir(self.epath)
         if os.path.exists('RUN'):
             shutil.rmtree('RUN')
         shutil.copytree('QC_FILES', 'RUN')
+        os.chdir(self.epath + '/RUN')
 
-    def check(self, epath):
-        os.chdir(epath + '/RUN')
+    def check(self, strict=True):
+        """
+        Check if there are any differences.
+        If strict is True, an error is raised if differences are found.
+            Otherwise, use finalise.
+        """
+        os.chdir(self.epath + '/RUN')
         print("Checking primary output files")
         for rfile in os.listdir('../REF_FILES'):
             print("  -> " + rfile)
             self.file_diff('../REF_FILES/'+rfile, rfile)
+
+        if strict:
+            if len(self.wstring) > 0:
+                raise pytestDiffError(self.wstring)
 
     def file_diff(self, reff, runf):
         """
@@ -99,4 +110,4 @@ class pytestDiffError(Exception):
         self.errmsg = errmsg
         
     def __str__(self):
-        return "\n\n  pytest detected difference to reference results:\n %s"%self.errmsg
+        return "\n\n *** pytest detected difference to reference results: ***\n\n %s"%self.errmsg

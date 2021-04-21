@@ -3,6 +3,8 @@
 """
 Integration tests for TheoDORE.
 Activate this by running pytest [-v/-s] in the EXAMPLES directory.
+This is an emulation of the older script theo_test.bash
+  - There are also additional testing scripts in the individual folders.
 """
 
 # TODO: Parts of this can be moved into its own library later
