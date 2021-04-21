@@ -8,19 +8,17 @@ class pytest_job:
     """
     Run and check job in EXAMPLES directory using pytest.
     """
-    def __init__(self, rdir=None):
+    def __init__(self, cfile):
         self.wstring = ''
-        self.theodir = "%s/EXAMPLES"%os.environ["THEODIR"]
-        if not rdir is None:
-            self.prep(rdir)
+        self.epath = os.path.dirname(os.path.abspath(cfile))
+        self.prep()
 
-    def run_standard(self, rdir):
+    def run_standard(self):
         """
         Run tests in standard format.
         TODO: one can include custom bash files here
         """
-        self.prep(rdir)
-
+        os.chdir(self.epath + '/RUN')
         for ifile in sorted(os.listdir('../IN_FILES')):
             print(ifile)
             shutil.copy("../IN_FILES/"+ifile, ifile)
@@ -38,26 +36,16 @@ class pytest_job:
 
         self.check()
 
-    def finalise(self):
-        """
-        Raise an error if any differences to the reference files are detected.
-        """
-        if len(self.wstring) > 0:
-            raise pytestDiffError(self.wstring)
-
-    def prep(self, rdir):
-        self.epath = os.path.join(self.theodir, rdir)
+    def prep(self):
         os.chdir(self.epath)
         if os.path.exists('RUN'):
             shutil.rmtree('RUN')
         shutil.copytree('QC_FILES', 'RUN')
         os.chdir(self.epath + '/RUN')
 
-    def check(self, strict=True):
+    def check(self):
         """
         Check if there are any differences.
-        If strict is True, an error is raised if differences are found.
-            Otherwise, use finalise.
         """
         os.chdir(self.epath + '/RUN')
         print("Checking primary output files")
@@ -65,9 +53,8 @@ class pytest_job:
             print("  -> " + rfile)
             self.file_diff('../REF_FILES/'+rfile, rfile)
 
-        if strict:
-            if len(self.wstring) > 0:
-                raise pytestDiffError(self.wstring)
+        if len(self.wstring) > 0:
+            raise pytestDiffError(self.wstring)
 
     def file_diff(self, reff, runf):
         """
