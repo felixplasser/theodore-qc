@@ -1,11 +1,12 @@
 from __future__ import print_function, division
+import os
 
 width=80
 
 def print_header(*args, **kwargs):
     print((ret_header(*args, **kwargs)))
 
-def ret_header(title=None, ioptions=None, ver='2.3'):
+def ret_header(title=None, ioptions=None, cfile=None, ver='2.4'):
     hstr  = width*'=' + '\n'
 
     hstr += addlinec("TheoDORE %s"%ver)
@@ -19,21 +20,13 @@ def ret_header(title=None, ioptions=None, ver='2.3'):
 
     hstr += addlinec("References for the modules used")
     hstr += addlinec("(see also http://theodore-qc.sourceforge.net/literature.html)")
-    hstr += addlinec()
-    hstr += addlinel("Transition density matrix analysis:", 3)
-    hstr += addlinel("F. Plasser and H. Lischka")
-    hstr += addlinel("J. Chem. Theory Comput. (2012), 8, 2777.")
-    hstr += addlinec()
-    hstr += addlinel("Transition and difference density matrix analysis:", 3)
-    hstr += addlinel("F. Plasser, M. Wormit, A. Dreuw")
-    hstr += addlinel("J. Chem. Phys. (2014), 141, 024106.")
-#    hstr += addlinel("F. Plasser, S. A. Baeppler, M. Wormit, A. Dreuw")
-#    hstr += addlinel("J. Chem. Phys. (2014), 141, 024107.")
 
+    hstr += add_stden(cfile)
     hstr += add_exciton(ioptions)
     hstr += add_entanglement(ioptions)
     hstr += add_cclib(ioptions)
     hstr += add_orbkit(ioptions)
+    hstr += add_VIST(cfile)
 
     hstr += addlinec()
     hstr += addlinel("Program citation:", 3)
@@ -55,6 +48,25 @@ def addlinec(line=""):
 
 def addlinel(line="", lpad=5):
     return "|" + lpad*' ' + line.ljust(width-2-lpad) + "|\n"
+
+def add_stden(cfile):
+    try:
+        cfileb = os.path.basename(cfile)
+    except TypeError:
+        return ''
+
+    rstr = ''
+    if cfileb in ['analyze_tden.py', 'analyze_sden.py']:
+        rstr += addlinec()
+        rstr += addlinel("Transition density matrix analysis:", 3)
+        rstr += addlinel("F. Plasser and H. Lischka")
+        rstr += addlinel("J. Chem. Theory Comput. (2012), 8, 2777.")
+        rstr += addlinec()
+        rstr += addlinel("Transition and difference density matrix analysis:", 3)
+        rstr += addlinel("F. Plasser, M. Wormit, A. Dreuw")
+        rstr += addlinel("J. Chem. Phys. (2014), 141, 024106.")
+
+    return rstr
 
 def add_exciton(ioptions):
     try:
@@ -134,5 +146,20 @@ def add_orbkit(ioptions):
         rstr += addlinel("orbkit for orbital/density plotting (http://orbkit.github.io):", 3)
         rstr += addlinel("G. Hermann, V. Pohl, J. C. Tremblay, B. Paulus, H.-C. Hege, A. Schild")
         rstr += addlinel("J. Comput. Chem. (2016), 37, 1511.")
+
+    return rstr
+
+def add_VIST(cfile):
+    try:
+        cfileb = os.path.basename(cfile)
+    except TypeError:
+        return ''
+
+    rstr = ''
+    if cfileb in ['plot_VIST.py']:
+        rstr += addlinec()
+        rstr += addlinel("Visualization of chemical shielding tensors (VIST):", 3)
+        rstr += addlinel("F. Plasser, F. Gloecklhofer")
+        rstr += addlinel("Eur. J. Org. Chem. (2021), DOI: 10.1002/ejoc.202100352.")
 
     return rstr

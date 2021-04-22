@@ -8,7 +8,7 @@ import os, sys
 
 from theodore import theo_header, lib_sden, input_options
 
-theo_header.print_header('State density matrix analysis')
+theo_header.print_header('State density matrix analysis', cfile=__file__)
 
 def ihelp():
     print(" analyze_sden.py\n")

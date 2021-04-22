@@ -17,7 +17,7 @@ def ihelp():
     print("  -p            : Render and plot all tensors separately")
     exit(0)
 
-theo_header.print_header('Read NICS values and prepare VIST plot')
+theo_header.print_header('Read NICS values and prepare VIST plot', cfile=__file__)
 
 vlist = None
 logfiles = []
