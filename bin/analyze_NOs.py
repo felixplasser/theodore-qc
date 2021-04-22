@@ -9,7 +9,7 @@ import sys
 from theodore import theo_header, lib_sden, input_options
 
 
-theo_header.print_header('NO file analysis')
+theo_header.print_header('NO file analysis', cfile=__file__)
 
 def ihelp():
     print(" analyze_NOs.py <MO_file> [<NO_file_ref> <NO_file2> ...]\n")

@@ -49,7 +49,7 @@ if not os.path.exists(ifile):
     ihelp()
 
 ioptions = input_options.tden_ana_options(ifile)
-theo_header.print_header('Transition density matrix analysis (UHF/UKS)', ioptions=ioptions)
+theo_header.print_header('Transition density matrix analysis (UHF/UKS)', ioptions=ioptions, cfile=__file__)
 
 ioptions['jmol_orbitals'] = False
 

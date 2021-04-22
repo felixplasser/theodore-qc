@@ -50,13 +50,13 @@ def addlinel(line="", lpad=5):
     return "|" + lpad*' ' + line.ljust(width-2-lpad) + "|\n"
 
 def add_stden(cfile):
-    try:
+    if not cfile is None:
         cfileb = os.path.basename(cfile)
-    except TypeError:
+    else:
         return ''
 
     rstr = ''
-    if cfileb in ['analyze_tden.py', 'analyze_sden.py']:
+    if 'analyze' in cfileb:
         rstr += addlinec()
         rstr += addlinel("Transition density matrix analysis:", 3)
         rstr += addlinel("F. Plasser and H. Lischka")
@@ -150,9 +150,9 @@ def add_orbkit(ioptions):
     return rstr
 
 def add_VIST(cfile):
-    try:
+    if not cfile is None:
         cfileb = os.path.basename(cfile)
-    except TypeError:
+    else:
         return ''
 
     rstr = ''
