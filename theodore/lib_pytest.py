@@ -3,6 +3,28 @@ General tools for using pytest.
 """
 
 import os, shutil, subprocess, difflib
+import io
+import sys
+from contextlib import contextmanager
+
+
+class StringIO_(io.StringIO):
+
+    def read(self):
+        pos = super().tell()
+        super().seek(0)
+        result = super().read()
+        super().seek(pos)
+        return result
+
+
+@contextmanager
+def mock_stdout():
+    old = sys.stdout
+    sys.stdout = StringIO_()
+    yield sys.stdout
+    sys.stdout = old
+
 
 class pytest_job:
     """
@@ -94,6 +116,7 @@ class pytest_job:
             else:
                 outl.append(line)
         return outl
+
 
 class pytestDiffError(Exception):
     def __init__(self, errmsg):
