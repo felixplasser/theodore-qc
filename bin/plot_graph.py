@@ -4,7 +4,7 @@ Script for creating graphs from multiple directories, e.g. potential curves.
 """
 
 from __future__ import print_function, division
-from theodore import theo_header, lib_plot
+from .. import theo_header, lib_plot
         
 def run_plot():
     infilen = 'graph.in'
@@ -29,7 +29,6 @@ def run_plot():
     if popt['dotxt']:   popt.txt_files()
     if popt['dognu']:   popt.gnu_inp()
     
-if __name__ == '__main__':
+def plot_graph():
     theo_header.print_header('Graph plotting')
-    
     run_plot()

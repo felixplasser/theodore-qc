@@ -1,9 +1,8 @@
-#!/usr/bin/env python3
 """
 Input generation for TheoDORE runs.
 """
 from __future__ import print_function, division
-from theodore import theo_header, input_options, lib_struc, error_handler, orbkit_interface
+from .. import theo_header, input_options, lib_struc, error_handler, orbkit_interface
 import os
 
 class write_options_theo(input_options.write_options):
@@ -472,7 +471,7 @@ def run_theoinp():
     if wopt['rtype'] == 'colmcscf':
         print("\nNow, please run write_den.bash to prepare the MCSCF density matrices!")
 
-if __name__ == '__main__':
-    theo_header.print_header('Input generation')
 
+def theoinp():
+    theo_header.print_header('Input generation')
     run_theoinp()

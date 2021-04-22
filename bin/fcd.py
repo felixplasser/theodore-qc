@@ -5,7 +5,7 @@ Perform a fragment charge difference analysis, following
 """
 
 from __future__ import print_function, division
-from theodore import theo_header, input_options,  error_handler, lib_diab
+from .. import theo_header, input_options,  error_handler, lib_diab
 import sys, os, numpy
 
 def ihelp():
@@ -15,7 +15,7 @@ def ihelp():
     print("  -ifile, -f [dens_ana.in]: name of the input file")
     exit(0)
 
-if __name__ == '__main__':
+def fcd():
     theo_header.print_header('Fragment charge difference analysis')
 
     ifile = 'fcd.in'

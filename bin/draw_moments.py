@@ -4,8 +4,9 @@ Plot arrows for dipole and quadrupole moments.
 """
 
 from __future__ import print_function, division
+import sys
 import numpy
-from theodore import theo_header, units, lib_file, input_options, error_handler
+from .. import theo_header, units, lib_file, input_options, error_handler
 
 class mom_options(input_options.write_options):
     def input(self):
@@ -160,9 +161,8 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
             self.af.write('draw color red\n')
             return True
 
-if __name__=='__main__':
-    import sys
 
+def draw_moments():
     theo_header.print_header('Plotting of dipole and quadrupole moments')
     print('draw_moments.py <tden_summ>')
     if len(sys.argv) < 2:

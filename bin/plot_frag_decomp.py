@@ -4,7 +4,7 @@ Script for plotting fragment decomposition.
 """
 
 from __future__ import print_function, division
-from theodore import theo_header, input_options, error_handler
+from .. import theo_header, input_options, error_handler
 import numpy
 
 try:
@@ -112,7 +112,6 @@ def run_plot():
     opt.plot()
 
 
-if __name__ == '__main__':
+def plot_frag_decomp():
     theo_header.print_header('Plot fragment decomposition')
-
     run_plot()

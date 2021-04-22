@@ -4,7 +4,7 @@ Convert the TheoDORE output data to a table in latex or html format.
 """
 
 from __future__ import print_function, division
-from theodore import theo_header, input_options, lib_file, error_handler
+from .. import theo_header, input_options, lib_file, error_handler
 
 import os
 
@@ -105,7 +105,7 @@ def run_table():
     if not copy:
         topt.flush()
 
-if __name__ == '__main__':
+
+def convert_table():
     theo_header.print_header('Table conversion')
-    
     run_table()

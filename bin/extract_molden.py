@@ -3,17 +3,8 @@
 from __future__ import print_function, division
 import os, sys
 import numpy
-from theodore import theo_header, lib_mo, error_handler
+from .. import theo_header, lib_mo, error_handler
 
-theo_header.print_header('Extract molden files')
-
-print("""\
-usage: Extract the hole/particle components out of a molden file
-syntax: extract_molden.py <mo_file1> [<mo_file2> ...]
-options: -ene          - interpret energies as occupations
-         -thresh=0.001 - threshold for print-out
-         -alphabeta    - use alpha/beta labels for hole/electron
-""")
 
 class extract_mld:
     def __init__(self, thresh=0.001, rd_ene=False, decompose=True):
@@ -106,7 +97,19 @@ class extract_mld:
         mos.export_AO(ens, occs, Ct, fname=outfile, occmin=self.thresh, alphabeta=True)
         print("  ... %s written, containing %i orbitals."%(outfile, len(ens)))
 
-if __name__=='__main__':
+def header():
+    theo_header.print_header('Extract molden files')
+
+    print("""\
+usage: Extract the hole/particle components out of a molden file
+syntax: extract_molden.py <mo_file1> [<mo_file2> ...]
+options: -ene          - interpret energies as occupations
+         -thresh=0.001 - threshold for print-out
+         -alphabeta    - use alpha/beta labels for hole/electron
+    """)
+
+def extract_molden():
+    header()
     extr = extract_mld()
     mo_files = []
 

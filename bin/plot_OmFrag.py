@@ -4,7 +4,7 @@ Script for plotting the Omega matrix as a pseudocolor matrix plot.
 """
 
 from __future__ import print_function, division
-from theodore import theo_header, input_options, lib_file, error_handler
+from .. import theo_header, input_options, lib_file, error_handler
 import numpy
 import os
 
@@ -215,7 +215,6 @@ def run_plot():
     Oopt.plot()
 
 
-if __name__ == '__main__':
+def plot_omfrag():
     theo_header.print_header('Plot Omega matrices')
-
     run_plot()

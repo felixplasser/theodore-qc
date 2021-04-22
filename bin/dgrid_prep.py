@@ -1,12 +1,8 @@
 #!/usr/bin/env python3
 
 from __future__ import print_function, division
-from theodore import theo_header, input_options, sys
+from .. import theo_header, input_options, sys
 
-print("""\
-usage: Prepare input for DGRid
-syntax: dgrid_prep.py <mo_file1> [<mo_file2> ...]
-""")
 
 class dgrid_options(input_options.write_options):
     def input(self):
@@ -63,6 +59,11 @@ mesh=%.4f %.2f\n"""%(bfilen, dopt['msize'], dopt['mborder']))
     wfile.close()
     print("File run_dgrid.bash written.\n  Run as:\n  bash run_dgrid.bash")
 
-if __name__=='__main__':
+
+def dgrid_prep():
+    print("""\
+usage: Prepare input for DGRid
+syntax: dgrid_prep.py <mo_file1> [<mo_file2> ...]
+    """)
     theo_header.print_header('Prepare input for DGrid')
     run()

@@ -1,11 +1,10 @@
-#!/usr/bin/env python3
 """
 Script for analyzing correlations in OmFrag files
 Author: Sebastian Mai
 """
 
 from __future__ import print_function, division
-from theodore import theo_header, input_options, lib_file, error_handler, lib_struc
+from .. import theo_header, input_options, lib_file, error_handler, lib_struc
 import numpy
 import os
 import math
@@ -1001,9 +1000,6 @@ class AnCorr_options(input_options.write_options):
         string='%s!%i!%s' % (colors_all[big+1],int(small*100),colors_all[big])
         return string
 
-
-
-
 # =======================================================================
 # =======================================================================
 # =======================================================================
@@ -1021,7 +1017,7 @@ def run_plot():
     if anOm.opt_dict['dolatex']:
         anOm.create_latex(anOm.output_h, anOm.output_e, anOm.output_m)
 
-if __name__ == '__main__':
-    theo_header.print_header('Correlation analysis and clustering of Omega matrices ')
 
+def analyze_correlations():
+    theo_header.print_header('Correlation analysis and clustering of Omega matrices ')
     run_plot()

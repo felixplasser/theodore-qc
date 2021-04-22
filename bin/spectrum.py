@@ -4,8 +4,9 @@ Create a convoluted spectrum from the oscillator strengths.
 """
 
 from __future__ import print_function, division
+import sys
 import math, numpy
-from theodore import theo_header, units, lib_file, input_options, error_handler
+from .. import theo_header, units, lib_file, input_options, error_handler
 
 do_plots = True
 try:
@@ -201,9 +202,7 @@ class spectrum:
         if lvprt >= 1:
             print("Spectrum file %s created."%pname)
 
-if __name__ == '__main__':
-    import sys
-
+def spectrum():
     theo_header.print_header('Create a convoluted spectrum')
     print('spectrum.py <tden_summ1> [<tden_summ2> ...]')
 
