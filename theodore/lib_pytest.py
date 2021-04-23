@@ -6,6 +6,7 @@ import os, shutil, subprocess, difflib
 import io
 import sys
 from contextlib import contextmanager
+from .actions import ActionFactory
 
 
 class StringIO_(io.StringIO):
@@ -44,31 +45,24 @@ class pytest_job:
         for ifile in sorted(os.listdir('../IN_FILES')):
             print(ifile)
             shutil.copy("../IN_FILES/"+ifile, ifile)
+            col = ifile.split('.')
+            dtype, atype = col[0], col[2]
+            sys.argv = ['theodore', f'analyze_{dtype}',  '-ifile', ifile]
             
-            finfo = ifile.split('.')
-            dtype = finfo[0]
-            atype = finfo[2]
-            comm="analyze_%s.py"%dtype
-            
-            with open("analyze_%s.out"%atype, 'w') as outf:
-                subprocess.check_call([comm, "-f", ifile], stdout=outf)
-            # if dtype == 'tden':
-            #     sys.argv = ['analyze_tden.py']
-            #     import analyze_tden
-
-        self.check()
+            with mock_stdout() as out:
+                ActionFactory.from_commandline()
+        assert self._check()
 
     def prep(self):
+        """Create `RUN` dir"""
         os.chdir(self.epath)
         if os.path.exists('RUN'):
             shutil.rmtree('RUN')
         shutil.copytree('QC_FILES', 'RUN')
         os.chdir(self.epath + '/RUN')
 
-    def check(self):
-        """
-        Check if there are any differences.
-        """
+    def _check(self):
+        """ Check if there are any differences.  """
         os.chdir(self.epath + '/RUN')
         print("Checking primary output files")
         for rfile in os.listdir('../REF_FILES'):
@@ -76,7 +70,9 @@ class pytest_job:
             self.file_diff('../REF_FILES/'+rfile, rfile)
 
         if len(self.wstring) > 0:
+            return False
             raise pytestDiffError(self.epath + '\n\n' + self.wstring)
+        return True
 
     def file_diff(self, reff, runf):
         """
