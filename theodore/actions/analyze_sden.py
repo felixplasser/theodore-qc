@@ -8,15 +8,15 @@ class AnalyzeSden(Action):
     name = 'analyze_sden'
 
     _questions = """
-    ifile = dens_ana.in :: file
+    f = dens_ana.in :: file
     """
 
     @timeit
-    def run(ifile):
+    def run(f):
         # header
         theo_header.print_header('State density matrix analysis')
         #
-        ioptions = input_options.sden_ana_options(ifile)
+        ioptions = input_options.sden_ana_options(f)
 
         #--------------------------------------------------------------------------#
         # Parsing and computations

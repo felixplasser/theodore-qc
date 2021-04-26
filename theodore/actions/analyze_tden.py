@@ -8,12 +8,12 @@ class AnalyzeTden(Action):
     name = 'analyze_tden'
 
     _questions = """
-    ifile = dens_ana.in :: file
+    f = dens_ana.in :: file
     """
 
     @timeit
-    def run(ifile):
-        ioptions = input_options.tden_ana_options(ifile)
+    def run(f):
+        ioptions = input_options.tden_ana_options(f)
         theo_header.print_header('Transition density matrix analysis', ioptions=ioptions)
 
         tdena = lib_tden.tden_ana(ioptions)
