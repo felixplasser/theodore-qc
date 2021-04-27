@@ -9,7 +9,7 @@ with open('README.rst') as readme_file:
     readme = readme_file.read()
 print(readme)
 
-requirements = ['pycolt>=0.3', 'cclib>=1.7', 'numpy>=1.17', 'openbabel>=3.1', 'orbkit>=1.1']
+requirements = ['pycolt>=0.3', 'cclib>=1.7', 'numpy>=1.17']
 
 setup_requirements = ['pytest-runner', ]
 
@@ -19,10 +19,14 @@ setup(
     author="Felix Plasser",
     python_requires='>=3.6, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5*',
     classifiers=[
+        'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: GNU General Public License 3.0',
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         'Natural Language :: English',
-        'Programming Language :: Python :: >=3.6',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ],
     description="Theoretical Density, Orbital Relaxation and Exciton analysis",
     install_requires=requirements,
@@ -38,6 +42,6 @@ setup(
     setup_requires=setup_requirements,
     tests_require=test_requirements,
     url='https://github.com/felixplasser/theodore-qc',
-    version='2.4.5',
+    version='2.4.7',
     zip_safe=False,
 )

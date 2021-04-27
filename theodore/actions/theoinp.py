@@ -2,6 +2,7 @@
 Input generation for TheoDORE runs.
 """
 from __future__ import print_function, division
+from .actions import Action
 from .. import theo_header, input_options, lib_struc, error_handler, orbkit_interface
 import os
 
@@ -472,6 +473,12 @@ def run_theoinp():
         print("\nNow, please run write_den.bash to prepare the MCSCF density matrices!")
 
 
-def theoinp():
-    theo_header.print_header('Input generation')
-    run_theoinp()
+class TheodoreInput(Action): 
+
+    name = 'theoinp'
+
+    _questions = ""
+
+    def run():
+        theo_header.print_header('Input generation')
+        run_theoinp()
