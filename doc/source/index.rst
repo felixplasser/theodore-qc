@@ -19,6 +19,7 @@ Welcome to the TheoDORE documentation wiki!
    chemical_shielding
    plotting
    orbitals_and_densities
+   program_specific_information
 
 If you have any questions, you may either use the comment function in the wiki, write to the [discussion forum](/p/theodore-qc/discussion) or send me an email to f.plasser(at)lboro.ac.uk.
 
