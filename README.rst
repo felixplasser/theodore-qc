@@ -2,7 +2,9 @@ The **TheoDORE** (Theoretical Density, Orbital Relaxation and Exciton analysis) 
 for the analysis of excited states obtained from quantum chemical excited state calculations.
 
 Author: **Felix Plasser**
-Contributors: Ljiljana Stojanovic, Gunter Hermann, Sebastian Mai, Maximilian F.S.J. Menger
+::
+
+    Contributors: Ljiljana Stojanovic, Gunter Hermann, Sebastian Mai, Maximilian F.S.J. Menger
 
 TheoDORE is distributed under the GNU General Public License 3.0 (see LICENSE.txt).
 
@@ -14,22 +16,28 @@ Copyright (c) 2017, the cclib development team.
 cclib is contained as part of this distribution.
 
 Citation for cclib:
+::
 
-    - N. M. O'Boyle, A. L. Tenderholt, K. M. Langner, J. Comput. Chem. (2008), 29, 839.
+    N. M. O'Boyle, A. L. Tenderholt, K. M. Langner, J. Comput. Chem. (2008), 29, 839.
 
 TheoDORE uses Open Babel (http://openbabel.org/) for reading chemical structure files.
 Open Babel is distributed under a GPL license. Install Open Babel if you want to use this functionality.
 Citations for Open Babel:
 
-    - N. M. O'Boyle, M. Banck, C. A. James, C. Morley, T. Vandermeersch, and G. R. Hutchison, J. Cheminf. (2011), 3, 33.
-    - The Open Babel Package, version 2.3.1 http://openbabel.org
+::
+
+    N. M. O'Boyle, M. Banck, C. A. James, C. Morley, T. Vandermeersch, and G. R. Hutchison, J. Cheminf. (2011), 3, 33.
+    The Open Babel Package, version 2.3.1 http://openbabel.org
 
 TheoDORE uses ORBKIT (http://orbkit.github.io/) for visualization of orbitals and densities.
 ORBKIT is distributed under an LGPL license. Install orbkit if you want to use this functionality.
 Citation for ORBKIT:
 
-    - G. Hermann, V. Pohl, J. C. Tremblay, B. Paulus, H.-C. Hege, A. Schild, J. Comput. Chem. (2016), 37, 1511.
+::
 
+    G. Hermann, V. Pohl, J. C. Tremblay, B. Paulus, H.-C. Hege, A. Schild, J. Comput. Chem. (2016), 37, 1511.
+
+TheoDORE uses colt (https://github.com/mfsjmenger/colt) for its commandline interface.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
