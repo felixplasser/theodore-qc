@@ -32,5 +32,5 @@ class Action(ActionFactory):
             cls.run = staticmethod(cls.run)
         return cls.run(**config)
          
-    def run(options):
+    def run(**options):
         raise NotImplementedError
