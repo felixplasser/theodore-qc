@@ -23,6 +23,7 @@ Welcome to the TheoDORE documentation wiki!
 
 If you have any questions, you may either use the comment function in the wiki, write to the [discussion forum](/p/theodore-qc/discussion) or send me an email to f.plasser(at)lboro.ac.uk.
 
+.. include:: ../../README.rst
 
 
 Indices and tables
