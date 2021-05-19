@@ -1,9 +1,10 @@
-#!/usr/bin/env python3
 """
 Automatic plotting of densities or MOs with vmd.
 """
 from __future__ import print_function, division
-from theodore import error_handler, theo_header, input_options, lib_struc, lib_file, lib_util
+import sys
+from .. import error_handler, theo_header, input_options, lib_struc, lib_file, lib_util
+
 
 class vmd_options(input_options.write_options):
     def vmd_input(self):
@@ -220,8 +221,7 @@ Files created. Now do the following:
 6. Open in browser: %s
 """%(vopt['lfile'], vopt['pfile'], vopt['cfile'], vopt['hfile']))
 
-if __name__=='__main__':
-    import sys
 
+def vmd_plots():
     theo_header.print_header('Automatic plotting in VMD')
     run()

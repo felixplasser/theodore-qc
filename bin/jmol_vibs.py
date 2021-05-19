@@ -5,7 +5,9 @@ Automatic plotting of vibrations with jmol.
 # Code adapted from jmol_MOs.py
 
 from __future__ import print_function, division
-from theodore import error_handler, lib_file, theo_header, input_options
+import sys
+from .. import error_handler, lib_file, theo_header, input_options
+
 
 class jmol_vib_opts(input_options.write_options):
     def input(self):
@@ -105,8 +107,7 @@ class vibcoll:
         if of == 'pngt': of = 'png'
         return "vib_%i.%s"%(ivib,of)    
 
-if __name__=='__main__':
-    import sys
+def jmol_vibs():
 
     theo_header.print_header('Plotting of vibrations in Jmol')
     print('jmol_MOs.py <mldfile>\n')

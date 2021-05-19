@@ -4,7 +4,8 @@ Automatic plotting of MOs with jmol.
 """
 
 from __future__ import print_function, division
-from theodore import lib_mo, error_handler, lib_file, theo_header, input_options
+from .. import lib_mo, error_handler, lib_file, theo_header, input_options
+import sys
 
 class mo_output:
     """
@@ -350,8 +351,7 @@ def run():
         else:
             print("  -> Now simply run \"jmol -n %s\" to plot all the orbitals.\n"%jo)
 
-if __name__=='__main__':
-    import sys
 
+def jmol_mos():
     theo_header.print_header('Orbital plotting in Jmol')
     run()

@@ -6,7 +6,7 @@ Author: Felix Plasser, Sebastian Mai
 """
 
 from __future__ import print_function, division
-from theodore import theo_header, input_options, lib_file, error_handler
+from .. import theo_header, input_options, lib_file, error_handler
 import numpy
 import os
 
@@ -240,7 +240,7 @@ def run_plot():
     opt.make_tex()
 
 
-if __name__ == '__main__':
+def plot_om_bars():
     theo_header.print_header('Plot Omega matrices as bar graphs')
 
     run_plot()
