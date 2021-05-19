@@ -4,3 +4,6 @@
 [submodule "external/orbkit"]
 	path = external/orbkit
 	url = https://github.com/felixplasser/orbkit.git
+[submodule "external/colt"]
+	path = external/colt
+	url = git@github.com:MFSJMenger/colt.git
