@@ -730,7 +730,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
             tdenJ = state['tden']
 
             DIJ_elec = numpy.dot(tdenI.T, tdenJ)
-            DIJ_hole = numpy.dot(tdenI, tdenJ.T)
+            DIJ_hole = numpy.dot(tdenJ, tdenI.T)
 
             state['tden'] = DIJ_elec
             state['tden'][:DIJ_hole.shape[0], :DIJ_hole.shape[1]] -= DIJ_hole

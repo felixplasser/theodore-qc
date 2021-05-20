@@ -52,6 +52,7 @@ if 'at_lists' in ioptions or ioptions['eh_pop'] >= 1:
 
 if 'at_lists' in ioptions:
     tdena.compute_all_OmFrag()
+    if ioptions['print_OmFrag']: tdena.fprint_OmFrag()
 
 if ioptions['comp_ntos']:  tdena.compute_all_NTO()
 if ioptions['comp_p_h_dens']: tdena.compute_p_h_dens()

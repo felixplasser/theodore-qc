@@ -1,5 +1,7 @@
 Download the newest TheoDORE release and tutorial.
 
+- State-to-state TDM
+
 TheoDORE 2.4
 - Visualization of chemical shielding tensors (VIST) [DOI: 10.1002/ejoc.202100352]
 - New pytest verification system
