@@ -47,10 +47,13 @@ class pytest_job:
             shutil.copy("../IN_FILES/"+ifile, ifile)
             col = ifile.split('.')
             dtype, atype = col[0], col[2]
-            sys.argv = ['theodore', f'analyze_{dtype}',  '-ifile', ifile]
+            sys.argv = ['theodore', f'analyze_{dtype}',  '-f', ifile]
             
             with mock_stdout() as out:
                 ActionFactory.from_commandline()
+                outlines = out.read()
+                with open(f'analyze_{atype}.out', 'w') as fh:
+                    fh.write(outlines)
         assert self._check()
 
     def prep(self):

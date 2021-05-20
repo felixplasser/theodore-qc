@@ -32,7 +32,7 @@ Fragment decomposition (e/h populations)
 
 An interactive script <code>plot_frag_decomp.py</code> can be used for plotting the fragment decomposition of the electron and hole populations of the excited states. To be called after <code>analyze_tden.py</code>
 
-![frag_decomp.png](https://sourceforge.net/p/theodore-qc/wiki/Plotting/attachment/frag_decomp.png)
+.. figure:: figures/frag_decomp.png
 
 Fragment decomposition (Omega matrices)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -65,4 +65,4 @@ An interactive script <code>plot_Om_bars.py</code> can be used for plotting the 
 
     ... switching to next component.
 
-![Om_bars.png](https://sourceforge.net/p/theodore-qc/wiki/Plotting/attachment/Om_bars.png)
+.. figure:: figures/Om_bars.png

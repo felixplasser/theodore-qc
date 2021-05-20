@@ -322,3 +322,4 @@ To quickly check whether a logfile can be parsed by cclib, simply type:
 ::
 
     cc_check.py <logfile>
+
