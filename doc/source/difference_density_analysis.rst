@@ -14,12 +14,15 @@ Unpaired electrons
 Two measures for a number of effectively unpaired electrons can be computed:
 
 .. math::
-    n_u=\sum_i\min(n_i,2-n_i)
+
+    n_u=\sum_i \min \left(n_i,2-n_i\right)
 
 and
 
-.. math::
-    n_{u,nl}=\sum_i n_i^2(2-n_i^2)
+.. math:: 
+
+   n_{u,nl} = \sum_i n_i^2 (2-n_i^2)
+
 
 where *n<sub>i</sub>* marks the occupation number of natural orbital *i*.
 

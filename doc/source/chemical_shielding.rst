@@ -60,13 +60,15 @@ Create a Gaussian input file for an NMR calculation with the positions of the sh
 
 After the job finishes simply run (assuming you named the output file `gaussian.log`)
 
-`plot_VIST.py gaussian.log`
+::
+
+    plot_VIST.py gaussian.log
 
 Open a molecular coordinate file in VMD. Then from inside VMD click: `File` - `Load Visualization State` - `VIST.vmd`
 
 In the first instance, this will plot the shielding tensors of all Bq positions on top of each other.
 
-![VIST all](https://sourceforge.net/p/theodore-qc/wiki/Analysis%20of%20chemical%20shielding/attachment/VIST-all.png)
+.. figure:: figures/VIST-all.png
 
 Use, the `-p` option to plot them all individually or use the `-v` option to select individual tensors.
 
@@ -75,16 +77,26 @@ _______________________________
 
 In many cases, it is desirable to process several output files at the same time to produce a consistent representation of several output files, for example to represent the shielding in different electronic states. The following figures represent the shielding in the dication, neutral state, and dianion of a macrocycle.
 
-![Dication](https://sourceforge.net/p/theodore-qc/wiki/Analysis%20of%20chemical%20shielding/attachment/2P.png)![Neutral](https://sourceforge.net/p/theodore-qc/wiki/Analysis%20of%20chemical%20shielding/attachment/neut.png)![Dianion](https://sourceforge.net/p/theodore-qc/wiki/Analysis%20of%20chemical%20shielding/attachment/2M.png)
+
+.. image:: figures/2P.png
+.. image:: figures/neut.png
+.. image:: figures/2M.png
+
+
+
 
 This figure was created with the command
 
-`plot_VIST.py -c -v '0 4' */gaussian.log`
+::
+
+    plot_VIST.py -c -v '0 4' */gaussian.log
 
 The `-c` option specifies that the molecular coordinates are directly parsed from the log-file. `-v 0 4` indicates that only the Bq atoms with index 0 and 4 are included in the representation. `*/gaussian.log` indicates that the gaussian.log files in all subdirectories are processed.
 
 The files are loaded into VMD via
 
-`vmd -e VIST.vmd`
+::
+
+    vmd -e VIST.vmd
 
 Initially all geometries are superposed on top of each other. To hide some of the molecules use the `D` option (part of `T A D F Molecule`) in the VMD Main menu.
