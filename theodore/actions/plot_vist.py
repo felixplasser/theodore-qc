@@ -17,7 +17,7 @@ class PlotVist(Action):
     """
 
     @timeit
-    def run(vist, ofile, scale, do_coor, plot_all):
+    def run(vist, ofile, scale, do_coor, plot_all, logfiles):
         theo_header.print_header('Read NICS values and prepare VIST plot', cfile=__file__)
         
         with open(ofile, 'w') as fh:
