@@ -54,7 +54,7 @@ class pytest_job:
                 outlines = out.read()
                 with open(f'analyze_{atype}.out', 'w') as fh:
                     fh.write(outlines)
-        assert self.check()
+        self.check()
 
     def prep(self):
         """Create `RUN` dir"""
@@ -73,9 +73,7 @@ class pytest_job:
             self.file_diff('../REF_FILES/'+rfile, rfile)
 
         if len(self.wstring) > 0:
-            return False
             raise pytestDiffError(self.epath + '\n\n' + self.wstring)
-        return True
 
     def file_diff(self, reff, runf):
         """
@@ -92,9 +90,14 @@ class pytest_job:
         if '.txt' in runf:
             for iline, line in enumerate(ref):
                 if not line == run[iline]:
+                    diffl = list(difflib.unified_diff(ref, run, fromfile=reff, tofile=runf))
+                    wstring = "\n"
+                    for line in diffl:
+                        self.wstring += line
                     # TODO: one could add numerical thresholds here
-                    self.wstring += "- " + line
-                    self.wstring += "+ " + run[iline]
+                    #self.wstring += "- " + line
+                    #self.wstring += "+ " + run[iline]
+                return
         # Use a general diff here
         else:
             diffl = list(difflib.unified_diff(self.diff_ignore(ref), self.diff_ignore(run), fromfile=reff, tofile=runf))

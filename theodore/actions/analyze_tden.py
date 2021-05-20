@@ -4,6 +4,13 @@ from .. import theo_header, lib_tden, lib_exciton, input_options
 
 
 class AnalyzeTden(Action):
+    """
+    *** This is the docstring for analyze_tden. ***
+    analyze_tden is used for analyzing transition density matrices.
+    - Charge-transfer numbers
+    - Natural transition orbitals
+    - Exciton sizes
+    """
 
     name = 'analyze_tden'
 
@@ -14,7 +21,7 @@ class AnalyzeTden(Action):
     @timeit
     def run(f):
         ioptions = input_options.tden_ana_options(f)
-        theo_header.print_header('Transition density matrix analysis', ioptions=ioptions)
+        theo_header.print_header('Transition density matrix analysis', ioptions=ioptions, cfile=__name__)
 
         tdena = lib_tden.tden_ana(ioptions)
         if 'mo_file' in ioptions: tdena.read_mos()
