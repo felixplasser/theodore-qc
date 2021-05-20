@@ -28,7 +28,7 @@ def analyze_tden_soc():
     
     
     ioptions = input_options.tden_ana_options(ifile)
-    theo_header.print_header('1TDM analysis for spin-orbit coupled states', ioptions=ioptions)
+    theo_header.print_header('1TDM analysis for spin-orbit coupled states', ioptions=ioptions, cfile=__file__)
     
     tdena = lib_soc.tden_ana_soc(ioptions)
     if 'mo_file' in ioptions: tdena.read_mos()

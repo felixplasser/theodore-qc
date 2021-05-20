@@ -9,7 +9,6 @@ from .. import theo_header, lib_sden, input_options
 
 import argparse
 
-
 def get_commandline_args():
     parser = argparse.ArgumentParser(description=None)
     parser.add_argument('mo_file', nargs='+', help='')
@@ -19,7 +18,7 @@ def get_commandline_args():
 
 
 def analyze_nos():
-    theo_header.print_header('NO file analysis')
+    theo_header.print_header('NO file analysis', cfile=__file__)
     no_files, ifile = get_commandline_args()
     # set options
     ioptions = input_options.sden_ana_options(ifile, check_init=False)

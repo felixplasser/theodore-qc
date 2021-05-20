@@ -1,9 +1,5 @@
- *** Warning: python-openbabel not found! ***
- Using emulation program with limited capabilities ...
- *** Warning: python-openbabel not found! ***
- Using emulation program with limited capabilities ...
 ================================================================================
-|                                 TheoDORE 2.3                                 |
+|                                 TheoDORE 2.4                                 |
 |         Theoretical Density, Orbital Relaxation and Exciton analysis         |
 |                                                                              |
 |                            Author: Felix Plasser                             |
@@ -13,13 +9,9 @@
 |                       References for the modules used                        |
 |        (see also http://theodore-qc.sourceforge.net/literature.html)         |
 |                                                                              |
-|   Transition density matrix analysis:                                        |
-|     F. Plasser and H. Lischka                                                |
-|     J. Chem. Theory Comput. (2012), 8, 2777.                                 |
-|                                                                              |
-|   Transition and difference density matrix analysis:                         |
-|     F. Plasser, M. Wormit, A. Dreuw                                          |
-|     J. Chem. Phys. (2014), 141, 024106.                                      |
+|   Visualization of chemical shielding tensors (VIST):                        |
+|     F. Plasser, F. Gloecklhofer                                              |
+|     Eur. J. Org. Chem. (2021), DOI: 10.1002/ejoc.202100352.                  |
 |                                                                              |
 |   Program citation:                                                          |
 |     F. Plasser, J. Chem. Phys. (2020), 152, 084108.                          |

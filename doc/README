@@ -1,5 +1,9 @@
 Download the newest TheoDORE release and tutorial.
 
+TheoDORE 2.4
+- Visualization of chemical shielding tensors (VIST) [DOI: 10.1002/ejoc.202100352]
+- New pytest verification system
+
 TheoDORE 2.3
 - Compute (unpaired) densities using orbkit
 - Fix for theo_test.bash

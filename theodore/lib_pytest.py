@@ -54,7 +54,7 @@ class pytest_job:
                 outlines = out.read()
                 with open(f'analyze_{atype}.out', 'w') as fh:
                     fh.write(outlines)
-        assert self._check()
+        assert self.check()
 
     def prep(self):
         """Create `RUN` dir"""
@@ -64,7 +64,7 @@ class pytest_job:
         shutil.copytree('QC_FILES', 'RUN')
         os.chdir(self.epath + '/RUN')
 
-    def _check(self):
+    def check(self):
         """ Check if there are any differences.  """
         os.chdir(self.epath + '/RUN')
         print("Checking primary output files")

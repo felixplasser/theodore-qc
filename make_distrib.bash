@@ -40,10 +40,10 @@ cp -r external/cclib/cclib $TDIR
 cp external/cclib/LICENSE $TDIR/cclib
 echo "Removing cclib binary files"
 rm -r $TDIR/cclib/__pycache__ $TDIR/cclib/*/__pycache__
-# also copy the source because of LGPL
-#mkdir $TDIR/external
-#cd $SDIR/external
-#tar -czf $TDIR/external/cclib.tgz cclib/ANNOUNCE cclib/CHANGELOG cclib/INSTALL cclib/LICENSE cclib/logo_for_ccl.svg cclib/logo.png cclib/manifest.py cclib/README.md cclib/setup.py cclib/src/ cclib/test/ cclib/THANKS
+
+# remove extra files in EXAMPLE directory
+rm -r $TDIR/EXAMPLES/*/RUN
+rm -r $TDIR/EXAMPLES/*/__pycache__
 
 # create tar with shorter relative paths
 cd $SDIR/../Versions
