@@ -718,7 +718,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         """
         Compute approximate transition density with respect to a reference excited state. This overwrites 'tden' and 'exc_en'
         This is computed analogously to the electron/hole densities:
-        D^IJ = (D^I0)^T * D^J0 - D^I0 * (D^J0)^T
+        D^IJ = (D^I0)^T * D^J0 - D^J0 * (D^I0)^T
         """
         refstate = self.state_list[iref-1]
         tdenI = refstate['tden']
