@@ -29,7 +29,7 @@ class write_options_theo(input_options.write_options):
                 rdef = 'ricc2'
             else:
                 rdef = 'escf'
-        elif os.path.exists('TAPE21'):
+        elif os.path.exists('ams.results/adf.rkf'):
             rdef = 'adf'
         elif os.path.exists('EXC.DAT'):
             rdef = 'tddftb'
@@ -125,7 +125,7 @@ class write_options_theo(input_options.write_options):
             self['coor_file'] = ''
             self['coor_format'] = ''
         elif self['rtype'] == 'adf':
-            self['rfile'] = 'TAPE21'
+            self['rfile'] = 'ams.results/adf.rkf'
             self['mo_file'] = None
             self['coor_file'] = ''
             self['coor_format'] = ''
