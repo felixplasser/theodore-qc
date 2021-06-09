@@ -42,6 +42,6 @@ setup(
     setup_requires=setup_requirements,
     tests_require=test_requirements,
     url='https://github.com/felixplasser/theodore-qc',
-    version='2.4.7',
+    version='2.4.8',
     zip_safe=False,
 )

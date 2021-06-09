@@ -16,12 +16,12 @@ class AnalyzeTden(Action):
     name = 'analyze_tden'
 
     _questions = """
-    f = dens_ana.in :: file
+    ifile = dens_ana.in :: file, alias=f
     """
 
     @timeit
-    def run(f):
-        ioptions = input_options.tden_ana_options(f)
+    def run(ifile):
+        ioptions = input_options.tden_ana_options(ifile)
         theo_header.print_header('Transition density matrix analysis', ioptions=ioptions, cfile=__name__)
 
         tdena = lib_tden.tden_ana(ioptions)
@@ -66,12 +66,12 @@ class AnalyzeTdenUnr(Action):
     name = 'analyze_tden_unr'
 
     _questions = """
-    f = dens_ana.in :: file
+    ifile = dens_ana.in :: file, alias=f
     """
 
     @timeit
-    def run(f):
-        ioptions = input_options.tden_ana_options(f)
+    def run(ifile):
+        ioptions = input_options.tden_ana_options(ifile)
         theo_header.print_header('Transition density matrix analysis (UHF/UKS)', ioptions=ioptions, cfile=__name__)
 
         ioptions['jmol_orbitals'] = False
