@@ -9,7 +9,7 @@ with open('README.rst') as readme_file:
     readme = readme_file.read()
 print(readme)
 
-requirements = ['pycolt>=0.3', 'cclib>=1.7', 'numpy>=1.17']
+requirements = ['pycolt>=0.4', 'cclib>=1.7', 'numpy>=1.17']
 
 setup_requirements = ['pytest-runner', ]
 
