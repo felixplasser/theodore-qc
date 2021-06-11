@@ -16,7 +16,7 @@ class AnalyzeTden(Action):
     name = 'analyze_tden'
 
     _questions = """
-    ifile = dens_ana.in :: file, alias=f
+    ifile = dens_ana.in :: existing_file, alias=f
     """
 
     @timeit
@@ -66,7 +66,7 @@ class AnalyzeTdenUnr(Action):
     name = 'analyze_tden_unr'
 
     _questions = """
-    ifile = dens_ana.in :: file, alias=f
+    ifile = dens_ana.in :: existing_file, alias=f
     """
 
     @timeit

@@ -20,7 +20,7 @@ class PlotVist(Action):
     # Render and plot all tensors separately
     plot_all = True :: bool, alias=p
     # Log files to be parsed
-    logfiles = :: list(str)
+    logfiles = :: list(existing_file)
     """
 
     @timeit

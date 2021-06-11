@@ -8,7 +8,7 @@ class AnalyzeSden(Action):
     name = 'analyze_sden'
 
     _questions = """
-    ifile = dens_ana.in :: file, alias=f
+    ifile = dens_ana.in :: existing_file, alias=f
     """
 
     @timeit
