@@ -7,16 +7,18 @@ class AnalyzeSden(Action):
 
     name = 'analyze_sden'
 
+    _colt_description = 'State density matrix analysis'
+
     _questions = """
-    f = dens_ana.in :: file
+    ifile = dens_ana.in :: existing_file, alias=f
     """
 
     @timeit
-    def run(f):
+    def run(ifile):
         # header
         theo_header.print_header('State density matrix analysis', cfile=__name__)
         #
-        ioptions = input_options.sden_ana_options(f)
+        ioptions = input_options.sden_ana_options(ifile)
 
         #--------------------------------------------------------------------------#
         # Parsing and computations
