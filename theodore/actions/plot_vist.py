@@ -23,6 +23,8 @@ class PlotVist(Action):
     logfiles = :: list(existing_file)
     """
 
+    _colt_description = "Read NICS values and prepare VIST plot"
+
     @timeit
     def run(vist, ofile, scale, coor, plot_all, logfiles):
         if vist is not None and len(vist) == 0:

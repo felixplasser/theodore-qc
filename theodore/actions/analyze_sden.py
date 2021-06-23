@@ -7,6 +7,8 @@ class AnalyzeSden(Action):
 
     name = 'analyze_sden'
 
+    _colt_description = 'State density matrix analysis'
+
     _questions = """
     ifile = dens_ana.in :: existing_file, alias=f
     """

@@ -10,12 +10,18 @@ def run():
     settings = {
             'description': theo_header.ret_header(),
             'logo': None,
-            'main_order': ['logo', 'description', 'pos_args', 'opt_args', 'usage', 'space'],
             'error_order': ['logo', 'usage', 'space', 'error'],
             'arg_format': {
-                'name': 12,
-                'comment': 40,
+                'name': 20,
+                'comment': 50,
                 'seperator': 2,
             },
+            'subparser_args': {
+                'title': 'Actions: %s',
+            },
+            'subparser_format': {
+                'name': 20,
+                'comment': 50,
+                },
     }
     ActionFactory.from_commandline(description=settings)

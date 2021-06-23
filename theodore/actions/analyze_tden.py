@@ -15,6 +15,8 @@ class AnalyzeTden(Action):
 
     name = 'analyze_tden'
 
+    _colt_description = 'Transition density matrix analysis'
+
     _questions = """
     ifile = dens_ana.in :: existing_file, alias=f
     """
@@ -63,7 +65,10 @@ class AnalyzeTden(Action):
         tdena.print_summary()
 
 class AnalyzeTdenUnr(Action):
+
     name = 'analyze_tden_unr'
+
+    _colt_description = 'Transition density matrix analysis'
 
     _questions = """
     ifile = dens_ana.in :: existing_file, alias=f
