@@ -13,6 +13,7 @@ Welcome to the TheoDORE documentation wiki!
    :caption: Contents:
 
    installation
+   usage
    input_generation
    transition_density_analysis
    difference_density_analysis

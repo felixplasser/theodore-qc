@@ -3,7 +3,7 @@ Program specific information
 
 In the case of TDDFT, "Exact" is used for cases where the whole **X** or **X** + **Y** vector is parsed.
 
-Use the <code>rtype</code> keyword in <code>dens_ana.in</code> to specify the respective method.
+Use the `rtype` keyword in `dens_ana.in` to specify the respective method.
 
 
 In general, TheoDORE needs two types of information: density matrices and MO coefficients. This page contains specific information about how to obtain this information from the different quantum chemistry programs.
@@ -35,7 +35,7 @@ To run the libwfa analysis set in the input file:
 
     state_analysis    true
 
-Alternatively, the standard output can be parsed. To do this set <code>read_libwfa=False</code> in <code>dens_ana.in</code>. In this case, the X vector is parsed and interpreted as the 1TDM while the Y vector is ignored. The following non-standard options have to be set in the input file:
+Alternatively, the standard output can be parsed. To do this set `read_libwfa=False` in `dens_ana.in`. In this case, the X vector is parsed and interpreted as the 1TDM while the Y vector is ignored. The following non-standard options have to be set in the input file:
 
 ::
 
@@ -43,7 +43,7 @@ Alternatively, the standard output can be parsed. To do this set <code>read_libw
     print_orbitals	5000
     molden_format	true
 
-The first one assures that enough amplitudes are printed for a meaningful semi-quantitative analysis. The second and third cause the print-out of all orbitals in Molden format, written to the end of the standard output file. This Molden file has to be extracted and copied to a new file <code>qchem.mld</code>.
+The first one assures that enough amplitudes are printed for a meaningful semi-quantitative analysis. The second and third cause the print-out of all orbitals in Molden format, written to the end of the standard output file. This Molden file has to be extracted and copied to a new file `qchem.mld`.
 
 Per default RPA vectors are parsed. If you are interested in TDA vectors, specify
 
@@ -51,7 +51,7 @@ Per default RPA vectors are parsed. If you are interested in TDA vectors, specif
 
     TDA=True
 
-in <code>dens_ana.in</code>.
+in `dens_ana.in`.
 
 fchk files
 __________
@@ -65,14 +65,14 @@ option. In this case, TheoDORE can read the transition density matrices and do t
 
 libwfa
 ______
-It is also possible to parse generic <code>libwfa</code> output by using the libwfa keyword.
+It is also possible to parse generic `libwfa` output by using the libwfa keyword.
 
 Columbus
 ~~~~~~~~
 
 MCSCF
 _____
-MCSCF transition density matrices are written by the program <code>mcscf.x</code>. To compute these, it is either possible to compute non-adiabatic coupling vectors or to use the shortcut of creating an <code>mcdenin</code> file. This file has the same structure as the <code>transmomin</code> file, e.g.
+MCSCF transition density matrices are written by the program `mcscf.x`. To compute these, it is either possible to compute non-adiabatic coupling vectors or to use the shortcut of creating an `mcdenin` file. This file has the same structure as the `transmomin` file, e.g.
 
 ::
 
@@ -85,22 +85,22 @@ MCSCF transition density matrices are written by the program <code>mcscf.x</code
 
 will compute all transition moments between the 1st and the 2nd through 6th states in DRT 1.
 
-After the computation call <code>write_den.bash</code> to convert the binary files into a form that can be read by TheoDORE. For this purpose the $COLUMBUS variable has to be set.
+After the computation call `write_den.bash` to convert the binary files into a form that can be read by TheoDORE. For this purpose the $COLUMBUS variable has to be set.
 
-State density matrix analysis is possible when the computation of dipole moments was requested. In this case it is possible to use the above procedure or to simply analyze the NO coefficient files in the <code>MOLDEN</code> directory.
+State density matrix analysis is possible when the computation of dipole moments was requested. In this case it is possible to use the above procedure or to simply analyze the NO coefficient files in the `MOLDEN` directory.
 
 MR-CI
 _____
 
-The MR-CI transition density analysis works in the case that transition moments were requested in the job control stage. After this it is assumed that <code>LISTINGS/trncils....</code> files with the transition density matrices are available. Frozen core orbitals have to be specified explicitly in the input file to get correct results. To specify, for example, four frozen orbitals of *a* symmetry and three of *b* use:
+The MR-CI transition density analysis works in the case that transition moments were requested in the job control stage. After this it is assumed that `LISTINGS/trncils....` files with the transition density matrices are available. Frozen core orbitals have to be specified explicitly in the input file to get correct results. To specify, for example, four frozen orbitals of *a* symmetry and three of *b* use:
 
 ::
 
     ncore={'a':4, 'b':3}
 
-In addition, the MO-coefficients of the preceeding MCSCF calculation have to be made available, typically in <code>MOLDEN/molden_mo_mc.sp</code>.
+In addition, the MO-coefficients of the preceeding MCSCF calculation have to be made available, typically in `MOLDEN/molden_mo_mc.sp`.
 
-For a state density analysis at the MR-CI level, the NO files should be read in rather than using the <code>colmrci</code> functionality. Alternatively, an attachment/detachment analysis can be done with the [densav.x](https://www.univie.ac.at/columbus/docs_COL70/utilities.html#densav) functionality of COLUMBUS.
+For a state density analysis at the MR-CI level, the NO files should be read in rather than using the `colmrci` functionality. Alternatively, an attachment/detachment analysis can be done with the [densav.x](https://www.univie.ac.at/columbus/docs_COL70/utilities.html#densav) functionality of COLUMBUS.
 
 Molcas
 ~~~~~~
@@ -116,7 +116,7 @@ First, run Molcas using the &WFA module
     &WFA
     h5file = $Project.rassi.h5
 
-and copy back the <code>*.om</code> files. In <code>theoinp</code> specify "y" for
+and copy back the `*.om` files. In `theoinp` specify "y" for
 
 ::
 
@@ -134,14 +134,14 @@ RASSCF
 ______
 In the case of Molcas, the output of the RASSI program is parsed. This gives access to RASSCF density and transition density matrices, so far without explicit point group symmetry. **Note**: The output is only parsed correctly if all states in the RASSI computation derive from the same RASSCF computation and if the specified Molden file derives from this calculation.
 
-First run a RASSCF + RASSI job with the (undocumented) <code>TRD1</code> keyword:
+First run a RASSCF + RASSI job with the (undocumented) `TRD1` keyword:
 
 ::
 
     &RASSI
         TRD1
 
-Then copy the transition densities to a directory <code>TRD</code>:
+Then copy the transition densities to a directory `TRD`:
 
 ::
 
@@ -180,16 +180,16 @@ Tubomole
 CC2 / ADC(2)
 ____________
 
-If you have the binary <code>CCRE0*</code> files, written by Turbomole, available, then choose the option
+If you have the binary `CCRE0*` files, written by Turbomole, available, then choose the option
 
 ::
 
     read_binary=True
 
 
-in <code>dens_ana.in</code>. Use <code>tm2molden</code> without further options to create the MO file. For printing the NTOs, it is not possible to use <code> jmol_orbitals</code> in this case, but only <code>molden_orbitals</code>.
+in `dens_ana.in`. Use `tm2molden` without further options to create the MO file. For printing the NTOs, it is not possible to use ` jmol_orbitals` in this case, but only `molden_orbitals`.
 
-Alternatively, approximate transition density matrices can be read directly from the standard output of <code>ricc2</code>. The MO file is again created with <code>tm2molden</code>. However, it is important that also the frozen orbitals are contained in the MO file. This can be achieved by running the following commands:
+Alternatively, approximate transition density matrices can be read directly from the standard output of `ricc2`. The MO file is again created with `tm2molden`. However, it is important that also the frozen orbitals are contained in the MO file. This can be achieved by running the following commands:
 
 ::
 
@@ -199,9 +199,9 @@ Alternatively, approximate transition density matrices can be read directly from
 
 TDDFT
 _____
-In the TDDFT case, the <code>sing_a</code> or <code>trip_a</code> files are parsed and interpreted as 1TDMs. Unfortunately, this analysis only works if no explicit symmetry is chosen in the initial job setup.
+In the TDDFT case, the `sing_a` or `trip_a` files are parsed and interpreted as 1TDMs. Unfortunately, this analysis only works if no explicit symmetry is chosen in the initial job setup.
 
-MO-coefficients have to be supplied by <code>tm2molden</code>.
+MO-coefficients have to be supplied by `tm2molden`.
 
 Terachem - TDDFT
 ~~~~~~~~~~~~~~~~
@@ -219,7 +219,7 @@ A state/difference density matrix analysis is possible by using the NO files pro
 
 Parsing of NO files
 ~~~~~~~~~~~~~~~~~~~
-NO files can be parsed directly using either <code>analyze_sden.py</code> or <code>analyze_NOs.py</code>. In this case it is important that one reference file is given, which contains the full, invertible MO-matrix.
+NO files can be parsed directly using either `analyze_sden.py` or `analyze_NOs.py`. In this case it is important that one reference file is given, which contains the full, invertible MO-matrix.
 
 TheoDORE assumes that the NO files are given with respect to spatial orbitals (occupation between 0 and 2). If spin NOs are given, then the analysis of unpaired electrons will not give suitable results.
 
@@ -253,13 +253,13 @@ Alternatively, ORCA can be parsed entirely with the [cclib library](http://cclib
      Print[ P_Overlap ] 1
     end
 
-It is recommended also in this case to read the CI-vectors from the binary file <code>orca.cis</code> rather than from standard output. To do this, set
+It is recommended also in this case to read the CI-vectors from the binary file `orca.cis` rather than from standard output. To do this, set
 
 ::
 
     read_binary=True
 
-In the case of TDA both options work, for RPA <code>read_binary=True</code> has to be used.
+In the case of TDA both options work, for RPA `read_binary=True` has to be used.
 
 Gaussian - TDDFT
 ~~~~~~~~~~~~~~~~
@@ -284,7 +284,7 @@ Firefly has been succesfully interfaced with TheoDORE, see [EXAMPLES/SnH4-ecp.fi
 
 ADF - TDDFT
 ~~~~~~~~~~~
-In the new ADF interface all information is read from the binary **TAPE21** file. Use the <code>rfile</code> option to point to this file.
+In the new ADF interface all information is read from the binary **TAPE21** file. Use the `rfile` option to point to this file.
 
 To run the analysis, you need to activate the ADF scripts and license, e.g.
 
@@ -298,7 +298,7 @@ The interface analyzes the eigenvectors of the reduced dimensional problem as pr
 
 It is not possible to visualize NTOs using the TheoDORE/ADF interface since Slater type orbitals, as employed by ADF, are not supported. It is, however, possible to compute NTOs within ADF itself.
 
-The atom-numbering for <code>at_lists</code> pertains to the original ordering in the input file rather than the internal ordering used by ADF.
+The atom-numbering for `at_lists` pertains to the original ordering in the input file rather than the internal ordering used by ADF.
 
 DFTB+ - TDDFTB
 ~~~~~~~~~~~~~~
