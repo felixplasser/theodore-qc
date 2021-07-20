@@ -7,6 +7,7 @@ from __future__ import print_function, division
 import sys
 import math, numpy
 from .. import theo_header, units, lib_file, input_options, error_handler
+from .actions import Action
 
 do_plots = True
 try:
@@ -202,15 +203,19 @@ class spectrum:
         if lvprt >= 1:
             print("Spectrum file %s created."%pname)
 
-def spectrum():
-    theo_header.print_header('Create a convoluted spectrum')
-    print('spectrum.py <tden_summ1> [<tden_summ2> ...]')
+class Spectrum(Action):
 
-    if len(sys.argv) < 2:
-        raise error_handler.MsgError('Enter at least one argument')
+    name = 'spectrum'
+    
+    _questions = """
+    tden_summs = :: list(existing_file)
+    """
 
-    sopt = spec_options('spectrum.in')
-    sopt['ana_files'] = sys.argv[1:]
-    sopt.spec_input()
+    def run(tden_summs):
+        theo_header.print_header('Create a convoluted spectrum')
 
-    sopt.make_spec()
+        sopt = spec_options('spectrum.in')
+        sopt['ana_files'] = tden_summs
+        sopt.spec_input()
+
+        sopt.make_spec()

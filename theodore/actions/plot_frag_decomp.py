@@ -5,6 +5,7 @@ Script for plotting fragment decomposition.
 
 from __future__ import print_function, division
 from .. import theo_header, input_options, error_handler
+from .actions import Action
 import numpy
 
 try:
@@ -103,15 +104,15 @@ class decomp_options(input_options.write_options):
         pylab.savefig(fname, dpi=self['plot_dpi'])
         print(("File %s written."%fname))
 
-def run_plot():
-    opt = decomp_options('plot.in')
-    opt.read_OmFrag()
 
-    opt.decomp_input()
+class PlotFragDecomp(Action):
+    name = 'plot_frag_decomp'
 
-    opt.plot()
+    def run_plot():
+        theo_header.print_header('Plot fragment decomposition')
+        opt = decomp_options('plot.in')
+        opt.read_OmFrag()
 
+        opt.decomp_input()
 
-def plot_frag_decomp():
-    theo_header.print_header('Plot fragment decomposition')
-    run_plot()
+        opt.plot()

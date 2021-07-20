@@ -5,6 +5,7 @@ Script for creating graphs from multiple directories, e.g. potential curves.
 
 from __future__ import print_function, division
 from .. import theo_header, input_options, lib_plot, lib_file
+from .actions import Action
 
 class write_plot_options_nx(lib_plot.write_plot_options):
     def plot_input(self):
@@ -153,18 +154,20 @@ class write_plot_options_nx(lib_plot.write_plot_options):
         lfile.write(ltable.ret_table())
         lfile.post(lvprt=1)
 
-def run_plot():
-    infilen = 'graph.in'
 
-    popt = write_plot_options_nx(infilen)
+class PlotGraphNx(Action):
 
-    popt.plot_input()
-    popt.read_data()
+    name = 'plot_graph_nx'
 
-    if popt['doplots']: popt.plot()
-    if popt['dotxt']:   popt.txt_files()
-    if popt['dognu']:   popt.gnu_inp()
+    def run():
+        theo_header.print_header('Graph plotting')
+        infilen = 'graph.in'
 
-def plot_graph_nx():
-    theo_header.print_header('Graph plotting')
-    run_plot()
+        popt = write_plot_options_nx(infilen)
+
+        popt.plot_input()
+        popt.read_data()
+
+        if popt['doplots']: popt.plot()
+        if popt['dotxt']:   popt.txt_files()
+        if popt['dognu']:   popt.gnu_inp()

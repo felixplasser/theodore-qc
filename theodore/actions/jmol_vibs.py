@@ -5,8 +5,8 @@ Automatic plotting of vibrations with jmol.
 # Code adapted from jmol_MOs.py
 
 from __future__ import print_function, division
-import sys
 from .. import error_handler, lib_file, theo_header, input_options
+from .actions import Action
 
 
 class jmol_vib_opts(input_options.write_options):
@@ -107,35 +107,41 @@ class vibcoll:
         if of == 'pngt': of = 'png'
         return "vib_%i.%s"%(ivib,of)    
 
-def jmol_vibs():
 
-    theo_header.print_header('Plotting of vibrations in Jmol')
-    print('jmol_MOs.py <mldfile>\n')
+class JMolVibs(Action):
 
-    vibfile = sys.argv[1]
-    
-    jopt = jmol_vib_opts('jmol.in')
-    jopt.input()
-    
-    jo = lib_file.wfile('jmol_vibs.spt')
-    ho = lib_file.htmlfile('vibs.html')
-    
-    ho.pre('Vibrations')
-    
-    vibc = vibcoll(jopt['st_ind'], jopt['en_ind'], vibfile)
+    name = 'jmol_vibs'
 
-    vibout = vib_output_jmol(vibc, jopt)
-    vibout.output(jo)
-    
-    vibh = vib_output_html(vibc, jopt)
-    vibh.output(ho)
+    _questions = """ 
+    vibfile = :: existing_file
+    """
 
-    ho.post(lvprt=1)
-    jo.post(lvprt=1)
-    if jopt['run_jmol']:
-        import subprocess
-        print("Running jmol ...")
+    def run(vibfile):
 
-        subprocess.call(["jmol", "-n", jo.name])
-    else:
-        print("  -> Now simply run \"jmol -n %s\" to plot all the orbitals.\n"%jo)
+        theo_header.print_header('Plotting of vibrations in Jmol')
+
+        jopt = jmol_vib_opts('jmol.in')
+        jopt.input()
+        
+        jo = lib_file.wfile('jmol_vibs.spt')
+        ho = lib_file.htmlfile('vibs.html')
+        
+        ho.pre('Vibrations')
+        
+        vibc = vibcoll(jopt['st_ind'], jopt['en_ind'], vibfile)
+
+        vibout = vib_output_jmol(vibc, jopt)
+        vibout.output(jo)
+        
+        vibh = vib_output_html(vibc, jopt)
+        vibh.output(ho)
+
+        ho.post(lvprt=1)
+        jo.post(lvprt=1)
+        if jopt['run_jmol']:
+            import subprocess
+            print("Running jmol ...")
+
+            subprocess.call(["jmol", "-n", jo.name])
+        else:
+            print("  -> Now simply run \"jmol -n %s\" to plot all the orbitals.\n"%jo)

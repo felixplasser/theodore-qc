@@ -7,6 +7,7 @@ from __future__ import print_function, division
 import sys
 import numpy
 from .. import theo_header, units, lib_file, input_options, error_handler
+from .actions import Action
 
 class mom_options(input_options.write_options):
     def input(self):
@@ -161,14 +162,14 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
             self.af.write('draw color red\n')
             return True
 
-
-def draw_moments():
-    theo_header.print_header('Plotting of dipole and quadrupole moments')
-    print('draw_moments.py <tden_summ>')
-    if len(sys.argv) < 2:
-        raise error_handler.MsgError('Enter one argument')
-
-    opt = mom_options('mom.in')
-    opt['ana_file'] = sys.argv[1]
-    opt.input()
-    opt.write_afile()
+class DrawMoments(Action):
+    name = 'draw_moments'
+    _questions = """
+    ana_file = :: existing_file
+    """
+    def run(ana_file):
+        theo_header.print_header('Plotting of dipole and quadrupole moments')
+        opt = mom_options('mom.in')
+        opt['ana_file'] = ana_file
+        opt.input()
+        opt.write_afile()

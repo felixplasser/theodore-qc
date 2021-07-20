@@ -5,8 +5,8 @@ Convert the TheoDORE output data to a table in latex or html format.
 
 from __future__ import print_function, division
 from .. import theo_header, input_options, lib_file, error_handler
+from .actions import Action
 
-import os
 
 class write_table_options(input_options.write_options):
     def table_input(self):
@@ -84,28 +84,29 @@ class read_table_options(input_options.read_options):
         self['fname'] = None
         self['fformat'] = '%.2f'
 
-def run_table():
-    infilen = 'table.in'
-    
-    topt = write_table_options(infilen)    
-    ropt = read_table_options(infilen, False)
-    
-    if ropt.init == 0:
-        copy = topt.ret_yn('Found %s. Use this file directly rather than performing an interactive input?'%infilen, True)
-    else:
-        copy = False    
-    
-    if copy:
-        topt.copy(ropt)
-    else:
-        topt.table_input()    
-    
-    topt.write_table()
-    
-    if not copy:
-        topt.flush()
 
+class ConvertTable(Action):
 
-def convert_table():
-    theo_header.print_header('Table conversion')
-    run_table()
+    name = 'convert_table'
+
+    def run():
+        theo_header.print_header('Table conversion')
+        infilen = 'table.in'
+        
+        topt = write_table_options(infilen)    
+        ropt = read_table_options(infilen, False)
+        
+        if ropt.init == 0:
+            copy = topt.ret_yn('Found %s. Use this file directly rather than performing an interactive input?'%infilen, True)
+        else:
+            copy = False    
+        
+        if copy:
+            topt.copy(ropt)
+        else:
+            topt.table_input()    
+        
+        topt.write_table()
+        
+        if not copy:
+            topt.flush()
