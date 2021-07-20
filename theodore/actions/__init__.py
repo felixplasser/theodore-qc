@@ -6,15 +6,14 @@ from .plot_vist import PlotVist
 from .. import theo_header
 
 
-def run():
-    settings = {
+settings = {
             'description': theo_header.ret_header(),
             'logo': None,
-            'error_order': ['logo', 'usage', 'space', 'error'],
+            'error_order': ['logo', 'description', 'args', 'usage', 'space', 'comment', 'space', 'error'],
             'arg_format': {
                 'name': 20,
                 'comment': 50,
-                'seperator': 2,
+                'seperator': ' | ',
             },
             'subparser_args': {
                 'title': 'Actions: %s',
@@ -23,5 +22,6 @@ def run():
                 'name': 20,
                 'comment': 50,
                 },
-    }
-    ActionFactory.from_commandline(description=settings)
+}
+
+run = ActionFactory.from_commandline(description=settings, as_parser=True)

@@ -16,7 +16,7 @@ Extract the source file
 
 Setup the path specification
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-To use TheoDORE the <code>PATH</code> and <code>PYTHONPATH</code> variables have to be adjusted. For this purpose you can use the provided bash script <code>setpaths.bash</code>
+To use TheoDORE the `PATH` and `PYTHONPATH` variables have to be adjusted. For this purpose you can use the provided bash script `setpaths.bash`
 
 ::
 
@@ -54,7 +54,7 @@ Four external packages are used by TheoDORE:
     - [python-openbabel](http://openbabel.org/wiki/Python) (optional) - for extended file-parsing capabilities of molecular structure files
     - [ORBKIT](http://orbkit.github.io/) (optional) - for creating cube files of densities
 
-The `numpy` and `matplotlib` packages are usually readily available with the standard installation tools, e.g. <code>apt-get</code>, <code>yum</code> etc. Alternatively, they may be downloaded from the URLs specified. If no integrated installation is performed, then it is necessary to add these libraries to the <code>PYTHONPATH</code> (see above).
+The `numpy` and `matplotlib` packages are usually readily available with the standard installation tools, e.g. `apt-get`, `yum` etc. Alternatively, they may be downloaded from the URLs specified. If no integrated installation is performed, then it is necessary to add these libraries to the `PYTHONPATH` (see above).
 
 For the installation of `orbkit` use the dedicated [TheoDORE fork on github](https://github.com/felixplasser/orbkit) and follow the installation instructions given there.
 
@@ -78,7 +78,7 @@ Testing
 Bash script
 ___________
 
-Use the <code>theo_test.bash</code> utility to test you installation:
+Use the `theo_test.bash` utility to test you installation:
 
 ::
 

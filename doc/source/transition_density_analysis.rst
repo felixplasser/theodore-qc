@@ -1,7 +1,20 @@
 Transition density matrix analysis
 ----------------------------------
 
-Analysis of the transition density matrix (1TDM) is performed with the script <code>analyze_tden.py</code>. The main types of analysis that can be performed are charge transfer numbers, natural transition orbitals, and an exciton size analysis.
+.. colt_commandline:: theodore run
+   :subparsers: options(analyze_tden)
+   :header: False
+
+    main_order = usage, pos_args, opt_args, subparser_args, space
+    alias = theodore
+
+    [arg_format]
+    name = 20
+    comment = 60
+
+
+
+Analysis of the transition density matrix (1TDM) is performed with the script `analyze_tden.py`. The main types of analysis that can be performed are charge transfer numbers, natural transition orbitals, and an exciton size analysis.
 
 **Note:** Traditionally, only spin-restricted computations are supported by TheoDORE and the treatment of unrestricted computations via the new script `analyze_tden_unr.py`  (see below) is not well-tested yet.
 
@@ -10,7 +23,7 @@ Charge transfer numbers
 
 The charge transfer numbers are computed as partial summations over squared transition density matrix elements of molecular fragments. The key step for a charge transfer analysis is to [divde the molecule into meaningful fragments](Input).
 
-The actual charge transfer number analysis is a generalized population analysis. Currently, three formulas are implemented: <code>Om_formula=0</code> yields a Mulliken style analysis
+The actual charge transfer number analysis is a generalized population analysis. Currently, three formulas are implemented: `Om_formula=0` yields a Mulliken style analysis
 
 .. math::
    
@@ -36,7 +49,7 @@ The actual charge transfer number analysis is a generalized population analysis.
 
 The last case (:math:`Om\_formula=2`) is probably the best option in terms of, both, computational effort and numerical stability.
 
-Subsequently TheoDORE computes fragment based descriptors of the &Omega;-matrix. These are specified using the <code>prop_list</code> keyword, e.g.
+Subsequently TheoDORE computes fragment based descriptors of the &Omega;-matrix. These are specified using the `prop_list` keyword, e.g.
 
 ::
 
@@ -103,7 +116,7 @@ Plotting in VMD using [vmd_plots.py](Utility scripts/#vmd_plotspy).
 Exciton size analysis
 ~~~~~~~~~~~~~~~~~~~~~
 
-An approximate exciton size, [*PCCP*, **18**, 2548 (2016)](http://dx.doi.org/10.1039/c5cp07077e), (computed as the root-mean-square *electron-hole* separation, denoted <code>RMSeh</code>) is constructed as
+An approximate exciton size, [*PCCP*, **18**, 2548 (2016)](http://dx.doi.org/10.1039/c5cp07077e), (computed as the root-mean-square *electron-hole* separation, denoted `RMSeh`) is constructed as
 
 .. math::
     d_{exc}=\sqrt{\sum_{MN}\Omega_{MN}d_{MN}^2/\Omega}
@@ -124,4 +137,4 @@ The script `analyze_tden_unr.py` performs independent calculations for alpha and
 Analysis of spin-orbit coupled states
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The analysis of spin-orbit coupled states, see [*Coord. Chem. Rev.*, **361**, 74 (2018)](http://dx.doi.org/10.1016/j.ccr.2018.01.019), is possible using the script <code>analyze_tden_soc.py</code>. Note, however, that this analysis is still in an experimental stage and is only possible for ADF.
+The analysis of spin-orbit coupled states, see [*Coord. Chem. Rev.*, **361**, 74 (2018)](http://dx.doi.org/10.1016/j.ccr.2018.01.019), is possible using the script `analyze_tden_soc.py`. Note, however, that this analysis is still in an experimental stage and is only possible for ADF.

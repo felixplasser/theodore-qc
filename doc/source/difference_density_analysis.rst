@@ -1,7 +1,7 @@
 State density matrix analysis
 -----------------------------
 
-Analysis of state and difference density matrices is performed with the script <code>analyze_sden.py</code>. In the case of an analysis of natural orbital (NO) files, also the <code>analyze_NOs.py</code> may be applied.
+Analysis of state and difference density matrices is performed with the script `analyze_sden.py`. In the case of an analysis of natural orbital (NO) files, also the `analyze_NOs.py` may be applied.
 
 Population analysis
 ~~~~~~~~~~~~~~~~~~~

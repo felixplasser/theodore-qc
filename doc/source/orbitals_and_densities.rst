@@ -13,7 +13,7 @@ Orbitals are exported in three forms:
 Using the Jmol script
 ~~~~~~~~~~~~~~~~~~~~~
 
-After running <code>analyze_tden.py</code> (<code>analyze_sden.py</code>) the file <code>nto_jmol.spt</code> (<code>ndo_jmol.spt</code>) is created. This is an input file for jmol, which can be directly executed as
+After running `analyze_tden.py` (`analyze_sden.py`) the file `nto_jmol.spt` (`ndo_jmol.spt`) is created. This is an input file for jmol, which can be directly executed as
 
 ::
 
@@ -29,12 +29,12 @@ For more flexibility, the following semi-interactive procedure can be applied:
 
 + Run the remaining lines of the script (by copying into the Jmol console)
 
-+ Open the file <code>nto.html</code> (<code>ndo.html</code>) to view the result ([Example](http://theodore-qc.sourceforge.net/images/nto.html)).
++ Open the file `nto.html` (`ndo.html`) to view the result ([Example](http://theodore-qc.sourceforge.net/images/nto.html)).
 
 Density plotting (ORBKIT)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Cube files of densities can be directly created with [ORBKIT](http://orbkit.github.io/). The interface is controlled via <code>theoinp</code>.
+Cube files of densities can be directly created with [ORBKIT](http://orbkit.github.io/). The interface is controlled via `theoinp`.
 
 The cube files can be loaded into VMD and visualized using VMD network files provided by ORBKIT or by using the [vmd_plots.py](Utility%20scripts/#vmd_plotspy) facility of TheoDORE. For the latter, just run:
 
@@ -61,10 +61,10 @@ Run, e.g.:
 
     extract_molden.py nto_1-1-a.mld
 
-This will create a new directory <code>nto_1-1-a.mld.dir</code> containing the files <code>nto_1-1-a.mld_elec.mld</code> and
-<code>nto_1-1-a.mld_hole.mld</code> with the separate contributions.
+This will create a new directory `nto_1-1-a.mld.dir` containing the files `nto_1-1-a.mld_elec.mld` and
+`nto_1-1-a.mld_hole.mld` with the separate contributions.
 
-* Open <code>nto_1-1-a.mld_elec.mld</code> in Molden (or preferably gmolden)
+* Open `nto_1-1-a.mld_elec.mld` in Molden (or preferably gmolden)
     * Go to "density mode"
     * Select "Plot Function" - "Density"
     * Use "Plot Mode" - "Space"
