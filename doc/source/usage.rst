@@ -18,7 +18,7 @@ Usage
    :subparsers: options(*)
    :header: True
 
-    main_order = comment, usage, pos_args, opt_args, subparser_args, space
+    main_order = comment, usage, args, space
     alias = theodore
 
     [arg_format]
