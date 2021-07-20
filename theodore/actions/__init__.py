@@ -3,6 +3,10 @@ from .analyze_tden import AnalyzeTden, AnalyzeTdenUnr
 from .analyze_sden import AnalyzeSden
 from .theoinp import TheodoreInput
 from .plot_vist import PlotVist
+from .jmol_MOs import JMolMOs
+from .babel import Babel
+from .cc_opt import CCOpt
+from .cc_check import CCCheck
 from .. import theo_header
 
 
