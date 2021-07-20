@@ -9,7 +9,6 @@ The `theoinp` utility allows quick generation of the input information needed by
    :subparsers: options(theoinp)
    :header: False
 
-   main_order = usage, pos_args, opt_args, subparser_args, space
    alias = theodore
 
    [arg_format]
