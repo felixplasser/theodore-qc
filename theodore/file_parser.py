@@ -1533,12 +1533,12 @@ class file_parser_adf(file_parser_base):
             self.nsing = len(rfile.read('All excitations','All Sing-Sing excitations'))
             excss = rfile.read('Excitations SS A', 'excenergies') * units.energy['eV']
             oscss = rfile.read('Excitations SS A', 'oscillator strengths')
-        except TypeError:
+        except:
             self.nsing = 0
         try:
             self.ntrip = len(rfile.read('All excitations','All Sing-Trip excitations'))
             excst = rfile.read('Excitations ST A', 'excenergies') * units.energy['eV']
-        except TypeError:
+        except:
             self.ntrip = 0
 
         state_list = [{} for istate in range(self.nsing+self.ntrip)]

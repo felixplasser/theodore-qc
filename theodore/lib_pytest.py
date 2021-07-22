@@ -89,15 +89,13 @@ class pytest_job:
         # These files should match line-by-line
         if '.txt' in runf:
             for iline, line in enumerate(ref):
+                # TODO: one could add numerical thresholds here
                 if not line == run[iline]:
                     diffl = list(difflib.unified_diff(ref, run, fromfile=reff, tofile=runf))
                     wstring = "\n"
                     for line in diffl:
                         self.wstring += line
-                    # TODO: one could add numerical thresholds here
-                    #self.wstring += "- " + line
-                    #self.wstring += "+ " + run[iline]
-                return
+                    return
         # Use a general diff here
         else:
             diffl = list(difflib.unified_diff(self.diff_ignore(ref), self.diff_ignore(run), fromfile=reff, tofile=runf))
