@@ -833,6 +833,93 @@ class MO_set_adf(MO_set):
 #      x=0
 #      y+=1
 
+class MO_set_onetep(MO_set):
+    """
+    Handling of MOs for ONETEP.
+    Within TheoDORE the Lowdin orthogonalized AOs are treated as MOs.
+    This means that no additional transformations are required.
+    """
+    def read(self, lvprt=1):
+        self.num_at = 3 # TODO
+
+        if lvprt >= 1:
+            print("Reading basis function information ...")
+        for line in open(self.file + '.jointngwf2atoms'):
+            at_ind = int(line.strip())
+            self.basis_fcts.append(basis_fct(at_ind))
+        self.basis_fcts_val = []
+        for line in open(self.file + '.valngwf2atoms'):
+            at_ind = int(line.strip())
+            self.basis_fcts_val.append(basis_fct(at_ind))
+
+        if lvprt >= 1:
+            print("Reading and processing overlap matrix ...")
+        self.read_S()
+
+        # The MO coefficients are just a dummy unit matrix.
+        self.mo_mat = numpy.identity(len(self.basis_fcts))
+
+    def read_S(self):
+        """
+        Read the overlap matrix.
+        """
+        # analysis of joint set
+        # this uses the variables of the main class
+        tmp = []
+        Sname = self.file + '.jointoverlap.mat'
+        for line in open(Sname, 'r'):
+            tmp.append(line.split())
+        self.S = numpy.array(tmp, float)
+        (eval, evec) = numpy.linalg.eigh(self.S)
+        self.S2 = numpy.dot(evec,
+            numpy.dot(numpy.diag(eval), evec))
+
+        # analysis of valence set only
+        # this creates its own temporary variables
+        tmp = []
+        Sname = self.file + '.valoverlap.mat'
+        for line in open(Sname, 'r'):
+            tmp.append(line.split())
+        self.S_val = numpy.array(tmp, float)
+        (eval, evec) = numpy.linalg.eigh(self.S_val)
+        ltmp = numpy.dot(evec,
+            numpy.dot(numpy.diag(eval), evec))
+        self.S2_val = numpy.zeros([len(self.S), len(self.S_val)])
+
+        # As a next step the valence basis functions have to be mapped
+        #   into the joint set. It is assumed that they are sorted by atom.
+        curr_at = 1
+        irow = -1
+        nskip = 1
+        for ibf, bf in enumerate(self.basis_fcts_val):
+            if curr_at == bf.at_ind:
+                irow  += 1
+            else:
+                curr_at = bf.at_ind
+                irow += nskip
+                nskip = 1
+            nskip += 1
+            self.S2_val[irow] = ltmp[ibf]
+
+    def lowdin_trans(self, D):
+        """
+        Nothing to do. D is already stored in the Lowdin orthogonalized AO basis.
+        """
+        return D
+
+    def prep_tden(self, D):
+        """
+        Prepare density matrix by putting it into the Lowdin orthogonalized AO basis.
+        """
+        return numpy.dot(self.S2_val,
+            numpy.dot(D, self.S2))
+
+    def ret_num_bas_val(self):
+        """
+        Return number of basis functions in only the valence set.
+        """
+        return len(self.S_val)
+
 class basis_fct:
     """
     Container for basisfunction information.

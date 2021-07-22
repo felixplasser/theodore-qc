@@ -1788,3 +1788,30 @@ class file_parser_rassi(file_parser_libwfa):
         rfile.close()
 
         return energies, oscs, state_list
+
+class file_parser_onetep(file_parser_base):
+    """
+    Read ONETEP job.
+    """
+    def read(self, mos):
+        state_list = []
+
+        pre = "water_molecule"
+        nstates = 2
+
+        for istate in range(1, nstates+1):
+            state_list.append({})
+            state = state_list[-1]
+            state['state_ind'] = istate 
+            state['name'] = 'A' + str(istate)
+            state['exc_en'] = istate
+
+            Dao = numpy.zeros([mos.ret_num_bas_val(), mos.ret_num_bas()], float)
+            dmfile = "%s_response_denskern_%i.dkn_dens.mat"%(pre, istate)
+            for i, line in enumerate(open(dmfile, 'r')):
+                words = line.split()
+                for j in range(mos.ret_num_bas_val()):
+                    Dao[j, i] = float(words[2 * j])
+            state['tden'] = mos.prep_tden(Dao)
+
+        return state_list
