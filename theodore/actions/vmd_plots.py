@@ -2,8 +2,10 @@
 Automatic plotting of densities or MOs with vmd.
 """
 from __future__ import print_function, division
+import os
 import sys
 from .. import error_handler, theo_header, input_options, lib_struc, lib_file, lib_util
+from .actions import Action
 
 
 class vmd_options(input_options.write_options):
@@ -179,39 +181,40 @@ mol modcolor 4 0 ColorID 1
 
         ho.post(lvprt=1)
 
-def run():
-    print('vmd_plots.py [<pltfile> [<pltfile2> ...]]\n')
+class VMDPlots(Action):
 
-    pltfiles = sys.argv[1:]
+    name = 'vmd_plots'
 
-    if len(pltfiles) == 0:
-        raise error_handler.MsgError('No file specified')
-    else:
-        print('%i Files analyzed:'%len(pltfiles), end=' ')
-        for pltf in pltfiles: print(pltf, end=' ')
-        print
+    _questions = """
+    pltfiles = :: list(existing_file)
+    """
 
-    vopt = vmd_options('vmd.in')
-    vopt.vmd_input()
-    auxfiles = []
-    if vopt['dnto']:
-        pltfiles, auxfiles = vopt.mod_pltfiles(pltfiles)
+    def run(pltfiles):
 
-    vopt.write_lfile(pltfiles, auxfiles)
-    vopt.write_pfile(pltfiles, auxfiles)
-    vopt.write_cfile(pltfiles)
-    vopt.write_hfile(pltfiles)
+        print('%i Files analyzed:' % len(pltfiles), end=' ')
+        print(", ".join(os.path.basename(filename) for filename in pltfiles))
 
-    print("Converting coordinate file ...")
-    struc = lib_struc.structure()
-    try:
-        struc.read_file(file_path=pltfiles[0], file_type=None)
-        struc.make_coord_file(file_path='coord.xyz',file_type='xyz',lvprt=1)
-    except:
-        print("*** WARNING: The coordinate file coord.xyz could not be created. ***")
-        print("    Please create this file yourself.\n\n")
+        vopt = vmd_options('vmd.in')
+        vopt.vmd_input()
+        auxfiles = []
+        if vopt['dnto']:
+            pltfiles, auxfiles = vopt.mod_pltfiles(pltfiles)
 
-    print("""
+        vopt.write_lfile(pltfiles, auxfiles)
+        vopt.write_pfile(pltfiles, auxfiles)
+        vopt.write_cfile(pltfiles)
+        vopt.write_hfile(pltfiles)
+
+        print("Converting coordinate file ...")
+        struc = lib_struc.structure()
+        try:
+            struc.read_file(file_path=pltfiles[0], file_type=None)
+            struc.make_coord_file(file_path='coord.xyz',file_type='xyz',lvprt=1)
+        except:
+            print("*** WARNING: The coordinate file coord.xyz could not be created. ***")
+            print("    Please create this file yourself.\n\n")
+
+        print("""
 Files created. Now do the following:
 1. vmd coord.xyz
 2.   File - Load Visualization State - %s
@@ -220,8 +223,3 @@ Files created. Now do the following:
 5. bash %s
 6. Open in browser: %s
 """%(vopt['lfile'], vopt['pfile'], vopt['cfile'], vopt['hfile']))
-
-
-def vmd_plots():
-    theo_header.print_header('Automatic plotting in VMD')
-    run()

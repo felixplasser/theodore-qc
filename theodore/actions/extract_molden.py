@@ -4,6 +4,7 @@ from __future__ import print_function, division
 import os, sys
 import numpy
 from .. import theo_header, lib_mo, error_handler
+from .actions import Action
 
 
 class extract_mld:
@@ -108,22 +109,23 @@ options: -ene          - interpret energies as occupations
          -alphabeta    - use alpha/beta labels for hole/electron
     """)
 
-def extract_molden():
-    header()
-    extr = extract_mld()
-    mo_files = []
+class ExtractMolden(Action):
+    _questions = """
+    mo_files = :: list(existing_file)
+    # interpret energies as occupations
+    ene = False :: bool, alias=e
+    # threshold for print-out
+    thresh = 0.001 :: float, alias=t
+    # use alpha/beta labels for hole/electron
+    alphabeta = False :: bool, alias=ab
+    """
 
-    args = sys.argv[1:]
-    while len(args) > 0:
-        arg = args.pop(0)
-        if arg == '-thresh':
-            extr.thresh = float(args.pop(0))
-        elif arg == '-ene':
-            extr.rd_ene = True
-        elif arg == '-alphabeta':
-            extr.decompose = False
-        else:
-            mo_files.append(arg)
+    name = 'extract_molden'
 
-    for mo_file in mo_files:
-        extr.extract(mo_file)
+    def run(mo_files, ene, thresh, alphabeta):
+        header()
+        extr = extract_mld(thresh=thresh, rd_ene=ene, decompose=not alphabeta)
+        mo_files = []
+
+        for mo_file in mo_files:
+            extr.extract(mo_file)

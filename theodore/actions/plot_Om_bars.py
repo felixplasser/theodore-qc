@@ -7,6 +7,7 @@ Author: Felix Plasser, Sebastian Mai
 
 from __future__ import print_function, division
 from .. import theo_header, input_options, lib_file, error_handler
+from .actions import Action
 import numpy
 import os
 
@@ -231,16 +232,14 @@ every linear axis/.append style={
 """
         return str
 
-def run_plot():
-    opt = Om_bar_options('plot.in')
-    opt.read_str("Name of the file with the Omega matrix entries", "OmFfile", "OmFrag.txt", autocomp=True)
-    opt.read_OmFrag(opt['OmFfile'])
-    opt.Om_bar_input()
-    opt.Om_bar_data()
-    opt.make_tex()
+class PlotOmBars(Action):
+    name = 'plot_om_bars'
 
-
-def plot_om_bars():
-    theo_header.print_header('Plot Omega matrices as bar graphs')
-
-    run_plot()
+    def run():
+        theo_header.print_header('Plot Omega matrices as bar graphs')
+        opt = Om_bar_options('plot.in')
+        opt.read_str("Name of the file with the Omega matrix entries", "OmFfile", "OmFrag.txt", autocomp=True)
+        opt.read_OmFrag(opt['OmFfile'])
+        opt.Om_bar_input()
+        opt.Om_bar_data()
+        opt.make_tex()

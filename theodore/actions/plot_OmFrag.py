@@ -5,6 +5,8 @@ Script for plotting the Omega matrix as a pseudocolor matrix plot.
 
 from __future__ import print_function, division
 from .. import theo_header, input_options, lib_file, error_handler
+from .actions import Action
+
 import numpy
 import os
 
@@ -206,15 +208,16 @@ class OmFrag_options(input_options.write_options):
 
         print(" HTML file %s containing the electron-hole correlation plots written."%hfname)
 
-def run_plot():
-    Oopt = OmFrag_options('plot.in')
-    Oopt.read_OmFrag()
 
-    Oopt.OmFrag_input()
+class PlotOmFrag(Action):
 
-    Oopt.plot()
+    name = 'plot_omfrag'
 
+    def run():
+        theo_header.print_header('Plot Omega matrices')
+        Oopt = OmFrag_options('plot.in')
+        Oopt.read_OmFrag()
 
-def plot_omfrag():
-    theo_header.print_header('Plot Omega matrices')
-    run_plot()
+        Oopt.OmFrag_input()
+
+        Oopt.plot()

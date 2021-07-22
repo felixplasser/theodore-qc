@@ -4,8 +4,9 @@ Automatic plotting of MOs with jmol.
 """
 
 from __future__ import print_function, division
+from .actions import Action
 from .. import lib_mo, error_handler, lib_file, theo_header, input_options
-import sys
+import sys, os
 
 class mo_output:
     """
@@ -284,74 +285,82 @@ class jmol_options(input_options.write_options):
 
         f.close()
 
-def run():
-    print('jmol_MOs.py [<mldfile> [<mldfile2> ...]]\n')
 
-    mldfiles = sys.argv[1:]
 
-    if len(mldfiles) == 0:
-        print("No file specified, generating generic script")
-        mldfiles = ['']
-        pref = ''
-    elif len(mldfiles) == 1:
-        print("Analyzing the file:", mldfiles[0])
-        pref = mldfiles[0] + '.'
-    else:
-        print("Analyzing the files:", mldfiles)
-        pref = 'multi.'
+class JMolMOs(Action):
 
-    jopt = jmol_options('jmol.in')
-    jopt.jmol_input()
+    name = 'jmol_mos'
 
-    if jopt['preprocess']:
-        jopt.preprocess(mldfiles)
-        mldfiles = ['merged.mld']
+    _colt_description = ''
 
-    jo = lib_file.wfile('jmol_orbitals.spt')
-    ho = lib_file.htmlfile('%sorbitals.html'%pref)
-    lo = lib_file.latexfile('%sorbitals.tex'%pref)
+    _questions = """
+    mldfiles = :: list(file), optional, alias=f
+    """
 
-    ho.pre('Orbitals')
-    lo.pre(None, graphicx=True, docclass='{standalone}')
+    def run(mldfiles):
+        theo_header.print_header('Orbital plotting in Jmol')
 
-    for mldfile in mldfiles:
-        print('Analyzing %s ...\n'%mldfile)
-        if jopt['spec'] == 'sten':
-            moc = mocoll(jopt['st_ind'], jopt['en_ind'], mldfile)
-        elif jopt['spec'] == 'frontier':
-            moc = mocollf(jopt['en_ind'], mldfile)
-        elif jopt['spec'] == 'occ':
-            moc = mocoll_occ(jopt['occmin'], jopt['occmax'], mldfile, jopt['eneocc'])
+        if os.path.basename(mldfiles[0]) == '<NOT_DEFINED>':
+            mldfiles = []
+
+        if len(mldfiles) == 0:
+            print("No file specified, generating generic script")
+            mldfiles = ['']
+            pref = ''
+        elif len(mldfiles) == 1:
+            print("Analyzing the file:", mldfiles[0])
+            pref = mldfiles[0] + '.'
         else:
-            raise error_handler.ElseError(self['spec'], 'spec')
+            print("Analyzing the files:", mldfiles)
+            pref = 'multi.'
 
-        moout = mo_output_jmol(moc, jopt)
-        moout.output(jo)
+        jopt = jmol_options('jmol.in')
+        jopt.jmol_input()
 
-        moh = mo_output_html(moc, jopt)
-        moh.output(ho)
+        if jopt['preprocess']:
+            jopt.preprocess(mldfiles)
+            mldfiles = ['merged.mld']
 
-        mol = mo_output_tex(moc, jopt)
-        mol.output(lo)
+        jo = lib_file.wfile('jmol_orbitals.spt')
+        ho = lib_file.htmlfile('%sorbitals.html'%pref)
+        lo = lib_file.latexfile('%sorbitals.tex'%pref)
 
-    ho.post(lvprt=1)
-    print("  -> View in browser.")
-    lo.post(lvprt=1)
-    print("  -> Compile with pdflatex (or adjust first).")
+        ho.pre('Orbitals')
+        lo.pre(None, graphicx=True, docclass='{standalone}')
 
-    jo.post(lvprt=1)
-    if mldfiles == [""]:
-        print("  -> Open the Molden-file in jmol and execute the commands contained in this file.")
-    else:
-        if jopt['run_jmol']:
-            import subprocess
-            print("Running jmol ...")
+        for mldfile in mldfiles:
+            print('Analyzing %s ...\n'%mldfile)
+            if jopt['spec'] == 'sten':
+                moc = mocoll(jopt['st_ind'], jopt['en_ind'], mldfile)
+            elif jopt['spec'] == 'frontier':
+                moc = mocollf(jopt['en_ind'], mldfile)
+            elif jopt['spec'] == 'occ':
+                moc = mocoll_occ(jopt['occmin'], jopt['occmax'], mldfile, jopt['eneocc'])
+            else:
+                raise error_handler.ElseError(self['spec'], 'spec')
 
-            subprocess.call(["jmol", "-n", jo.name])
+            moout = mo_output_jmol(moc, jopt)
+            moout.output(jo)
+
+            moh = mo_output_html(moc, jopt)
+            moh.output(ho)
+
+            mol = mo_output_tex(moc, jopt)
+            mol.output(lo)
+
+        ho.post(lvprt=1)
+        print("  -> View in browser.")
+        lo.post(lvprt=1)
+        print("  -> Compile with pdflatex (or adjust first).")
+
+        jo.post(lvprt=1)
+        if mldfiles == [""]:
+            print("  -> Open the Molden-file in jmol and execute the commands contained in this file.")
         else:
-            print("  -> Now simply run \"jmol -n %s\" to plot all the orbitals.\n"%jo)
+            if jopt['run_jmol']:
+                import subprocess
+                print("Running jmol ...")
 
-
-def jmol_mos():
-    theo_header.print_header('Orbital plotting in Jmol')
-    run()
+                subprocess.call(["jmol", "-n", jo.name])
+            else:
+                print("  -> Now simply run \"jmol -n %s\" to plot all the orbitals.\n"%jo)
