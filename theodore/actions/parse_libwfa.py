@@ -20,10 +20,15 @@ class ParseLibwfa(Action):
 
     name = 'parse_libwfa'
 
+    _colt_description = 'Parse libwfa output from Q-Chem or OpenMolcas (TODO)'
+
     _questions = """
+    # Logfile from Q-Chem or OpenMolcas
     logfile = :: existing_file
+    # Type of calculation
     typ    = :: str, optional :: qcadc, qctddft, qctda, rassi
-    ifile = dens_ana.in :: existing_file, alias=f
+    # Input file
+    ifile = :: file, optional, alias=f
     """
 
     def run(logfile, typ, ifile):
@@ -44,7 +49,7 @@ class ParseLibwfa(Action):
         if (not 'rfile' in ioptions) or (not 'rtype' in ioptions):
             ihelp()
         
-        theo_header.print_header('Parse libwfa output', ioptions=ioptions)
+        theo_header.print_header(__class__._colt_description, ioptions=ioptions)
         
         #--------------------------------------------------------------------------#
         # Parsing and computations

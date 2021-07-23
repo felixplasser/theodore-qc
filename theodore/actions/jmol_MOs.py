@@ -299,7 +299,7 @@ class JMolMOs(Action):
     """
 
     def run(mldfiles):
-        theo_header.print_header(_colt_description)
+        theo_header.print_header(__class__._colt_description)
 
         if os.path.basename(mldfiles[0]) == '<NOT_DEFINED>':
             mldfiles = []

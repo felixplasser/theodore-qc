@@ -29,8 +29,8 @@ class CCOpt(Action):
     name = 'cc_opt'
 
     def run(logfile, scan, thresh, output):
-        
-           theo_header.print_header(_colt_description)
+
+           theo_header.print_header(__class__._colt_description)
            
            fname = output
            

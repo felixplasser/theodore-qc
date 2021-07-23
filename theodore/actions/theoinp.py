@@ -479,8 +479,8 @@ class TheodoreInput(Action):
 
     _questions = ""
 
-    _colt_description = "generate input for theodore"
+    _colt_description = "Input generation for TheoDORE"
 
     def run():
-        theo_header.print_header('Input generation')
+        theo_header.print_header(__class__._colt_description)
         run_theoinp()

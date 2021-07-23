@@ -22,7 +22,7 @@ class AnalyzeNOs(Action):
     """
 
     def run(no_files, ifile):
-        theo_header.print_header(_colt_description, cfile=__file__)
+        theo_header.print_header(__class__._colt_description, cfile=__file__)
         # set options
         ioptions = input_options.sden_ana_options(ifile, check_init=False)
         ioptions['rtype'] = 'nos'

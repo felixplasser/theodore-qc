@@ -22,7 +22,7 @@ class Babel(Action):
     """
 
     def run(infile, intype, outtype, outfile):
-        theo_header.print_header(_colt_description)
+        theo_header.print_header(__class__._colt_description)
 
         if intype in lib_struc.veloc_types: # special treatment of velocities
             veloc = struc_linalg.veloc()

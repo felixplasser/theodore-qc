@@ -6,13 +6,13 @@ from .analyze_sden import AnalyzeSden
 from .analyze_NOs import AnalyzeNOs
 from .plot_vist import PlotVist
 from .jmol_MOs import JMolMOs
+from .jmol_vibs import JMolVibs
 from .babel import Babel
 from .cc_opt import CCOpt
 from .cc_check import CCCheck
 from .draw_moments import DrawMoments
 from .extract_molden import ExtractMolden
 from .fcd import FCD
-from .jmol_vibs import JMolVibs
 from .parse_libwfa import ParseLibwfa
 from .plot_OmFrag import PlotOmFrag
 from .plot_Om_bars import PlotOmBars

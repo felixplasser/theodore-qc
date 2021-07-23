@@ -35,7 +35,7 @@ class AnalyzeTdenSoc(Action):
     @timeit
     def run(ifile, spin_comp):
         ioptions = input_options.tden_ana_options(ifile)
-        theo_header.print_header(_colt_description, ioptions=ioptions, cfile=__file__)
+        theo_header.print_header(__class__._colt_description, ioptions=ioptions, cfile=__file__)
         
         tdena = lib_soc.tden_ana_soc(ioptions)
         if 'mo_file' in ioptions: tdena.read_mos()
