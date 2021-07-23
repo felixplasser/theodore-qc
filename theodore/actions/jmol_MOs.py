@@ -291,14 +291,15 @@ class JMolMOs(Action):
 
     name = 'jmol_mos'
 
-    _colt_description = ''
+    _colt_description = 'Orbital plotting in Jmol'
 
     _questions = """
+    # List of Molden files with orbitals
     mldfiles = :: list(file), optional, alias=f
     """
 
     def run(mldfiles):
-        theo_header.print_header('Orbital plotting in Jmol')
+        theo_header.print_header(_colt_description)
 
         if os.path.basename(mldfiles[0]) == '<NOT_DEFINED>':
             mldfiles = []

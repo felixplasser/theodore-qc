@@ -8,15 +8,21 @@ import sys
 
 from .. import theo_header, cclib_interface, input_options, error_handler, units
 from .actions import Action
-# import openbabel
+import openbabel
 
 
 class CCOpt(Action):
 
+    _colt_description = 'Analysis of geom. opt. or relaxed scan'
+
     _questions = """
+    # Logfile of quant. chemistry program
     logfile = :: existing_file
+    # Analyse a relaxed scan
     scan = false :: bool, alias=s
+    # Threshold for energy change (for scan)
     thresh = 500 :: float, alias=t
+    # Name of output xyz file
     output  = cc_opt.xyz :: file, alias=o
     """
      
@@ -24,7 +30,7 @@ class CCOpt(Action):
 
     def run(logfile, scan, thresh, output):
         
-           theo_header.print_header('Analysis of a geometry optimization or relaxed scan')
+           theo_header.print_header(_colt_description)
            
            fname = output
            
@@ -80,7 +86,7 @@ class CCOpt(Action):
                    except IndexError:
                        dE2 = 1.
            
-                   if abs(dE2) > scan_thresh * abs(dE1):
+                   if abs(dE2) > thresh * abs(dE1):
                        print('     -> Geometry written to %s (% .4f / % .4f / % .1f)'%(f.name, dE1, dE2, dE2/dE1))
                    else:
                        print('     -> Geometry skipped')
