@@ -1794,6 +1794,12 @@ class file_parser_onetep(file_parser_base):
     Read ONETEP job.
     """
     def read(self, mos):
+        self.ioptions['jmol_orbitals'] = False
+        self.ioptions['molden_orbitals'] = False
+
+        print(" \nUsing Lowdin analysis for ONETEP (Om_formula=2)")
+        self.ioptions['Om_formula'] = 2
+
         state_list = []
 
         pre = "water_molecule"
@@ -1812,6 +1818,9 @@ class file_parser_onetep(file_parser_base):
                 words = line.split()
                 for j in range(mos.ret_num_bas_val()):
                     Dao[j, i] = float(words[2 * j])
+
+            print("fptmp: Dao norm", numpy.sum(Dao * Dao))
             state['tden'] = mos.prep_tden(Dao)
+            print("fptmp: tden norm", numpy.sum(state['tden'] * state['tden']))
 
         return state_list

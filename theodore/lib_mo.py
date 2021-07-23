@@ -840,8 +840,6 @@ class MO_set_onetep(MO_set):
     This means that no additional transformations are required.
     """
     def read(self, lvprt=1):
-        self.num_at = 3 # TODO
-
         if lvprt >= 1:
             print("Reading basis function information ...")
         for line in open(self.file + '.jointngwf2atoms'):
@@ -900,6 +898,8 @@ class MO_set_onetep(MO_set):
                 nskip = 1
             nskip += 1
             self.S2_val[irow] = ltmp[ibf]
+
+        self.num_at = curr_at
 
     def lowdin_trans(self, D):
         """
