@@ -1802,18 +1802,37 @@ class file_parser_onetep(file_parser_base):
 
         state_list = []
 
-        pre = "water_molecule"
+        pre = self.ioptions['rfile']
         nstates = 2
 
-        for istate in range(1, nstates+1):
-            state_list.append({})
-            state = state_list[-1]
-            state['state_ind'] = istate 
-            state['name'] = 'A' + str(istate)
-            state['exc_en'] = istate
+        rfile = open("%s.onetep"%pre, 'r')
+        while True:
+            try:
+                line = next(rfile)
+            except StopIteration:
+                print("Finished parsing %s."%rfile.name)
+                break
+
+            if 'Energy (in Ha)' in line:
+                while True:
+                    line = next(rfile)
+                    words = line.split()
+                    print(words[0], words[0] == "Writing")
+                    if len(words) != 4 or words[0] == "Writing":
+                        break
+
+                    state_list.append({})
+                    state = state_list[-1]
+                    state['state_ind'] = int(words[0])
+                    state['name'] = 'A' + words[0]
+                    state['exc_en'] = float(words[1]) * units.energy['eV']
+                    state['osc_str'] = float(words[2])
+
+        for istate in range(nstates):
+            state = state_list[istate]
 
             Dao = numpy.zeros([mos.ret_num_bas_val(), mos.ret_num_bas()], float)
-            dmfile = "%s_response_denskern_%i.dkn_dens.mat"%(pre, istate)
+            dmfile = "%s_response_denskern_%i.dkn_dens.mat"%(pre, istate+1)
             for i, line in enumerate(open(dmfile, 'r')):
                 words = line.split()
                 for j in range(mos.ret_num_bas_val()):
