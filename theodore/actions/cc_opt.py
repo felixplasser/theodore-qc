@@ -62,7 +62,8 @@ class CCOpt(Action):
            print('\n%21s'%'SCF energies (a.u.)', end=' ')
            if et: print('%15s'%'Exc. (a.u.)')
            else:  print()
-           
+
+           ngeo = 0
            for i,scfen in enumerate(scfens):
                en_au = scfen/units.energy['eV']
                print('%5i:% 15.7f'%(i,en_au), end=' ')
@@ -102,9 +103,12 @@ class CCOpt(Action):
                    f.write('Energy = % .7f\n'%(en_au))
                    for line in lines[2:-1]:
                        f.write(line + '\n')
-           
+                   ngeo += 1
+
            f.close()
-           print("Geometries written to %s"%f.name)
+           print("\n*** Done *** \n%i geometries written to %s"%(ngeo, f.name))
+           if scan:
+               print(" ... lower threshold (-t) to get more geometries.")
            
            try:
                optdone = ccparser.data.optdone
