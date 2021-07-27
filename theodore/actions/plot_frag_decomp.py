@@ -108,8 +108,10 @@ class decomp_options(input_options.write_options):
 class PlotFragDecomp(Action):
     name = 'plot_frag_decomp'
 
+    _colt_description = 'Plot fragment decomposition of Omega matrix'
+
     def run_plot():
-        theo_header.print_header('Plot fragment decomposition')
+        theo_header.print_header(__class__._colt_description)
         opt = decomp_options('plot.in')
         opt.read_OmFrag()
 

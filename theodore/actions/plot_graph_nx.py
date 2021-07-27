@@ -159,8 +159,10 @@ class PlotGraphNx(Action):
 
     name = 'plot_graph_nx'
 
+    _colt_description = 'Graph plotting (Newton-X)'
+
     def run():
-        theo_header.print_header('Graph plotting')
+        theo_header.print_header(title=__class__._colt_description)
         infilen = 'graph.in'
 
         popt = write_plot_options_nx(infilen)

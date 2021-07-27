@@ -98,32 +98,25 @@ class extract_mld:
         mos.export_AO(ens, occs, Ct, fname=outfile, occmin=self.thresh, alphabeta=True)
         print("  ... %s written, containing %i orbitals."%(outfile, len(ens)))
 
-def header():
-    theo_header.print_header('Extract molden files')
-
-    print("""\
-usage: Extract the hole/particle components out of a molden file
-syntax: extract_molden.py <mo_file1> [<mo_file2> ...]
-options: -ene          - interpret energies as occupations
-         -thresh=0.001 - threshold for print-out
-         -alphabeta    - use alpha/beta labels for hole/electron
-    """)
-
 class ExtractMolden(Action):
     _questions = """
+    # List of MO files to analyse
     mo_files = :: list(existing_file)
-    # interpret energies as occupations
+    # Interpret energies as occupations
     ene = False :: bool, alias=e
-    # threshold for print-out
+    # Threshold for print-out
     thresh = 0.001 :: float, alias=t
-    # use alpha/beta labels for hole/electron
+    # Use alpha/beta labels for hole/electron
     alphabeta = False :: bool, alias=ab
     """
 
     name = 'extract_molden'
 
+    _colt_description = 'Extract hole/particle parts from Molden file'
+
     def run(mo_files, ene, thresh, alphabeta):
-        header()
+        theo_header.print_header(title=__class__._colt_description)
+
         extr = extract_mld(thresh=thresh, rd_ene=ene, decompose=not alphabeta)
         mo_files = []
 

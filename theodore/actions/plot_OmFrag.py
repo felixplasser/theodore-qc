@@ -213,8 +213,10 @@ class PlotOmFrag(Action):
 
     name = 'plot_omfrag'
 
+    _colt_description = 'Plot Omega matrices as pseudocolor matrix plot'
+
     def run():
-        theo_header.print_header('Plot Omega matrices')
+        theo_header.print_header(title=__class__._colt_description)
         Oopt = OmFrag_options('plot.in')
         Oopt.read_OmFrag()
 

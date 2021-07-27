@@ -89,8 +89,10 @@ class ConvertTable(Action):
 
     name = 'convert_table'
 
+    _colt_description = 'Convert the output to latex/html table'
+
     def run():
-        theo_header.print_header('Table conversion')
+        theo_header.print_header(title=__class__._colt_description)
         infilen = 'table.in'
         
         topt = write_table_options(infilen)    
