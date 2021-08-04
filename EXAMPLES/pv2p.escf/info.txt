@@ -1,1 +1,0 @@
-PPV fragment computed at the TDDFT/B3LYP level using Turbomole

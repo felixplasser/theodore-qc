@@ -1,6 +1,0 @@
-ORCA read binary with singlets and triplets
-Test created by S. Mai
-
-Modified by F. Plasser to test the usage of Molden format files.
--> Results are identical, see
-   tden_summ_bin.txt and tden_summ_molden.txt
