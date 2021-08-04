@@ -8,7 +8,6 @@ import sys
 
 from .. import theo_header, cclib_interface, input_options, error_handler, units
 from .actions import Action
-import openbabel
 
 
 class CCOpt(Action):
@@ -29,6 +28,7 @@ class CCOpt(Action):
     name = 'cc_opt'
 
     def run(logfile, scan, thresh, output):
+           import openbabel
 
            theo_header.print_header(__class__._colt_description)
            

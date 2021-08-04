@@ -60,17 +60,26 @@ class OmFrag_options(input_options.write_options):
 
             self.maxOm = max(self.maxOm, state['OmFrag'].max())
 
-    def OmFrag_input(self, use_old=True):
+    def OmFrag_input(self, use_new=False):
 
-        if not use_old:
+        if use_new:
             class InputPlot(Colt):
                 _questions = """
+                # Scale values before plotting?
+                #
                 plot_type = original :: str :: squareroot, original
+                # Resolution (dpi) for plotting
+                #
                 plot_dpi = 200 :: int
-                cmap = Greys :: str 
+                # Coloring scheme for pseudocolor plots
+                #
+                cmap = Greys :: str
+                # Font size
+                #
                 fsize = 10 :: int
+                # Format of output graphics files
+                #
                 output_format = png :: str
-
                 vmin = 0 :: int
                 vmax = 0 :: int
                 use_labels = False :: bool
@@ -110,6 +119,7 @@ class OmFrag_options(input_options.write_options):
             self['plot_type'] = values[data['plot_type']]
             return
 
+        # Old (pre-colt) version starts here
         plot_opts = ['Plot original values', 'Plot sqareroot scaled values']
         ichoice = self.ret_choose_list('Do you want to scale the values before plotting?', plot_opts, 1)
         self.write_option('plot_type', ichoice)
@@ -268,15 +278,16 @@ class PlotOmFrag(Action):
     name = 'plot_omfrag'
 
     _questions = """
-    use_old = True :: bool
+    # Use new colt interface
+    use_new = False :: bool
     """
 
 
-    def run(use_old):
+    def run(use_new):
         theo_header.print_header(title=__class__._colt_description)
         Oopt = OmFrag_options('plot.in')
         Oopt.read_OmFrag()
 
-        Oopt.OmFrag_input(use_old=use_old)
+        Oopt.OmFrag_input(use_new=use_new)
 
         Oopt.plot()
