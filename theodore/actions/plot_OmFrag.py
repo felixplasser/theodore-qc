@@ -6,6 +6,7 @@ Script for plotting the Omega matrix as a pseudocolor matrix plot.
 from __future__ import print_function, division
 from .. import theo_header, input_options, lib_file, error_handler
 from .actions import Action
+from colt import Colt
 
 import numpy
 import os
@@ -59,7 +60,56 @@ class OmFrag_options(input_options.write_options):
 
             self.maxOm = max(self.maxOm, state['OmFrag'].max())
 
-    def OmFrag_input(self):
+    def OmFrag_input(self, use_old=True):
+
+        if not use_old:
+            class InputPlot(Colt):
+                _questions = """
+                plot_type = original :: str :: squareroot, original
+                plot_dpi = 200 :: int
+                cmap = Greys :: str 
+                fsize = 10 :: int
+                output_format = png :: str
+
+                vmin = 0 :: int
+                vmax = 0 :: int
+                use_labels = False :: bool
+                # Enter x-tick labels (separated by spaces)
+                xticks = :: list, optional
+                # Enter y-tick labels (separated by spaces)
+                yticks = :: list, optional
+                #
+                grid = True :: bool
+                # Plot colorbar for each individual plot?
+                cbar = False :: bool
+                """
+
+                def from_config(cls, config):
+                    return config
+
+            data = InputPlot.from_questions()
+
+
+            self['sscale'] = data['vmax'] != 0
+            if self['sscale']:
+                for key in ('vmin', 'vmax'):
+                    self[key] = data[key]
+
+            self['axis'] = data['use_labels']
+            if data['xticks'] is not None or data['yticks'] is not None:
+                if not (data['xticks'] is not None and data['yticks'] is not None):
+                    raise Exception("")
+                self['ticks'] = True
+                self['xticks'] = data['xticks']
+                self['yticks'] = data['yticks']
+            else:                
+                self['ticks'] = False
+            for key in ('plot_dpi', 'cmap', 'fsize', 'output_format', 'grid', 'cbar'):
+                self[key] = data[key]
+            values = {'original': 1, 'sqareroot': 2}
+            self['plot_type'] = values[data['plot_type']]
+            return
+
         plot_opts = ['Plot original values', 'Plot sqareroot scaled values']
         ichoice = self.ret_choose_list('Do you want to scale the values before plotting?', plot_opts, 1)
         self.write_option('plot_type', ichoice)
@@ -85,8 +135,10 @@ class OmFrag_options(input_options.write_options):
         ], 'Greys'
         )
 
+
         self.read_int('Font size', 'fsize', 10)
         self.read_str("Format of output graphics files", "output_format", "png", autocomp=False)
+
         self.read_yn('Use the same scale for all plots', 'sscale', True)
         if self['sscale']:
             self.read_float('Minimal value to plot', 'vmin', 0.)
@@ -213,11 +265,15 @@ class PlotOmFrag(Action):
 
     name = 'plot_omfrag'
 
-    def run():
+    _questions = """
+    use_old = True :: bool
+    """
+
+    def run(use_old):
         theo_header.print_header('Plot Omega matrices')
         Oopt = OmFrag_options('plot.in')
         Oopt.read_OmFrag()
 
-        Oopt.OmFrag_input()
+        Oopt.OmFrag_input(use_old=use_old)
 
         Oopt.plot()
