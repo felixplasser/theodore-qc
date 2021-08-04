@@ -19,7 +19,7 @@ class CCCheck(Action):
     _colt_description = "Check if a logfile can be parsed with cclib"
 
     def run(logfile, printlevel):
-        theo_header.print_header('Check cclib')
+        theo_header.print_header(__class__._colt_description)
         
         
         ioptions = input_options.dens_ana_options(ifile=None, check_init=False)

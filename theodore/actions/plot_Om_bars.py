@@ -235,8 +235,10 @@ every linear axis/.append style={
 class PlotOmBars(Action):
     name = 'plot_om_bars'
 
+    _colt_description = 'Plot Omega matrices as bar graphs'
+
     def run():
-        theo_header.print_header('Plot Omega matrices as bar graphs')
+        theo_header.print_header(__class__._colt_description)
         opt = Om_bar_options('plot.in')
         opt.read_str("Name of the file with the Omega matrix entries", "OmFfile", "OmFrag.txt", autocomp=True)
         opt.read_OmFrag(opt['OmFfile'])

@@ -18,13 +18,14 @@ class AnalyzeTden(Action):
     _colt_description = 'Transition density matrix analysis'
 
     _questions = """
+    # Main input file
     ifile = dens_ana.in :: existing_file, alias=f
     """
 
     @timeit
     def run(ifile):
         ioptions = input_options.tden_ana_options(ifile)
-        theo_header.print_header('Transition density matrix analysis', ioptions=ioptions, cfile=__name__)
+        theo_header.print_header(title=__class__._colt_description, ioptions=ioptions, cfile=__name__)
 
         tdena = lib_tden.tden_ana(ioptions)
         if 'mo_file' in ioptions: tdena.read_mos()
@@ -68,7 +69,7 @@ class AnalyzeTdenUnr(Action):
 
     name = 'analyze_tden_unr'
 
-    _colt_description = 'Transition density matrix analysis'
+    _colt_description = 'Transition density matrix analysis (UHF/UKS)'
 
     _questions = """
     ifile = dens_ana.in :: existing_file, alias=f
@@ -77,7 +78,7 @@ class AnalyzeTdenUnr(Action):
     @timeit
     def run(ifile):
         ioptions = input_options.tden_ana_options(ifile)
-        theo_header.print_header('Transition density matrix analysis (UHF/UKS)', ioptions=ioptions, cfile=__name__)
+        theo_header.print_header(_colt_description, ioptions=ioptions, cfile=__name__)
 
         ioptions['jmol_orbitals'] = False
 

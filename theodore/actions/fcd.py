@@ -14,12 +14,14 @@ class FCD(Action):
 
     name = 'fcd'
 
+    _colt_description = 'Fragment charge difference analysis'
+
     _questions = """
     # name of the input file
     ifile = fcd.in :: existing_file, alias=f
     """
     def run(ifile):
-        theo_header.print_header('Fragment charge difference analysis')
+        theo_header.print_header(title=__class__._colt_description)
 
         ifile = 'fcd.in'
 

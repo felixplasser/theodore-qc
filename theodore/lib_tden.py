@@ -711,3 +711,31 @@ class tden_ana(dens_ana_base.dens_ana_base):
             state['RMSeh'] = exciton_ana.ret_RMSeh(Om, OmAt)
             state['MAeh']  = exciton_ana.ret_MAeh(Om, OmAt)
             state['Eb']    = exciton_ana.ret_Eb(Om, OmAt, self.ioptions['Eb_diag'])
+
+#---
+
+    def compute_es2es_tden(self, iref=1):
+        """
+        Compute approximate transition density with respect to a reference excited state. This overwrites 'tden' and 'exc_en'
+        This is computed analogously to the electron/hole densities:
+        D^IJ = (D^I0)^T * D^J0 - D^J0 * (D^I0)^T
+        """
+        refstate = self.state_list[iref-1]
+        tdenI = refstate['tden']
+        enI   = refstate['exc_en']
+        print("Computing approximate state-to-state transition densities")
+        print(" ... reference state: %s \n"%refstate['name'])
+
+        for state in self.state_list:
+            tdenJ = state['tden']
+
+            DIJ_elec = numpy.dot(tdenI.T, tdenJ)
+            DIJ_hole = numpy.dot(tdenJ, tdenI.T)
+
+            state['tden'] = DIJ_elec
+            state['tden'][:DIJ_hole.shape[0], :DIJ_hole.shape[1]] -= DIJ_hole
+
+            state['exc_en'] = state['exc_en'] - enI
+            del state['osc_str']
+
+        del self.state_list[iref-1]

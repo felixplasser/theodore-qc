@@ -206,13 +206,16 @@ class spectrum:
 class Spectrum(Action):
 
     name = 'spectrum'
+
+    _colt_description = 'Convoluted spectrum from analyze_tden output'
     
     _questions = """
+    # Files produced by analyze_tden.py
     tden_summs = :: list(existing_file)
     """
 
     def run(tden_summs):
-        theo_header.print_header('Create a convoluted spectrum')
+        theo_header.print_header(title=__class__._colt_description)
 
         sopt = spec_options('spectrum.in')
         sopt['ana_files'] = tden_summs

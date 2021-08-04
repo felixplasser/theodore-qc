@@ -8,23 +8,29 @@ import sys
 
 from .. import theo_header, cclib_interface, input_options, error_handler, units
 from .actions import Action
-# import openbabel
+import openbabel
 
 
 class CCOpt(Action):
 
+    _colt_description = 'Analysis of geom. opt. or relaxed scan'
+
     _questions = """
+    # Logfile of quant. chemistry program
     logfile = :: existing_file
+    # Analyse a relaxed scan
     scan = false :: bool, alias=s
+    # Threshold for energy change (for scan)
     thresh = 500 :: float, alias=t
+    # Name of output xyz file
     output  = cc_opt.xyz :: file, alias=o
     """
      
     name = 'cc_opt'
 
     def run(logfile, scan, thresh, output):
-        
-           theo_header.print_header('Analysis of a geometry optimization or relaxed scan')
+
+           theo_header.print_header(__class__._colt_description)
            
            fname = output
            
@@ -56,7 +62,8 @@ class CCOpt(Action):
            print('\n%21s'%'SCF energies (a.u.)', end=' ')
            if et: print('%15s'%'Exc. (a.u.)')
            else:  print()
-           
+
+           ngeo = 0
            for i,scfen in enumerate(scfens):
                en_au = scfen/units.energy['eV']
                print('%5i:% 15.7f'%(i,en_au), end=' ')
@@ -80,7 +87,7 @@ class CCOpt(Action):
                    except IndexError:
                        dE2 = 1.
            
-                   if abs(dE2) > scan_thresh * abs(dE1):
+                   if abs(dE2) > thresh * abs(dE1):
                        print('     -> Geometry written to %s (% .4f / % .4f / % .1f)'%(f.name, dE1, dE2, dE2/dE1))
                    else:
                        print('     -> Geometry skipped')
@@ -96,9 +103,12 @@ class CCOpt(Action):
                    f.write('Energy = % .7f\n'%(en_au))
                    for line in lines[2:-1]:
                        f.write(line + '\n')
-           
+                   ngeo += 1
+
            f.close()
-           print("Geometries written to %s"%f.name)
+           print("\n*** Done *** \n%i geometries written to %s"%(ngeo, f.name))
+           if scan:
+               print(" ... lower threshold (-t) to get more geometries.")
            
            try:
                optdone = ccparser.data.optdone

@@ -111,14 +111,17 @@ class vibcoll:
 class JMolVibs(Action):
 
     name = 'jmol_vibs'
+    
+    _colt_description = 'Plotting of vibrations in Jmol'
 
-    _questions = """ 
+    _questions = """
+    # Molden file with info about vibrations
     vibfile = :: existing_file
     """
 
     def run(vibfile):
 
-        theo_header.print_header('Plotting of vibrations in Jmol')
+        theo_header.print_header(__class__._colt_description)
 
         jopt = jmol_vib_opts('jmol.in')
         jopt.input()

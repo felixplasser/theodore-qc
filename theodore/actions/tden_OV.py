@@ -13,6 +13,8 @@ class TDenOv(Action):
 
     name = 'tden_ov'
 
+    _colt_description = 'Transition density matrix overlap'
+
     _questions = """
     dir1 = :: existing_folder
     dir2 = :: existing_folder
@@ -28,7 +30,7 @@ class TDenOv(Action):
         ifile2 = ''
         
         ioptions = input_options.tden_ana_options(ifile)
-        theo_header.print_header('Transition density matrix overlap', ioptions=ioptions)
+        theo_header.print_header(title=__class__._colt_description, ioptions=ioptions)
         
         if ifile2 is None:
             ioptions2 = ioptions

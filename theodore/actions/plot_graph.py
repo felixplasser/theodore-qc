@@ -6,11 +6,15 @@ Script for creating graphs from multiple directories, e.g. potential curves.
 from __future__ import print_function, division
 from .. import theo_header, lib_plot
 from .actions import Action
-        
+
 class PlotGraph(Action):
+
     name = 'plot_graph'
+
+    _colt_description = 'Graph plotting for potential curves etc.'
+
     def run():
-        theo_header.print_header('Graph plotting')
+        theo_header.print_header(title=__class__._colt_description)
         infilen = 'graph.in'
         
         popt = lib_plot.write_plot_options(infilen)

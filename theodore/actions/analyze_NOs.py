@@ -8,17 +8,21 @@ import sys
 from .actions import Action
 from .. import theo_header, lib_sden, input_options
 
-class AnalyzeSden(Action):
+class AnalyzeNOs(Action):
 
-    name = 'analyze_sden'
+    name = 'analyze_nos'
+
+    _colt_description = 'Analysis of natural orbital (NO) files'
 
     _questions = """
+    # List of NO files in Molden format
     no_files = :: list(existing_file)
+    # Main input file
     ifile = dens_ana.in :: existing_file, alias=f
     """
 
     def run(no_files, ifile):
-        theo_header.print_header('NO file analysis', cfile=__file__)
+        theo_header.print_header(__class__._colt_description, cfile=__file__)
         # set options
         ioptions = input_options.sden_ana_options(ifile, check_init=False)
         ioptions['rtype'] = 'nos'

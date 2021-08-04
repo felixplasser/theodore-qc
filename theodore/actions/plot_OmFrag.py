@@ -263,14 +263,17 @@ class OmFrag_options(input_options.write_options):
 
 class PlotOmFrag(Action):
 
+    _colt_description = 'Plot Omega matrices as pseudocolor matrix plot'
+
     name = 'plot_omfrag'
 
     _questions = """
     use_old = True :: bool
     """
 
+
     def run(use_old):
-        theo_header.print_header('Plot Omega matrices')
+        theo_header.print_header(title=__class__._colt_description)
         Oopt = OmFrag_options('plot.in')
         Oopt.read_OmFrag()
 

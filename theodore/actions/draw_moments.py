@@ -164,11 +164,15 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
 
 class DrawMoments(Action):
     name = 'draw_moments'
+
+    _colt_description = 'Plotting of dipole and quadrupole moments'
+
     _questions = """
+    # File produced by analyze_tden
     ana_file = :: existing_file
     """
     def run(ana_file):
-        theo_header.print_header('Plotting of dipole and quadrupole moments')
+        theo_header.print_header(title=__class__._colt_description)
         opt = mom_options('mom.in')
         opt['ana_file'] = ana_file
         opt.input()

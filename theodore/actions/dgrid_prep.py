@@ -16,13 +16,16 @@ class dgrid_options(input_options.write_options):
 class DGridPrep(Action):
     name = 'dgrid_prep'
 
+    _colt_description = 'Prepare input for DGrid'
+
     _questions = """
+    # Molden files
     mldfiles = :: list(existing_file)
     """
 
     def run(mldfiles):
 
-        theo_header.print_header('Prepare input for DGrid')
+        theo_header.print_header(title=__class__._colt_description)
         print("Using the Molden files:", mldfiles)
 
         dopt = dgrid_options('dgrid.in')

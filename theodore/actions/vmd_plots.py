@@ -185,11 +185,15 @@ class VMDPlots(Action):
 
     name = 'vmd_plots'
 
+    _colt_description = 'Automatic plotting of cube files in VMD'
+
     _questions = """
+    # List of cube files (or other format VMD can read)
     pltfiles = :: list(existing_file)
     """
 
     def run(pltfiles):
+        theo_header.print_header(title=__class__._colt_description)
 
         print('%i Files analyzed:' % len(pltfiles), end=' ')
         print(", ".join(os.path.basename(filename) for filename in pltfiles))

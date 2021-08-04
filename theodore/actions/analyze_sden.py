@@ -16,7 +16,7 @@ class AnalyzeSden(Action):
     @timeit
     def run(ifile):
         # header
-        theo_header.print_header('State density matrix analysis', cfile=__name__)
+        theo_header.print_header(__class__._colt_description, cfile=__name__)
         #
         ioptions = input_options.sden_ana_options(ifile)
 

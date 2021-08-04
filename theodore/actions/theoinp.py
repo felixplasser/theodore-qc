@@ -29,7 +29,7 @@ class write_options_theo(input_options.write_options):
                 rdef = 'ricc2'
             else:
                 rdef = 'escf'
-        elif os.path.exists('TAPE21'):
+        elif os.path.exists('ams.results/adf.rkf'):
             rdef = 'adf'
         elif os.path.exists('EXC.DAT'):
             rdef = 'tddftb'
@@ -125,7 +125,7 @@ class write_options_theo(input_options.write_options):
             self['coor_file'] = ''
             self['coor_format'] = ''
         elif self['rtype'] == 'adf':
-            self['rfile'] = 'TAPE21'
+            self['rfile'] = 'ams.results/adf.rkf'
             self['mo_file'] = None
             self['coor_file'] = ''
             self['coor_format'] = ''
@@ -479,8 +479,8 @@ class TheodoreInput(Action):
 
     _questions = ""
 
-    _colt_description = "generate input for theodore"
+    _colt_description = "Input generation for TheoDORE"
 
     def run():
-        theo_header.print_header('Input generation')
+        theo_header.print_header(__class__._colt_description)
         run_theoinp()

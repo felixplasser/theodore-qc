@@ -1,0 +1,12 @@
+rtype='ricc2'
+rfile='ricc2.out'
+mo_file='molden.input'
+at_lists=[[1],[5,6,10,11],[2,3,7,8],[4,9]]
+comp_ntos=True
+jmol_orbitals=False
+molden_orbitals=False
+prop_list=['Om', 'POS', 'POSi', 'POSf', 'PR', 'DEL', 'CT', 'CTnt', 'PRNTO', 'Z_HE', 'S_HE']
+output_prec=(9,5)
+output_file='tden_es2es_summ_stdout.txt'
+eh_pop=0
+print_OmFrag = False
