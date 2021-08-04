@@ -1,0 +1,301 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Analysis of chemical shielding &mdash; theodore 2.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Plotting" href="plotting.html" />
+    <link rel="prev" title="State density matrix analysis" href="difference_density_analysis.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/theodore.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input_generation.html">Input generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transition_density_analysis.html">Transition density matrix analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="difference_density_analysis.html">State density matrix analysis</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Analysis of chemical shielding</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#visualisation-of-chemical-shielding-tensors-vist">Visualisation of chemical shielding tensors (VIST)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#command-line-options">Command line options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#simple-example">Simple example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#processing-several-output-files">Processing several output files</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="orbitals_and_densities.html">Orbitals and Densities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="program_specific_information.html">Program specific information</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">theodore</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Analysis of chemical shielding</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/chemical_shielding.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="analysis-of-chemical-shielding">
+<h1>Analysis of chemical shielding<a class="headerlink" href="#analysis-of-chemical-shielding" title="Permalink to this headline">¶</a></h1>
+<p>TheoDORE provides functionalities to analyse chemical shielding tensors and, in particular their use to analyze aromaticity.</p>
+<div class="section" id="visualisation-of-chemical-shielding-tensors-vist">
+<h2>Visualisation of chemical shielding tensors (VIST)<a class="headerlink" href="#visualisation-of-chemical-shielding-tensors-vist" title="Permalink to this headline">¶</a></h2>
+<p>The VIST method ( [<em>Eur. J. Org. Chem.</em>, <strong>2021</strong>](<a class="reference external" href="https://doi.org/10.1002/ejoc.202100352">https://doi.org/10.1002/ejoc.202100352</a>) ) allows to visualise chemical shielding tensors in the context of the molecular structure showing local variations of the shielding along with its anisotropy. The method proceeds in the following order</p>
+<ul class="simple">
+<li><p>Computation of shielding tensors (at the moment only Gaussian is interfaced)</p></li>
+<li><p>Creation of VIST input via <cite>plot_VIST.py</cite></p></li>
+<li><p>Rendering of VIST plot in [VMD](<a class="reference external" href="https://www.ks.uiuc.edu/Research/vmd/">https://www.ks.uiuc.edu/Research/vmd/</a>)</p></li>
+</ul>
+<p>The tools have only been recently developed and still might require a bit of manual tuning of script files by the user. Any feedback on the user-friendliness of the tools is appreciated.</p>
+<div class="section" id="command-line-options">
+<h3>Command line options<a class="headerlink" href="#command-line-options" title="Permalink to this headline">¶</a></h3>
+<p>Run <cite>plot_VIST.py -h</cite> to see all command line options</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plot_VIST</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">logfile1</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">logfile2</span><span class="o">&gt;</span>
+<span class="n">Command</span> <span class="n">line</span> <span class="n">options</span><span class="p">:</span>
+ <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">-</span><span class="n">H</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span><span class="p">:</span> <span class="nb">print</span> <span class="n">this</span> <span class="n">help</span>
+ <span class="o">-</span><span class="n">v</span><span class="p">,</span> <span class="o">--</span><span class="n">vist</span>    <span class="p">:</span> <span class="n">VIST</span> <span class="k">for</span> <span class="n">only</span> <span class="n">these</span> <span class="n">dummy</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="o">-</span><span class="n">v</span> <span class="s1">&#39;0 3 5&#39;</span>
+ <span class="o">-</span><span class="n">o</span>            <span class="p">:</span> <span class="n">Name</span> <span class="n">of</span> <span class="n">output</span> <span class="n">file</span> <span class="p">(</span><span class="k">for</span> <span class="n">VMD</span><span class="p">)</span>
+ <span class="o">-</span><span class="n">s</span><span class="p">,</span> <span class="o">--</span><span class="n">scale</span>   <span class="p">:</span> <span class="n">Scale</span> <span class="n">factor</span> <span class="n">VIST</span> <span class="n">dumb</span><span class="o">-</span><span class="n">bells</span>
+ <span class="o">-</span><span class="n">c</span><span class="p">,</span> <span class="o">--</span><span class="n">coor</span>    <span class="p">:</span> <span class="n">Create</span> <span class="n">coordinate</span> <span class="n">files</span> <span class="p">(</span><span class="n">using</span> <span class="n">cclib</span><span class="p">)</span>
+ <span class="o">-</span><span class="n">p</span>            <span class="p">:</span> <span class="n">Render</span> <span class="ow">and</span> <span class="n">plot</span> <span class="nb">all</span> <span class="n">tensors</span> <span class="n">separately</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="simple-example">
+<h3>Simple example<a class="headerlink" href="#simple-example" title="Permalink to this headline">¶</a></h3>
+<p>Create a Gaussian input file for an NMR calculation with the positions of the shielding tensors indicated as dummy (Bq) atoms and run Gaussian.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># PBE1PBE/Def2SVP scf=tight nmr</span>
+
+<span class="n">Shielding</span> <span class="n">tensors</span>
+
+<span class="mi">0</span> <span class="mi">1</span>
+<span class="n">C</span>          <span class="mf">0.00000</span>        <span class="mf">1.20802</span>        <span class="mf">0.69749</span>
+<span class="n">C</span>          <span class="mf">0.00000</span>        <span class="mf">1.20802</span>       <span class="o">-</span><span class="mf">0.69749</span>
+<span class="n">C</span>          <span class="mf">0.00000</span>       <span class="o">-</span><span class="mf">0.00000</span>       <span class="o">-</span><span class="mf">1.39501</span>
+<span class="n">C</span>         <span class="o">-</span><span class="mf">0.00000</span>       <span class="o">-</span><span class="mf">1.20802</span>       <span class="o">-</span><span class="mf">0.69749</span>
+<span class="n">C</span>         <span class="o">-</span><span class="mf">0.00000</span>       <span class="o">-</span><span class="mf">1.20802</span>        <span class="mf">0.69749</span>
+<span class="n">C</span>         <span class="o">-</span><span class="mf">0.00000</span>       <span class="o">-</span><span class="mf">0.00000</span>        <span class="mf">1.39501</span>
+<span class="n">H</span>          <span class="mf">0.00000</span>        <span class="mf">2.15464</span>       <span class="o">-</span><span class="mf">1.24395</span>
+<span class="n">H</span>         <span class="o">-</span><span class="mf">0.00000</span>        <span class="mf">2.15464</span>        <span class="mf">1.24395</span>
+<span class="n">H</span>         <span class="o">-</span><span class="mf">0.00000</span>       <span class="o">-</span><span class="mf">2.15464</span>       <span class="o">-</span><span class="mf">1.24395</span>
+<span class="n">H</span>          <span class="mf">0.00000</span>       <span class="o">-</span><span class="mf">0.00000</span>       <span class="o">-</span><span class="mf">2.48803</span>
+<span class="n">H</span>         <span class="o">-</span><span class="mf">0.00000</span>       <span class="o">-</span><span class="mf">0.00000</span>        <span class="mf">2.48803</span>
+<span class="n">H</span>         <span class="o">-</span><span class="mf">0.00000</span>       <span class="o">-</span><span class="mf">2.15464</span>        <span class="mf">1.24395</span>
+<span class="n">Bq</span>         <span class="mf">0.0</span>            <span class="mf">0.0</span>            <span class="mf">0.0</span>
+<span class="n">Bq</span>         <span class="mf">1.0</span>            <span class="mf">0.0</span>            <span class="mf">0.0</span>
+<span class="n">Bq</span>         <span class="mf">2.0</span>            <span class="mf">0.0</span>            <span class="mf">0.0</span>
+</pre></div>
+</div>
+<p>After the job finishes simply run (assuming you named the output file <cite>gaussian.log</cite>)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plot_VIST</span><span class="o">.</span><span class="n">py</span> <span class="n">gaussian</span><span class="o">.</span><span class="n">log</span>
+</pre></div>
+</div>
+<p>Open a molecular coordinate file in VMD. Then from inside VMD click: <cite>File</cite> - <cite>Load Visualization State</cite> - <cite>VIST.vmd</cite></p>
+<p>In the first instance, this will plot the shielding tensors of all Bq positions on top of each other.</p>
+<div class="figure align-default">
+<img alt="_images/VIST-all.png" src="_images/VIST-all.png" />
+</div>
+<p>Use, the <cite>-p</cite> option to plot them all individually or use the <cite>-v</cite> option to select individual tensors.</p>
+</div>
+<div class="section" id="processing-several-output-files">
+<h3>Processing several output files<a class="headerlink" href="#processing-several-output-files" title="Permalink to this headline">¶</a></h3>
+<p>In many cases, it is desirable to process several output files at the same time to produce a consistent representation of several output files, for example to represent the shielding in different electronic states. The following figures represent the shielding in the dication, neutral state, and dianion of a macrocycle.</p>
+<img alt="_images/2P.png" src="_images/2P.png" />
+<img alt="_images/neut.png" src="_images/neut.png" />
+<img alt="_images/2M.png" src="_images/2M.png" />
+<p>This figure was created with the command</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plot_VIST</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">c</span> <span class="o">-</span><span class="n">v</span> <span class="s1">&#39;0 4&#39;</span> <span class="o">*/</span><span class="n">gaussian</span><span class="o">.</span><span class="n">log</span>
+</pre></div>
+</div>
+<p>The <cite>-c</cite> option specifies that the molecular coordinates are directly parsed from the log-file. <cite>-v 0 4</cite> indicates that only the Bq atoms with index 0 and 4 are included in the representation. <cite>*/gaussian.log</cite> indicates that the gaussian.log files in all subdirectories are processed.</p>
+<p>The files are loaded into VMD via</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">vmd</span> <span class="o">-</span><span class="n">e</span> <span class="n">VIST</span><span class="o">.</span><span class="n">vmd</span>
+</pre></div>
+</div>
+<p>Initially all geometries are superposed on top of each other. To hide some of the molecules use the <cite>D</cite> option (part of <cite>T A D F Molecule</cite>) in the VMD Main menu.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="plotting.html" class="btn btn-neutral float-right" title="Plotting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="difference_density_analysis.html" class="btn btn-neutral float-left" title="State density matrix analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Felix Plasser
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
