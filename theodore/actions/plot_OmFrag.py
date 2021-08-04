@@ -96,7 +96,7 @@ class OmFrag_options(input_options.write_options):
                 def from_config(cls, config):
                     return config
 
-            data = InputPlot.from_questions()
+            data = InputPlot.from_questions(config='plot_omfrag.in')
 
 
             self['sscale'] = data['vmax'] != 0
