@@ -6,7 +6,13 @@ from __future__ import print_function, division
 import sys
 
 from .actions import Action
-from .. import theo_header, lib_sden, input_options
+from colt.lazyimport import LazyImportCreator, LazyImporter
+
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    lib_sden = importer.lazy_import_as('..lib_sden', 'lib_sden')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
 
 class AnalyzeNOs(Action):
 
@@ -14,12 +20,18 @@ class AnalyzeNOs(Action):
 
     _colt_description = 'Analysis of natural orbital (NO) files'
 
-    _questions = """
+    _user_input = """
     # List of NO files in Molden format
     no_files = :: list(existing_file)
     # Main input file
     ifile = dens_ana.in :: existing_file, alias=f
     """
+
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..lib_sden': 'lib_sden',
+            '..input_options': 'input_options'
+    })
 
     def run(no_files, ifile):
         theo_header.print_header(__class__._colt_description, cfile=__file__)
