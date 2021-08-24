@@ -18,7 +18,7 @@ class PlotVist(Action):
     # Create coordinate files (using cclib)
     coor  = false :: bool, alias=c
     # Render and plot all tensors separately
-    plot_all = True :: bool, alias=p
+    plot_all = false :: bool, alias=p
     # Log files to be parsed
     logfiles = :: list(existing_file)
     """
