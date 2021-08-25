@@ -5,8 +5,16 @@ Script for parsing libwfa output.
 from __future__ import print_function, division
 import sys
 
-from .. import theo_header, dens_ana_base, input_options, error_handler
 from .actions import Action
+from colt.lazyimport import LazyImportCreator, LazyImporter
+
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    dens_ana_base = importer.lazy_import_as('..dens_ana_base', 'dens_ana_base')
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
+
 
 def ihelp():
     print(" parse_libwfa.py <logfile> <type>\n")
@@ -22,7 +30,7 @@ class ParseLibwfa(Action):
 
     _colt_description = 'Parse libwfa output from Q-Chem or OpenMolcas (TODO)'
 
-    _questions = """
+    _user_input = """
     # Logfile from Q-Chem or OpenMolcas
     logfile = :: existing_file
     # Type of calculation
@@ -30,6 +38,13 @@ class ParseLibwfa(Action):
     # Input file
     ifile = :: file, optional, alias=f
     """
+
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..dens_ana_base': 'dens_ana_base',
+            '..error_handler': 'error_handler',
+            '..input_options': 'input_options',
+    })
 
     def run(logfile, typ, ifile):
         #--------------------------------------------------------------------------#

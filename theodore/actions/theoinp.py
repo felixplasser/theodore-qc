@@ -3,8 +3,17 @@ Input generation for TheoDORE runs.
 """
 from __future__ import print_function, division
 from .actions import Action
-from .. import theo_header, input_options, lib_struc, error_handler, orbkit_interface
 import os
+from colt.lazyimport import LazyImportCreator, LazyImporter
+
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
+    lib_struc = importer.lazy_import_as('..lib_struc', 'lib_struc')
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
+    orbkit_interface = importer.lazy_import_as('..orbkit_interface', 'orbkit_interface')
+
 
 class write_options_theo(input_options.write_options):
     """
@@ -477,9 +486,17 @@ class TheodoreInput(Action):
 
     name = 'theoinp'
 
-    _questions = ""
+    _user_input = ""
 
     _colt_description = "Input generation for TheoDORE"
+
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..input_options': 'input_options',
+            '..lib_struc': 'lib_struc',
+            '..error_handler': 'error_handler',
+            '..orbkit_interface': 'orbkit_interface',
+    })
 
     def run():
         theo_header.print_header(__class__._colt_description)

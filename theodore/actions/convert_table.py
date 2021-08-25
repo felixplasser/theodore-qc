@@ -4,8 +4,16 @@ Convert the TheoDORE output data to a table in latex or html format.
 """
 
 from __future__ import print_function, division
-from .. import theo_header, input_options, lib_file, error_handler
 from .actions import Action
+from colt.lazyimport import LazyImportCreator, LazyImporter
+
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
+    lib_file = importer.lazy_import_as('..lib_file', 'lib_file')
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
+
 
 
 class write_table_options(input_options.write_options):
@@ -90,6 +98,13 @@ class ConvertTable(Action):
     name = 'convert_table'
 
     _colt_description = 'Convert the output to latex/html table'
+
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..input_options': 'input_options',
+            '..lib_file': 'lib_file',
+            '..error_handler': 'error_handler',
+    })
 
     def run():
         theo_header.print_header(title=__class__._colt_description)

@@ -6,15 +6,25 @@ Use cclib and openbabel to analyze a geometry optimization.
 from __future__ import print_function, division
 import sys
 
-from .. import theo_header, cclib_interface, input_options, error_handler, units
 from .actions import Action
+from colt.lazyimport import LazyImportCreator, LazyImporter
+
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    cclib_interface = importer.lazy_import_as('..cclib_interface', 'cclib_interface')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
+    units = importer.lazy_import_as('..units', 'units')
+
+
 
 
 class CCOpt(Action):
 
     _colt_description = 'Analysis of geom. opt. or relaxed scan'
 
-    _questions = """
+    _user_input = """
     # Logfile of quant. chemistry program
     logfile = :: existing_file
     # Analyse a relaxed scan
@@ -26,6 +36,14 @@ class CCOpt(Action):
     """
      
     name = 'cc_opt'
+
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..cclib_interface': 'cclib_interface',
+            '..error_handler': 'error_handler',
+            '..input_options': 'input_options',
+            '..units': 'units',
+    })
 
     def run(logfile, scan, thresh, output):
            import openbabel

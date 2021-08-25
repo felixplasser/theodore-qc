@@ -4,20 +4,23 @@ Script for plotting the Omega matrix as a pseudocolor matrix plot.
 """
 
 from __future__ import print_function, division
-from .. import theo_header, input_options, lib_file, error_handler
 from .actions import Action
 from colt import Colt
 
 import numpy
 import os
+from colt.lazyimport import LazyImportCreator, LazyImporter
 
-try:
-    import matplotlib
-    matplotlib.use('Agg')
-    import pylab
-except:
-    print("pylab/matplotlib not installed - plotting not possible")
-    raise
+
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
+    lib_file = importer.lazy_import_as('..lib_file', 'lib_file')
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
+    matplotlib = importer.lazy_import('matplotlib')
+    pylab = importer.lazy_import('pylab')
+
 
 class OmFrag_options(input_options.write_options):
     """
@@ -64,7 +67,7 @@ class OmFrag_options(input_options.write_options):
 
         if use_new:
             class InputPlot(Colt):
-                _questions = """
+                _user_input = """
                 # Scale values before plotting?
                 #
                 plot_type = original :: str :: squareroot, original
@@ -277,13 +280,23 @@ class PlotOmFrag(Action):
 
     name = 'plot_omfrag'
 
-    _questions = """
+    _user_input = """
     # Use new colt interface
     use_new = False :: bool
     """
 
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..input_options': 'input_options',
+            '..lib_file': 'lib_file',
+            '..error_handler': 'error_handler',
+            'matplotlib': 'matplotlib',
+            'pylab': 'pylab',
+    })
+
 
     def run(use_new):
+        matplotlib.use('Agg')
         theo_header.print_header(title=__class__._colt_description)
         Oopt = OmFrag_options('plot.in')
         Oopt.read_OmFrag()
