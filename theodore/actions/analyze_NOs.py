@@ -17,17 +17,25 @@ class AnalyzeNOs(Action):
     _questions = """
     # List of NO files in Molden format
     no_files = :: list(existing_file)
-    # Main input file
-    ifile = dens_ana.in :: existing_file, alias=f
+    # Input file (optional)
+    ifile = dens_ana.in :: file, alias=f
+    # Reference MO file for computing overlap matrix
+    ref = :: existing_file, optional, alias=r
     """
 
-    def run(no_files, ifile):
+    def run(no_files, ifile, ref):
         theo_header.print_header(__class__._colt_description, cfile=__file__)
+
         # set options
         ioptions = input_options.sden_ana_options(ifile, check_init=False)
         ioptions['rtype'] = 'nos'
-        ioptions['mo_file'] = no_files[0]
-        ioptions['ana_files'] = no_files[1:]
+
+        # optionally use a manually specified MO file for computing the AO overlap matrix
+        if ref is None:
+            ioptions['mo_file'] = no_files[0]
+        else:
+            ioptions['mo_file'] = ref
+        ioptions['ana_files'] = no_files
 
         #--------------------------------------------------------------------------#        
         # Parsing and computations
