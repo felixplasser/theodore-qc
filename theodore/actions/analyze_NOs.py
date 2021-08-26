@@ -25,8 +25,10 @@ class AnalyzeNOs(Action):
     no_files = :: list(existing_file)
     # Input file (optional)
     ifile = dens_ana.in :: file, alias=f
-    # Reference MO file for computing overlap matrix
+    # Reference MO file for computing AO overlap matrix
     ref = :: existing_file, optional, alias=r
+    # Multiply occupations with this factor
+    occ_fac = :: float, optional, alias=o
     """
 
     _lazy_imports = LazyImporter({
@@ -35,12 +37,14 @@ class AnalyzeNOs(Action):
             '..input_options': 'input_options'
     })
 
-    def run(no_files, ifile, ref):
+    def run(no_files, ifile, ref, occ_fac):
         theo_header.print_header(__class__._colt_description, cfile=__file__)
 
         # set options
         ioptions = input_options.sden_ana_options(ifile, check_init=False)
         ioptions['rtype'] = 'nos'
+        if not occ_fac is None:
+            ioptions['occ_fac'] = occ_fac
 
         # optionally use a manually specified MO file for computing the AO overlap matrix
         if ref is None:

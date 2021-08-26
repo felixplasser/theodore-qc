@@ -3,6 +3,8 @@ State density matrix analysis
 
 Analysis of state and difference density matrices is performed with the script `analyze_sden.py`. In the case of an analysis of natural orbital (NO) files, also the `analyze_NOs.py` may be applied.
 
+For NO files, it may be necessary to adjust the occupations manually (or use the -o option). Bond-order and unpaired electrons analysis currently only works for spin-restricted orbitals. Population and attachement-detachment analysis also works for unrestricted orbitals.
+
 Population analysis
 ~~~~~~~~~~~~~~~~~~~
 
