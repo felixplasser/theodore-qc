@@ -28,13 +28,13 @@ class ParseLibwfa(Action):
 
     name = 'parse_libwfa'
 
-    _colt_description = 'Parse libwfa output from Q-Chem or OpenMolcas (TODO)'
+    _colt_description = 'Parse libwfa output from Q-Chem or OpenMolcas'
 
     _user_input = """
     # Logfile from Q-Chem or OpenMolcas
     logfile = :: existing_file
-    # Type of calculation
-    typ    = :: str, optional :: qcadc, qctddft, qctda, rassi
+    # Type of calculation (qcadc, qctddft, qctda, rassi)
+    typ    = :: str :: qcadc, qctddft, qctda, rassi
     # Input file
     ifile = :: file, optional, alias=f
     """

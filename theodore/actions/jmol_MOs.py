@@ -304,7 +304,7 @@ class JMolMOs(Action):
 
     _user_input = """
     # List of Molden files with orbitals
-    mldfiles = :: list(file), optional, alias=f
+    mldfiles = :: list(str), optional, alias=f
     """
 
     _lazy_imports = LazyImporter({
@@ -318,10 +318,7 @@ class JMolMOs(Action):
     def run(mldfiles):
         theo_header.print_header(__class__._colt_description)
 
-        if os.path.basename(mldfiles[0]) == '<NOT_DEFINED>':
-            mldfiles = []
-
-        if len(mldfiles) == 0:
+        if mldfiles is None:
             print("No file specified, generating generic script")
             mldfiles = ['']
             pref = ''
