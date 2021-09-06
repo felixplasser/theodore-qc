@@ -3,17 +3,26 @@ Compute the overlap between transition density matrices.
 """
 
 from __future__ import print_function, division
-from .. import theo_header, lib_tden, input_options, error_handler
 from .actions import Action
 import numpy
 import os
+from colt.lazyimport import LazyImportCreator, LazyImporter
+
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    lib_tden = importer.lazy_import_as('..lib_tden', 'lib_tden')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
 
 
 class TDenOv(Action):
 
     name = 'tden_ov'
 
-    _questions = """
+    _colt_description = 'Transition density matrix overlap'
+
+    _user_input = """
     dir1 = :: existing_folder
     dir2 = :: existing_folder
     ao_ov = :: existing_file, optional
@@ -23,12 +32,19 @@ class TDenOv(Action):
     ifile2 = :: existing_file, optional, alias=f2
     """
 
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..lib_tden': 'lib_tden',
+            '..error_handler': 'error_handler',
+            '..input_options': 'input_options',
+    })
+
     def run(dir1, dir2, ao_ov, ifile, ifile2):
         ifile = 'tden_OV.in'
         ifile2 = ''
         
         ioptions = input_options.tden_ana_options(ifile)
-        theo_header.print_header('Transition density matrix overlap', ioptions=ioptions)
+        theo_header.print_header(title=__class__._colt_description, ioptions=ioptions)
         
         if ifile2 is None:
             ioptions2 = ioptions

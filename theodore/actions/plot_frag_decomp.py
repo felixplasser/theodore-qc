@@ -4,17 +4,19 @@ Script for plotting fragment decomposition.
 """
 
 from __future__ import print_function, division
-from .. import theo_header, input_options, error_handler
 from .actions import Action
 import numpy
+from colt.lazyimport import LazyImportCreator, LazyImporter
 
-try:
-    import matplotlib
-    matplotlib.use('Agg')
-    import pylab
-except:
-    print("pylab/matplotlib not installed - plotting not possible")
-    raise
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
+    matplotlib = importer.lazy_import('matplotlib')
+    pylab = importer.lazy_import('pylab')
+
+
 
 class decomp_options(input_options.write_options):
     """
@@ -108,8 +110,19 @@ class decomp_options(input_options.write_options):
 class PlotFragDecomp(Action):
     name = 'plot_frag_decomp'
 
+    _colt_description = 'Plot fragment decomposition of Omega matrix'
+
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..input_options': 'input_options',
+            '..error_handler': 'error_handler',
+            'matplotlib': 'matplotlib',
+            'pylab': 'pylab',
+    })
+
     def run_plot():
-        theo_header.print_header('Plot fragment decomposition')
+        matplotlib.use('Agg')
+        theo_header.print_header(__class__._colt_description)
         opt = decomp_options('plot.in')
         opt.read_OmFrag()
 

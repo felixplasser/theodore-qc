@@ -266,7 +266,7 @@ class sden_ana(dens_ana_base.dens_ana_base):
         for i, di in enumerate(ad):
             if di > -minad: break
 
-            jmolI = 'mo ['
+            jmolI = 'mo color blue red\nmo ['
             for occind in (-abs(Wt[i])**2).argsort():
                 occ = Wt[i][occind]
                 if abs(occ) < mincoeff: break
@@ -280,7 +280,7 @@ class sden_ana(dens_ana_base.dens_ana_base):
             ai = ad[-i]
             if ai < minad: break
 
-            jmolF = 'mo ['
+            jmolF = 'mo color orange green\nmo ['
             for occind in (-abs(Wt[-i])**2).argsort():
                 occ = Wt[-i][occind]
                 if abs(occ) < mincoeff: break

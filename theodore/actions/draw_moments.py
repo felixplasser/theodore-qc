@@ -6,8 +6,17 @@ Plot arrows for dipole and quadrupole moments.
 from __future__ import print_function, division
 import sys
 import numpy
-from .. import theo_header, units, lib_file, input_options, error_handler
+
 from .actions import Action
+from colt.lazyimport import LazyImportCreator, LazyImporter
+
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    units = importer.lazy_import_as('..units', 'units')
+    lib_file = importer.lazy_import_as('..lib_file', 'lib_file')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
 
 class mom_options(input_options.write_options):
     def input(self):
@@ -164,11 +173,24 @@ mol modstyle 0 0 Licorice 0.100000 30.000000 30.000000
 
 class DrawMoments(Action):
     name = 'draw_moments'
-    _questions = """
+
+    _colt_description = 'Plotting of dipole and quadrupole moments'
+
+    _user_input = """
+    # File produced by analyze_tden
     ana_file = :: existing_file
     """
+
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..units': 'units',
+            '..input_options': 'input_options',
+            '..lib_file': 'lib_file',
+            '..error_handler': 'error_handler',
+    })
+
     def run(ana_file):
-        theo_header.print_header('Plotting of dipole and quadrupole moments')
+        theo_header.print_header(title=__class__._colt_description)
         opt = mom_options('mom.in')
         opt['ana_file'] = ana_file
         opt.input()

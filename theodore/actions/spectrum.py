@@ -6,17 +6,21 @@ Create a convoluted spectrum from the oscillator strengths.
 from __future__ import print_function, division
 import sys
 import math, numpy
-from .. import theo_header, units, lib_file, input_options, error_handler
 from .actions import Action
+from colt.lazyimport import LazyImportCreator, LazyImporter
+
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    units = importer.lazy_import_as('..units', 'units')
+    lib_file = importer.lazy_import_as('..lib_file', 'lib_file')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
+    matplotlib = importer.lazy_import('matplotlib')
+    pylab = importer.lazy_import('pylab')
+
 
 do_plots = True
-try:
-    import matplotlib
-    matplotlib.use('Agg')
-    import pylab
-except:
-    print("pylab/matplotlib not installed - plotting not possible")
-    do_plots = False
 
 class spec_options(input_options.write_options):
     def spec_input(self):
@@ -206,13 +210,27 @@ class spectrum:
 class Spectrum(Action):
 
     name = 'spectrum'
+
+    _colt_description = 'Convoluted spectrum from analyze_tden output'
     
-    _questions = """
+    _user_input = """
+    # Files produced by analyze_tden.py
     tden_summs = :: list(existing_file)
     """
 
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..units': 'units',
+            '..lib_file': 'lib_file',
+            '..input_options': 'input_options',
+            '..error_handler': 'error_handler',
+            'matplotlib': 'matplotlib',
+            'pylab': 'pylab',
+    })
+
     def run(tden_summs):
-        theo_header.print_header('Create a convoluted spectrum')
+        matplotlib.use('Agg')
+        theo_header.print_header(title=__class__._colt_description)
 
         sopt = spec_options('spectrum.in')
         sopt['ana_files'] = tden_summs

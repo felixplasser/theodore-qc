@@ -1,7 +1,14 @@
 import os
 from .actions import Action
 from .theotools import timeit
-from .. import theo_header, lib_tden, lib_exciton, input_options
+from colt.lazyimport import LazyImportCreator, LazyImporter
+
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    lib_tden = importer.lazy_import_as('..lib_tden', 'lib_tden')
+    lib_exciton = importer.lazy_import_as('..lib_exciton', 'lib_exciton')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
 
 
 class AnalyzeTden(Action):
@@ -17,14 +24,22 @@ class AnalyzeTden(Action):
 
     _colt_description = 'Transition density matrix analysis'
 
-    _questions = """
+    _user_input = """
+    # Main input file
     ifile = dens_ana.in :: existing_file, alias=f
     """
+
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..lib_tden': 'lib_tden',
+            '..lib_exciton': 'lib_exciton',
+            '..input_options': 'input_options'
+    })
 
     @timeit
     def run(ifile):
         ioptions = input_options.tden_ana_options(ifile)
-        theo_header.print_header('Transition density matrix analysis', ioptions=ioptions, cfile=__name__)
+        theo_header.print_header(title=__class__._colt_description, ioptions=ioptions, cfile=__name__)
 
         tdena = lib_tden.tden_ana(ioptions)
         if 'mo_file' in ioptions: tdena.read_mos()
@@ -68,16 +83,23 @@ class AnalyzeTdenUnr(Action):
 
     name = 'analyze_tden_unr'
 
-    _colt_description = 'Transition density matrix analysis'
+    _colt_description = 'Transition density matrix analysis (UHF/UKS)'
 
-    _questions = """
+    _user_input = """
     ifile = dens_ana.in :: existing_file, alias=f
     """
+
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..lib_tden': 'lib_tden',
+            '..lib_exciton': 'lib_exciton',
+            '..input_options': 'input_options'
+    })
 
     @timeit
     def run(ifile):
         ioptions = input_options.tden_ana_options(ifile)
-        theo_header.print_header('Transition density matrix analysis (UHF/UKS)', ioptions=ioptions, cfile=__name__)
+        theo_header.print_header(_colt_description, ioptions=ioptions, cfile=__name__)
 
         ioptions['jmol_orbitals'] = False
 

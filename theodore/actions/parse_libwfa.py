@@ -5,8 +5,16 @@ Script for parsing libwfa output.
 from __future__ import print_function, division
 import sys
 
-from .. import theo_header, dens_ana_base, input_options, error_handler
 from .actions import Action
+from colt.lazyimport import LazyImportCreator, LazyImporter
+
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    dens_ana_base = importer.lazy_import_as('..dens_ana_base', 'dens_ana_base')
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
+
 
 def ihelp():
     print(" parse_libwfa.py <logfile> <type>\n")
@@ -20,11 +28,23 @@ class ParseLibwfa(Action):
 
     name = 'parse_libwfa'
 
-    _questions = """
+    _colt_description = 'Parse libwfa output from Q-Chem or OpenMolcas (TODO)'
+
+    _user_input = """
+    # Logfile from Q-Chem or OpenMolcas
     logfile = :: existing_file
+    # Type of calculation
     typ    = :: str, optional :: qcadc, qctddft, qctda, rassi
-    ifile = dens_ana.in :: existing_file, alias=f
+    # Input file
+    ifile = :: file, optional, alias=f
     """
+
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..dens_ana_base': 'dens_ana_base',
+            '..error_handler': 'error_handler',
+            '..input_options': 'input_options',
+    })
 
     def run(logfile, typ, ifile):
         #--------------------------------------------------------------------------#
@@ -44,7 +64,7 @@ class ParseLibwfa(Action):
         if (not 'rfile' in ioptions) or (not 'rtype' in ioptions):
             ihelp()
         
-        theo_header.print_header('Parse libwfa output', ioptions=ioptions)
+        theo_header.print_header(__class__._colt_description, ioptions=ioptions)
         
         #--------------------------------------------------------------------------#
         # Parsing and computations

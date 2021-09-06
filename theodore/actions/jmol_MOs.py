@@ -5,8 +5,17 @@ Automatic plotting of MOs with jmol.
 
 from __future__ import print_function, division
 from .actions import Action
-from .. import lib_mo, error_handler, lib_file, theo_header, input_options
 import sys, os
+from colt.lazyimport import LazyImportCreator, LazyImporter
+
+
+with LazyImportCreator() as importer:
+    lib_mo = importer.lazy_import_as('..lib_mo', 'lib_mo')
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
+    lib_file = importer.lazy_import_as('..lib_file', 'lib_file')
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
+
 
 class mo_output:
     """
@@ -291,14 +300,23 @@ class JMolMOs(Action):
 
     name = 'jmol_mos'
 
-    _colt_description = ''
+    _colt_description = 'Orbital plotting in Jmol'
 
-    _questions = """
+    _user_input = """
+    # List of Molden files with orbitals
     mldfiles = :: list(file), optional, alias=f
     """
 
+    _lazy_imports = LazyImporter({
+            '..lib_mo': 'lib_mo',
+            '..theo_header': 'theo_header',
+            '..error_handler': 'error_handler',
+            '..input_options': 'input_options',
+            '..lib_file': 'lib_file',
+    })
+
     def run(mldfiles):
-        theo_header.print_header('Orbital plotting in Jmol')
+        theo_header.print_header(__class__._colt_description)
 
         if os.path.basename(mldfiles[0]) == '<NOT_DEFINED>':
             mldfiles = []

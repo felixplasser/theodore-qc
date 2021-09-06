@@ -1616,25 +1616,11 @@ class file_parser_nos(file_parser_base):
             # for Q-Chem
             tmp_name = tmp_name.replace('NOs/','').replace('.mo', '')
 
+            tmp_name = os.path.basename(tmp_name)
+
             state['name'] = tmp_name
 
         return state_list
-
-    def read_ref_nos(self, state, ref_nos):
-        """
-        Read the reference MOs.
-        ### This is currently not used! ###
-        """
-        state['sden'] = numpy.diag(ref_nos.occs)
-
-        if self.ioptions['unpaired_ana']:
-            nu_list = [min(occ, 2.-occ) for occ in ref_nos.occs]
-            state['nu'] = sum(nu_list)
-            state['nu_den'] = numpy.diag(nu_list)
-
-            nunl_list = [occ*occ*(2-occ)*(2-occ) for occ in ref_nos.occs]
-            state['nunl'] = sum(nunl_list)
-            state['nunl_den'] = numpy.diag(nunl_list)
 
     def read_no_file(self, state, ref_mos, no_file):
         """
@@ -1645,6 +1631,10 @@ class file_parser_nos(file_parser_base):
         nos.compute_inverse()
         if self.ioptions['rd_ene']:
             nos.set_ens_occs()
+        if not self.ioptions['occ_fac'] == 1:
+            nos.occs = [occ * self.ioptions['occ_fac'] for occ in nos.occs]
+        if self.ioptions['lvprt'] >= 2:
+            print("Number of electrons:", sum(nos.occs))
 
         if not self.ioptions['ignore_irreps'] == []:
             print("  Ignoring irreps: ", self.ioptions['ignore_irreps'])

@@ -3,8 +3,15 @@
 from __future__ import print_function, division
 import os, sys
 import numpy
-from .. import theo_header, lib_mo, error_handler
+
 from .actions import Action
+from colt.lazyimport import LazyImportCreator, LazyImporter
+
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    lib_mo = importer.lazy_import_as('..lib_mo', 'lib_mo')
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
 
 
 class extract_mld:
@@ -98,32 +105,33 @@ class extract_mld:
         mos.export_AO(ens, occs, Ct, fname=outfile, occmin=self.thresh, alphabeta=True)
         print("  ... %s written, containing %i orbitals."%(outfile, len(ens)))
 
-def header():
-    theo_header.print_header('Extract molden files')
-
-    print("""\
-usage: Extract the hole/particle components out of a molden file
-syntax: extract_molden.py <mo_file1> [<mo_file2> ...]
-options: -ene          - interpret energies as occupations
-         -thresh=0.001 - threshold for print-out
-         -alphabeta    - use alpha/beta labels for hole/electron
-    """)
 
 class ExtractMolden(Action):
-    _questions = """
+
+    _user_input = """
+    # List of MO files to analyse
     mo_files = :: list(existing_file)
-    # interpret energies as occupations
+    # Interpret energies as occupations
     ene = False :: bool, alias=e
-    # threshold for print-out
+    # Threshold for print-out
     thresh = 0.001 :: float, alias=t
-    # use alpha/beta labels for hole/electron
+    # Use alpha/beta labels for hole/electron
     alphabeta = False :: bool, alias=ab
     """
 
     name = 'extract_molden'
 
+    _colt_description = 'Extract hole/particle parts from Molden file'
+
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..error_handler': 'error_handler',
+            '..lib_mo': 'lib_mo',
+    })
+
     def run(mo_files, ene, thresh, alphabeta):
-        header()
+        theo_header.print_header(title=__class__._colt_description)
+
         extr = extract_mld(thresh=thresh, rd_ene=ene, decompose=not alphabeta)
         mo_files = []
 
