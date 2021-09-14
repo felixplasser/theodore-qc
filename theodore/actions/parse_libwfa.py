@@ -15,15 +15,6 @@ with LazyImportCreator() as importer:
     error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
     input_options = importer.lazy_import_as('..input_options', 'input_options')
 
-
-def ihelp():
-    print(" parse_libwfa.py <logfile> <type>\n")
-    print("  type: qcadc, qctddft, qctda, rassi\n")
-    print(" Command line options:")
-    print("  -h, -H, -help: print this help")
-    print("  -ifile, -f [dens_ana.in]: name of the input file")
-    exit(0)
-
 class ParseLibwfa(Action):    
 
     name = 'parse_libwfa'
@@ -60,10 +51,7 @@ class ParseLibwfa(Action):
         if ioptions['rtype'] == 'qctda':
             ioptions['TDA'] = True
             ioptions['rtype'] = 'qctddft'
-        
-        if (not 'rfile' in ioptions) or (not 'rtype' in ioptions):
-            ihelp()
-        
+
         theo_header.print_header(__class__._colt_description, ioptions=ioptions)
         
         #--------------------------------------------------------------------------#
