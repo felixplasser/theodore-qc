@@ -16,7 +16,7 @@ def test_BCyc_VIST():
 
 
     with mock_stdout() as out:
-        sys.argv = ['theodore', 'plot_vist', '-c', '-v', '0 4', 'neutral.log', 'triplet.log', '2M.log']
+        sys.argv = ['theodore', 'plot_vist', '-c', '-v', "'0 4'", 'neutral.log', 'triplet.log', '2M.log']
         ActionFactory.from_commandline()
         with open(f'run_VIST.out', 'w') as fh:
             fh.write(out.read())

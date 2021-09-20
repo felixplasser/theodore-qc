@@ -1,5 +1,5 @@
 ================================================================================
-|                                 TheoDORE 2.4                                 |
+|                              TheoDORE 3.0_alpha                              |
 |         Theoretical Density, Orbital Relaxation and Exciton analysis         |
 |                                                                              |
 |                            Author: Felix Plasser                             |
@@ -131,6 +131,6 @@ Parsing Gaussian log file 2M.log ...
 Reading cclib structure with 64 atoms.
 VMD input appended to VIST.vmd
 
-Input file for VMD and coordinate file(s) created. Now run:
-   vmd -e VIST.vmd
+        Input file for VMD and coordinate file(s) created. Now run:
+           vmd -e VIST.vmd
     
