@@ -1787,13 +1787,9 @@ class file_parser_onetep(file_parser_base):
         self.ioptions['jmol_orbitals'] = False
         self.ioptions['molden_orbitals'] = False
 
-        print(" \nUsing Lowdin analysis for ONETEP (Om_formula=2)")
-        self.ioptions['Om_formula'] = 2
-
         state_list = []
 
         pre = self.ioptions['rfile']
-        nstates = 2
 
         rfile = open("%s.onetep"%pre, 'r')
         while True:
@@ -1807,7 +1803,7 @@ class file_parser_onetep(file_parser_base):
                 while True:
                     line = next(rfile)
                     words = line.split()
-                    print(words[0], words[0] == "Writing")
+                    # print(words[0], words[0] == "Writing")
                     if len(words) != 4 or words[0] == "Writing":
                         break
 
@@ -1818,18 +1814,18 @@ class file_parser_onetep(file_parser_base):
                     state['exc_en'] = float(words[1]) * units.energy['eV']
                     state['osc_str'] = float(words[2])
 
-        for istate in range(nstates):
+        for istate in range(len(state_list)):
             state = state_list[istate]
 
-            Dao = numpy.zeros([mos.ret_num_bas_val(), mos.ret_num_bas()], float)
+            Dao = numpy.zeros([mos.ret_num_bas() // 2, mos.ret_num_bas()], float)
             dmfile = "%s_response_denskern_%i.dkn_dens.mat"%(pre, istate+1)
             for i, line in enumerate(open(dmfile, 'r')):
                 words = line.split()
-                for j in range(mos.ret_num_bas_val()):
-                    Dao[j, i] = float(words[2 * j])
+                # Read only the real parts and assert that imaginary parts are zero
+                for j in range(0, mos.ret_num_bas(), 2):
+                    Dao[j // 2, i] = float(words[j])
+                    assert(float(words[j+1]) == 0.)
 
-            print("fptmp: Dao norm", numpy.sum(Dao * Dao))
-            state['tden'] = mos.prep_tden(Dao)
-            print("fptmp: tden norm", numpy.sum(state['tden'] * state['tden']))
+            state['tden'] = Dao
 
         return state_list

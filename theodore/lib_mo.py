@@ -227,6 +227,40 @@ class MO_set:
                 Dsub = D[:self.ret_num_mo()]
                 return numpy.dot(self.ret_mo_mat(trnsp, inv), Dsub)
 
+    def OmBas_Mulliken(self, D, formula):
+        """
+        Compute OmBas in a Mulliken-style analysis.
+        """
+        # construction of intermediate matrices
+           # S implicitly computed from C
+        tempA = self.CdotD(D, trnsp=False, inv=False)  # C.D
+        DS   = self.MdotC(tempA, trnsp=False, inv=True) # DAO.S = C.D.C^(-1)
+        tempB = self.CdotD(D, trnsp=True, inv=True)  # C^(-1,T).D
+        SD   = self.MdotC(tempB, trnsp=True, inv=False)  # S.DAO = C^(-1,T).DAO.C^T
+
+        if   formula == 0:
+            return DS * SD
+        elif formula == 1:
+            DAO = self.MdotC(tempA, trnsp=True, inv=False) # DAO = C.D.C^T
+            # S.DAO.S = C^(-1,T).D.C^(-1)
+            SDS = self.MdotC(tempB, trnsp=False, inv=True)
+            return 0.5 * (DS * SD + DAO * SDS)
+        else:
+            raise error_handler.ElseError(formula, 'Om formula')
+
+    def comp_OmAt(self, OmBas):
+        """
+        Compute the Omega matrix wrt atoms.
+        Use an optimised algorithm via bf_blocks.
+        """
+        OmAt = numpy.zeros([self.num_at, self.num_at])
+        bf_blocks = self.bf_blocks()
+        for iat, ist, ien in bf_blocks:
+            for jat, jst, jen in bf_blocks:
+                OmAt[iat, jat] = numpy.sum(OmBas[ist:ien, jst:jen])
+
+        return OmAt
+
     def lowdin_trans(self, D, reverse=False):
         """
         MO-AO transformation and Lowdin orthogonalization by using
@@ -282,21 +316,26 @@ class MO_set:
     def export_AO(self, *args, **kwargs):
         raise error_handler.PureVirtualError()
 
-    def bf_blocks(self):
+    def bf_blocks(self, bf_list = None, num_bas = None):
         """
         Return a list with the start and end indices for basis functions on the different atoms.
         [(iat, ist, ien), ...]
         """
+        if bf_list is None:
+            bf_list = self.basis_fcts
+        if num_bas is None:
+            num_bas = self.ret_num_bas()
+
         bf_blocks = []
         iat_old = 0
         ist = 0
-        for ibas in range(self.ret_num_bas()):
-            iat = self.basis_fcts[ibas].at_ind - 1
+        for ibas in range(num_bas):
+            iat = bf_list[ibas].at_ind - 1
             if iat != iat_old:
                 bf_blocks.append((iat_old, ist, ibas))
                 iat_old = iat
                 ist = ibas
-        bf_blocks.append((iat, ist, self.ret_num_bas()))
+        bf_blocks.append((iat, ist, num_bas))
 
         return bf_blocks
 
@@ -836,26 +875,32 @@ class MO_set_adf(MO_set):
 class MO_set_onetep(MO_set):
     """
     Handling of MOs for ONETEP.
-    Within TheoDORE the Lowdin orthogonalized AOs are treated as MOs.
-    This means that no additional transformations are required.
+    ONETEP actually already provides the 1TDM already in the AO basis.
+    That is why the workflow of the ONETEP interface is different to the others.
     """
     def read(self, lvprt=1):
+
+        self.num_at = 0
         if lvprt >= 1:
             print("Reading basis function information ...")
         for line in open(self.file + '.jointngwf2atoms'):
             at_ind = int(line.strip())
             self.basis_fcts.append(basis_fct(at_ind))
+            self.num_at = max(self.num_at, at_ind)
+
+        # The MO coefficients are just a dummy unit matrix.
+        self.mo_mat = numpy.identity(len(self.basis_fcts))
+
+        # Information for valence set only
         self.basis_fcts_val = []
         for line in open(self.file + '.valngwf2atoms'):
             at_ind = int(line.strip())
             self.basis_fcts_val.append(basis_fct(at_ind))
+        assert(len(self.basis_fcts_val) == self.ret_num_bas() // 2)
 
         if lvprt >= 1:
             print("Reading and processing overlap matrix ...")
         self.read_S()
-
-        # The MO coefficients are just a dummy unit matrix.
-        self.mo_mat = numpy.identity(len(self.basis_fcts))
 
     def read_S(self):
         """
@@ -869,8 +914,9 @@ class MO_set_onetep(MO_set):
             tmp.append(line.split())
         self.S = numpy.array(tmp, float)
         (eval, evec) = numpy.linalg.eigh(self.S)
-        self.S2 = numpy.dot(evec,
-            numpy.dot(numpy.diag(eval), evec))
+        # sqval = numpy.sqrt(eval)
+        # self.S2 = numpy.dot(evec,
+        #     numpy.dot(numpy.diag(sqval), evec))
 
         # analysis of valence set only
         # this creates its own temporary variables
@@ -879,46 +925,35 @@ class MO_set_onetep(MO_set):
         for line in open(Sname, 'r'):
             tmp.append(line.split())
         self.S_val = numpy.array(tmp, float)
-        (eval, evec) = numpy.linalg.eigh(self.S_val)
-        ltmp = numpy.dot(evec,
-            numpy.dot(numpy.diag(eval), evec))
-        self.S2_val = numpy.zeros([len(self.S), len(self.S_val)])
-
-        # As a next step the valence basis functions have to be mapped
-        #   into the joint set. It is assumed that they are sorted by atom.
-        curr_at = 1
-        irow = -1
-        nskip = 1
-        for ibf, bf in enumerate(self.basis_fcts_val):
-            if curr_at == bf.at_ind:
-                irow  += 1
-            else:
-                curr_at = bf.at_ind
-                irow += nskip
-                nskip = 1
-            nskip += 1
-            self.S2_val[irow] = ltmp[ibf]
-
-        self.num_at = curr_at
 
     def lowdin_trans(self, D):
         """
         Nothing to do. D is already stored in the Lowdin orthogonalized AO basis.
         """
-        return D
+        raise error_handler.MsgError("Not implemented for ONETEP")
 
-    def prep_tden(self, D):
-        """
-        Prepare density matrix by putting it into the Lowdin orthogonalized AO basis.
-        """
-        return numpy.dot(self.S2_val,
-            numpy.dot(D, self.S2))
+    def OmBas_Mulliken(self, D, formula):
+        DS = numpy.dot(D, self.S)
+        SD = numpy.dot(self.S_val, D)
+        if   formula == 0:
+            return DS * SD
+        elif formula == 1:
+            SDS = numpy.dot(SD, self.S)
+            return 0.5 * (DS * SD + D * SDS)
+        else:
+            raise error_handler.ElseError(formula, 'Om formula')
 
-    def ret_num_bas_val(self):
+    def comp_OmAt(self, OmBas):
         """
-        Return number of basis functions in only the valence set.
+        Compute the Omega matrix wrt atoms.
+        Differentiate between valence and joint basis set.
         """
-        return len(self.S_val)
+        OmAt = numpy.zeros([self.num_at, self.num_at])
+        for iat, ist, ien in self.bf_blocks(self.basis_fcts_val, self.ret_num_bas() // 2):
+            for jat, jst, jen in self.bf_blocks():
+                OmAt[iat, jat] = numpy.sum(OmBas[ist:ien, jst:jen])
+
+        return OmAt
 
 class basis_fct:
     """
