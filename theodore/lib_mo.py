@@ -884,7 +884,9 @@ class MO_set_onetep(MO_set):
         if lvprt >= 1:
             print("Reading basis function information ...")
         for line in open(self.file + '.jointngwf2atoms'):
-            at_ind = int(line.strip())
+            if line[0] == '#':
+                continue
+            at_ind = int(line.split()[3])
             self.basis_fcts.append(basis_fct(at_ind))
             self.num_at = max(self.num_at, at_ind)
 
@@ -894,7 +896,9 @@ class MO_set_onetep(MO_set):
         # Information for valence set only
         self.basis_fcts_val = []
         for line in open(self.file + '.valngwf2atoms'):
-            at_ind = int(line.strip())
+            if line[0] == '#':
+                continue
+            at_ind = int(line.split()[3])
             self.basis_fcts_val.append(basis_fct(at_ind))
         assert(len(self.basis_fcts_val) == self.ret_num_bas() // 2)
 
