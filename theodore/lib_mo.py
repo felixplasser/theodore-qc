@@ -886,7 +886,7 @@ class MO_set_onetep(MO_set):
         for line in open(self.file + '.jointngwf2atoms'):
             if line[0] == '#':
                 continue
-            at_ind = int(line.split()[3])
+            at_ind = int(line.split()[-1])
             self.basis_fcts.append(basis_fct(at_ind))
             self.num_at = max(self.num_at, at_ind)
 
@@ -898,7 +898,7 @@ class MO_set_onetep(MO_set):
         for line in open(self.file + '.valngwf2atoms'):
             if line[0] == '#':
                 continue
-            at_ind = int(line.split()[3])
+            at_ind = int(line.split()[-1])
             self.basis_fcts_val.append(basis_fct(at_ind))
         assert(len(self.basis_fcts_val) == self.ret_num_bas() // 2)
 
