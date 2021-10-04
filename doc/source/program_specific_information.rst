@@ -318,17 +318,20 @@ ONETEP - TDDFT
 
 An interface for TDDFT computations in ONETEP is available.
 Currently (October 2021) this interface requires a developoment version of ONETEP.
+The interface can perform an analysis of CT numbers
+but no exporting of orbitals or densities is possible.
+
 Analysis occurs in a mixed basis where excitations proceed from a valence basis to
 a joint basis.
-
-The interface needs the following files.
+TheoDORE needs information on both types of bases to operate.
+The following files are required:
 
 * <rfile>.onetep
 * <rfile>_response_denskern_\*.dkn_dens.mat
 * <rfile>.jointngwf2atoms/valngwf2atoms
 * <rfile>.jointoverlap.mat/valoverlap.mat
 
-Here, :code:`rfile` is a joint prefix to all the files, which is read from
+Here, :code:`<rfile>` is a joint prefix to all the files, which is read from
 the input file :code:`dens_ana.in` and can be specified via :code:`theoinp`.
 
 Other programs (cclib)
