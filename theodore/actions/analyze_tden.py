@@ -171,3 +171,53 @@ class AnalyzeTdenUnr(Action):
 
         print("\n *** Spin-summed results ***")
         tdena_beta.print_summary()
+
+class AnalyzeTdenEs2Es(Action):
+
+    name = 'analyze_tden_es2es'
+
+    _colt_description = 'Transition density matrix ana. (state-to-state)'
+
+    _user_input = """
+    # Main input file
+    ifile = dens_ana.in :: existing_file, alias=f
+    # Reference state
+    iref  = 1 :: int, alias=r
+    """
+
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..lib_tden': 'lib_tden',
+            '..input_options': 'input_options'
+    })
+
+    @timeit
+    def run(ifile, iref):
+        ioptions = input_options.tden_ana_options(ifile)
+        theo_header.print_header(title=__class__._colt_description, ioptions=ioptions, cfile=__name__)
+
+        tdena = lib_tden.tden_ana(ioptions)
+        if 'mo_file' in ioptions: tdena.read_mos()
+
+        tdena.read_dens()
+        tdena.compute_es2es_tden(iref=iref)
+
+        if 'at_lists' in ioptions or ioptions['eh_pop'] >= 1:
+            tdena.compute_all_OmAt()
+
+        if 'at_lists' in ioptions:
+            tdena.compute_all_OmFrag()
+            if ioptions['print_OmFrag']: tdena.fprint_OmFrag()
+
+        if ioptions['comp_ntos']:  tdena.compute_all_NTO()
+        if ioptions['comp_p_h_dens']: tdena.compute_p_h_dens()
+        if ioptions['comp_rho0n']: tdena.compute_rho_0_n()
+        if 'Phe' in ioptions['prop_list']:
+            tdena.compute_all_Phe()
+
+        #--------------------------------------------------------------------------#
+        # Print-out
+        #--------------------------------------------------------------------------#    
+        tdena.print_all_eh_pop()
+
+        tdena.print_summary()
