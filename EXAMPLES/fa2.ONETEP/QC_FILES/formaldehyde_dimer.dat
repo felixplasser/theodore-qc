@@ -1,0 +1,48 @@
+task singlepoint cond lr_tddft
+cutoff_energy 600.0 eV
+xc_functional pbe
+maxit_ngwf_cg 120
+minit_lnv 5
+maxit_lnv 10
+do_properties T
+output_mo_coeff T
+
+cond_num_states : 16
+lr_tddft_num_states : 5
+
+%block species
+C C 6 4 8.0
+O O 8 4 8.0
+H H 1 1 8.0
+%endblock species
+
+%block species_cond
+C C 6 4 10.0
+O O 8 4 10.0
+H H 1 1 10.0
+%endblock species_cond
+
+%block species_pot
+C C_OTF.usp
+O O_OTF.usp
+H H_OTF.usp
+%endblock species_pot
+
+%block lattice_cart
+ang
+     30.000000000       0.000000000       0.000000000
+      0.000000000      30.000000000       0.000000000
+      0.000000000       0.000000000      30.000000000
+%endblock lattice_cart
+
+%block positions_abs
+ang
+C           1.75000         0.00000         0.59225
+C          -1.75000         0.00000         0.59225
+O           1.75000         0.00000        -0.59537
+O          -1.75000         0.00000        -0.59537
+H           1.75000         0.92490         1.17073
+H          -1.75000         0.92490         1.17073
+H           1.75000        -0.92490         1.17073
+H          -1.75000        -0.92490         1.17073
+%endblock positions_abs

@@ -1,5 +1,5 @@
 ================================================================================
-|                                 TheoDORE 2.4                                 |
+|                              TheoDORE 3.0_alpha                              |
 |         Theoretical Density, Orbital Relaxation and Exciton analysis         |
 |                                                                              |
 |                            Author: Felix Plasser                             |
@@ -54,7 +54,8 @@ P6 -> NICS value at ( 3.48236,  0.97613, -0.11121):   4.37 = (  25.94  -4.48  -8
 P7 -> NICS value at (-3.48236, -0.97613, -0.11121):   4.38 = (  25.94  -4.48  -8.33 )/3
 VMD input appended to simple.vmd
 
-Input file for VMD created. Now do the following:
-1. Open VMD and load coordinate file
-2.   File - Load Visualization State - simple.vmd
+        Input file for VMD created. Now do the following:
+        1. Open VMD and load coordinate file
+        2.   File - Load Visualization State - simple.vmd
     
+CPU time:  0.0 s, wall time: 0.0 s

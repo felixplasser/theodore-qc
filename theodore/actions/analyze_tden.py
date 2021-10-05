@@ -99,7 +99,7 @@ class AnalyzeTdenUnr(Action):
     @timeit
     def run(ifile):
         ioptions = input_options.tden_ana_options(ifile)
-        theo_header.print_header(_colt_description, ioptions=ioptions, cfile=__name__)
+        theo_header.print_header(__class__._colt_description, ioptions=ioptions, cfile=__name__)
 
         ioptions['jmol_orbitals'] = False
 

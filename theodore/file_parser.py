@@ -1778,3 +1778,54 @@ class file_parser_rassi(file_parser_libwfa):
         rfile.close()
 
         return energies, oscs, state_list
+
+class file_parser_onetep(file_parser_base):
+    """
+    Read ONETEP job.
+    """
+    def read(self, mos):
+        self.ioptions['jmol_orbitals'] = False
+        self.ioptions['molden_orbitals'] = False
+
+        state_list = []
+
+        pre = self.ioptions['rfile']
+
+        rfile = open("%s.onetep"%pre, 'r')
+        while True:
+            try:
+                line = next(rfile)
+            except StopIteration:
+                print("Finished parsing %s."%rfile.name)
+                break
+
+            if 'Energy (in Ha)' in line:
+                while True:
+                    line = next(rfile)
+                    words = line.split()
+                    # print(words[0], words[0] == "Writing")
+                    if len(words) != 4 or words[0] == "Writing":
+                        break
+
+                    state_list.append({})
+                    state = state_list[-1]
+                    state['state_ind'] = int(words[0])
+                    state['name'] = 'A' + words[0]
+                    state['exc_en'] = float(words[1]) * units.energy['eV']
+                    state['osc_str'] = float(words[2])
+
+        for istate in range(len(state_list)):
+            state = state_list[istate]
+
+            Dao = numpy.zeros([mos.ret_num_bas() // 2, mos.ret_num_bas()], float)
+            dmfile = "%s_response_denskern_%i.dkn_dens.mat"%(pre, istate+1)
+            for i, line in enumerate(open(dmfile, 'r')):
+                words = line.split()
+                # Read only the real parts and assert that imaginary parts are zero
+                for j in range(0, mos.ret_num_bas(), 2):
+                    Dao[j // 2, i] = float(words[j])
+                    assert(float(words[j+1]) == 0.)
+
+            state['tden'] = Dao
+
+        return state_list

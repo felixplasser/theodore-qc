@@ -313,6 +313,27 @@ An interface to DFTB+ was written by Ljiljana Stojanovic. This interface current
 *  detailed.out (orbital occupations and energies)
 *  wfc.3ob-3-1.hsd (DFTB parameter file)
 
+ONETEP - TDDFT
+~~~~~~~~~~~~~~
+
+An interface for TDDFT computations in ONETEP is available.
+Currently (October 2021) this interface requires a developoment version of ONETEP.
+The interface can perform an analysis of CT numbers
+but no exporting of orbitals or densities is possible.
+
+Analysis occurs in a mixed basis where excitations proceed from a valence basis to
+a joint basis.
+TheoDORE needs information on both types of bases to operate.
+The following files are required:
+
+* <rfile>.onetep
+* <rfile>_response_denskern_\*.dkn_dens.mat
+* <rfile>.jointngwf2atoms/valngwf2atoms
+* <rfile>.jointoverlap.mat/valoverlap.mat
+
+Here, :code:`<rfile>` is a joint prefix to all the files, which is read from
+the input file :code:`dens_ana.in` and can be specified via :code:`theoinp`.
+
 Other programs (cclib)
 ~~~~~~~~~~~~~~~~~~~~~~
 In principle all third party programs, which are parsed by the [cclib library](http://cclib.github.io/) can be used. These are: ADF, Firefly, GAMESS, Gaussian, Jaguar, Molpro, ORCA. But not all of these have been tested by the developers and it may be necessary to set some additional program specific options. Please report, if you did so successfully.

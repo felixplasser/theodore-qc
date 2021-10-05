@@ -20,7 +20,7 @@ class PlotVist(Action):
     # VIST for only these dummy atoms, e.g. -v '0 3 5'
     vist = :: ilist, optional, alias=v
     # Name of output file (for VMD)
-    ofile    = VIST.vmd :: file, alias=o
+    ofile    = VIST.vmd :: str, alias=o
     # Scale factor for VIST dumb-bells
     scale    = 1.0 :: float, alias=s
     # Create coordinate files (using cclib)
@@ -28,7 +28,7 @@ class PlotVist(Action):
     # Render and plot all tensors separately
     plot_all = false :: bool, alias=p
     # Log files to be parsed
-    logfiles = :: list(existing_file)
+    logfiles = :: list(str)
     """
 
     _colt_description = "Read NICS values and prepare VIST plot"
