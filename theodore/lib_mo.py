@@ -227,6 +227,40 @@ class MO_set:
                 Dsub = D[:self.ret_num_mo()]
                 return numpy.dot(self.ret_mo_mat(trnsp, inv), Dsub)
 
+    def OmBas_Mulliken(self, D, formula):
+        """
+        Compute OmBas in a Mulliken-style analysis.
+        """
+        # construction of intermediate matrices
+           # S implicitly computed from C
+        tempA = self.CdotD(D, trnsp=False, inv=False)  # C.D
+        DS   = self.MdotC(tempA, trnsp=False, inv=True) # DAO.S = C.D.C^(-1)
+        tempB = self.CdotD(D, trnsp=True, inv=True)  # C^(-1,T).D
+        SD   = self.MdotC(tempB, trnsp=True, inv=False)  # S.DAO = C^(-1,T).DAO.C^T
+
+        if   formula == 0:
+            return DS * SD
+        elif formula == 1:
+            DAO = self.MdotC(tempA, trnsp=True, inv=False) # DAO = C.D.C^T
+            # S.DAO.S = C^(-1,T).D.C^(-1)
+            SDS = self.MdotC(tempB, trnsp=False, inv=True)
+            return 0.5 * (DS * SD + DAO * SDS)
+        else:
+            raise error_handler.ElseError(formula, 'Om formula')
+
+    def comp_OmAt(self, OmBas):
+        """
+        Compute the Omega matrix wrt atoms.
+        Use an optimised algorithm via bf_blocks.
+        """
+        OmAt = numpy.zeros([self.num_at, self.num_at])
+        bf_blocks = self.bf_blocks()
+        for iat, ist, ien in bf_blocks:
+            for jat, jst, jen in bf_blocks:
+                OmAt[iat, jat] = numpy.sum(OmBas[ist:ien, jst:jen])
+
+        return OmAt
+
     def lowdin_trans(self, D, reverse=False):
         """
         MO-AO transformation and Lowdin orthogonalization by using
@@ -282,21 +316,26 @@ class MO_set:
     def export_AO(self, *args, **kwargs):
         raise error_handler.PureVirtualError()
 
-    def bf_blocks(self):
+    def bf_blocks(self, bf_list = None, num_bas = None):
         """
         Return a list with the start and end indices for basis functions on the different atoms.
         [(iat, ist, ien), ...]
         """
+        if bf_list is None:
+            bf_list = self.basis_fcts
+        if num_bas is None:
+            num_bas = self.ret_num_bas()
+
         bf_blocks = []
         iat_old = 0
         ist = 0
-        for ibas in range(self.ret_num_bas()):
-            iat = self.basis_fcts[ibas].at_ind - 1
+        for ibas in range(num_bas):
+            iat = bf_list[ibas].at_ind - 1
             if iat != iat_old:
                 bf_blocks.append((iat_old, ist, ibas))
                 iat_old = iat
                 ist = ibas
-        bf_blocks.append((iat, ist, self.ret_num_bas()))
+        bf_blocks.append((iat, ist, num_bas))
 
         return bf_blocks
 
@@ -832,6 +871,93 @@ class MO_set_adf(MO_set):
 #    if x>y:
 #      x=0
 #      y+=1
+
+class MO_set_onetep(MO_set):
+    """
+    Handling of MOs for ONETEP.
+    ONETEP actually already provides the 1TDM already in the AO basis.
+    That is why the workflow of the ONETEP interface is different to the others.
+    """
+    def read(self, lvprt=1):
+
+        self.num_at = 0
+        if lvprt >= 1:
+            print("Reading basis function information ...")
+        for line in open(self.file + '.jointngwf2atoms'):
+            if line[0] == '#':
+                continue
+            at_ind = int(line.split()[-1])
+            self.basis_fcts.append(basis_fct(at_ind))
+            self.num_at = max(self.num_at, at_ind)
+
+        # The MO coefficients are just a dummy unit matrix.
+        self.mo_mat = numpy.identity(len(self.basis_fcts))
+
+        # Information for valence set only
+        self.basis_fcts_val = []
+        for line in open(self.file + '.valngwf2atoms'):
+            if line[0] == '#':
+                continue
+            at_ind = int(line.split()[-1])
+            self.basis_fcts_val.append(basis_fct(at_ind))
+        assert(len(self.basis_fcts_val) == self.ret_num_bas() // 2)
+
+        if lvprt >= 1:
+            print("Reading and processing overlap matrix ...")
+        self.read_S()
+
+    def read_S(self):
+        """
+        Read the overlap matrix.
+        """
+        # analysis of joint set
+        # this uses the variables of the main class
+        tmp = []
+        Sname = self.file + '.jointoverlap.mat'
+        for line in open(Sname, 'r'):
+            tmp.append(line.split())
+        self.S = numpy.array(tmp, float)
+        (eval, evec) = numpy.linalg.eigh(self.S)
+        # sqval = numpy.sqrt(eval)
+        # self.S2 = numpy.dot(evec,
+        #     numpy.dot(numpy.diag(sqval), evec))
+
+        # analysis of valence set only
+        # this creates its own temporary variables
+        tmp = []
+        Sname = self.file + '.valoverlap.mat'
+        for line in open(Sname, 'r'):
+            tmp.append(line.split())
+        self.S_val = numpy.array(tmp, float)
+
+    def lowdin_trans(self, D):
+        """
+        Nothing to do. D is already stored in the Lowdin orthogonalized AO basis.
+        """
+        raise error_handler.MsgError("Not implemented for ONETEP")
+
+    def OmBas_Mulliken(self, D, formula):
+        DS = numpy.dot(D, self.S)
+        SD = numpy.dot(self.S_val, D)
+        if   formula == 0:
+            return DS * SD
+        elif formula == 1:
+            SDS = numpy.dot(SD, self.S)
+            return 0.5 * (DS * SD + D * SDS)
+        else:
+            raise error_handler.ElseError(formula, 'Om formula')
+
+    def comp_OmAt(self, OmBas):
+        """
+        Compute the Omega matrix wrt atoms.
+        Differentiate between valence and joint basis set.
+        """
+        OmAt = numpy.zeros([self.num_at, self.num_at])
+        for iat, ist, ien in self.bf_blocks(self.basis_fcts_val, self.ret_num_bas() // 2):
+            for jat, jst, jen in self.bf_blocks():
+                OmAt[iat, jat] = numpy.sum(OmBas[ist:ien, jst:jen])
+
+        return OmAt
 
 class basis_fct:
     """

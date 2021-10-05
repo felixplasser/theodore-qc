@@ -79,6 +79,12 @@ class dens_ana_base:
             self.state_list = file_parser.file_parser_tddftb(self.ioptions).read(self.mos)
         elif rtype=='dftmrci':
             self.state_list = file_parser.file_parser_dftmrci(self.ioptions).read(self.mos)
+        elif rtype=='onetep':
+            self.mos = lib_mo.MO_set_onetep(file=self.ioptions.get('rfile'))
+            self.mos.read(lvprt=1)
+            self.num_mo  = self.mos.ret_num_mo()
+            self.num_bas = self.mos.ret_num_bas()
+            self.state_list = file_parser.file_parser_onetep(self.ioptions).read(self.mos)
         elif rtype == 'nos':
             self.ioptions['NO_ana'] = False # Do not do explicit NO analysis
             self.state_list = file_parser.file_parser_nos(self.ioptions).read(self.mos)

@@ -1,0 +1,6 @@
+#!/usr/bin/env python3
+from theodore import run
+
+
+if __name__ == '__main__':
+    run()

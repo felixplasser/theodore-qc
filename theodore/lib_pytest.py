@@ -3,6 +3,29 @@ General tools for using pytest.
 """
 
 import os, shutil, subprocess, difflib
+import io
+import sys
+from contextlib import contextmanager
+from .actions import ActionFactory
+
+
+class StringIO_(io.StringIO):
+
+    def read(self):
+        pos = super().tell()
+        super().seek(0)
+        result = super().read()
+        super().seek(pos)
+        return result
+
+
+@contextmanager
+def mock_stdout():
+    old = sys.stdout
+    sys.stdout = StringIO_()
+    yield sys.stdout
+    sys.stdout = old
+
 
 class pytest_job:
     """
@@ -22,21 +45,19 @@ class pytest_job:
         for ifile in sorted(os.listdir('../IN_FILES')):
             print(ifile)
             shutil.copy("../IN_FILES/"+ifile, ifile)
+            col = ifile.split('.')
+            dtype, atype = col[0], col[2]
+            sys.argv = ['theodore', f'analyze_{dtype}',  '-f', ifile]
             
-            finfo = ifile.split('.')
-            dtype = finfo[0]
-            atype = finfo[2]
-            comm="analyze_%s.py"%dtype
-            
-            with open("analyze_%s.out"%atype, 'w') as outf:
-                subprocess.check_call([comm, "-f", ifile], stdout=outf)
-            # if dtype == 'tden':
-            #     sys.argv = ['analyze_tden.py']
-            #     import analyze_tden
-
+            with mock_stdout() as out:
+                ActionFactory.from_commandline()
+                outlines = out.read()
+                with open(f'analyze_{atype}.out', 'w') as fh:
+                    fh.write(outlines)
         self.check()
 
     def prep(self):
+        """Create `RUN` dir"""
         os.chdir(self.epath)
         if os.path.exists('RUN'):
             shutil.rmtree('RUN')
@@ -44,9 +65,7 @@ class pytest_job:
         os.chdir(self.epath + '/RUN')
 
     def check(self):
-        """
-        Check if there are any differences.
-        """
+        """ Check if there are any differences.  """
         os.chdir(self.epath + '/RUN')
         print("Checking primary output files")
         for rfile in os.listdir('../REF_FILES'):
@@ -76,7 +95,7 @@ class pytest_job:
                     wstring = "\n"
                     for line in diffl:
                         self.wstring += line
-                return
+                    return
         # Use a general diff here
         else:
             diffl = list(difflib.unified_diff(self.diff_ignore(ref), self.diff_ignore(run), fromfile=reff, tofile=runf))
@@ -97,6 +116,7 @@ class pytest_job:
             else:
                 outl.append(line)
         return outl
+
 
 class pytestDiffError(Exception):
     def __init__(self, errmsg):
