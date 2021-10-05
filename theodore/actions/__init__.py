@@ -1,6 +1,6 @@
 from .actions import ActionFactory
 from .theoinp import TheodoreInput
-from .analyze_tden import AnalyzeTden, AnalyzeTdenUnr
+from .analyze_tden import AnalyzeTden, AnalyzeTdenUnr, AnalyzeTdenEs2Es
 from .analyze_tden_soc import AnalyzeTdenSoc
 from .analyze_sden import AnalyzeSden
 from .analyze_NOs import AnalyzeNOs
