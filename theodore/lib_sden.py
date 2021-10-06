@@ -166,8 +166,8 @@ class sden_ana(dens_ana_base.dens_ana_base):
                 numpy.dot(numpy.diag(nunl_v), U.T) )
 
             nel = sum(pop)
-            iy0 = len(pop) - int(nel/2 + 0.5) - 2
-            iy1 = len(pop) - int(nel/2 + 0.5) - 3
+            iy0 = len(pop) - int(nel/2 + 0.5) - 1
+            iy1 = len(pop) - int(nel/2 + 0.5) - 2
             state['y0'] = pop[iy0]
             state['y1'] = pop[iy1]
 
