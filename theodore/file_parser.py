@@ -1674,6 +1674,12 @@ class file_parser_nos(file_parser_base):
             state['nunl_den'] = numpy.dot(T,
                                   numpy.dot(numpy.diag(nunl_list), T.transpose()))
 
+            nel = sum(nos.occs)
+            iy0 = int(nel/2 + 0.5)
+            iy1 = int(nel/2 + 0.5) + 1
+            state['y0'] = nos.occs[iy0]
+            state['y1'] = nos.occs[iy1]
+
 class file_parser_rassi(file_parser_libwfa):
     def read(self, mos):
 
