@@ -90,6 +90,7 @@ class pytest_job:
         if '.txt' in runf:
             for iline, line in enumerate(ref):
                 if not line == run[iline]:
+                    print(' *** Running numerical diff ***')
                     if self.num_diff(line, run[iline]) > 0:
                         self.wstring += 'Numerical threshold exceeded \n\n'
                         diffl = list(difflib.unified_diff(ref, run, fromfile=reff, tofile=runf))
