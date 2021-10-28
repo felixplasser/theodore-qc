@@ -252,6 +252,11 @@ class sden_ana(dens_ana_base.dens_ana_base):
             oi.compute_p_h_dens(state, U, lam, Vt, self.mos, minlam=self.ioptions['min_occ'])
 
     def ret_NDO(self, state, ref_state):
+        """
+        Compute NDOs and promotion number.
+        A generalised excitation number eta is also computed here,
+           cf. Barca et al. JCTC 2018, 14, 9.
+        """
         dD = state['sden'] - ref_state['sden']
 
         (ad,W) = numpy.linalg.eigh(dD)
@@ -262,6 +267,12 @@ class sden_ana(dens_ana_base.dens_ana_base):
         if abs(state['p'] + pD) > 10E-8:
             estr = 'pA + pD = %.8f != 0.'%(state['p'] + pD)
             print(' WARNING: ' + estr)
+
+        nA  = numpy.trace(ref_state['sden'])
+        nAA = 0.5 * numpy.sum(ref_state['sden'] * ref_state['sden'])
+        nAB = 0.5 * numpy.sum(state['sden'] * ref_state['sden'])
+        state["eta_A"]  = nA - nAB
+        state["eta_AA"] = nAA - nAB
 
         return ad, W
 
