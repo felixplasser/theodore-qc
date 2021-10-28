@@ -1677,8 +1677,14 @@ class file_parser_nos(file_parser_base):
             nel = sum(nos.occs)
             iy0 = int(nel/2 + 0.5)
             iy1 = int(nel/2 + 0.5) + 1
-            state['y0'] = nos.occs[iy0]
-            state['y1'] = nos.occs[iy1]
+            try:
+                state['y0'] = nos.occs[iy0]
+            except IndexError:
+                state['y0'] = 0.
+            try:
+                state['y1'] = nos.occs[iy1]
+            except IndexError:
+                state['y1'] = 0.
 
 class file_parser_rassi(file_parser_libwfa):
     def read(self, mos):
