@@ -268,11 +268,10 @@ class sden_ana(dens_ana_base.dens_ana_base):
             estr = 'pA + pD = %.8f != 0.'%(state['p'] + pD)
             print(' WARNING: ' + estr)
 
-        nA  = numpy.trace(ref_state['sden'])
         nAA = 0.5 * numpy.sum(ref_state['sden'] * ref_state['sden'])
+        nBB = 0.5 * numpy.sum(state['sden'] * state['sden'])
         nAB = 0.5 * numpy.sum(state['sden'] * ref_state['sden'])
-        state["eta_A"]  = nA - nAB
-        state["eta_AA"] = nAA - nAB
+        state["eta"] = max(nAA, nBB) - nAB
 
         return ad, W
 
