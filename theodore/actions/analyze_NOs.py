@@ -29,6 +29,8 @@ class AnalyzeNOs(Action):
     ref = :: existing_file, optional, alias=r
     # Multiply occupations with this factor
     occ_fac = :: float, optional, alias=o
+    # Interpret energies as occupations
+    rd_ene = false :: bool, alias=e
     """
 
     _lazy_imports = LazyImporter({
@@ -37,7 +39,7 @@ class AnalyzeNOs(Action):
             '..input_options': 'input_options'
     })
 
-    def run(no_files, ifile, ref, occ_fac):
+    def run(no_files, ifile, ref, occ_fac, rd_ene):
         theo_header.print_header(__class__._colt_description, cfile=__file__)
 
         # set options
@@ -45,6 +47,7 @@ class AnalyzeNOs(Action):
         ioptions['rtype'] = 'nos'
         if not occ_fac is None:
             ioptions['occ_fac'] = occ_fac
+        ioptions['rd_ene'] = rd_ene
 
         # optionally use a manually specified MO file for computing the AO overlap matrix
         if ref is None:

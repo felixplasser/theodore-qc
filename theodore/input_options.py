@@ -488,7 +488,7 @@ class sden_ana_options(dens_ana_options):
 
         # Output options
         self['output_file']   = "sden_summ.txt"
-        self['prop_list'] = ['nu', 'nunl', 'p']
+        self['prop_list'] = ['nu', 'nunl', 'y0', 'y1', 'eta', 'p']
 
 class libwfa_parse_options(dens_ana_options):
     """
