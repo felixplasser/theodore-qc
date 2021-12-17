@@ -9,6 +9,8 @@ The **TheoDORE** (Theoretical Density, Orbital Relaxation and Exciton analysis) 
 
 TheoDORE is distributed under the GNU General Public License 3.0 (see `LICENSE.txt <https://github.com/felixplasser/theodore-qc/blob/master/LICENSE.txt>`_).
 
+.. image:: ./doc/source/_static/theodore.png
+
 Documentation
 ~~~~~~~~~~~~~
 * `Documentation of TheoDORE 2 <https://sourceforge.net/p/theodore-qc/wiki/Home/>`_
