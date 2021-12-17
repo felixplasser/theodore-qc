@@ -893,6 +893,9 @@ class file_parser_qctddft(file_parser_libwfa):
 
                     line = next(rfileh)
                     line = next(rfileh)
+                    if 'Details' in line:
+                        line = next(rfileh)
+                        line = next(rfileh)
                     words = line.split()
 
                     if words[0] == 'Multiplicity:':
