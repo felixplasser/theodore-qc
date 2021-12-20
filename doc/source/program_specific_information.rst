@@ -1,10 +1,14 @@
+.. _prog-spec-info:
+
 Program specific information 
 ----------------------------
 
 In the case of TDDFT, "Exact" is used for cases where the whole **X** or **X** + **Y** vector is parsed.
 
-Use the `rtype` keyword in `dens_ana.in` to specify the respective method.
+Use the ``rtype`` keyword in ``dens_ana.in`` to specify the respective method.
 
+..
+    TODO include table
 
 In general, TheoDORE needs two types of information: density matrices and MO coefficients. This page contains specific information about how to obtain this information from the different quantum chemistry programs.
 
@@ -27,7 +31,8 @@ To run the libwfa analysis set in the input file:
 TDDFT
 _____
 
-The CIS/TDDFT module of Q-Chem is directly interfaced to the wavefunction analysis library libwfa (see [DOI: 10.1063/1.4935178](http://dx.doi.org/10.1063/1.4935178) for more details). Most analysis steps are performed within Q-Chem and the main purpose  of TheoDORE is to enable [plotting](PLotting) of *electron-hole* correlation plots.
+The CIS/TDDFT module of Q-Chem is directly interfaced to the wavefunction analysis library libwfa
+(see `JCP 143, 171101 (2015) <http://dx.doi.org/10.1063/1.4935178>`_ for more details). Most analysis steps are performed within Q-Chem and the main purpose  of TheoDORE is to enable [plotting](PLotting) of *electron-hole* correlation plots.
 
 To run the libwfa analysis set in the input file:
 
@@ -35,7 +40,8 @@ To run the libwfa analysis set in the input file:
 
     state_analysis    true
 
-Alternatively, the standard output can be parsed. To do this set `read_libwfa=False` in `dens_ana.in`. In this case, the X vector is parsed and interpreted as the 1TDM while the Y vector is ignored. The following non-standard options have to be set in the input file:
+Alternatively, the standard output can be parsed. To do this set ``read_libwfa=False`` in ``dens_ana.in``.
+In this case, the X vector is parsed and interpreted as the 1TDM while the Y vector is ignored. The following non-standard options have to be set in the input file:
 
 ::
 
@@ -51,7 +57,7 @@ Per default RPA vectors are parsed. If you are interested in TDA vectors, specif
 
     TDA=True
 
-in `dens_ana.in`.
+in ``dens_ana.in``.
 
 fchk files
 __________
@@ -65,14 +71,16 @@ option. In this case, TheoDORE can read the transition density matrices and do t
 
 libwfa
 ______
-It is also possible to parse generic `libwfa` output by using the libwfa keyword.
+It is also possible to parse generic ``libwfa`` output by using the libwfa keyword.
 
 Columbus
 ~~~~~~~~
 
 MCSCF
 _____
-MCSCF transition density matrices are written by the program `mcscf.x`. To compute these, it is either possible to compute non-adiabatic coupling vectors or to use the shortcut of creating an `mcdenin` file. This file has the same structure as the `transmomin` file, e.g.
+MCSCF transition density matrices are written by the program ``mcscf.x``.
+To compute these, it is either possible to compute non-adiabatic coupling vectors or to use the shortcut of creating an ``mcdenin`` file.
+This file has the same structure as the ``transmomin`` file, e.g.
 
 ::
 
@@ -85,26 +93,33 @@ MCSCF transition density matrices are written by the program `mcscf.x`. To compu
 
 will compute all transition moments between the 1st and the 2nd through 6th states in DRT 1.
 
-After the computation call `write_den.bash` to convert the binary files into a form that can be read by TheoDORE. For this purpose the $COLUMBUS variable has to be set.
+After the computation call ``write_den.bas`h`` to convert the binary files into a form that can be read by TheoDORE. For this purpose the $COLUMBUS variable has to be set.
 
-State density matrix analysis is possible when the computation of dipole moments was requested. In this case it is possible to use the above procedure or to simply analyze the NO coefficient files in the `MOLDEN` directory.
+State density matrix analysis is possible when the computation of dipole moments was requested.
+In this case it is possible to use the above procedure or to simply analyze the NO coefficient files in the ``MOLDEN`` directory.
 
 MR-CI
 _____
 
-The MR-CI transition density analysis works in the case that transition moments were requested in the job control stage. After this it is assumed that `LISTINGS/trncils....` files with the transition density matrices are available. Frozen core orbitals have to be specified explicitly in the input file to get correct results. To specify, for example, four frozen orbitals of *a* symmetry and three of *b* use:
+The MR-CI transition density analysis works in the case that transition moments were requested in the job control stage.
+After this it is assumed that ``LISTINGS/trncils*`` files with the transition density matrices are available.
+Frozen core orbitals have to be specified explicitly in the input file to get correct results.
+To specify, for example, four frozen orbitals of *a* symmetry and three of *b* use:
 
 ::
 
     ncore={'a':4, 'b':3}
 
-In addition, the MO-coefficients of the preceeding MCSCF calculation have to be made available, typically in `MOLDEN/molden_mo_mc.sp`.
+In addition, the MO-coefficients of the preceeding MCSCF calculation have to be made available, typically in ``MOLDEN/molden_mo_mc.sp``.
 
-For a state density analysis at the MR-CI level, the NO files should be read in rather than using the `colmrci` functionality. Alternatively, an attachment/detachment analysis can be done with the [densav.x](https://www.univie.ac.at/columbus/docs_COL70/utilities.html#densav) functionality of COLUMBUS.
+For a state density analysis at the MR-CI level, the NO files should be read in rather than using the ``colmrci`` functionality.
+Alternatively, an attachment/detachment analysis can be done with the `densav.x <https://www.univie.ac.at/columbus/docs_COL70/utilities.html#densav>`_ functionality of COLUMBUS.
 
 Molcas
 ~~~~~~
-The prefered way to use Molcas is through the [libwfa library](https://github.com/libwfa/libwfa), which is available through [OpenMolcas](https://gitlab.com/Molcas/OpenMolcas). In this way it is possible to analyze RASSCF and MS-CASPT2 computatoins.
+The prefered way to use Molcas is through the `libwfa library <https://github.com/libwfa/libwfa>`_,
+which is available through `OpenMolcas <https://gitlab.com/Molcas/OpenMolcas>`_ as described in `JCTC, 13, 5343 (2017) <http://dx.doi.org/10.1021/acs.jctc.7b00718>`_.
+In this way it is possible to analyze RASSCF and MS-CASPT2 computations.
 
 First, run Molcas using the &WFA module
 
@@ -116,7 +131,7 @@ First, run Molcas using the &WFA module
     &WFA
     h5file = $Project.rassi.h5
 
-and copy back the `*.om` files. In `theoinp` specify "y" for
+and copy back the ``*.om`` files. In ``theoinp`` specify "y" for
 
 ::
 
@@ -180,14 +195,14 @@ Tubomole
 CC2 / ADC(2)
 ____________
 
-If you have the binary `CCRE0*` files, written by Turbomole, available, then choose the option
+If you have the binary ``CCRE0*`` files, written by Turbomole, available, then choose the option
 
 ::
 
     read_binary=True
 
 
-in `dens_ana.in`. Use `tm2molden` without further options to create the MO file. For printing the NTOs, it is not possible to use ` jmol_orbitals` in this case, but only `molden_orbitals`.
+in ``dens_ana.in``. Use ``tm2molden`` without further options to create the MO file. For printing the NTOs, it is not possible to use ` jmol_orbitals` in this case, but only `molden_orbitals`.
 
 Alternatively, approximate transition density matrices can be read directly from the standard output of `ricc2`. The MO file is again created with `tm2molden`. However, it is important that also the frozen orbitals are contained in the MO file. This can be achieved by running the following commands:
 
@@ -199,9 +214,9 @@ Alternatively, approximate transition density matrices can be read directly from
 
 TDDFT
 _____
-In the TDDFT case, the `sing_a` or `trip_a` files are parsed and interpreted as 1TDMs. Unfortunately, this analysis only works if no explicit symmetry is chosen in the initial job setup.
+In the TDDFT case, the ``sing_a`` or ``trip_a`` files are parsed and interpreted as 1TDMs. Unfortunately, this analysis only works if no explicit symmetry is chosen in the initial job setup.
 
-MO-coefficients have to be supplied by `tm2molden`.
+MO-coefficients have to be supplied by ``tm2molden``.
 
 Terachem - TDDFT
 ~~~~~~~~~~~~~~~~
@@ -219,18 +234,21 @@ A state/difference density matrix analysis is possible by using the NO files pro
 
 Parsing of NO files
 ~~~~~~~~~~~~~~~~~~~
-NO files can be parsed directly using either `analyze_sden.py` or `analyze_NOs.py`. In this case it is important that one reference file is given, which contains the full, invertible MO-matrix.
+NO files can be parsed directly using ``analyze_nos``.
+Alternatively, you can use ``theoinp`` follows by ``analyze_sden``.
+For analysis of NOs, it is important that one reference file is given, which contains the full, invertible MO-matrix.
 
-TheoDORE assumes that the NO files are given with respect to spatial orbitals (occupation between 0 and 2). If spin NOs are given, then the analysis of unpaired electrons will not give suitable results.
+TheoDORE assumes that the NO files are given with respect to spatial orbitals (occupation between 0 and 2).
+If spin NOs are given, then the analysis of unpaired electrons will not give suitable results.
 
 ORCA - TDDFT
 ~~~~~~~~~~~~
-Starting in TheoDORE 2.0.1, the preferred version of parsing ORCA TDDFT jobs uses a Molden format file and the  `orca.cis` file.
+Starting in TheoDORE 2.0.1, the preferred version of parsing ORCA TDDFT jobs uses a Molden format file and the  ``orca.cis`` file.
 
 1. Run an ORCA job and copy back the `orca.gbw` and `orca.cis` files
-*Note*: the filename `orca.cis` is hardcoded in TheoDORE
-2. Create a molden file using `orca_2mkl orca -molden`
-3. Run TheoDORE and select `13` at
+*Note*: the filename ``orca.cis`` is hardcoded in TheoDORE
+2. Create a molden file using ``orca_2mkl orca -molden``
+3. Run TheoDORE and select ``13`` at
 
 ::
 
@@ -243,7 +261,8 @@ Starting in TheoDORE 2.0.1, the preferred version of parsing ORCA TDDFT jobs use
 
 ORCA using cclib
 ~~~~~~~~~~~~~~~~
-Alternatively, ORCA can be parsed entirely with the [cclib library](http://cclib.github.io/). If you want to do that, set the following output options:
+Alternatively, ORCA can be parsed entirely with the `cclib library <http://cclib.github.io/>`_.
+If you want to do that, set the following output options:
 
 ::
 
@@ -253,7 +272,7 @@ Alternatively, ORCA can be parsed entirely with the [cclib library](http://cclib
      Print[ P_Overlap ] 1
     end
 
-It is recommended also in this case to read the CI-vectors from the binary file `orca.cis` rather than from standard output. To do this, set
+It is recommended also in this case to read the CI-vectors from the binary file ``orca.cis`` rather than from standard output. To do this, set
 
 ::
 
@@ -263,15 +282,17 @@ In the case of TDA both options work, for RPA `read_binary=True` has to be used.
 
 Gaussian - TDDFT
 ~~~~~~~~~~~~~~~~
-Gaussian is parsed with the [cclib library](http://cclib.github.io/). Set the `pop=full iop(9/40=3)` option to increase the number of CI vector elements printed. Use `GFINPUT` to print the basis functions and `iop(3/33=4)` to get the overlap matrix.
+Gaussian is parsed with the `cclib library <http://cclib.github.io/>`_. Set the ``pop=full iop(9/40=3)``` option to increase the number of CI vector elements printed.
+Use ``GFINPUT`` to print the basis functions and ``iop(3/33=4)``` to get the overlap matrix.
 
 Example input:
 
-::
+.. code-block:: text
 
     #p PBEPBE/6-31G* td=(singlets, nstates=10) pop=full iop(9/40=3) GFINPUT
 
-For some applications, in particular in connection with ORBKIT, it is advisable to supply an externally generated molden file with orbital information. For this purpose, open the Gaussian-log file in Molden. Choose "Write - Molden Format" and save as `orbs.mld`. Then specify this file in `dens_ana.in`:
+For some applications, in particular in connection with ORBKIT, it is advisable to supply an externally generated molden file with orbital information.
+For this purpose, open the Gaussian-log file in Molden. Choose "Write - Molden Format" and save as ``orbs.mld``. Then specify this file in ``dens_ana.in``:
 
 ::
 
@@ -280,11 +301,13 @@ For some applications, in particular in connection with ORBKIT, it is advisable 
 Firefly - TDDFT
 ~~~~~~~~~~~~~~~
 
-Firefly has been succesfully interfaced with TheoDORE, see [EXAMPLES/SnH4-ecp.firefly](https://sourceforge.net/p/theodore-qc/code/ci/master/tree/EXAMPLES/SnH4-ecp.firefly/). Firefly output is parsed with the [cclib library](http://cclib.github.io/).
+Firefly has been succesfully interfaced with TheoDORE,
+see [EXAMPLES/SnH4-ecp.firefly](https://sourceforge.net/p/theodore-qc/code/ci/master/tree/EXAMPLES/SnH4-ecp.firefly/).
+Firefly output is parsed with the `cclib library <http://cclib.github.io/>`_.
 
 ADF - TDDFT
 ~~~~~~~~~~~
-In the new ADF interface all information is read from the binary **TAPE21** file. Use the `rfile` option to point to this file.
+In the new ADF interface all information is read from the binary ``TAPE21`` file. Use the ``rfile`` option to point to this file.
 
 To run the analysis, you need to activate the ADF scripts and license, e.g.
 
@@ -336,11 +359,13 @@ the input file :code:`dens_ana.in` and can be specified via :code:`theoinp`.
 
 Other programs (cclib)
 ~~~~~~~~~~~~~~~~~~~~~~
-In principle all third party programs, which are parsed by the [cclib library](http://cclib.github.io/) can be used. These are: ADF, Firefly, GAMESS, Gaussian, Jaguar, Molpro, ORCA. But not all of these have been tested by the developers and it may be necessary to set some additional program specific options. Please report, if you did so successfully.
+In principle all third party programs, which are parsed by the `cclib library <http://cclib.github.io/>`_ can be used.
+These are: ADF, Firefly, GAMESS, Gaussian, Jaguar, Molpro, ORCA.
+But not all of these have been tested by the developers and it may be necessary to set some additional program specific options.
+Please report, if you did so successfully.
 
 To quickly check whether a logfile can be parsed by cclib, simply type:
 
 ::
 
     cc_check.py <logfile>
-
