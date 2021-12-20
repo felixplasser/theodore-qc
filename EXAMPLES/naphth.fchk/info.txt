@@ -1,2 +1,0 @@
-Comparison of qcadc and fchk.
-Results are the same up to about 4 decimal digits.

@@ -1,9 +1,0 @@
-rtype='cclib'
-rfile='SnH4.out'
-at_lists=[[1], [2], [3], [4], [5]]
-comp_ntos=True
-jmol_orbitals=True
-#coor_file='SnH4.out'
-#coor_format='gamout'
-prop_list=['Om', 'POSi', 'POSf', 'PR', 'CT', 'MC', 'LC', 'MLCT', 'LMCT', 'LLCT', 'PRNTO', 'RMSeh']
-output_prec=(10, 6)
