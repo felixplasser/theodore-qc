@@ -31,10 +31,11 @@ class pytest_job:
     """
     Run and check job in EXAMPLES directory using pytest.
     """
-    def __init__(self, cfile):
+    def __init__(self, cfile, thresh=1.e-6):
         self.wstring = ''
         self.epath = os.path.dirname(os.path.abspath(cfile))
         self.prep()
+        self.thresh = thresh
 
     def run_standard(self):
         """
@@ -119,7 +120,7 @@ class pytest_job:
                 outl.append(line)
         return outl
 
-    def num_diff(self, rline, line, thres=1.e-6):
+    def num_diff(self, rline, line):
         """
         Run numerical diff for line.
         """
@@ -134,7 +135,7 @@ class pytest_job:
             except ValueError:
                 continue
             val = float(words[i])
-            if abs(rval-val) > thres:
+            if abs(rval-val) > self.thresh:
                 ierr += 1
 
         return ierr
