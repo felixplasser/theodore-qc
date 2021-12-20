@@ -41,7 +41,7 @@ Python3
 
 TheoDORE 3 is compatible with python3 and no compatibility to python2 is maintained.
 
-The older release, TheoDORE 2.4 is still compatible with python v2.7.14.
+The older release, TheoDORE 2.4, is still compatible with python v2.7.14.
 
 External packages
 ~~~~~~~~~~~~~~~~~
