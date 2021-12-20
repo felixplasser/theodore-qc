@@ -52,6 +52,10 @@ cclib is distributed under a BSD 3-Clause License, see cclib/LICENSE .
 Copyright (c) 2017, the cclib development team.
 cclib is contained as part of this distribution.
 
+TheoDORE uses colt (https://github.com/mfsjmenger/colt) for its commandline interface.
+colt is distributed under the Apache License 2.0.
+colt is contained as part of this distribution.
+
 Citation for cclib:
 
 ``N. M. O'Boyle, A. L. Tenderholt, K. M. Langner, J. Comput. Chem. (2008), 29, 839.``
@@ -69,8 +73,6 @@ ORBKIT is distributed under an LGPL license. Install orbkit if you want to use t
 Citation for ORBKIT:
 
 ``G. Hermann, V. Pohl, J. C. Tremblay, B. Paulus, H.-C. Hege, A. Schild, J. Comput. Chem. (2016), 37, 1511.``
-
-TheoDORE uses colt (https://github.com/mfsjmenger/colt) for its commandline interface.
 
 Disclaimer
 ~~~~~~~~~~
