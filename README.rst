@@ -16,10 +16,18 @@ Documentation
 * `Documentation of TheoDORE 2 <https://sourceforge.net/p/theodore-qc/wiki/Home/>`_
 * `Documentation of TheoDORE 3 <https://theodore-qc.sourceforge.io/doc_theo3-alpha/index.html>`_
 
+For bugs / feature requests, please use the `issues page <https://github.com/felixplasser/theodore-qc/issues>`_.
+
 Installation
 ~~~~~~~~~~~~
-* You can obtain the newest TheoDORE version from `github releases <https://github.com/felixplasser/theodore-qc/releases>`_.
-* Setup ``PATH`` and ``PYTHONPATH`` as explained in the `installation instructions <https://theodore-qc.sourceforge.io/doc_theo3-alpha/installation.html>`_.
+* You can obtain the newest TheoDORE release from `github releases <https://github.com/felixplasser/theodore-qc/releases>`_.
+* Alternatively, to get the current development version, run
+
+::
+
+    git clone --recursive https://github.com/felixplasser/theodore-qc.git
+
+* To run TheoDORE, setup ``PATH`` and ``PYTHONPATH`` as explained in the `installation instructions <https://theodore-qc.sourceforge.io/doc_theo3-alpha/installation.html>`_.
 
 Usage
 ~~~~~
