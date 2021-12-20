@@ -75,8 +75,12 @@ First download the `anaconda distribution <https://www.anaconda.com/distribution
 Testing
 ~~~~~~~
 
-The tests can also be invoked with pytest. In the ``EXAMPLES`` directory run
+The tests are invoked with pytest. In the ``EXAMPLES`` directory run (depending on the packages you want to test)
 
 ::
 
-    pytest
+    pytest STANDARD
+    pytest CCLIB
+    pytest EXTRA
+
+The tests are available at the `theodore-test <https://github.com/felixplasser/theodore-test>`_ repository.
