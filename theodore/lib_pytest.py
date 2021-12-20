@@ -108,7 +108,7 @@ class pytest_job:
 
     def diff_ignore(self, dlist):
         outl = []
-        iglist = ["TheoDORE", "time", "rbkit", "openbabel", "capabilities"]
+        iglist = ["TheoDORE", "time", "rbkit", "openbabel", "capabilities", "cclib"]
         for line in dlist:
             for ig in iglist:
                 if ig in line:
