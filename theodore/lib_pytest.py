@@ -69,22 +69,18 @@ class pytest_job:
                     fh.write(outlines)
         self.check()
 
-    def run_utils(self):
+    def run_util(self, args, stdin='', outf=None):
         """
-        This is for running the secondary utility scripts.
-        Generate the input as, e.g.:
+        This is for running an arbitrary utility script.
+        Generate the input for stdin as, e.g.:
             tee plot_omfrag.in | theodore plot_omfrag
+        After this, self.check() has to be run.
         """
-        os.chdir(self.epath + '/RUN')
-        for ifile in sorted(os.listdir('../IN_FILES')):
-            shutil.copy("../IN_FILES/"+ifile, ifile)
-            util = ifile.split('.')[0]
-            stdin = ''
-            for line in open(ifile, 'r'):
-                stdin += line
-            with commandline(f'theodore {util}'), mock_stdin(stdin):
-                ActionFactory.from_commandline()
-        self.check()
+        os.chdir(f'{self.epath}/RUN')
+        with commandline(f'theodore {args}'), mock_stdin(stdin), mock_stdout() as out:
+            ActionFactory.from_commandline()
+            if not outf is None:
+                open(outf, 'w').write(out.read())
 
     def prep(self):
         """Create `RUN` dir"""
