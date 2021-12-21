@@ -7,19 +7,20 @@ TheoDORE provides functionalities to analyse chemical shielding tensors and, in 
 Visualisation of chemical shielding tensors (VIST)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The VIST method ( [*Eur. J. Org. Chem.*, **2021**](https://doi.org/10.1002/ejoc.202100352) ) allows to visualise chemical shielding tensors in the context of the molecular structure showing local variations of the shielding along with its anisotropy. The method proceeds in the following order
+The VIST method [`Eur. J. Org. Chem., (2021) <https://doi.org/10.1002/ejoc.202100352>`_] allows to visualise chemical shielding tensors in the context of the molecular structure showing local variations of the shielding along with its anisotropy. The method proceeds in the following order
 
 * Computation of shielding tensors (at the moment only Gaussian is interfaced)
-* Creation of VIST input via `plot_VIST.py`
-* Rendering of VIST plot in [VMD](https://www.ks.uiuc.edu/Research/vmd/)
+* Creation of VIST input via ``theodore plot_vist``
+* Rendering of VIST plot in `VMD <https://www.ks.uiuc.edu/Research/vmd/>`_
 
 The tools have only been recently developed and still might require a bit of manual tuning of script files by the user. Any feedback on the user-friendliness of the tools is appreciated.
 
 Command line options
 ____________________
 
-Run `plot_VIST.py -h` to see all command line options
-::
+Run ``theodore plot_vist -h`` to see all command line options
+
+.. code-block:: text
 
     plot_VIST.py [options] <logfile1> <logfile2>
     Command line options:
@@ -58,7 +59,7 @@ Create a Gaussian input file for an NMR calculation with the positions of the sh
     Bq         2.0            0.0            0.0
  
 
-After the job finishes simply run (assuming you named the output file `gaussian.log`)
+After the job finishes simply run (assuming you named the output file ``gaussian.log``)
 
 ::
 
@@ -89,9 +90,9 @@ This figure was created with the command
 
 ::
 
-    plot_VIST.py -c -v '0 4' */gaussian.log
+    theodore plot_vist -c -v '0 4' */gaussian.log
 
-The `-c` option specifies that the molecular coordinates are directly parsed from the log-file. `-v 0 4` indicates that only the Bq atoms with index 0 and 4 are included in the representation. `*/gaussian.log` indicates that the gaussian.log files in all subdirectories are processed.
+The ``-c`` option specifies that the molecular coordinates are directly parsed from the log-file. ``-v 0 4`` indicates that only the Bq atoms with index 0 and 4 are included in the representation. ``*/gaussian.log`` indicates that the gaussian.log files in all subdirectories are processed.
 
 The files are loaded into VMD via
 
@@ -99,4 +100,4 @@ The files are loaded into VMD via
 
     vmd -e VIST.vmd
 
-Initially all geometries are superposed on top of each other. To hide some of the molecules use the `D` option (part of `T A D F Molecule`) in the VMD Main menu.
+Initially all geometries are superposed on top of each other. To hide some of the molecules use the ``D`` option (part of ``T A D F Molecule``) in the VMD Main menu.

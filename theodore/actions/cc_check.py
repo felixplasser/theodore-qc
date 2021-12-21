@@ -5,18 +5,32 @@ Check if a file can be read by cclib and if all the required information is avai
 from __future__ import print_function, division
 import sys
 
-from .. import theo_header, cclib_interface, input_options, error_handler
 from .actions import Action
+from colt.lazyimport import LazyImportCreator, LazyImporter
+
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    cclib_interface = importer.lazy_import_as('..cclib_interface', 'cclib_interface')
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
 
 class CCCheck(Action):
 
     name = 'cc_check'
 
-    _questions = """
+    _user_input = """
     logfile = :: existing_file
     printlevel = 1 :: int, alias=p
     """
     _colt_description = "Check if a logfile can be parsed with cclib"
+
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..cclib_interface': 'cclib_interface',
+            '..error_handler': 'error_handler',
+            '..input_options': 'input_options'
+    })
 
     def run(logfile, printlevel):
         theo_header.print_header(__class__._colt_description)

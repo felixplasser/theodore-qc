@@ -3,8 +3,17 @@ Input generation for TheoDORE runs.
 """
 from __future__ import print_function, division
 from .actions import Action
-from .. import theo_header, input_options, lib_struc, error_handler, orbkit_interface
 import os
+from colt.lazyimport import LazyImportCreator, LazyImporter
+
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
+    lib_struc = importer.lazy_import_as('..lib_struc', 'lib_struc')
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
+    orbkit_interface = importer.lazy_import_as('..orbkit_interface', 'orbkit_interface')
+
 
 class write_options_theo(input_options.write_options):
     """
@@ -53,7 +62,8 @@ class write_options_theo(input_options.write_options):
             ('orca', 'ORCA TDDFT (using a Molden file and cclib)'),
             ('adf', 'ADF (TDDFT)'),
             ('tddftb', 'DFTB+ - TDDFTB'),
-            ('dftmrci', 'DFT/MRCI')
+            ('dftmrci', 'DFT/MRCI'),
+            ('onetep', 'ONETEP')
         ], rdef)
 
         # set defaults
@@ -137,6 +147,11 @@ class write_options_theo(input_options.write_options):
         elif self['rtype'] == 'dftmrci':
             self['rfile'] = 'mrci.log'
             self['mo_file'] = 'orca.molden.input'
+            self['coor_file'] = ''
+            self['coor_format'] = ''
+        elif self['rtype'] == 'onetep':
+            self['rfile'] = ''
+            self['mo_file'] = None
             self['coor_file'] = ''
             self['coor_format'] = ''
         else:
@@ -268,7 +283,12 @@ class write_options_theo(input_options.write_options):
         """
         Set the list of Omega descriptors to be computed and set the formula.
         """
-        if not self['read_libwfa']:
+        if self['read_libwfa']:
+            pass
+        elif self['rtype'] == 'onetep':
+            self.read_int('Formula for Omega matrix computation\n\
+   0 - simple, 1 - Mulliken', 'Om_formula', 1)
+        else:
             self.read_int('Formula for Omega matrix computation\n\
    0 - simple, 1 - Mulliken, 2 - Lowdin', 'Om_formula', 2)
 
@@ -302,7 +322,7 @@ class write_options_theo(input_options.write_options):
         self.read_yn('Perform analysis of domain NTOs and conditional densities?', 'comp_dntos', False)
         if self['comp_ntos'] or self['comp_dntos']:
             self['prop_list'] += ['PRNTO', 'Z_HE']
-            if self['rtype'] in ['adf', 'tddftb']:
+            if self['rtype'] in ['adf', 'tddftb', 'onetep']:
                 return
             if self['rtype'] == 'ricc2' and self['read_binary'] == True:
                 self.read_yn('NTOs in Molden format', 'molden_orbitals', True)
@@ -347,7 +367,7 @@ class write_options_theo(input_options.write_options):
         self.read_yn('Attachment/detachment analysis', 'AD_ana', True)
         if self['AD_ana']:
             self['prop_list'] += ['p']
-            if not self['rtype'] in ['adf']:
+            if not self['rtype'] in ['adf', 'tddftb', 'onetep']:
                 self.read_yn('NDOs as Jmol script?', 'jmol_orbitals', True)
                 self.read_yn('NDOs in Molden format?', 'molden_orbitals', False)
                 if self['molden_orbitals']:
@@ -361,7 +381,7 @@ class write_options_theo(input_options.write_options):
     def comp_rho0n(self):
         if not orbkit_interface.orbkit_avail:
             return
-        if self['rtype'] in ['adf', 'tddftb']:
+        if self['rtype'] in ['adf', 'tddftb', 'onetep']:
             return
         if self['read_libwfa'] == True:
             return
@@ -477,9 +497,17 @@ class TheodoreInput(Action):
 
     name = 'theoinp'
 
-    _questions = ""
+    _user_input = ""
 
     _colt_description = "Input generation for TheoDORE"
+
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..input_options': 'input_options',
+            '..lib_struc': 'lib_struc',
+            '..error_handler': 'error_handler',
+            '..orbkit_interface': 'orbkit_interface',
+    })
 
     def run():
         theo_header.print_header(__class__._colt_description)

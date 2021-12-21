@@ -3,8 +3,15 @@
 from __future__ import print_function, division
 import os, sys
 import numpy
-from .. import theo_header, lib_mo, error_handler
+
 from .actions import Action
+from colt.lazyimport import LazyImportCreator, LazyImporter
+
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    lib_mo = importer.lazy_import_as('..lib_mo', 'lib_mo')
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
 
 
 class extract_mld:
@@ -98,8 +105,10 @@ class extract_mld:
         mos.export_AO(ens, occs, Ct, fname=outfile, occmin=self.thresh, alphabeta=True)
         print("  ... %s written, containing %i orbitals."%(outfile, len(ens)))
 
+
 class ExtractMolden(Action):
-    _questions = """
+
+    _user_input = """
     # List of MO files to analyse
     mo_files = :: list(existing_file)
     # Interpret energies as occupations
@@ -113,6 +122,12 @@ class ExtractMolden(Action):
     name = 'extract_molden'
 
     _colt_description = 'Extract hole/particle parts from Molden file'
+
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..error_handler': 'error_handler',
+            '..lib_mo': 'lib_mo',
+    })
 
     def run(mo_files, ene, thresh, alphabeta):
         theo_header.print_header(title=__class__._colt_description)

@@ -1,29 +1,45 @@
 from .actions import Action
 from .theotools import timeit
-from .. import theo_header, lib_NICS, error_handler, cclib_interface, input_options
+from colt.lazyimport import LazyImportCreator, LazyImporter
+
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    lib_NICS = importer.lazy_import_as('..lib_NICS', 'lib_NICS')
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
+    cclib_interface = importer.lazy_import_as('..cclib_interface', 'cclib_interface')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
 
 
 class PlotVist(Action):
 
     name = 'plot_vist'
 
-    _questions = """
+    _user_input = """
 
     # VIST for only these dummy atoms, e.g. -v '0 3 5'
     vist = :: ilist, optional, alias=v
     # Name of output file (for VMD)
-    ofile    = VIST.vmd :: file, alias=o
+    ofile    = VIST.vmd :: str, alias=o
     # Scale factor for VIST dumb-bells
     scale    = 1.0 :: float, alias=s
     # Create coordinate files (using cclib)
     coor  = false :: bool, alias=c
     # Render and plot all tensors separately
-    plot_all = True :: bool, alias=p
+    plot_all = false :: bool, alias=p
     # Log files to be parsed
-    logfiles = :: list(existing_file)
+    logfiles = :: list(str)
     """
 
     _colt_description = "Read NICS values and prepare VIST plot"
+
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..lib_NICS': 'lib_NICS',
+            '..error_handler': 'error_handler',
+            '..cclib_interface': 'cclib_interface',
+            '..input_options': 'input_options',
+    })
 
     @timeit
     def run(vist, ofile, scale, coor, plot_all, logfiles):

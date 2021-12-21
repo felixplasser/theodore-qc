@@ -3,10 +3,17 @@ Compute the overlap between transition density matrices.
 """
 
 from __future__ import print_function, division
-from .. import theo_header, lib_tden, input_options, error_handler
 from .actions import Action
 import numpy
 import os
+from colt.lazyimport import LazyImportCreator, LazyImporter
+
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    lib_tden = importer.lazy_import_as('..lib_tden', 'lib_tden')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
 
 
 class TDenOv(Action):
@@ -15,7 +22,7 @@ class TDenOv(Action):
 
     _colt_description = 'Transition density matrix overlap'
 
-    _questions = """
+    _user_input = """
     dir1 = :: existing_folder
     dir2 = :: existing_folder
     ao_ov = :: existing_file, optional
@@ -24,6 +31,13 @@ class TDenOv(Action):
     # name of input file for the second computation
     ifile2 = :: existing_file, optional, alias=f2
     """
+
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..lib_tden': 'lib_tden',
+            '..error_handler': 'error_handler',
+            '..input_options': 'input_options',
+    })
 
     def run(dir1, dir2, ao_ov, ifile, ifile2):
         ifile = 'tden_OV.in'

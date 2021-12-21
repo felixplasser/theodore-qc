@@ -1,19 +1,21 @@
+.. _orb-dens:
 Orbitals and Densities
 ----------------------
 
 
 Orbitals are exported in three forms:
 
-* [Molden format](http://www.cmbi.ru.nl/molden/molden_format.html), which can be directly read by a number of visualization programs
+* `Molden format <http://www.cmbi.ru.nl/molden/molden_format.html>`_, which can be directly read by a number of visualization programs
 
-* As a compact script for the [Jmol](http://jmol.sourceforge.net/) program
+* As a compact script for the `Jmol <http://jmol.sourceforge.net/>`_ program
 
-* Cube files of densities created by [ORBKIT](http://orbkit.github.io/)
+* Cube files of densities created by `ORBKIT http://orbkit.github.io/`_
 
 Using the Jmol script
 ~~~~~~~~~~~~~~~~~~~~~
 
-After running `analyze_tden.py` (`analyze_sden.py`) the file `nto_jmol.spt` (`ndo_jmol.spt`) is created. This is an input file for jmol, which can be directly executed as
+After running ``analyze_tden`` (``analyze_sden``) the file ``nto_jmol.spt`` (``ndo_jmol.spt``) is created.
+This is an input file for jmol, which can be directly executed as
 
 ::
 
@@ -29,18 +31,18 @@ For more flexibility, the following semi-interactive procedure can be applied:
 
 + Run the remaining lines of the script (by copying into the Jmol console)
 
-+ Open the file `nto.html` (`ndo.html`) to view the result ([Example](http://theodore-qc.sourceforge.net/images/nto.html)).
++ Open the file ``nto.html`` (``ndo.html``) to view the result (`Example <http://theodore-qc.sourceforge.net/images/nto.html>`_).
 
 Density plotting (ORBKIT)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Cube files of densities can be directly created with [ORBKIT](http://orbkit.github.io/). The interface is controlled via `theoinp`.
+Cube files of densities can be directly created with `ORBKIT <http://orbkit.github.io/>`_. The interface is controlled via ``theoinp``.
 
-The cube files can be loaded into VMD and visualized using VMD network files provided by ORBKIT or by using the [vmd_plots.py](Utility%20scripts/#vmd_plotspy) facility of TheoDORE. For the latter, just run:
+The cube files can be loaded into VMD and visualized using VMD network files provided by ORBKIT or by using the ``vmd_plots`` facility of TheoDORE. For the latter, just run:
 
 ::
 
-    vmd_plots.py *.cb
+    theodore vmd_plots *.cb
 
 ORBKIT is somewhat sensitive in terms of the molden file with orbital information. To achieve the best result, it is advisable to create this file within Molden rather than through TheoDORE.
 
@@ -61,11 +63,11 @@ Run, e.g.:
 
     extract_molden.py nto_1-1-a.mld
 
-This will create a new directory `nto_1-1-a.mld.dir` containing the files `nto_1-1-a.mld_elec.mld` and
-`nto_1-1-a.mld_hole.mld` with the separate contributions.
+This will create a new directory ``nto_1-1-a.mld.dir`` containing the files ``nto_1-1-a.mld_elec.mld`` and
+``nto_1-1-a.mld_hole.mld`` with the separate contributions.
 
-* Open `nto_1-1-a.mld_elec.mld` in Molden (or preferably gmolden)
-    * Go to "density mode"
-    * Select "Plot Function" - "Density"
-    * Use "Plot Mode" - "Space"
-    * The result is the *particle* density as defined in [this Ref](http://dx.doi.org/10.1063/1.4885819).
+* Open ``nto_1-1-a.mld_elec.mld`` in Molden (or preferably gmolden)
+* Go to "density mode"
+* Select "Plot Function" - "Density"
+* Use "Plot Mode" - "Space"
+* The result is the *particle* density as defined in `JCP, 141, 024106 (2014) <http://dx.doi.org/10.1063/1.4885819>`_.

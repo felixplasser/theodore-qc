@@ -893,6 +893,9 @@ class file_parser_qctddft(file_parser_libwfa):
 
                     line = next(rfileh)
                     line = next(rfileh)
+                    if 'Details' in line:
+                        line = next(rfileh)
+                        line = next(rfileh)
                     words = line.split()
 
                     if words[0] == 'Multiplicity:':
@@ -1616,25 +1619,11 @@ class file_parser_nos(file_parser_base):
             # for Q-Chem
             tmp_name = tmp_name.replace('NOs/','').replace('.mo', '')
 
+            tmp_name = os.path.basename(tmp_name)
+
             state['name'] = tmp_name
 
         return state_list
-
-    def read_ref_nos(self, state, ref_nos):
-        """
-        Read the reference MOs.
-        ### This is currently not used! ###
-        """
-        state['sden'] = numpy.diag(ref_nos.occs)
-
-        if self.ioptions['unpaired_ana']:
-            nu_list = [min(occ, 2.-occ) for occ in ref_nos.occs]
-            state['nu'] = sum(nu_list)
-            state['nu_den'] = numpy.diag(nu_list)
-
-            nunl_list = [occ*occ*(2-occ)*(2-occ) for occ in ref_nos.occs]
-            state['nunl'] = sum(nunl_list)
-            state['nunl_den'] = numpy.diag(nunl_list)
 
     def read_no_file(self, state, ref_mos, no_file):
         """
@@ -1645,6 +1634,10 @@ class file_parser_nos(file_parser_base):
         nos.compute_inverse()
         if self.ioptions['rd_ene']:
             nos.set_ens_occs()
+        if not self.ioptions['occ_fac'] == 1:
+            nos.occs = [occ * self.ioptions['occ_fac'] for occ in nos.occs]
+        if self.ioptions['lvprt'] >= 2:
+            print("Number of electrons:", sum(nos.occs))
 
         if not self.ioptions['ignore_irreps'] == []:
             print("  Ignoring irreps: ", self.ioptions['ignore_irreps'])
@@ -1683,6 +1676,18 @@ class file_parser_nos(file_parser_base):
             state['nunl'] = sum(nunl_list)
             state['nunl_den'] = numpy.dot(T,
                                   numpy.dot(numpy.diag(nunl_list), T.transpose()))
+
+            nel = sum(nos.occs)
+            iy0 = int(nel/2 + 0.5)
+            iy1 = int(nel/2 + 0.5) + 1
+            try:
+                state['y0'] = nos.occs[iy0]
+            except IndexError:
+                state['y0'] = 0.
+            try:
+                state['y1'] = nos.occs[iy1]
+            except IndexError:
+                state['y1'] = 0.
 
 class file_parser_rassi(file_parser_libwfa):
     def read(self, mos):
@@ -1788,3 +1793,54 @@ class file_parser_rassi(file_parser_libwfa):
         rfile.close()
 
         return energies, oscs, state_list
+
+class file_parser_onetep(file_parser_base):
+    """
+    Read ONETEP job.
+    """
+    def read(self, mos):
+        self.ioptions['jmol_orbitals'] = False
+        self.ioptions['molden_orbitals'] = False
+
+        state_list = []
+
+        pre = self.ioptions['rfile']
+
+        rfile = open("%s.onetep"%pre, 'r')
+        while True:
+            try:
+                line = next(rfile)
+            except StopIteration:
+                print("Finished parsing %s."%rfile.name)
+                break
+
+            if 'Energy (in Ha)' in line:
+                while True:
+                    line = next(rfile)
+                    words = line.split()
+                    # print(words[0], words[0] == "Writing")
+                    if len(words) != 4 or words[0] == "Writing":
+                        break
+
+                    state_list.append({})
+                    state = state_list[-1]
+                    state['state_ind'] = int(words[0])
+                    state['name'] = 'A' + words[0]
+                    state['exc_en'] = float(words[1]) * units.energy['eV']
+                    state['osc_str'] = float(words[2])
+
+        for istate in range(len(state_list)):
+            state = state_list[istate]
+
+            Dao = numpy.zeros([mos.ret_num_bas() // 2, mos.ret_num_bas()], float)
+            dmfile = "%s_response_denskern_%i.dkn_dens.mat"%(pre, istate+1)
+            for i, line in enumerate(open(dmfile, 'r')):
+                words = line.split()
+                # Read only the real parts and assert that imaginary parts are zero
+                for j in range(0, mos.ret_num_bas(), 2):
+                    Dao[j // 2, i] = float(words[j])
+                    assert(float(words[j+1]) == 0.)
+
+            state['tden'] = Dao
+
+        return state_list

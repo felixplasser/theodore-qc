@@ -1,7 +1,15 @@
 Input generation
 ----------------
 
-The `theoinp` utility allows quick generation of the input information needed by TheoDORE. When running `theoinp`, the relevant options are suggested by default and only minimal input by the user is needed. It is however advised to take a look at the [program specific information](Program specific information) for the different interfaced quantum chemistry codes. After running `theoinp` a list of [keywords](Keywords) is written to the file `dens_ana.in`.
+The ``theoinp`` utility allows quick generation of the input information needed by TheoDORE. You can invoke ``theoinp`` using
+
+::
+
+    theodore theoinp
+
+When running ``theoinp``, the relevant options are suggested by default and only minimal input by the user is needed.
+It is however advised to take a look at the :ref:`program specific information <prog-spec-info>` for the different interfaced quantum chemistry codes.
+After running ``theoinp`` a list of keywords is written to the file ``dens_ana.in``.
 
 
 
@@ -27,24 +35,27 @@ A key input quantity for the charge transfer number analysis in TheoDORE is the 
 
 There are five different ways of specifying the fragment information in `theoinp`.
 
-::
+.. code-block:: text
 
     Mode for specifying molecular fragments (at_lists):
         [ 1] Manual input
         [ 2] Automatic generation by fragment (using python-openbabel)
         [ 3] Automatic generation for transition metal complexes (using python-openbabel)
-        [ 4] Automatic generation by element (using python-openbabel)
-        [ 5] Leave empty and fill out later
+        [ 4] Mixed manual/automatic generation (using python-openbabel)
+        [ 5] Automatic generation by element (using python-openbabel)
+        [ 6] Leave empty and fill out later
 
-In mode 1 you will be asked to enter the indices of the atoms that belong to the different fragments successively.
+- In mode 1 you will be asked to enter the indices of the atoms that belong to the different fragments successively.
 
-Mode 2 is a special utility for automatic fragment definition. If the system of interest is composed of different molecules, these are detected automatically. Further customization can be performed by exporting the molecule in `.mol` format and changing the bond definitions by using for example [Avogadro](http://avogadro.cc/).
+- Mode 2 is a special utility for automatic fragment definition. If the system of interest is composed of different molecules, these are detected automatically. Further customization can be performed by exporting the molecule in ``.mol`` format and changing the bond definitions by using for example `Avogadro <http://avogadro.cc/>`_.
 
-Mode 3 is a shortcut version of mode 2 that specifically works for transition metal complexes, see [*Coord. Chem. Rev.*, **361**, 74 (2018)](http://dx.doi.org/10.1016/j.ccr.2018.01.019). You simply have to add the atom of the transition metal and the system is automatically separated into the transition metal and the different ligands.
+- Mode 3 is a shortcut version of mode 2 that specifically works for transition metal complexes, see `Coord. Chem. Rev., 361, 74 (2018) <http://dx.doi.org/10.1016/j.ccr.2018.01.019>`_. You simply have to add the atom of the transition metal and the system is automatically separated into the transition metal and the different ligands.
 
-Mode 4 automatically separates the list by elements.
+- Mode 4 allows you to specify one or more fragments manually and applies Mode 2 for the remaining atoms.
 
-For mode 5 the `dens_ana.in` file has to be edited manually. For example, the input
+- Mode 5 automatically separates the list according to the different chemical elements present.
+
+- For mode 6 the ``dens_ana.in`` file has to be edited manually. For example, the input
 
 ::
 
