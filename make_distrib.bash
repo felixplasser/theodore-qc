@@ -3,6 +3,7 @@
 
 # TODO before:
 #   - Check version number in theo_header.py and doc/source/conf.py
+#   - doc/README up to date?
 #   - git tag set by this script
 
 echo "Syntax: make_distrib.bash [Version]"
