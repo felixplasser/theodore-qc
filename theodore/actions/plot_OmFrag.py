@@ -298,9 +298,10 @@ class PlotOmFrag(Action):
     def run(use_new):
         matplotlib.use('Agg')
         theo_header.print_header(title=__class__._colt_description)
-        Oopt = OmFrag_options('plot.in')
+        Oopt = OmFrag_options('OmFrag.in')
         Oopt.read_OmFrag()
 
         Oopt.OmFrag_input(use_new=use_new)
+        Oopt.flush()
 
         Oopt.plot()

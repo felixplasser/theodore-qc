@@ -254,9 +254,10 @@ class PlotOmBars(Action):
 
     def run():
         theo_header.print_header(__class__._colt_description)
-        opt = Om_bar_options('plot.in')
+        opt = Om_bar_options('Om_bars.in')
         opt.read_str("Name of the file with the Omega matrix entries", "OmFfile", "OmFrag.txt", autocomp=True)
         opt.read_OmFrag(opt['OmFfile'])
         opt.Om_bar_input()
+        opt.flush()
         opt.Om_bar_data()
         opt.make_tex()
