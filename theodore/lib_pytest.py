@@ -30,7 +30,7 @@ def mock_stdout():
 @contextmanager
 def mock_stdin(string):
     old = sys.stdin
-    sys.stdin = StringIO(string)
+    sys.stdin = StringIO_(string)
     yield sys.stdin
     sys.stdin = old
 
@@ -56,7 +56,6 @@ class pytest_job:
     def run_standard(self):
         """
         Run tests in standard format.
-        TODO: one can include custom bash files here
         """
         os.chdir(self.epath + '/RUN')
         for ifile in sorted(os.listdir('../IN_FILES')):
@@ -68,6 +67,23 @@ class pytest_job:
                 outlines = out.read()
                 with open(f'analyze_{atype}.out', 'w') as fh:
                     fh.write(outlines)
+        self.check()
+
+    def run_utils(self):
+        """
+        This is for running the secondary utility scripts.
+        Generate the input as, e.g.:
+            tee plot_omfrag.in | theodore plot_omfrag
+        """
+        os.chdir(self.epath + '/RUN')
+        for ifile in sorted(os.listdir('../IN_FILES')):
+            shutil.copy("../IN_FILES/"+ifile, ifile)
+            util = ifile.split('.')[0]
+            stdin = ''
+            for line in open(ifile, 'r'):
+                stdin += line
+            with commandline(f'theodore {util}'), mock_stdin(stdin):
+                ActionFactory.from_commandline()
         self.check()
 
     def prep(self):
