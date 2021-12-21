@@ -27,6 +27,22 @@ def mock_stdout():
     sys.stdout = old
 
 
+@contextmanager
+def mock_stdin(string):
+    old = sys.stdin
+    sys.stdin = StringIO(string)
+    yield sys.stdin
+    sys.stdin = old
+
+
+@contextmanager
+def commandline(string):
+    old = sys.argv
+    sys.argv = string.split()
+    yield sys.argv
+    sys.argv = old
+
+
 class pytest_job:
     """
     Run and check job in EXAMPLES directory using pytest.
@@ -44,13 +60,10 @@ class pytest_job:
         """
         os.chdir(self.epath + '/RUN')
         for ifile in sorted(os.listdir('../IN_FILES')):
-            print(ifile)
             shutil.copy("../IN_FILES/"+ifile, ifile)
             col = ifile.split('.')
             dtype, atype = col[0], col[2]
-            sys.argv = ['theodore', f'analyze_{dtype}',  '-f', ifile]
-
-            with mock_stdout() as out:
+            with commandline(f'theodore analyze_{dtype} -f {ifile}'), mock_stdout() as out:
                 ActionFactory.from_commandline()
                 outlines = out.read()
                 with open(f'analyze_{atype}.out', 'w') as fh:
