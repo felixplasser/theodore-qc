@@ -291,6 +291,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         if self.ioptions['eh_pop'] >= 3:
             state['OmBas'] = OmBas
 
+        state['LOC'] = numpy.trace(OmBas)
         state['Om'] = numpy.sum(OmBas)
         state['OmAt'] = self.mos.comp_OmAt(OmBas)
 
