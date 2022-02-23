@@ -1604,7 +1604,19 @@ class file_parser_nos(file_parser_base):
 
         for no_file in self.ioptions['ana_files']:
             state_list.append({})
-            self.read_no_file(state_list[-1], mos, no_file)
+            state = state_list[-1]
+            if not self.ioptions['unrestricted']:
+                state['sden'] = self.read_no_file(state, mos, no_file)
+            else:
+                # TODO: One could compute the spin-density here
+                state['sden_a'] = self.read_no_file(state, mos, no_file, spin=1)
+                try:
+                    state['sden_b'] = self.read_no_file(state, mos, no_file, spin=-1)
+                except IndexError:
+                    print("  WARNING: Could not find beta orbitals.")
+                    print("  Setting beta=alpha")
+                    state['sden_b'] = state['sden_a']
+                state['sden']   = state['sden_a'] + state['sden_b']
 
         for istate, state in enumerate(state_list):
             state['exc_en'] = float(istate + 1) # set fake excitation energy
@@ -1625,12 +1637,12 @@ class file_parser_nos(file_parser_base):
 
         return state_list
 
-    def read_no_file(self, state, ref_mos, no_file):
+    def read_no_file(self, state, ref_mos, no_file, spin=0):
         """
         Read information from a secondary NO file.
         """
         nos = lib_mo.MO_set_molden(file=no_file)
-        nos.read()
+        nos.read(spin=spin)
         nos.compute_inverse()
         if self.ioptions['rd_ene']:
             nos.set_ens_occs()
@@ -1663,10 +1675,7 @@ class file_parser_nos(file_parser_base):
 
         T = numpy.dot(ref_mos.ret_mo_mat(trnsp=False, inv=True), nos.mo_mat)
 
-        state['sden'] = numpy.dot(T,
-                                  numpy.dot(numpy.diag(nos.occs), T.transpose()))
-
-        if self.ioptions['unpaired_ana']:
+        if not self.ioptions['unrestricted']:
             nu_list = [min(occ, 2.-occ) for occ in nos.occs]
             state['nu'] = sum(nu_list)
             state['nu_den'] = numpy.dot(T,
@@ -1688,6 +1697,8 @@ class file_parser_nos(file_parser_base):
                 state['y1'] = nos.occs[iy1]
             except IndexError:
                 state['y1'] = 0.
+
+        return numpy.dot(T, numpy.dot(numpy.diag(nos.occs), T.transpose()))
 
 class file_parser_rassi(file_parser_libwfa):
     def read(self, mos):

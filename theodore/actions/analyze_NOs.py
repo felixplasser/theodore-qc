@@ -29,6 +29,8 @@ class AnalyzeNOs(Action):
     ref = :: existing_file, optional, alias=r
     # Multiply occupations with this factor
     occ_fac = :: float, optional, alias=o
+    # Use if unrestricted orbitals are present
+    unrestricted = false :: bool, alias=u
     # Interpret energies as occupations
     rd_ene = false :: bool, alias=e
     """
@@ -39,7 +41,7 @@ class AnalyzeNOs(Action):
             '..input_options': 'input_options'
     })
 
-    def run(no_files, ifile, ref, occ_fac, rd_ene):
+    def run(no_files, ifile, ref, occ_fac, unrestricted, rd_ene):
         theo_header.print_header(__class__._colt_description, cfile=__file__)
 
         # set options
@@ -47,6 +49,7 @@ class AnalyzeNOs(Action):
         ioptions['rtype'] = 'nos'
         if not occ_fac is None:
             ioptions['occ_fac'] = occ_fac
+        ioptions['unrestricted'] = unrestricted
         ioptions['rd_ene'] = rd_ene
 
         # optionally use a manually specified MO file for computing the AO overlap matrix
@@ -61,9 +64,14 @@ class AnalyzeNOs(Action):
         #--------------------------------------------------------------------------#
 
         sdena = lib_sden.sden_ana(ioptions)
-        sdena.read_mos()
+        if unrestricted:
+            sdena.read_mos(spin=1)
+        else:
+            sdena.read_mos()
         sdena.read_dens()
 
+        if unrestricted:
+            sdena.compute_all_NO()
         if ioptions['AD_ana']:
             sdena.compute_all_AD()
         if ioptions['pop_ana']:
