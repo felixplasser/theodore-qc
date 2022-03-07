@@ -27,6 +27,8 @@ class PlotVist(Action):
     coor  = false :: bool, alias=c
     # Render and plot all tensors separately
     plot_all = false :: bool, alias=p
+    # Add labels for eigenvalues above this value (in ppm), e.g. -l 10
+    lab_min = 1000. :: float, alias=l
     # Log files to be parsed
     logfiles = :: list(str)
     """
@@ -42,7 +44,7 @@ class PlotVist(Action):
     })
 
     @timeit
-    def run(vist, ofile, scale, coor, plot_all, logfiles):
+    def run(vist, ofile, scale, coor, plot_all, lab_min, logfiles):
         if vist is not None and len(vist) == 0:
             vist = None
         theo_header.print_header('Read NICS values and prepare VIST plot', cfile='plot_VIST.py')
@@ -65,7 +67,7 @@ class PlotVist(Action):
                 coorf = "coor%i.xyz"%ilog
                 struc.make_coord_file(file_path=coorf,file_type='Bqxyz')
                 open(ofile, 'a').write("mol new %s\n"%coorf)
-            nv.vmd_tensors(ofile, vist, scale, plot_all)
+            nv.vmd_tensors(ofile, vist, scale, plot_all, lab_min)
         
         # Instructions for VMD
         if coor:
