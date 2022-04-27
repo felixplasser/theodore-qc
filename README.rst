@@ -5,7 +5,7 @@ The **TheoDORE** (Theoretical Density, Orbital Relaxation and Exciton analysis) 
 
 *Author*: Felix Plasser
 
-*Contributors*: Ljiljana Stojanovic, Gunter Hermann, Sebastian Mai, Maximilian F.S.J. Menger
+*Contributors*: Ljiljana Stojanovic, Gunter Hermann, Sebastian Mai, Maximilian F.S.J. Menger, Patrick Kimber
 
 TheoDORE is distributed under the GNU General Public License 3.0 (see `LICENSE.txt <https://github.com/felixplasser/theodore-qc/blob/master/LICENSE.txt>`_).
 
@@ -21,11 +21,12 @@ For bugs / feature requests, please use the `issues page <https://github.com/fel
 Installation
 ~~~~~~~~~~~~
 * You can obtain the newest TheoDORE release from `github releases <https://github.com/felixplasser/theodore-qc/releases>`_.
-* Alternatively, to get the current development version, run
+* Alternatively, to get the current development version of the code and test suite, run
 
 ::
 
     git clone --recursive https://github.com/felixplasser/theodore-qc.git
+    git clone https://github.com/felixplasser/theo-test.git
 
 * To run TheoDORE, setup ``PATH`` and ``PYTHONPATH`` as explained in the `installation instructions <https://theodore-qc.sourceforge.io/doc_theo3-alpha/installation.html>`_.
 
