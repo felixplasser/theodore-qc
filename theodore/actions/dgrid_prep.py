@@ -3,8 +3,13 @@
 from __future__ import print_function, division
 import sys
 
-from .. import theo_header, input_options
 from .actions import Action
+from colt.lazyimport import LazyImportCreator, LazyImporter
+
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
 
 
 class dgrid_options(input_options.write_options):
@@ -13,15 +18,22 @@ class dgrid_options(input_options.write_options):
         self.read_float('Mesh border (a.u.)', 'mborder', 4.0)
         self.read_int('Number of parallel processes', 'nproc', 1)
 
+
 class DGridPrep(Action):
+
     name = 'dgrid_prep'
 
     _colt_description = 'Prepare input for DGrid'
 
-    _questions = """
+    _user_input = """
     # Molden files
     mldfiles = :: list(existing_file)
     """
+
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..input_options': 'input_options'
+    })
 
     def run(mldfiles):
 

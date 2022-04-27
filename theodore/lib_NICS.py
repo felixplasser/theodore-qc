@@ -35,7 +35,7 @@ class NICS_parser:
             for point in self.NICS_data:
                 f.write(point.get_data())
 
-    def vmd_tensors(self, filen='VIST.vmd', vlist=None, scale=1., plot_all=False):
+    def vmd_tensors(self, filen='VIST.vmd', vlist=None, scale=1., plot_all=False, lab_min=1000.):
         """
         Draw VMD tensors for all the NICS values parsed.
         filen - name of output file
@@ -64,7 +64,7 @@ draw delete all
 
         for ipoint, point in enumerate(self.NICS_data):
             if vlist is None or ipoint in vlist:
-                point.vmd_tensor(af, scale=scale)
+                point.vmd_tensor(af, scale=scale, lab_min=lab_min)
                 if plot_all:
                     af.write("render TachyonInternal P%i.tga\n"%ipoint)
                     af.write("draw delete all\n")
@@ -194,9 +194,11 @@ class NICS_point:
             self.coor  = coor
 
     # VMD part - maybe this should be moved into a separate library
-    def vmd_tensor(self, af, scale=1.):
+    def vmd_tensor(self, af, scale=1., lab_min=1000.):
         """
         Create a graphical representation of the NICS tensor to be plotted in VMD.
+        scale - scale for drawing tensors
+        lab_min - minimal value (in ppm) for drawing labels
         """
         self.af = af
 
@@ -214,10 +216,13 @@ class NICS_point:
                 vec = scale * 0.3 * abs(evmu)**.5 * self.coor[:, mu]
                 stick = scale * 0.1
                 rad = max(scale * 0.03 * abs(evmu)**.5, 0.5 * stick)
-                self.plot_quad_comp(self.orig, vec, rad, stick)
+                if abs(evmu) >= lab_min:
+                    self.plot_quad_comp(self.orig, vec, rad, stick, evmu)
+                else:
+                    self.plot_quad_comp(self.orig, vec, rad, stick)
                 #self.plot_quad_cone(fac, self.orig, coor[:, mu], 0.5 * fac)
 
-    def plot_quad_comp(self, orig, vec, rad, stick=0.1):
+    def plot_quad_comp(self, orig, vec, rad, stick=0.1, lab=None):
         """
         Plot component of quadrupole moment.
         """
@@ -233,6 +238,11 @@ class NICS_point:
         self.af.write('draw sphere ')
         self.vmd_coors(orig - vec)
         self.af.write('radius % .3f\n'%(2*rad))
+
+        if not lab is None:
+            self.af.write('draw text ')
+            self.vmd_coors(orig + vec * 0.7)
+            self.af.write('" % .1f"\n'%lab)
 
     def plot_quad_cone(self, fac, orig, vec, rad):
         """

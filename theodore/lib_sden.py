@@ -165,6 +165,12 @@ class sden_ana(dens_ana_base.dens_ana_base):
             state['nunl_den'] = numpy.dot(U,
                 numpy.dot(numpy.diag(nunl_v), U.T) )
 
+            nel = sum(pop)
+            iy0 = len(pop) - int(nel/2 + 0.5) - 1
+            iy1 = len(pop) - int(nel/2 + 0.5) - 2
+            state['y0'] = pop[iy0]
+            state['y1'] = pop[iy1]
+
         return pop, U
 
     def export_NOs_jmol(self, state, jmolNO, pop, U, mincoeff=0.2, minp=0.01):
@@ -246,6 +252,11 @@ class sden_ana(dens_ana_base.dens_ana_base):
             oi.compute_p_h_dens(state, U, lam, Vt, self.mos, minlam=self.ioptions['min_occ'])
 
     def ret_NDO(self, state, ref_state):
+        """
+        Compute NDOs and promotion number.
+        A generalised excitation number eta is also computed here,
+           cf. Barca et al. JCTC 2018, 14, 9.
+        """
         dD = state['sden'] - ref_state['sden']
 
         (ad,W) = numpy.linalg.eigh(dD)
@@ -257,6 +268,11 @@ class sden_ana(dens_ana_base.dens_ana_base):
             estr = 'pA + pD = %.8f != 0.'%(state['p'] + pD)
             print(' WARNING: ' + estr)
 
+        nAA = 0.5 * numpy.sum(ref_state['sden'] * ref_state['sden'])
+        nBB = 0.5 * numpy.sum(state['sden'] * state['sden'])
+        nAB = 0.5 * numpy.sum(state['sden'] * ref_state['sden'])
+        state["eta"] = max(nAA, nBB) - nAB
+
         return ad, W
 
     def export_NDOs_jmol(self, state, jmolNDO, ad, W, mincoeff=0.2, minad=0.05):
@@ -266,7 +282,7 @@ class sden_ana(dens_ana_base.dens_ana_base):
         for i, di in enumerate(ad):
             if di > -minad: break
 
-            jmolI = 'mo ['
+            jmolI = 'mo color blue red\nmo ['
             for occind in (-abs(Wt[i])**2).argsort():
                 occ = Wt[i][occind]
                 if abs(occ) < mincoeff: break
@@ -280,7 +296,7 @@ class sden_ana(dens_ana_base.dens_ana_base):
             ai = ad[-i]
             if ai < minad: break
 
-            jmolF = 'mo ['
+            jmolF = 'mo color orange green\nmo ['
             for occind in (-abs(Wt[-i])**2).argsort():
                 occ = Wt[-i][occind]
                 if abs(occ) < mincoeff: break

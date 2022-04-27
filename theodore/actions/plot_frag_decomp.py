@@ -4,17 +4,19 @@ Script for plotting fragment decomposition.
 """
 
 from __future__ import print_function, division
-from .. import theo_header, input_options, error_handler
 from .actions import Action
 import numpy
+from colt.lazyimport import LazyImportCreator, LazyImporter
 
-try:
-    import matplotlib
-    matplotlib.use('Agg')
-    import pylab
-except:
-    print("pylab/matplotlib not installed - plotting not possible")
-    raise
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
+    matplotlib = importer.lazy_import('matplotlib')
+    pylab = importer.lazy_import('pylab')
+
+
 
 class decomp_options(input_options.write_options):
     """
@@ -25,7 +27,7 @@ class decomp_options(input_options.write_options):
         self.numF = 0 # number of fragments
 
         input_options.write_options.__init__(self, *args, **kwargs)
-        self['colors'] = ['b', 'g', 'orange', 'red']
+        self['colors'] = ['b', 'g', 'orange', 'red', 'gray']
 
     ## \param fname file with the data produced in a previous analyze_tden.py run
     def read_OmFrag(self, fname='OmFrag.txt'):
@@ -60,7 +62,7 @@ class decomp_options(input_options.write_options):
 
         self.read_float('Relative width of the bars', 'barwidth', 0.75)
         self.read_int('Resolution (dpi) for plotting', 'plot_dpi', 200)
-        self.read_int('Font size', 'fsize', 5)
+        self.read_int('Font size', 'fsize', 8)
         self.read_str("Format of output graphics files", "output_format", "png", autocomp=False)
         self.labels = []
         for iF in range(self.numF):
@@ -77,10 +79,7 @@ class decomp_options(input_options.write_options):
             hpops[istate, :] = -numpy.sum(state['OmFrag'], 0)
             epops[istate, :] =  numpy.sum(state['OmFrag'], 1)
 
-        #print hpops
-        #print epops
-
-        pylab.figure(figsize=[0.5 * len(self.state_list)+1,3])
+        pylab.figure(figsize=[len(self.state_list)+1, 5])
 
         barkwargs = {'width':self['barwidth']}
 
@@ -98,7 +97,9 @@ class decomp_options(input_options.write_options):
         pylab.plot([ind[0]-0.5, ind[-1]+0.5+self['barwidth']], [0.,0.], 'k-')
 
         pylab.legend()
-        pylab.xticks([])
+        pylab.xticks(ind, [state['name'] for state in self.state_list], rotation='vertical')
+
+        pylab.subplots_adjust(bottom=0.2, left=0.2)
 
         fname = 'frag_decomp.%s'%self['output_format']
         pylab.savefig(fname, dpi=self['plot_dpi'])
@@ -110,7 +111,16 @@ class PlotFragDecomp(Action):
 
     _colt_description = 'Plot fragment decomposition of Omega matrix'
 
-    def run_plot():
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..input_options': 'input_options',
+            '..error_handler': 'error_handler',
+            'matplotlib': 'matplotlib',
+            'pylab': 'pylab',
+    })
+
+    def run():
+        matplotlib.use('Agg')
         theo_header.print_header(__class__._colt_description)
         opt = decomp_options('plot.in')
         opt.read_OmFrag()

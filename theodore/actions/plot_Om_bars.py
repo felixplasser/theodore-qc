@@ -6,10 +6,18 @@ Author: Felix Plasser, Sebastian Mai
 """
 
 from __future__ import print_function, division
-from .. import theo_header, input_options, lib_file, error_handler
 from .actions import Action
 import numpy
 import os
+from colt.lazyimport import LazyImportCreator, LazyImporter
+
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
+    lib_file = importer.lazy_import_as('..lib_file', 'lib_file')
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
+
 
 class Om_bar_options(input_options.write_options):
     """
@@ -237,11 +245,19 @@ class PlotOmBars(Action):
 
     _colt_description = 'Plot Omega matrices as bar graphs'
 
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..input_options': 'input_options',
+            '..lib_file': 'lib_file',
+            '..error_handler': 'error_handler',
+    })
+
     def run():
         theo_header.print_header(__class__._colt_description)
-        opt = Om_bar_options('plot.in')
+        opt = Om_bar_options('Om_bars.in')
         opt.read_str("Name of the file with the Omega matrix entries", "OmFfile", "OmFrag.txt", autocomp=True)
         opt.read_OmFrag(opt['OmFfile'])
         opt.Om_bar_input()
+        opt.flush()
         opt.Om_bar_data()
         opt.make_tex()

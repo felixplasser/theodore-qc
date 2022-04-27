@@ -9,7 +9,7 @@ with open('README.rst') as readme_file:
     readme = readme_file.read()
 print(readme)
 
-requirements = ['pycolt>=0.4', 'cclib>=1.7', 'numpy>=1.17']
+requirements = ['pycolt>=0.5', 'cclib>=1.7', 'numpy>=1.17', 'orbkit>=1.0', 'matplotlib', 'openbabel']
 
 setup_requirements = ['pytest-runner', ]
 
@@ -19,7 +19,7 @@ setup(
     author="Felix Plasser",
     python_requires='>=3.6, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5*',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: Alpha',
         'Intended Audience :: Developers',
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         'Natural Language :: English',
@@ -42,6 +42,6 @@ setup(
     setup_requires=setup_requirements,
     tests_require=test_requirements,
     url='https://github.com/felixplasser/theodore-qc',
-    version='2.4.8',
+    version='3.0_alpha',
     zip_safe=False,
 )

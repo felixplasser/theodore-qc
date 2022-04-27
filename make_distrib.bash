@@ -2,7 +2,8 @@
 # Create a new distribution version
 
 # TODO before:
-#   - Check version number in theo_header.py
+#   - Check version number in theo_header.py and doc/source/conf.py
+#   - doc/README up to date?
 #   - git tag set by this script
 
 echo "Syntax: make_distrib.bash [Version]"
@@ -24,26 +25,32 @@ git tag -a v$1
 
 mkdir $TDIR || exit 2
 
-cp README COPYRIGHT.txt LICENSE.txt $TDIR
+cp README.rst COPYRIGHT.txt LICENSE.txt $TDIR
 
 sed "s/GIT/$LTDIR/" setpaths.bash > $TDIR/setpaths.bash
 sed "s/GIT/$LTDIR/" setpaths.csh > $TDIR/setpaths.csh
 
 cp -r bin $TDIR
-cp -r EXAMPLES $TDIR
+mkdir $TDIR/EXAMPLES
+cp -r ../EXAMPLES/STANDARD $TDIR/EXAMPLES
+cp -r ../EXAMPLES/CCLIB    $TDIR/EXAMPLES
+cp -r ../EXAMPLES/EXTRA    $TDIR/EXAMPLES
 
-mkdir $TDIR/theodore
-cp theodore/*.py $TDIR/theodore
+cp -r theodore $TDIR
 
 # cclib as used by TheoDORE
 cp -r external/cclib/cclib $TDIR
 cp external/cclib/LICENSE $TDIR/cclib
-echo "Removing cclib binary files"
-rm -r $TDIR/cclib/__pycache__ $TDIR/cclib/*/__pycache__
+
+# colt as used by TheoDORE
+cp -r external/colt/colt $TDIR
+cp external/colt/LICENSE $TDIR/colt
 
 # remove extra files in EXAMPLE directory
-rm -r $TDIR/EXAMPLES/*/RUN
-rm -r $TDIR/EXAMPLES/*/__pycache__
+rm -r $TDIR/EXAMPLES/*/*/RUN
+
+echo "Removing binary pyc files"
+find $TDIR -name '*pyc' -exec rm -v {} \;
 
 # create tar with shorter relative paths
 cd $SDIR/../Versions

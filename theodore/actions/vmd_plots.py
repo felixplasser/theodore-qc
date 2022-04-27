@@ -4,8 +4,17 @@ Automatic plotting of densities or MOs with vmd.
 from __future__ import print_function, division
 import os
 import sys
-from .. import error_handler, theo_header, input_options, lib_struc, lib_file, lib_util
 from .actions import Action
+from colt.lazyimport import LazyImportCreator, LazyImporter
+
+
+with LazyImportCreator() as importer:
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
+    lib_struc = importer.lazy_import_as('..lib_struc', 'lib_struc')
+    lib_file = importer.lazy_import_as('..lib_file', 'lib_file')
+    lib_util = importer.lazy_import_as('..lib_util', 'lib_util')
 
 
 class vmd_options(input_options.write_options):
@@ -187,10 +196,19 @@ class VMDPlots(Action):
 
     _colt_description = 'Automatic plotting of cube files in VMD'
 
-    _questions = """
+    _user_input = """
     # List of cube files (or other format VMD can read)
     pltfiles = :: list(existing_file)
     """
+
+    _lazy_imports = LazyImporter({
+            '..error_handler': 'error_handler',
+            '..theo_header': 'theo_header',
+            '..input_options': 'input_options',
+            '..lib_struc': 'lib_struc',
+            '..lib_file': 'lib_file',
+            '..lib_util': 'lib_util',
+    })
 
     def run(pltfiles):
         theo_header.print_header(title=__class__._colt_description)

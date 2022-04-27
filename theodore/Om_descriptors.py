@@ -140,7 +140,8 @@ class Om_desc_coll:
                 self.descriptors['LLCT'] += self.OmNorm[A,B] + self.OmNorm[B,A]
                 
         #hpop = numpy.sum(OmFrag, 1)
-        epop = numpy.sum(self.OmFrag, 0)
-        self.descriptors['SIEL'] = -epop[1] + 1./(self.numFrag-2.) * numpy.sum(epop[2:])
-
-            
+        if self.numFrag >= 3:
+            epop = numpy.sum(self.OmFrag, 0)
+            self.descriptors['SIEL'] = -epop[1] + 1./(self.numFrag-2.) * numpy.sum(epop[2:])
+        else:
+            self.descriptors['SIEL'] = None

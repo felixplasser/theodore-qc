@@ -4,19 +4,23 @@ Script for plotting the Omega matrix as a pseudocolor matrix plot.
 """
 
 from __future__ import print_function, division
-from .. import theo_header, input_options, lib_file, error_handler
 from .actions import Action
+from colt import Colt
 
 import numpy
 import os
+from colt.lazyimport import LazyImportCreator, LazyImporter
 
-try:
-    import matplotlib
-    matplotlib.use('Agg')
-    import pylab
-except:
-    print("pylab/matplotlib not installed - plotting not possible")
-    raise
+
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
+    lib_file = importer.lazy_import_as('..lib_file', 'lib_file')
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
+    matplotlib = importer.lazy_import('matplotlib')
+    pylab = importer.lazy_import('pylab')
+
 
 class OmFrag_options(input_options.write_options):
     """
@@ -59,7 +63,66 @@ class OmFrag_options(input_options.write_options):
 
             self.maxOm = max(self.maxOm, state['OmFrag'].max())
 
-    def OmFrag_input(self):
+    def OmFrag_input(self, use_new=False):
+
+        if use_new:
+            class InputPlot(Colt):
+                _user_input = """
+                # Scale values before plotting?
+                #
+                plot_type = original :: str :: squareroot, original
+                # Resolution (dpi) for plotting
+                #
+                plot_dpi = 200 :: int
+                # Coloring scheme for pseudocolor plots
+                #
+                cmap = Greys :: str
+                # Font size
+                #
+                fsize = 10 :: int
+                # Format of output graphics files
+                #
+                output_format = png :: str
+                vmin = 0 :: int
+                vmax = 0 :: int
+                use_labels = False :: bool
+                # Enter x-tick labels (separated by spaces)
+                xticks = :: list, optional
+                # Enter y-tick labels (separated by spaces)
+                yticks = :: list, optional
+                #
+                grid = True :: bool
+                # Plot colorbar for each individual plot?
+                cbar = False :: bool
+                """
+
+                def from_config(cls, config):
+                    return config
+
+            data = InputPlot.from_questions(config='plot_omfrag.in')
+
+
+            self['sscale'] = data['vmax'] != 0
+            if self['sscale']:
+                for key in ('vmin', 'vmax'):
+                    self[key] = data[key]
+
+            self['axis'] = data['use_labels']
+            if data['xticks'] is not None or data['yticks'] is not None:
+                if not (data['xticks'] is not None and data['yticks'] is not None):
+                    raise Exception("")
+                self['ticks'] = True
+                self['xticks'] = data['xticks']
+                self['yticks'] = data['yticks']
+            else:                
+                self['ticks'] = False
+            for key in ('plot_dpi', 'cmap', 'fsize', 'output_format', 'grid', 'cbar'):
+                self[key] = data[key]
+            values = {'original': 1, 'sqareroot': 2}
+            self['plot_type'] = values[data['plot_type']]
+            return
+
+        # Old (pre-colt) version starts here
         plot_opts = ['Plot original values', 'Plot sqareroot scaled values']
         ichoice = self.ret_choose_list('Do you want to scale the values before plotting?', plot_opts, 1)
         self.write_option('plot_type', ichoice)
@@ -85,8 +148,10 @@ class OmFrag_options(input_options.write_options):
         ], 'Greys'
         )
 
+
         self.read_int('Font size', 'fsize', 10)
         self.read_str("Format of output graphics files", "output_format", "png", autocomp=False)
+
         self.read_yn('Use the same scale for all plots', 'sscale', True)
         if self['sscale']:
             self.read_float('Minimal value to plot', 'vmin', 0.)
@@ -211,15 +276,32 @@ class OmFrag_options(input_options.write_options):
 
 class PlotOmFrag(Action):
 
-    name = 'plot_omfrag'
-
     _colt_description = 'Plot Omega matrices as pseudocolor matrix plot'
 
-    def run():
+    name = 'plot_omfrag'
+
+    _user_input = """
+    # Use new colt interface
+    use_new = False :: bool
+    """
+
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..input_options': 'input_options',
+            '..lib_file': 'lib_file',
+            '..error_handler': 'error_handler',
+            'matplotlib': 'matplotlib',
+            'pylab': 'pylab',
+    })
+
+
+    def run(use_new):
+        matplotlib.use('Agg')
         theo_header.print_header(title=__class__._colt_description)
-        Oopt = OmFrag_options('plot.in')
+        Oopt = OmFrag_options('OmFrag.in')
         Oopt.read_OmFrag()
 
-        Oopt.OmFrag_input()
+        Oopt.OmFrag_input(use_new=use_new)
+        Oopt.flush()
 
         Oopt.plot()

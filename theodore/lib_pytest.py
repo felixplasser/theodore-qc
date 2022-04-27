@@ -27,34 +27,60 @@ def mock_stdout():
     sys.stdout = old
 
 
+@contextmanager
+def mock_stdin(string):
+    old = sys.stdin
+    sys.stdin = StringIO_(string)
+    yield sys.stdin
+    sys.stdin = old
+
+
+@contextmanager
+def commandline(string):
+    old = sys.argv
+    sys.argv = string.split()
+    yield sys.argv
+    sys.argv = old
+
+
 class pytest_job:
     """
     Run and check job in EXAMPLES directory using pytest.
     """
-    def __init__(self, cfile):
+    def __init__(self, cfile, thresh=1.e-6):
         self.wstring = ''
         self.epath = os.path.dirname(os.path.abspath(cfile))
         self.prep()
+        self.thresh = thresh
 
     def run_standard(self):
         """
         Run tests in standard format.
-        TODO: one can include custom bash files here
         """
         os.chdir(self.epath + '/RUN')
         for ifile in sorted(os.listdir('../IN_FILES')):
-            print(ifile)
             shutil.copy("../IN_FILES/"+ifile, ifile)
             col = ifile.split('.')
             dtype, atype = col[0], col[2]
-            sys.argv = ['theodore', f'analyze_{dtype}',  '-f', ifile]
-            
-            with mock_stdout() as out:
+            with commandline(f'theodore analyze_{dtype} -f {ifile}'), mock_stdout() as out:
                 ActionFactory.from_commandline()
                 outlines = out.read()
                 with open(f'analyze_{atype}.out', 'w') as fh:
                     fh.write(outlines)
         self.check()
+
+    def run_util(self, args, stdin='', outf=None):
+        """
+        This is for running an arbitrary utility script.
+        Generate the input for stdin as, e.g.:
+            tee plot_omfrag.in | theodore plot_omfrag
+        After this, self.check() has to be run.
+        """
+        os.chdir(f'{self.epath}/RUN')
+        with commandline(f'theodore {args}'), mock_stdin(stdin), mock_stdout() as out:
+            ActionFactory.from_commandline()
+            if not outf is None:
+                open(outf, 'w').write(out.read())
 
     def prep(self):
         """Create `RUN` dir"""
@@ -81,7 +107,7 @@ class pytest_job:
          line-by-line treatment for txt files, otherwise general diff.
         """
         wstring = "\n"
-        
+
         ref = open(reff).readlines()
         run = open(runf).readlines()
 #        suffix = runf.split('.')[-1]
@@ -89,13 +115,15 @@ class pytest_job:
         # These files should match line-by-line
         if '.txt' in runf:
             for iline, line in enumerate(ref):
-                # TODO: one could add numerical thresholds here
                 if not line == run[iline]:
-                    diffl = list(difflib.unified_diff(ref, run, fromfile=reff, tofile=runf))
-                    wstring = "\n"
-                    for line in diffl:
-                        self.wstring += line
-                    return
+                    print(' *** Running numerical diff ***')
+                    if self.num_diff(line, run[iline]) > 0:
+                        self.wstring += 'Numerical threshold exceeded \n\n'
+                        diffl = list(difflib.unified_diff(ref, run, fromfile=reff, tofile=runf))
+                        wstring = "\n"
+                        for line in diffl:
+                            self.wstring += line
+                        return
         # Use a general diff here
         else:
             diffl = list(difflib.unified_diff(self.diff_ignore(ref), self.diff_ignore(run), fromfile=reff, tofile=runf))
@@ -106,7 +134,7 @@ class pytest_job:
 
     def diff_ignore(self, dlist):
         outl = []
-        iglist = ["TheoDORE", "time", "rbkit", "openbabel", "capabilities"]
+        iglist = ["TheoDORE", "time", "rbkit", "openbabel", "capabilities", "cclib"]
         for line in dlist:
             for ig in iglist:
                 if ig in line:
@@ -117,10 +145,29 @@ class pytest_job:
                 outl.append(line)
         return outl
 
+    def num_diff(self, rline, line):
+        """
+        Run numerical diff for line.
+        """
+        ierr = 0
+
+        rwords = rline.split()
+        words  = line.split()
+
+        for i, rword in enumerate(rwords):
+            try:
+                rval = float(rword)
+            except ValueError:
+                continue
+            val = float(words[i])
+            if abs(rval-val) > self.thresh:
+                ierr += 1
+
+        return ierr
 
 class pytestDiffError(Exception):
     def __init__(self, errmsg):
         self.errmsg = errmsg
-        
+
     def __str__(self):
         return "\n\n *** pytest detected difference to reference results: ***\n\n %s"%self.errmsg

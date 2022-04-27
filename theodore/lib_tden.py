@@ -276,31 +276,13 @@ class tden_ana(dens_ana_base.dens_ana_base):
             return None, None
 
         print("Computation of Omega matrix ...")
-      # construction of intermediate matrices
-        # S implicitly computed from C
 
         if formula <= 1:
-            temp = self.mos.CdotD(D, trnsp=False, inv=False)  # C.DAO
-            DS   = self.mos.MdotC(temp, trnsp=False, inv=True) # DAO.S = C.D.C^(-1)
-            if formula==1:
-                DAO = self.mos.MdotC(temp, trnsp=True, inv=False) # DAO = C.D.C^T
-
-            temp = self.mos.CdotD(D, trnsp=True, inv=True)  # C^(-1,T).DAO
-            SD   = self.mos.MdotC(temp, trnsp=True, inv=False)  # S.DAO = C^(-1,T).DAO.C^T
-            if formula==1:
-                # S.DAO.S = C^(-1,T).D.C^(-1)
-                SDS = self.mos.MdotC(temp, trnsp=False, inv=True)
-
+            OmBas = self.mos.OmBas_Mulliken(D, formula)
         elif formula == 2:
             SDSh = self.mos.lowdin_trans(D)
             if fullmat or self.ioptions['comp_dntos']:
                 state['SDSh'] = SDSh
-
-        if   formula == 0:
-            OmBas = DS * SD
-        elif formula == 1:
-            OmBas = 0.5 * (DS * SD + DAO * SDS)
-        elif formula == 2:
             OmBas = SDSh * SDSh
         else:
             raise error_handler.MsgError("Om_formula=%i for CT numbers not implemented!"%formula)
@@ -309,23 +291,9 @@ class tden_ana(dens_ana_base.dens_ana_base):
         if self.ioptions['eh_pop'] >= 3:
             state['OmBas'] = OmBas
 
+        state['LOC'] = numpy.trace(OmBas)
         state['Om'] = numpy.sum(OmBas)
-
-        # Add up the contributions for the different atoms
-        #   This needs a lot of computation time!
-        #   But using the optimized "bf_blocks" algorithm significantly speeds up the results.
-
-        state['OmAt'] = numpy.zeros([self.mos.num_at, self.mos.num_at])
-        bf_blocks = self.mos.bf_blocks()
-        for iat, ist, ien in bf_blocks:
-            for jat, jst, jen in bf_blocks:
-                state['OmAt'][iat, jat] = numpy.sum(OmBas[ist:ien, jst:jen])
-
-        # Code with indexing arrays -> slower
-        #at_inds = numpy.array([self.mos.basis_fcts[i].at_ind - 1 for i in xrange(self.num_bas)], int)
-        #for iat in range(self.mos.num_at):
-        #    for jat in range(self.mos.num_at):
-        #        state['OmAt'][iat, jat] = numpy.sum(OmBas[at_inds==iat][:,at_inds==jat])
+        state['OmAt'] = self.mos.comp_OmAt(OmBas)
 
         return state['Om'], state['OmAt']
 

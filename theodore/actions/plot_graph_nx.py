@@ -4,8 +4,16 @@ Script for creating graphs from multiple directories, e.g. potential curves.
 """
 
 from __future__ import print_function, division
-from .. import theo_header, input_options, lib_plot, lib_file
 from .actions import Action
+from colt.lazyimport import LazyImportCreator, LazyImporter
+
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
+    lib_plot = importer.lazy_import_as('..lib_plot', 'lib_plot')
+    lib_file = importer.lazy_import_as('..lib_file', 'lib_file')
+
 
 class write_plot_options_nx(lib_plot.write_plot_options):
     def plot_input(self):
@@ -160,6 +168,14 @@ class PlotGraphNx(Action):
     name = 'plot_graph_nx'
 
     _colt_description = 'Graph plotting (Newton-X)'
+
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..input_options': 'input_options',
+            '..lib_plot': 'lib_plot',
+            '..lib_file': 'lib_file',
+    })
+
 
     def run():
         theo_header.print_header(title=__class__._colt_description)

@@ -5,31 +5,37 @@ Script for parsing libwfa output.
 from __future__ import print_function, division
 import sys
 
-from .. import theo_header, dens_ana_base, input_options, error_handler
 from .actions import Action
+from colt.lazyimport import LazyImportCreator, LazyImporter
 
-def ihelp():
-    print(" parse_libwfa.py <logfile> <type>\n")
-    print("  type: qcadc, qctddft, qctda, rassi\n")
-    print(" Command line options:")
-    print("  -h, -H, -help: print this help")
-    print("  -ifile, -f [dens_ana.in]: name of the input file")
-    exit(0)
+
+with LazyImportCreator() as importer:
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    dens_ana_base = importer.lazy_import_as('..dens_ana_base', 'dens_ana_base')
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
 
 class ParseLibwfa(Action):    
 
     name = 'parse_libwfa'
 
-    _colt_description = 'Parse libwfa output from Q-Chem or OpenMolcas (TODO)'
+    _colt_description = 'Parse libwfa output from Q-Chem or OpenMolcas'
 
-    _questions = """
+    _user_input = """
     # Logfile from Q-Chem or OpenMolcas
     logfile = :: existing_file
-    # Type of calculation
-    typ    = :: str, optional :: qcadc, qctddft, qctda, rassi
+    # Type of calculation (qcadc, qctddft, qctda, rassi)
+    typ    = :: str :: qcadc, qctddft, qctda, rassi
     # Input file
     ifile = :: file, optional, alias=f
     """
+
+    _lazy_imports = LazyImporter({
+            '..theo_header': 'theo_header',
+            '..dens_ana_base': 'dens_ana_base',
+            '..error_handler': 'error_handler',
+            '..input_options': 'input_options',
+    })
 
     def run(logfile, typ, ifile):
         #--------------------------------------------------------------------------#
@@ -45,10 +51,7 @@ class ParseLibwfa(Action):
         if ioptions['rtype'] == 'qctda':
             ioptions['TDA'] = True
             ioptions['rtype'] = 'qctddft'
-        
-        if (not 'rfile' in ioptions) or (not 'rtype' in ioptions):
-            ihelp()
-        
+
         theo_header.print_header(__class__._colt_description, ioptions=ioptions)
         
         #--------------------------------------------------------------------------#

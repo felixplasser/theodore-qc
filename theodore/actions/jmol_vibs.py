@@ -5,8 +5,16 @@ Automatic plotting of vibrations with jmol.
 # Code adapted from jmol_MOs.py
 
 from __future__ import print_function, division
-from .. import error_handler, lib_file, theo_header, input_options
+
 from .actions import Action
+from colt.lazyimport import LazyImportCreator, LazyImporter
+
+
+with LazyImportCreator() as importer:
+    error_handler = importer.lazy_import_as('..error_handler', 'error_handler')
+    lib_file = importer.lazy_import_as('..lib_file', 'lib_file')
+    theo_header = importer.lazy_import_as('..theo_header', 'theo_header')
+    input_options = importer.lazy_import_as('..input_options', 'input_options')
 
 
 class jmol_vib_opts(input_options.write_options):
@@ -114,10 +122,17 @@ class JMolVibs(Action):
     
     _colt_description = 'Plotting of vibrations in Jmol'
 
-    _questions = """
+    _user_input = """
     # Molden file with info about vibrations
     vibfile = :: existing_file
     """
+
+    _lazy_imports = LazyImporter({
+            '..error_handler': 'error_handler',
+            '..lib_file': 'lib_file',
+            '..theo_header': 'theo_header',
+            '..input_options': 'input_options',
+    })
 
     def run(vibfile):
 
