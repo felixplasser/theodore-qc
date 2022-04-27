@@ -62,6 +62,8 @@ class mo_output_jmol(mo_output):
         self.outstr += "mo cutoff %.3f\n\n"%self.jopt['cutoff']
 
     def print_mos(self):
+        squ_string_plus = ''
+        squ_string_minus = ''
         for imo in self.moc.molist:
             if self.jopt['ccode']:
                 if self.moc.is_occ(imo):
@@ -70,6 +72,23 @@ class mo_output_jmol(mo_output):
                     self.outstr += "mo color %s\n"%self.jopt['celec']
             self.outstr += "mo %s\n"%self.moc.moname(imo)
             self.outstr += "write image %s \"%s\"\n"%(self.jopt['oformat'], self.moc.mopath(imo, self.jopt['oformat']))
+
+            if self.jopt['do_dens']:
+                occ = self.moc.ret_occ(imo)
+                # One has to take the squareroot here for jmol to undlerstand this correctly
+                if occ > 0.:
+                    squ_string_plus += ' %.3f %i'%(occ**.5, imo+1)
+                if occ < 0.:
+                    squ_string_minus += ' %.3f %i'%((-occ)**.5, imo+1)
+
+        if squ_string_plus != '':
+            self.outstr += "mo color %s\n"%self.jopt['celec']
+            self.outstr += 'mo [%s] squared\n'%squ_string_plus
+            self.outstr += "write image %s \"%s\"\n"%(self.jopt['oformat'], self.moc.denspath("plus", self.jopt['oformat']))
+        if squ_string_minus != '':
+            self.outstr += "mo color %s\n"%self.jopt['chole']
+            self.outstr += 'mo [%s] squared\n'%squ_string_minus
+            self.outstr += "write image %s \"%s\"\n"%(self.jopt['oformat'], self.moc.denspath("minus", self.jopt['oformat']))
 
 class mo_output_html(mo_output):
     """
@@ -83,6 +102,13 @@ class mo_output_html(mo_output):
             el = '<img src="%s" "border="1" width="%i">'%(self.moc.mopath(imo, self.jopt['oformat']), self.jopt['width'])
             el += self.moc.mo_extra(imo,pref="<br> MO %i:"%(imo+1))
             self.htable.add_el(el)
+
+        el = '<img src="%s" "border="1" width="%i">'%(self.moc.denspath("plus", self.jopt['oformat']), self.jopt['width'])
+        el += "<br> Density (plus)"
+        self.htable.add_el(el)
+        el = '<img src="%s" "border="1" width="%i">'%(self.moc.denspath("minus", self.jopt['oformat']), self.jopt['width'])
+        el += "<br> Density (minus)"
+        self.htable.add_el(el)
 
     def post(self, ofileh):
         ofileh.write("<h2>Orbitals - %s</h2>\n"%self.moc.mldfile)
@@ -141,6 +167,10 @@ class mocoll:
         if of == 'pngt': of = 'png'
         return "%sMO_%s.%s"%(self.ret_label(),self.moname(imo),of)
 
+    def denspath(self, dname, of='png'):
+        if of == 'pngt': of = 'png'
+        return "%sdens_%s.%s"%(self.ret_label(),dname,of)
+
     def mo_extra(self, imo, pref="", postf=""):
         if self.mldfile=="":
             return ""
@@ -154,6 +184,16 @@ class mocoll:
                 print("occs:", self.moset.occs)
                 raise
             return "%s %5s %.4f / %.4f %s"%(pref,sym,ene,occ,postf)
+
+    def ret_occ(self, imo):
+        """
+        Return occupancy of orbital (including eneocc option).
+        """
+        ene, occ = self.moset.ret_eo(imo)
+        if self.eneocc:
+            return ene
+        else:
+            return occ
 
     def ret_label(self):
         if self.mldfile=="":
@@ -221,6 +261,10 @@ class mocoll_occ(mocoll):
                 self.molist.append(imo)
 
     def is_occ(self, imo):
+        """
+        Check if orbital is occupied. This only works if the
+        occupied (hole) orbitals are given with negative populations.
+        """
         if self.eneocc:
             occnum = self.moset.ens[imo]
         else:
@@ -229,6 +273,11 @@ class mocoll_occ(mocoll):
 
 class jmol_options(input_options.write_options):
     def jmol_input(self, nfiles=1):
+        # some defaults
+        self['do_dens'] = False
+        self['chole']   = 'blue red'
+        self['celec']   = 'red blue'
+
         self.read_float('Cutoff value', 'cutoff', 0.05)
 
         #print ""
@@ -255,12 +304,15 @@ class jmol_options(input_options.write_options):
             self.read_float('Maximal absolute occupancy', 'occmax', 1.99)
 
             self.read_yn('Preprocess and merge the Molden files', 'preprocess', nfiles>1)
+            if not self['preprocess']:
+                self.read_yn('Compute occupancy-weighted densities (attachment/dentachment, hole/electron, etc)?', 'do_dens', False)
 
             self.read_yn('Interpret energies as occupations (use for Q-Chem)', 'eneocc', False)
+
         else:
             raise error_handler.ElseError(self['spec'], 'spec')
 
-        self.read_yn('Use "rotate best" command (only available in Jmol 14)', 'rot_best')
+        self.read_yn('Use "rotate best" command (available since Jmol 14)', 'rot_best', True)
         self.read_yn('Additional custom rotation of the molecule?', 'rot_custom')
         if self['rot_custom']:
             self.read_float('Rotation around the x-axis', 'rot_x', 0.)
@@ -300,7 +352,7 @@ class JMolMOs(Action):
 
     name = 'jmol_mos'
 
-    _colt_description = 'Orbital plotting in Jmol'
+    _colt_description = 'Orbital/density plotting in Jmol'
 
     _user_input = """
     # List of Molden files with orbitals
