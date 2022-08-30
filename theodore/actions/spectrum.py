@@ -37,7 +37,7 @@ class spec_options(input_options.write_options):
         if self['restr']:
             self.restrictions()
 
-        #self.read_yn("Normalize the spectrum?", "normalize", not self['restr'])
+        self.read_yn("Normalize the spectrum?", "normalize", not self['restr'])
 
     def restrictions(self):
         self['rlist'] = []
@@ -91,9 +91,9 @@ class spec_options(input_options.write_options):
         self.spec.ascii_file()
 
         if do_plots:
-            self.spec.plot(xunit='eV', pname='spectrum_eV.png', weight=self['weight'])
-            self.spec.plot(xunit='nm', pname='spectrum_nm.png', weight=self['weight'])
-            self.spec.plot(xunit='rcm', pname='spectrum_rcm.png', weight=self['weight'])
+            self.spec.plot(xunit='eV', pname='spectrum_eV.png', weight=self['weight'], normalize=self['normalize'])
+            self.spec.plot(xunit='nm', pname='spectrum_nm.png', weight=self['weight'], normalize=self['normalize'])
+            self.spec.plot(xunit='rcm', pname='spectrum_rcm.png', weight=self['weight'], normalize=self['normalize'])
 
 # Code adapted from SHARC
 class gauss:
@@ -141,6 +141,9 @@ class spectrum:
         print("\nSpectrum costructed from %i states with non-vanishing osc. strength"%len(self.sticks))
 
     def normalize(self):
+        """
+        Note: this is deactivated.
+        """
         smax = max(self.spec)
         print('Normalizing the spectrum...')
         print('Maximum: % .5f'%smax)
@@ -167,7 +170,7 @@ class spectrum:
         wf.write(wt.ret_table())
         wf.post(lvprt=1)
 
-    def plot(self, xunit=1, pname='spectrum.png', lvprt=1, weight=1):
+    def plot(self, xunit=1, pname='spectrum.png', lvprt=1, weight=1, normalize=True):
         pylab.figure(figsize=(8,6))
 
         if xunit.lower() == 'ev':
@@ -193,15 +196,25 @@ class spectrum:
         pylab.ylabel('Oscillator strength')
 
         if weight == 1:
-            pylab.plot(xlist, self.spec / max(self.spec), 'k-')
+            if normalize:
+                pylab.plot(xlist, self.spec / max(self.spec), 'k-')
+                ymax = 1.
+            else:
+                pylab.plot(xlist, self.spec, 'k-')
+                ymax = max(self.spec)
             for A,x0 in plot_sticks:
                 pylab.plot([x0, x0], [-1., A], 'rx-')
         elif weight == 2:
-            pylab.plot(xlist, self.dos / max(self.dos), 'k-')
+            if normalize:
+                pylab.plot(xlist, self.dos / max(self.dos), 'k-')
+                ymax = 1
+            else:
+                pylab.plot(xlist, self.dos, 'k-')
+                ymax = max(self.dos)
         else:
             raise error_handler.ElseError('weight', weight)
 
-        pylab.axis(xmin=xmin, xmax=xmax, ymin=0., ymax=1.)
+        pylab.axis(xmin=xmin, xmax=xmax, ymin=0., ymax=ymax)
         pylab.savefig(pname)
 
         if lvprt >= 1:
