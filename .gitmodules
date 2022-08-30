@@ -7,3 +7,6 @@
 [submodule "external/colt"]
 	path = external/colt
 	url = https://github.com/MFSJMenger/colt.git
+[submodule "external/periodictable"]
+	path = external/periodictable
+	url = git@github.com:pkienzle/periodictable.git
