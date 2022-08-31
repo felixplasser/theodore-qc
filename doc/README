@@ -1,9 +1,9 @@
 Download the newest TheoDORE release and tutorial.
 
-- LOC for ionic states
-- Analysis of unrestricted NOs
-- Improvement for VIST
-- Jmol densities
+- LOC for ionic states (analyze_tden)
+- Analysis of unrestricted NOs (analyze_nos)
+- Improvement for VIST (plot_vist)
+- Jmol densities (jmol_mos)
 
 TheoDORE 3.0_alpha
 - New user interface and documentation
