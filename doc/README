@@ -1,5 +1,7 @@
 Download the newest TheoDORE release and tutorial.
 
+TheoDORE 3.0
+- New user interface and documentation
 - LOC for ionic states (analyze_tden)
 - Analysis of unrestricted NOs (analyze_nos)
 - Improvement for VIST (plot_vist)

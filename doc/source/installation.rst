@@ -39,7 +39,8 @@ Alternatively, a csh script setpaths.csh is provided.
 Python3
 ~~~~~~~
 
-TheoDORE 3 is compatible with python3 and no compatibility to python2 is maintained.
+TheoDORE 3 is compatible with python3 (ideally >3.7).
+No compatibility to python2 is maintained.
 
 The older release, TheoDORE 2.4, is still compatible with python v2.7.14.
 
