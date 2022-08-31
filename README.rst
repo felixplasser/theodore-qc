@@ -13,8 +13,8 @@ TheoDORE is distributed under the GNU General Public License 3.0 (see `LICENSE.t
 
 Documentation
 ~~~~~~~~~~~~~
-* `Documentation of TheoDORE 2 <https://sourceforge.net/p/theodore-qc/wiki/Home/>`_
-* `Documentation of TheoDORE 3 <https://theodore-qc.sourceforge.io/doc_theo3-alpha/index.html>`_
+* `Documentation of TheoDORE 3 <https://theodore-qc.sourceforge.io/docs/contents.html>`_
+* `Documentation of TheoDORE 2 (old) <https://sourceforge.net/p/theodore-qc/wiki/Home/>`_
 
 For bugs / feature requests, please use the `issues page <https://github.com/felixplasser/theodore-qc/issues>`_.
 
