@@ -50,13 +50,15 @@ The following external packages are used by TheoDORE and require a separate inst
 
     - `python3-numpy <http://numpy.scipy.org/>`_ - for basic numerical manipulations
     - `python3-matplotlib <http://matplotlib.sourceforge.net/>`_ *(optional)* - for plotting of graphs
-    - `python-openbabel <http://openbabel.org/wiki/Python>`_ *(optional)* - for extended file-parsing capabilities of molecular structure files
+    - `python3-openbabel <http://openbabel.org/wiki/Python>`_ *(optional)* - for extended file-parsing capabilities of molecular structure files
 
-    The ``numpy`` and ``matplotlib`` packages are usually readily available with the standard installation tools, e.g. ``apt-get``, ``yum`` etc. Alternatively, they may be downloaded from the URLs specified. If no integrated installation is performed, then it is necessary to add these libraries to the `PYTHONPATH` (see above).
+    These packages are usually readily available with the standard installation tools, e.g. ``apt-get``, ``yum`` etc.
+    Alternatively, they may be downloaded from the URLs specified. If no integrated installation is performed, then it is necessary to add these libraries to the `PYTHONPATH` (see above).
 
 The following external packages are provided along with the TheoDORE distribution in the ``external`` directory.
 
     - `cclib <http://cclib.github.io/>`_ - For file parsing work. Installation not required, activated via symbolic link from main TheoDORE directory
+    - `periodictable <https://github.com/pkienzle/periodictable>`_ - Information about periodic table (needed by cclib)
     - `colt <https://github.com/mfsjmenger/colt>`_ - User interface. Installation not required, activated via symbolic link from main TheoDORE directory
     - `ORBKIT <http://orbkit.github.io/>`_ *(optional)* - For creating cube files of densities. Installation required.
 
@@ -75,12 +77,14 @@ First download the `anaconda distribution <https://www.anaconda.com/distribution
 Testing
 ~~~~~~~
 
-The tests are invoked with pytest. In the ``EXAMPLES`` directory run (depending on the packages you want to test)
+The tests are invoked with ``pytest-3``. In the ``EXAMPLES`` directory run (depending on the packages you want to test)
 
 ::
 
-    pytest STANDARD
-    pytest CCLIB
-    pytest EXTRA
+    pytest-3 STANDARD
+    pytest-3 CCLIB
+    pytest-3 UTILS
+    pytest-3 EXTRA
 
-The tests are available at the `theodore-test <https://github.com/felixplasser/theodore-test>`_ repository.
+The tests are available with the TheoDORE distribution.
+They are maintained via the `theodore-test <https://github.com/felixplasser/theodore-test>`_ repository.
