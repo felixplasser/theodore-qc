@@ -1,0 +1,293 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Installation &mdash; theodore 3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Usage" href="usage.html" />
+    <link rel="prev" title="TheoDORE" href="contents.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="contents.html">
+          
+
+          
+            
+            <img src="_static/theodore.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#download-and-extract-the-source-file">Download and extract the source file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setup-the-path-specification">Setup the path specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#python3">Python3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#external-packages">External packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-anaconda">Using anaconda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input_generation.html">Input generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transition_density_analysis.html">Transition density matrix analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="difference_density_analysis.html">State density matrix analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chemical_shielding.html">Analysis of chemical shielding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="orbitals_and_densities.html">Orbitals and Densities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="program_specific_information.html">Program specific information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keywords.html">Keywords</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="contents.html">theodore</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="contents.html">Docs</a> &raquo;</li>
+        
+      <li>Installation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/installation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>The installation on a Linux system is split into four simple parts:</p>
+<div class="section" id="download-and-extract-the-source-file">
+<h2>Download and extract the source file<a class="headerlink" href="#download-and-extract-the-source-file" title="Permalink to this headline">¶</a></h2>
+<p>Download the newest release TheoDORE_v.s.tgz from the <a class="reference external" href="https://github.com/felixplasser/theodore-qc/releases">github releases page</a>.</p>
+<p>Extract the source file</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tar</span> <span class="o">-</span><span class="n">xf</span> <span class="n">TheoDORE_v</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">tgz</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="setup-the-path-specification">
+<h2>Setup the path specification<a class="headerlink" href="#setup-the-path-specification" title="Permalink to this headline">¶</a></h2>
+<p>To use TheoDORE the <cite>PATH</cite> and <cite>PYTHONPATH</cite> variables have to be adjusted. For this purpose you can use the provided bash script <cite>setpaths.bash</cite></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>#!/bin/bash
+export THEODIR=/yourpath/TheoDORE/TheoDORE_v.s
+export PATH=$THEODIR/bin:$PATH
+export PYTHONPATH=$THEODIR:$PYTHONPATH
+</pre></div>
+</div>
+<p><strong>Note:</strong> <cite>PYTHONPATH</cite> no longer points to the <cite>lib</cite> directory starting in TheoDORE_2.0.</p>
+<p>Copy the above lines into your .bashrc file or run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="n">setpaths</span><span class="o">.</span><span class="n">bash</span>
+</pre></div>
+</div>
+<p>Alternatively, a csh script setpaths.csh is provided.</p>
+</div>
+<div class="section" id="python3">
+<h2>Python3<a class="headerlink" href="#python3" title="Permalink to this headline">¶</a></h2>
+<p>TheoDORE 3 is compatible with python3 and no compatibility to python2 is maintained.</p>
+<p>The older release, TheoDORE 2.4, is still compatible with python v2.7.14.</p>
+</div>
+<div class="section" id="external-packages">
+<h2>External packages<a class="headerlink" href="#external-packages" title="Permalink to this headline">¶</a></h2>
+<p>The following external packages are used by TheoDORE and require a separate instatllation:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference external" href="http://numpy.scipy.org/">python3-numpy</a> - for basic numerical manipulations</li>
+<li><a class="reference external" href="http://matplotlib.sourceforge.net/">python3-matplotlib</a> <em>(optional)</em> - for plotting of graphs</li>
+<li><a class="reference external" href="http://openbabel.org/wiki/Python">python-openbabel</a> <em>(optional)</em> - for extended file-parsing capabilities of molecular structure files</li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">numpy</span></code> and <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> packages are usually readily available with the standard installation tools, e.g. <code class="docutils literal notranslate"><span class="pre">apt-get</span></code>, <code class="docutils literal notranslate"><span class="pre">yum</span></code> etc. Alternatively, they may be downloaded from the URLs specified. If no integrated installation is performed, then it is necessary to add these libraries to the <cite>PYTHONPATH</cite> (see above).</p>
+</div></blockquote>
+<p>The following external packages are provided along with the TheoDORE distribution in the <code class="docutils literal notranslate"><span class="pre">external</span></code> directory.</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference external" href="http://cclib.github.io/">cclib</a> - For file parsing work. Installation not required, activated via symbolic link from main TheoDORE directory</li>
+<li><a class="reference external" href="https://github.com/mfsjmenger/colt">colt</a> - User interface. Installation not required, activated via symbolic link from main TheoDORE directory</li>
+<li><a class="reference external" href="http://orbkit.github.io/">ORBKIT</a> <em>(optional)</em> - For creating cube files of densities. Installation required.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="using-anaconda">
+<h2>Using anaconda<a class="headerlink" href="#using-anaconda" title="Permalink to this headline">¶</a></h2>
+<p>A straightforward and universal way of installing most of the required packages is through the use of Anaconda.</p>
+<p>First download the <a class="reference external" href="https://www.anaconda.com/distribution/">anaconda distribution</a> and do the installation. Then run the commands:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="n">numpy</span> <span class="n">matplotlib</span>
+<span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">c</span> <span class="n">openbabel</span> <span class="n">openbabel</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>The tests are invoked with pytest. In the <code class="docutils literal notranslate"><span class="pre">EXAMPLES</span></code> directory run (depending on the packages you want to test)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span> <span class="n">STANDARD</span>
+<span class="n">pytest</span> <span class="n">CCLIB</span>
+<span class="n">pytest</span> <span class="n">EXTRA</span>
+</pre></div>
+</div>
+<p>The tests are available at the <a class="reference external" href="https://github.com/felixplasser/theodore-test">theodore-test</a> repository.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="usage.html" class="btn btn-neutral float-right" title="Usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="contents.html" class="btn btn-neutral float-left" title="TheoDORE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Felix Plasser
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,306 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Orbitals and Densities &mdash; theodore 3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Program specific information" href="program_specific_information.html" />
+    <link rel="prev" title="Plotting" href="plotting.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="contents.html">
+          
+
+          
+            
+            <img src="_static/theodore.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input_generation.html">Input generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transition_density_analysis.html">Transition density matrix analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="difference_density_analysis.html">State density matrix analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chemical_shielding.html">Analysis of chemical shielding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Orbitals and Densities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#using-the-jmol-script">Using the Jmol script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#density-plotting-orbkit">Density plotting (ORBKIT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#density-plotting-jmol-molden">Density plotting (Jmol / Molden)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Jmol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#molden">Molden</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="program_specific_information.html">Program specific information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keywords.html">Keywords</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="contents.html">theodore</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="contents.html">Docs</a> &raquo;</li>
+        
+      <li>Orbitals and Densities</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/orbitals_and_densities.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="orbitals-and-densities">
+<h1>Orbitals and Densities<a class="headerlink" href="#orbitals-and-densities" title="Permalink to this headline">¶</a></h1>
+<p>Orbitals are exported in three forms:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://www.cmbi.ru.nl/molden/molden_format.html">Molden format</a>, which can be directly read by a number of visualization programs</li>
+<li>As a compact script for the <a class="reference external" href="http://jmol.sourceforge.net/">Jmol</a> program</li>
+<li>Cube files of densities created by the <a class="reference external" href="http://orbkit.github.io/">ORBKIT</a></li>
+</ul>
+<div class="section" id="using-the-jmol-script">
+<h2>Using the Jmol script<a class="headerlink" href="#using-the-jmol-script" title="Permalink to this headline">¶</a></h2>
+<p>After running <code class="docutils literal notranslate"><span class="pre">analyze_tden</span></code> (<code class="docutils literal notranslate"><span class="pre">analyze_sden</span></code>) the file <code class="docutils literal notranslate"><span class="pre">nto_jmol.spt</span></code> (<code class="docutils literal notranslate"><span class="pre">ndo_jmol.spt</span></code>) is created.
+This is an input file for jmol, which can be directly executed as</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">jmol</span> <span class="o">-</span><span class="n">n</span> <span class="n">nto_jmol</span><span class="o">.</span><span class="n">spt</span>
+</pre></div>
+</div>
+<p>For more flexibility, the following semi-interactive procedure can be applied:</p>
+<ul class="simple">
+<li>Open Jmol</li>
+<li>Run the first few lines of the script to preview the settings (simply copy them into the Jmol console)</li>
+<li>Adjust the perspective</li>
+<li>Run the remaining lines of the script (by copying into the Jmol console)</li>
+<li>Open the file <code class="docutils literal notranslate"><span class="pre">nto.html</span></code> (<code class="docutils literal notranslate"><span class="pre">ndo.html</span></code>) to view the result (<a class="reference external" href="http://theodore-qc.sourceforge.net/images/nto.html">Example</a>).</li>
+</ul>
+</div>
+<div class="section" id="density-plotting-orbkit">
+<h2>Density plotting (ORBKIT)<a class="headerlink" href="#density-plotting-orbkit" title="Permalink to this headline">¶</a></h2>
+<p>Cube files of densities can be directly created with <a class="reference external" href="http://orbkit.github.io/">ORBKIT</a>. The interface is controlled via <code class="docutils literal notranslate"><span class="pre">theoinp</span></code>.</p>
+<p>The cube files can be loaded into VMD and visualized using VMD network files provided by ORBKIT or by using the <code class="docutils literal notranslate"><span class="pre">vmd_plots</span></code> facility of TheoDORE. For the latter, just run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">theodore</span> <span class="n">vmd_plots</span> <span class="o">*.</span><span class="n">cb</span>
+</pre></div>
+</div>
+<p>ORBKIT is somewhat sensitive in terms of the molden file with orbital information. To achieve the best result, it is advisable to create this file within Molden rather than through TheoDORE.</p>
+</div>
+<div class="section" id="density-plotting-jmol-molden">
+<h2>Density plotting (Jmol / Molden)<a class="headerlink" href="#density-plotting-jmol-molden" title="Permalink to this headline">¶</a></h2>
+<p>The weighted sum over the NTOs gives the <em>hole</em> / <em>particle</em> densities, while the NDOs yield the <em>attachment</em> / <em>detachment</em> densities.
+First, create Molden format files of the NTOs / NDOs using analyze_tden.py / analyze_sden.py</p>
+<div class="section" id="id2">
+<h3>Jmol<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>To use Jmol use the <code class="docutils literal notranslate"><span class="pre">jmol_mos</span></code> tool. Run, e.g.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">theodore</span> <span class="n">jmol_mos</span> <span class="n">nto</span><span class="o">*.</span><span class="n">mld</span>
+</pre></div>
+</div>
+<p>Activate occupancy weighted densities using the following set of options:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Specification of the orbital indices to be plotted (spec):
+  [ 1]       sten - Start and end indices
+  [ 2]   frontier - Number of frontier orbitals
+  [ 3]        occ - Occupation threshold
+Choice: 3
+
+...
+
+Preprocess and merge the Molden files (preprocess):
+Choice (y/n): [n] n
+
+Compute occupancy-weighted densities (attachment/dentachment, hole/electron, etc)? (do_dens):
+Choice (y/n): [n] y
+</pre></div>
+</div>
+<p>This will plot densities corresponding to all orbitals that fit the occupation threshold.
+Separate densities (<code class="docutils literal notranslate"><span class="pre">dens_plus.png</span></code>, <code class="docutils literal notranslate"><span class="pre">dens_minus.png</span></code>) are computed for orbitals with positive and negative eigenvalues.</p>
+</div>
+<div class="section" id="molden">
+<h3>Molden<a class="headerlink" href="#molden" title="Permalink to this headline">¶</a></h3>
+<p>For Molden the following procedure is suggested.</p>
+<ul class="simple">
+<li>To extract the separate <em>hole</em> / <em>particle</em> contributions use the <code class="docutils literal notranslate"><span class="pre">extract_molden</span></code> functitonality</li>
+</ul>
+<p>Run, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">theodore</span> <span class="n">extract_molden</span> <span class="n">nto_1</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">a</span><span class="o">.</span><span class="n">mld</span>
+</pre></div>
+</div>
+<p>This will create a new directory <code class="docutils literal notranslate"><span class="pre">nto_1-1-a.mld.dir</span></code> containing the files <code class="docutils literal notranslate"><span class="pre">nto_1-1-a.mld_elec.mld</span></code> and
+<code class="docutils literal notranslate"><span class="pre">nto_1-1-a.mld_hole.mld</span></code> with the separate contributions.</p>
+<ul class="simple">
+<li>Open <code class="docutils literal notranslate"><span class="pre">nto_1-1-a.mld_elec.mld</span></code> in Molden (or preferably gmolden)</li>
+<li>Go to “density mode”</li>
+<li>Select “Plot Function” - “Density”</li>
+<li>Use “Plot Mode” - “Space”</li>
+<li>The result is the <em>particle</em> density as defined in <a class="reference external" href="http://dx.doi.org/10.1063/1.4885819">JCP, 141, 024106 (2014)</a>.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="program_specific_information.html" class="btn btn-neutral float-right" title="Program specific information" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="plotting.html" class="btn btn-neutral float-left" title="Plotting" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Felix Plasser
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

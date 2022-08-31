@@ -1,0 +1,327 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Transition density matrix analysis &mdash; theodore 3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="State density matrix analysis" href="difference_density_analysis.html" />
+    <link rel="prev" title="Input generation" href="input_generation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="contents.html">
+          
+
+          
+            
+            <img src="_static/theodore.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input_generation.html">Input generation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Transition density matrix analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#charge-transfer-numbers">Charge transfer numbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#natural-transition-orbitals">Natural transition orbitals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conditional-densities-domain-ntos">Conditional densities / domain NTOs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exciton-size-analysis">Exciton size analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#analysis-of-unrestricted-computations">Analysis of unrestricted computations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#analysis-of-spin-orbit-coupled-states">Analysis of spin-orbit coupled states</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="difference_density_analysis.html">State density matrix analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chemical_shielding.html">Analysis of chemical shielding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plotting.html">Plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="orbitals_and_densities.html">Orbitals and Densities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="program_specific_information.html">Program specific information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="keywords.html">Keywords</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="contents.html">theodore</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="contents.html">Docs</a> &raquo;</li>
+        
+      <li>Transition density matrix analysis</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/transition_density_analysis.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="transition-density-matrix-analysis">
+<h1>Transition density matrix analysis<a class="headerlink" href="#transition-density-matrix-analysis" title="Permalink to this headline">¶</a></h1>
+<div class="topic">
+<div class="line"><pre class="literal-block">
+usage: theodore ... analyze_tden [-h] [-f ifile]  
+
+
+
+  optional arguments:
+  ---------------------------------------------------
+    -h/--help            show this help message and exit                             
+    -f/--ifile           Main input file                                             
+ 
+</pre>
+</div>
+</div>
+<p>Analysis of the transition density matrix (1TDM) is invoked via <code class="docutils literal notranslate"><span class="pre">theodore</span> <span class="pre">analyze_tden</span></code>.
+The main types of analysis that can be performed are charge transfer numbers, natural transition orbitals, and an exciton size analysis.</p>
+<p><strong>Note:</strong> Traditionally, only spin-restricted computations are supported by TheoDORE and the treatment of unrestricted computations via the new script <code class="docutils literal notranslate"><span class="pre">analyze_tden_unr</span></code>  (see below) is not well-tested yet.</p>
+<div class="section" id="charge-transfer-numbers">
+<h2>Charge transfer numbers<a class="headerlink" href="#charge-transfer-numbers" title="Permalink to this headline">¶</a></h2>
+<p>The charge transfer numbers are computed as partial summations over squared transition density matrix elements of molecular fragments. The key step for a charge transfer analysis is to [divde the molecule into meaningful fragments](Input).</p>
+<p>The actual charge transfer number analysis is a generalized population analysis. Currently, three formulas are implemented: <code class="docutils literal notranslate"><span class="pre">Om_formula=0</span></code> yields a Mulliken style analysis</p>
+<div class="math notranslate nohighlight">
+\[\begin{eqnarray}
+\Omega_{AB}=\sum_{\mu\in A}\sum_{\nu\in B}\left(\mathbf{D}^{0I}\mathbf{S}\right)_{\mu\nu}\left(\mathbf{S}\mathbf{D}^{0I}\right)_{\mu\nu}
+\end{eqnarray}\]</div>
+<p><code class="docutils literal notranslate"><span class="pre">Om_formula=1</span></code> yields a somewhat different Mulliken style analysis</p>
+<div class="math notranslate nohighlight">
+\[\begin{eqnarray}
+\Omega_{AB}=0.5\sum_{\mu\in A}\sum_{\nu\in B}\left(\mathbf{D}^{0I}\mathbf{S}\right)_{\mu\nu}\left(\mathbf{S}\mathbf{D}^{0I}\right)_{\mu\nu}+D^{0I}_{\mu\nu}\left(\mathbf{S}\mathbf{D}^{0I}\mathbf{S}\right)_{\mu\nu}
+\end{eqnarray}\]</div>
+<p><code class="docutils literal notranslate"><span class="pre">Om\_formula=2</span></code> yields a Lowdin style analysis</p>
+<div class="math notranslate nohighlight">
+\[\begin{eqnarray}
+\Omega_{AB}=\sum_{\mu\in A}\sum_{\nu\in B}\left(\mathbf{S}^{1/2}\mathbf{D}^{0I}\mathbf{S}^{1/2}\right)_{\mu\nu}{}^{2}
+\end{eqnarray}\]</div>
+<p>The last case (<code class="docutils literal notranslate"><span class="pre">Om\_formula=2</span></code>) is probably the best option in terms of, both, computational effort and numerical stability.</p>
+<p>Subsequently TheoDORE computes fragment based descriptors of the Omega-matrix. These are specified using the <code class="docutils literal notranslate"><span class="pre">prop_list</span></code> keyword, e.g.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prop_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Om&#39;</span><span class="p">,</span> <span class="s1">&#39;POS&#39;</span><span class="p">,</span> <span class="s1">&#39;PR&#39;</span><span class="p">,</span> <span class="s1">&#39;CT&#39;</span><span class="p">,</span> <span class="s1">&#39;CTnt&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The complete list of available descriptors can be found [here](Transition density matrix analysis/attachment/Om_desc.pdf), see also the source file [Om_descriptors.py](<a class="reference external" href="https://sourceforge.net/p/theodore-qc/code/ci/master/tree/lib/Om_descriptors.py">https://sourceforge.net/p/theodore-qc/code/ci/master/tree/lib/Om_descriptors.py</a>).</p>
+</div>
+<div class="section" id="natural-transition-orbitals">
+<h2>Natural transition orbitals<a class="headerlink" href="#natural-transition-orbitals" title="Permalink to this headline">¶</a></h2>
+<p>The natural transition orbitals (NTOs) are constructed through a singular value decomposition of the transition density matrx <span class="math notranslate nohighlight">\(\mathbf{D}^{0I}\)</span></p>
+<div class="math notranslate nohighlight">
+\[\mathbf{D}^{0I}=\mathbf{U}diag(\lambda_1,\lambda_2,\ldots \mathbf{V}^T)\]</div>
+<p>The are written to either a Molden format file or a compact script, which can be executed in Jmol. In the case of the Molden file the following convention is adopted: NTO singular values are written into the Occ field of the Molden file where negative values denote hole orbitals and positive values electron orbitals.</p>
+<p>To count the number of NTO transitions involved, use the NTO participation ratio <span class="math notranslate nohighlight">\(PR_{NTO}\)</span></p>
+<div class="math notranslate nohighlight">
+\[PR_{NTO}=\frac{\Omega}{\sum_i\lambda_i^2}\]</div>
+<p>or the entanglement measures defined in <a class="reference external" href="http://dx.doi.org/10.1063/1.4949535">J. Chem. Phys., 144, 194107 (2016)</a></p>
+<div class="math notranslate nohighlight">
+\[S_{H|E}=-\sum_i\lambda_i\log_2\lambda_i\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[\begin{eqnarray}
+Z_{HE}=2^{S_{H|E}},
+\end{eqnarray}\]</div>
+<p>which are accessed by the following keywords:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prop_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;PRNTO&#39;</span><span class="p">,</span> <span class="s1">&#39;S_HE&#39;</span><span class="p">,</span> <span class="s1">&#39;Z_HE&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The <em>hole</em>/<em>particle</em> densities, which are analogous to the [attachment/detachment densities](State density matrix analysis), can be obtained as weighted sums over squared NTOs.
+This has to be <a class="reference internal" href="orbitals_and_densities.html#orb-dens"><span class="std std-ref">done externally</span></a>, e.g. in Molden.</p>
+</div>
+<div class="section" id="conditional-densities-domain-ntos">
+<h2>Conditional densities / domain NTOs<a class="headerlink" href="#conditional-densities-domain-ntos" title="Permalink to this headline">¶</a></h2>
+<p>An alternative to the charge transfer numbers and NTOs has been introduced in <a class="reference external" href="http://dx.doi.org/10.1002/cptc.201900014">ChemPhotoChem 3, 702, (2019)</a>.
+To compute conditional densities or domain NTOs, specify in <code class="docutils literal notranslate"><span class="pre">theoinp</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Perform analysis of domain NTOs and conditional densities? (comp_dntos):
+Choice (y/n): [n] y
+</pre></div>
+</div>
+<p>Using <a class="reference external" href="https://orbkit.github.io/">ORBKIT</a>, you can directly generate cube files of the conditional densities, see also <a class="reference internal" href="orbitals_and_densities.html#orb-dens"><span class="std std-ref">Orbitals and Densities</span></a>.
+Specify whether you want to compute the conditional densities for fixed hole (1), fixed electron (2) or both (3).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Compute conditional densities as cube files?
+ 0 - no, 1 - hole, 2 - electron, 3 - both (comp_dnto_dens):
+Choice: [0] 1
+</pre></div>
+</div>
+<p>Plotting in VMD using <code class="docutils literal notranslate"><span class="pre">theodore</span> <span class="pre">vmd_plots</span></code>.</p>
+</div>
+<div class="section" id="exciton-size-analysis">
+<h2>Exciton size analysis<a class="headerlink" href="#exciton-size-analysis" title="Permalink to this headline">¶</a></h2>
+<p>An approximate exciton size, <a class="reference external" href="http://dx.doi.org/10.1039/c5cp07077e">PCCP, 18, 2548 (2016)</a>, (computed as the root-mean-square <em>electron-hole</em> separation, denoted <code class="docutils literal notranslate"><span class="pre">RMSeh</span></code>) is constructed as</p>
+<div class="math notranslate nohighlight">
+\[d_{exc}=\sqrt{\sum_{MN}\Omega_{MN}d_{MN}^2/\Omega}\]</div>
+<p>where M and N are two atom indices and d&lt;sub&gt;MN&lt;/sub&gt; is the distance between them. The result is given in Angstrom.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prop_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;RMSeh&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="analysis-of-unrestricted-computations">
+<h2>Analysis of unrestricted computations<a class="headerlink" href="#analysis-of-unrestricted-computations" title="Permalink to this headline">¶</a></h2>
+<p>Unrestricted computations are supported via the script `` theodore analyze_tden_unr``. This has only been tested with ORCA. For a well-tested support of unrestricted computations you have to resort to the implementations in Q-Chem and OpenMolcas.</p>
+<p>The tool <code class="docutils literal notranslate"><span class="pre">analyze_tden_unr</span></code> performs independent calculations for alpha and beta spin and writes the results to the subdirectories <cite>ALPHA</cite> and <cite>BETA</cite>. Natural transition orbitals can be written into these subdirectories as Molden files. Subsequently, the information is added up and collected in the main directory.</p>
+</div>
+<div class="section" id="analysis-of-spin-orbit-coupled-states">
+<h2>Analysis of spin-orbit coupled states<a class="headerlink" href="#analysis-of-spin-orbit-coupled-states" title="Permalink to this headline">¶</a></h2>
+<p>The analysis of spin-orbit coupled states, see <a class="reference external" href="http://dx.doi.org/10.1016/j.ccr.2018.01.019">Coord. Chem. Rev., 361, 74 (2018)</a>, is possible using <code class="docutils literal notranslate"><span class="pre">theodore</span> <span class="pre">analyze_tden_soc</span></code>.
+Note, however, that this analysis is still in an experimental stage and is only possible for ADF.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="difference_density_analysis.html" class="btn btn-neutral float-right" title="State density matrix analysis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="input_generation.html" class="btn btn-neutral float-left" title="Input generation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Felix Plasser
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

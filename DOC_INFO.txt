@@ -1,0 +1,13 @@
+Preparation of documentation:
+
+git pull origin master
+
+cd doc
+make html
+cd ..
+/bin/cp -r doc/html/* docs
+/bin/cp -r doc/build/html/* docs/docs
+
+# submit docs to GIT
+git commit docs
+git push origin docs2
