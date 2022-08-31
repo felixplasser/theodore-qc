@@ -1,0 +1,37 @@
+/* Styles für die gesamte Webseite */
+
+body {background-color:#ffffff; ; font-family:Cambria,Times New Roman,serif;
+border:0px solid; margin:0pt; padding:0px;}
+
+td.title {background-color:#353377; color:#ffffff; text-align:center; font-family:Arial Rounded MT Bold,Arial,sans-serif;}
+td.menu {background-color:#565595; color:#ffffff; width:250px; vertical-align:top; padding:10px; font-size:12pt;}
+td.main {background-color:#ffffff; vertical-align:top; padding:15px;}
+td.progname {font-weight:bold;}
+td.progdescr {font-style:italic;}
+
+div {margin-bottom:8pt;}
+
+p {text-indent:1em;}
+
+h2 {font-size:25pt;font-family:Lucida Fax,Times New Roman,serif; color:#1b1a59;}
+h3 {font-size:20pt; color:#353377;}
+h3.hmenu {font-size:20pt; color:#ffffff;}
+h4 {font-size:15pt;}
+
+a:link {text-decoration:none;color:#aa3e39;}
+a:visited {text-decoration:none;color:#884410;}
+a:hover {text-decoration:underline;}
+
+a.menu:link {  text-decoration:none;color:#ffffff;}
+a.menu:visited {  text-decoration:none;color:#FFFFFF;}
+a.menu:hover {text-decoration:underline;}
+
+div.lit {text-align:center}
+span.expl {font-style:italic}
+span.authors {}
+span.title {}
+span.titlef {}
+span.year {font-weight:bold;}
+span.journal {font-style:italic;}
+
+p.narrow {width:600px;}
