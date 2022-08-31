@@ -47,21 +47,21 @@ The older release, TheoDORE 2.4, is still compatible with python v2.7.14.
 External packages
 ~~~~~~~~~~~~~~~~~
 
-The following external packages are used by TheoDORE and require a separate instatllation:
+The following external packages are used by TheoDORE and require a separate installation:
 
     - `python3-numpy <http://numpy.scipy.org/>`_ - for basic numerical manipulations
     - `python3-matplotlib <http://matplotlib.sourceforge.net/>`_ *(optional)* - for plotting of graphs
     - `python3-openbabel <http://openbabel.org/wiki/Python>`_ *(optional)* - for extended file-parsing capabilities of molecular structure files
+    - `ORBKIT <https://github.com/felixplasser/orbkit>`_ *(optional)* - For creating cube files of densities
 
-    These packages are usually readily available with the standard installation tools, e.g. ``apt-get``, ``yum`` etc.
+    The first three are usually readily available with the standard installation tools, e.g. ``apt-get``, ``yum`` etc.
     Alternatively, they may be downloaded from the URLs specified. If no integrated installation is performed, then it is necessary to add these libraries to the `PYTHONPATH` (see above).
 
-The following external packages are provided along with the TheoDORE distribution in the ``external`` directory.
+The following external packages are provided along with the TheoDORE distribution and do not require installation.
 
-    - `cclib <http://cclib.github.io/>`_ - For file parsing work. Installation not required, activated via symbolic link from main TheoDORE directory
-    - `periodictable <https://github.com/pkienzle/periodictable>`_ - Information about periodic table (needed by cclib)
-    - `colt <https://github.com/mfsjmenger/colt>`_ - User interface. Installation not required, activated via symbolic link from main TheoDORE directory
-    - `ORBKIT <http://orbkit.github.io/>`_ *(optional)* - For creating cube files of densities. Installation required.
+    - `cclib <http://cclib.github.io/>`_ - for file parsing work
+    - `periodictable <https://github.com/pkienzle/periodictable>`_ - information about periodic table (needed by cclib)
+    - `colt <https://github.com/mfsjmenger/colt>`_ - user interface
 
 Using anaconda
 ~~~~~~~~~~~~~~
@@ -82,10 +82,11 @@ The tests are invoked with ``pytest-3``. In the ``EXAMPLES`` directory run (depe
 
 ::
 
-    pytest-3 STANDARD
-    pytest-3 CCLIB
-    pytest-3 UTILS
+    pytest-3 UTILS STANDARD CCLIB
     pytest-3 EXTRA
 
-The tests are available with the TheoDORE distribution.
+The first three tests should always work.
+``EXTRA`` only works if openbabel and ADF are installed.
+
+The tests are distributed within the standard TheoDORE distribution.
 They are maintained via the `theodore-test <https://github.com/felixplasser/theodore-test>`_ repository.
