@@ -1,4 +1,6 @@
-Preparation of documentation:
+# Preparation of documentation:
+
+# Change relevant files in master branch
 
 git pull origin master
 
