@@ -30,7 +30,7 @@ Installation
 ::
 
     git clone --recursive https://github.com/felixplasser/theodore-qc.git
-    git clone https://github.com/felixplasser/theo-test.git
+    git clone https://github.com/felixplasser/theodore-test.git
 
 * To run TheoDORE, setup ``PATH`` and ``PYTHONPATH`` as explained in the `installation instructions <https://theodore-qc.sourceforge.io/docs/installation.html>`_.
 
