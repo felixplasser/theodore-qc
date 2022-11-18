@@ -40,7 +40,7 @@
 
 \newcommand{\comment}[1]{\textcolor{blue}{#1}}
 \newcommand{\red}[1]{\textcolor{red}{#1}}
-\newcommand{\redl}[1]{{\textcolor{red}{\underline{#1}}}}
+\newcommand{\redl}[1]{{\textcolor{red}{\texttt{#1}}}}
 \newcommand{\rede}[1]{\redl{#1 <ENTER>}}
 
 \newcommand{\doi}[1]{\href{http://dx.doi.org/#1}{\textcolor{blue}{DOI:~#1}}}
@@ -1485,7 +1485,7 @@ Using \textsc{Jmol}, the shortcuts used earlier are available to view the orbita
 Then the results can be viewed by looking at the .html files in a browser.
 
 A more compact representation is obtained by processing the cube files generated via VMD. Run:\\
-\comm{vmd\_plots.py rho*.cb}\\
+\comm{theodore vmd\_plots rho*.cb}\\
 When prompted, do the following:
 \scriptsize
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -1550,176 +1550,107 @@ The key results you get for the naphthalene CH fragments as outlined in this tut
 \section{Attachment/detachment analysis (Molcas - natural orbitals)}
 While the previous examples were focused on an analysis of the transition density matrices, TheoDORE can also analyze state- and difference-density matrices.
 These are most conveniently read in as natural orbital (NO) files in \textsc{Molden} format.
+The utility script \texttt{analyze\_nos} can be used as a shortcut for analyzing NO files.
 
-\subsection{Input generation}
+\greybox{Also standard RHF/UHF and DFT (RKS/UKS) orbitals can be analyzed with this mode.
+It is for example possible to compute the different density between a closed-shell RKS ground state and a UKS triplet or ionized state.}
+
+\subsection{NO analysis}
 Get the input files \\
-\comm{cp -r \$THEODIR/EXAMPLES/fa2.rassi/QC\_FILES/ fa2.rassi.tutorial}
+\comm{cp -r \$THEODIR/EXAMPLES/STANDARD/fa2.rassi/QC\_FILES/ fa2.rassi.tutorial}
 
-and call \comm{theoinp}
+Then simply call
 
-\scriptsize
-\begin{Verbatim}[commandchars=\\\{\}]
-Type of job (rtype):
-  [ 1]      qcadc - Q-Chem ADC (libwfa output)
-  [ 2]     libwfa - General libwfa output
-  [ 3]    qctddft - Q-Chem TDDFT
-  [ 4]       fchk - Q-Chem fchk file
-  [ 5]   colmcscf - Columbus MCSCF
-  [ 6]    colmrci - Columbus MR-CI (tden analysis)
-  [ 7]      rassi - Molcas RASSI
-  [ 8]        nos - Read natural orbitals (Molden format) for sden analysis: Columbus, Molcas, ...
-  [ 9]      ricc2 - Turbomole ricc2
-  [10]       escf - Turbomole escf
-  [11]   terachem - Terachem (TDDFT)
-  [12]      cclib - Use external cclib library: Gaussian, GAMESS, ...
-  [13]       orca - ORCA TDDFT (using a Molden file and cclib)
-  [14]        adf - ADF (TDDFT)
-  [15]     tddftb - DFTB+ - TDDFTB
-Choice: [7] \rede{8} \comment{! let's use the generic NO interface here}
+\comm{theodore analyze\_nos -u MOLDEN.1 MOLDEN.2 MOLDEN.3}
 
-MO file (Molden format)
- -> This file should ideally contain a square invertible coefficient matrix (mo_file):
-Choice (autocomplete enabled): \rede{molcas.rasscf.molden}
-
-Directory with the NO files:
-Choice (autocomplete enabled): [.] \rede{}
-. contains the following files:
-  [ 1] MOLCAS.input
-  [ 2] MOLDEN.1
-  [ 3] MOLDEN.2
-  [ 4] MOLDEN.3
-  [ 5] TRD
-  [ 6] geom.xyz
-  [ 7] molcas.log
-  [ 8] molcas.rasscf.molden
-
-Input indices of required files (separated by spaces)
- Start with ground state.
-Choice: \rede{2 3 4} \comment{! we want to analyze the files MOLDEN.1, MOLDEN.2, MOLDEN.3}
-
-Intepret energies as orbital occupations (for Q-Chem) (rd_ene):
-Choice (y/n): [n] \rede{} \comment{! This job was run using Molcas}
-
-Analysis of state density matrices?
-Choice (y/n): [y] \rede{}
-
-Print out Mulliken populations? (pop_ana):
-Choice (y/n): [y] \rede{}
-
-Compute number of unpaired electrons? (unpaired_ana):
-Choice (y/n): [y]  \rede{n} \comment{! this does not currently work in the case of spin-NOs as used by Molcas}
-
-Attachment/detachment analysis (AD_ana):
-Choice (y/n): [y] \rede{y}
-
-NDOs as Jmol script? (jmol_orbitals):
-Choice (y/n): [y] \rede{}
-
-NDOs in Molden format? (molden_orbitals):
-Choice (y/n): [n] \rede{}
-
-Mayer bond order and valence analysis? (BO_ana):
-Choice (y/n): [y] \rede{}
-
-Adjust detailed output options?
-Choice (y/n): [n] \rede{}
-
-Name of input file
-Choice: [dens_ana.in] \rede{}
-Finished: File dens_ana.in written.
-\end{Verbatim}
-\normalsize
-
-\subsection{State density matrix analysis}
-This time, we run the program
-
-\comm{analyze\_sden.py}
+\greybox{The -u flag signifies unrestricted orbitals.
+Generally speaking the operation of analyze\_nos depends on the correct specification of input flags.
+Call ``theodore analyze\_nos'' without arguments to see a listing of the options.}
 
 \scriptsize
 \begin{Verbatim}[commandchars=\\\{\}]
-Mulliken populations \comment{! ground state}
-MOLDEN.1            
+Mulliken populations \comment{! Analysis of the ground state}
+MOLDEN.1
 ------------------------------------
   Atom     state        nu      nunl
 ------------------------------------
-  C  1   5.92413   5.92413   5.91471
-  C  2   5.92413   5.92413   5.91471
-  O  3   8.35389   8.35389   8.37254
-  O  4   8.35389   8.35389   8.37254
-  H  5   0.86099   0.86099   0.86103
-  H  6   0.86099   0.86099   0.86103
-  H  7   0.86099   0.86099   0.86103
-  H  8   0.86099   0.86099   0.86103
+  C  1   5.92413   0.10075   0.03645 \comment{! Gross population on the atom, and two measures for unpaired electrons}
+  C  2   5.92413   0.10075   0.03645
+  O  3   8.35389   0.10030   0.03601
+  O  4   8.35389   0.10030   0.03601
+...
 ------------------------------------
-        32.00002  32.00002  32.01861
+        32.00002   0.40234   0.14493 \comment{! Total number of electrons / unpaired electrons}
 ------------------------------------
-   
 
-MOLDEN.2 \comment{! first excited state}
+MOLDEN.2
 --------------------------------------------------------
   Atom     state        nu      nunl       det       att
 --------------------------------------------------------
-  C  1   6.04465   6.04465   6.00915   0.03847  -0.15898 \comment{! detachment/attachment with respect to ground state}
-  C  2   6.04465   6.04465   6.00915   0.03847  -0.15898
-  O  3   8.28628   8.28628   8.54512   0.45914  -0.39152
-  O  4   8.28628   8.28628   8.54512   0.45914  -0.39152
-  H  5   0.83454   0.83454   0.84813   0.02650  -0.00004
-  H  6   0.83454   0.83454   0.84813   0.02650  -0.00004
-  H  7   0.83454   0.83454   0.84813   0.02650  -0.00004
-  H  8   0.83454   0.83454   0.84813   0.02650  -0.00004
+  C  1   6.04465   0.44212   0.49413   0.03847  -0.15898 \comment{! Also attachment/detachment populations}
+  C  2   6.04465   0.44212   0.49412   0.03847  -0.15898
+  O  3   8.28628   0.67712   0.71951   0.45914  -0.39152
+  O  4   8.28628   0.67712   0.71951   0.45914  -0.39152
+...
 --------------------------------------------------------
-        32.00000  32.00000  32.50104   1.10119  -1.10117 \comment{! sum: promotion number \textit{p}}
+        32.00000   2.34492   2.54684   1.10119  -1.10117 \comment{! sum: promotion number p}
 --------------------------------------------------------
+\end{Verbatim}
+\normalsize
 
+\scriptsize
+\begin{Verbatim}[commandchars=\\\{\}]
+Valence information \comment{! Valence analysis following Ref. \cite{Mayer_BO}}
 ...
 
-Valence information \comment{! valence analysis from Ref. \cite{Mayer_BO}}
- Total valence (V\_A)
- Free valence (F\_A) 
-MOLDEN.1            
---------------------------
-  Atom       V\_A       F\_A
---------------------------
-  C  1   3.67354   0.19140
-  C  2   3.67354   0.19140
-  O  3   1.85728   0.19063
-  O  4   1.85728   0.19063
-  H  5   0.93361   0.00012
-  H  6   0.93361   0.00012
-  H  7   0.93361   0.00012
-  H  8   0.93361   0.00012
---------------------------
-        14.79604   0.76452
---------------------------
-
-...
-
-Bond order information \comment{! bond orders from Ref. \cite{Mayer_BO}}
+Bond order information \comment{! Bond orders following Ref. \cite{Mayer_BO}}
  <at1>-<at2> : <bond order>
 MOLDEN.1
-  1=3  : 1.6330 \comment{! C1=03 double bond}
-  1-5  : 0.9229 \comment{! C1-H5 single bond}
+  1=3  : 1.6330 \comment{! Double bond between C=O}
+  1-5  : 0.9229
   1-7  : 0.9229
   2=4  : 1.6330
   2-6  : 0.9229
   2-8  : 0.9229
 MOLDEN.2
-  1-3  : 1.2048 \comment{! reduced bond order in the exc. state}
+  1-3  : 1.2048 \comment{! Bond order reduced in excited state}
   1-5  : 0.9145
   1-7  : 0.9145
   2-4  : 1.2048
   2-6  : 0.9145
   2-8  : 0.9145
-...
 \end{Verbatim}
 \normalsize
 
 \subsection{Plotting of the orbitals}
-In the case of using \textsc{Jmol}, you can use the automatic functionality for creating the natural difference orbitals (NDOs)
+In the case of using \textsc{Jmol}, you can use the automatic functionality for creating the natural difference orbitals (NDOs) or natural orbitals (NOs)
 
 \comm{jmol -n ndo\_jmol.spt}
 
 \greybox{The NDOs are in general similar to the NTOs, only that they also contain contributions from double excitations and orbital relaxation \cite{DMAT_ADC_II}.}
+
+\subsection{Alternative}
+
+It is also possible to perform the state-density analysis using
+
+\comm{theodore theoinp}
+
+and
+
+\comm{theodore analyze\_sden}
+
+\section{VIST plot for visualizing aromaticity}
+
+\textit{This section is still under construction but you can try running the basic commands.}
+
+Get the input files \\
+\comm{cp -r \$THEODIR/EXAMPLES/UTILS/BCyc\_VIST/QC\_FILES BCyc\_VIST.tutorial}
+
+\subsection{Simple example}
+\comm{theodore plot\_vist -p -o simple.vmd neutral.log}
+
+\subsection{More complicated example}
+\comm{theodore plot\_vist -c -v '0 4' neutral.log triplet.log 2M.log}
 
 \section{Contact}
 If you have any questions about this tutorial or about the \textsc{TheoDORE} program, please use the forum:
