@@ -610,6 +610,14 @@ class MO_set_molden(MO_set):
            raise
 
 class MO_set_tddftb(MO_set):
+    
+    def __init__(self, file, coor_file='geom.xyz'):
+        """
+        Add the ability to change the filename of the .xyz
+        """
+        super().__init__(file)
+        self.coor_file = coor_file
+    
     def read(self, lvprt=1, spin=0):
         """
         Read in MO coefficients from eigenvec.out file.
@@ -689,7 +697,7 @@ class MO_set_tddftb(MO_set):
 
         at_symb = []
 
-        filegeom = open('geom.xyz','r')
+        filegeom = open(self.coor_file,'r')
         nline = 0
         for line in filegeom:
             nline += 1
