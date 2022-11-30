@@ -629,7 +629,7 @@ class MO_set_tddftb(MO_set):
 
        # self.header = ''
 
-        filemo = open('eigenvec.out', 'r')
+        filemo = open(self.file, 'r')
         MO = False
 
         for line in filemo:
@@ -654,29 +654,30 @@ class MO_set_tddftb(MO_set):
            print("Is there a mismatch between spherical/cartesian functions?\n ---")
            raise
 
-        Eig = False
-        Occs = False
+        #Eig = False
+        #Occs = False
 
-        filemosec = open('detailed.out', 'r')
-        for line in filemosec:
-            if 'Eigenvalues /eV' in line:
-               Eig = True
-            elif 'Fillings' in line:
-               Occs = True
-            elif line.strip() == '':
-               Eig = False
-               Occs = False
-            elif Eig:
-                self.ens.append(float(line))
-                self.syms.append(str('a'))
-            elif Occs:
-                self.occs.append(float(line))
-        filemosec.close()
+        # filemosec = open('detailed.out', 'r')
+        # for line in filemosec:
+        #     if 'Eigenvalues /eV' in line:
+        #        Eig = True
+        #     elif 'Fillings' in line:
+        #        Occs = True
+        #     elif line.strip() == '':
+        #        Eig = False
+        #        Occs = False
+        #     elif Eig:
+        #         self.ens.append(float(line))
+        #         self.syms.append(str('a'))
+        #     elif Occs:
+        #         self.occs.append(float(line))
+        # filemosec.close()
 
         if len(self.occs) == 0:
             self.ens = []
             self.syms = []
-            print(" WARNING: Parsing of detailed.out failed - using band.out instead")
+            # print(" WARNING: Parsing of detailed.out failed - using band.out instead")
+            print("Parsing of band.out")
             ft = open('band.out', 'r')
             for line in ft.readlines()[1:]:
                 words = line.split()
