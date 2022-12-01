@@ -611,12 +611,13 @@ class MO_set_molden(MO_set):
 
 class MO_set_tddftb(MO_set):
     
-    def __init__(self, file, coor_file='geom.xyz'):
+    def __init__(self, file, coor_file='geom.xyz', sto_file='wfc.3ob-3-1.hsd'):
         """
         Add the ability to change the filename of the .xyz
         """
         super().__init__(file)
         self.coor_file = coor_file
+        self.sto_file = sto_file
     
     def read(self, lvprt=1, spin=0):
         """
@@ -719,7 +720,7 @@ class MO_set_tddftb(MO_set):
         ang_momentum = 0
         curr_at = 0
         for i in range(0,self.num_at):
-            filewfc = open('wfc.3ob-3-1.hsd','r')
+            filewfc = open(self.sto_file,'r')
             atom_name = at_symb[i] + " {"
             for line in filewfc:
                 atom = False

@@ -443,6 +443,9 @@ class dens_ana_options(read_options):
             # 0 - none, 1 - only hole, 2 - only electron, 3 - both
         self['normalize_dnto_dens'] = False # Normalize the DNTO densities
             # for each fragment
+        
+        # options for dftb
+        self['sto_file'] = None # STO coefficients file (.hsd)
 
         # Additional information
         # irrep labels for output
