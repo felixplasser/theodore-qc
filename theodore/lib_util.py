@@ -2,6 +2,8 @@
 Library with some utilities that do not fit anywhere else.
 """
 
+import numpy
+
 class cube_file:
     """
     Analyse a cube file and compute isovalues corresponding to volume integrals.
@@ -106,6 +108,17 @@ class cube_file:
                     break
 
         return retvals
+
+    def ret_volume(self, iso, lvprt=0):
+        """
+        Return the volume associated to a specific isovalue by counting
+        the number of elements above this isovalue.
+        """
+        if self.vals is None:
+            self.read(lvprt=lvprt)
+        nval = numpy.count_nonzero(numpy.array(self.avals) > iso)
+
+        return nval * self.V
 
     def prep(self, other, lvprt=0):
         """
