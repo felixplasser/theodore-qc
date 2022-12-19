@@ -721,35 +721,37 @@ class MO_set_tddftb(MO_set):
         curr_at = 0
         for i in range(0,self.num_at):
             filewfc = open(self.sto_file,'r')
-            atom_name = at_symb[i] + " {"
+            atom_name_without_equal = at_symb[i] + " {"
+            atom_name_with_equal = at_symb[i] + " = {"
             for line in filewfc:
                 atom = False
                 words = line.split()
-                if atom_name in line:
-                 curr_at += 1
-                 for line in filewfc:
-                       words = line.split()
-                       if (len(words) == 0): break
-                       if 'AngularMomentum' in line:
-                               ang_momentum = int(words[2])
-                               if ang_momentum == 0:
+                if atom_name_with_equal in line or atom_name_without_equal in line:
+                  curr_at += 1
+                  for line in filewfc:
+                        words = line.split()
+                        if (len(words) == 0): break
+                        if 'AngularMomentum' in line:
+                                ang_momentum = int(words[2])
+                                if ang_momentum == 0:
                                     orbsymb = 's'
                                     orb_deg = 1
                                     num_orb = num_orb + orb_deg
-                               elif ang_momentum == 1:
+                                elif ang_momentum == 1:
                                     orbsymb = 'sp'
                                     orb_deg = 3
                                     num_orb = num_orb + orb_deg
-                               elif ang_momentum == 2:
+                                elif ang_momentum == 2:
                                     orbsymb = 'spd'
                                     orb_deg = 5
                                     num_orb = num_orb + orb_deg
-                               for i in range(num_bas[orbsymb]):
-                                   self.basis_fcts.append(basis_fct(curr_at, orbsymb, orient[orbsymb][i]))
-                                   label = self.basis_fcts[-1].label()
-                                   if not label in self.bf_labels:
+                                for i in range(num_bas[orbsymb]):
+                                    self.basis_fcts.append(basis_fct(curr_at, orbsymb, orient[orbsymb][i]))
+                                    label = self.basis_fcts[-1].label()
+                                    if not label in self.bf_labels:
                                       self.bf_labels.append(label)
             filewfc.close()
+                
 
 ### file parsing finished ###
 

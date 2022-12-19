@@ -42,7 +42,8 @@ class AnalyzeTden(Action):
         theo_header.print_header(title=__class__._colt_description, ioptions=ioptions, cfile=__name__)
 
         tdena = lib_tden.tden_ana(ioptions)
-        if 'mo_file' in ioptions: tdena.read_mos()
+        if 'mo_file' in ioptions: 
+            tdena.read_mos()
 
         tdena.read_dens()
 
