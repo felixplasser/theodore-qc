@@ -589,9 +589,9 @@ class structure:
             for ind in range(1, num_at+1):
                 obatom  = self.mol.GetAtom(ind)
                 outstr  = '%2s'%Z_symbol_dict[obatom.GetAtomicNum()]
-                outstr += '% 14.10f'%(obatom.x())
-                outstr += '% 14.10f'%(obatom.y())
-                outstr += '% 14.10f'%(obatom.z())
+                outstr += '% 16.10f'%(obatom.x())
+                outstr += '% 16.10f'%(obatom.y())
+                outstr += '% 16.10f'%(obatom.z())
                 outfile.write(outstr+'\n')
 
         outfile.close()
