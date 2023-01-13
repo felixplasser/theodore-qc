@@ -145,6 +145,9 @@ class write_options_theo(input_options.write_options):
             self['coor_file'] = 'geom.xyz'
             self['coor_format'] = 'xyz'
             self['sto_file'] = 'wfc.3ob-3-1.hsd'
+            self['spx_file'] = 'spx.bin'
+            self['xpy_file'] = 'xpy.bin'
+            self['spx_xpy_format'] = 'bin'
         elif self['rtype'] == 'dftmrci':
             self['rfile'] = 'mrci.log'
             self['mo_file'] = 'orca.molden.input'
@@ -282,6 +285,11 @@ class write_options_theo(input_options.write_options):
         
     def sto_file(self):
         self.read_str('STO coefficients file', 'sto_file', self['sto_file'], True)
+        
+    def spx_xpy_file(self):
+        self.read_str('SPX file', 'spx_file', self['spx_file'], True)
+        self.read_str('XplusY file', 'xpy_file', self['xpy_file'], True)
+        self.read_str('Format of the SPX and XplusY files, bin or dat', 'spx_xpy_format', self['spx_xpy_format'], False)
 
     def set_Om_desc(self):
         """
@@ -490,6 +498,7 @@ def run_theoinp():
         wopt.get_rassi_list()
     elif wopt['rtype'] in ['tddftb']:
         wopt.sto_file()
+        wopt.spx_xpy_file()
 
     wopt.output_options()
 

@@ -446,6 +446,9 @@ class dens_ana_options(read_options):
         
         # options for dftb
         self['sto_file'] = None # STO coefficients file (.hsd)
+        self['spx_file'] = None # SPX bin file (.bin)
+        self['xpy_file'] = None # XplusY bin file (.bin)
+        self['spx_xpy_format'] = None # Format of the SPX and XplusY files
 
         # Additional information
         # irrep labels for output

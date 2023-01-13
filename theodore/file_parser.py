@@ -1316,102 +1316,123 @@ class file_parser_tddftb(file_parser_base):
     Author: Ljiljana Stojanovic
     """
     def read(self, mos):
-        # state_list = []  # check if state_list is already allocated
-        # occ = []
-        # virt = []
-        # words = []
-        # Coeff = False
-        # # read the order of iocc, avirt pairs from the SPX.DAT file. It corresponds to the order in which X+Y coeffs are written in XplusY.DAT file
-        # spxfileh = open('SPX.DAT', 'r') # spxfile is SPX.DAT
-        # for line in spxfileh:
-        #     words = line.split()
-        #     if len(words) == 6:
-        #        occ.append(int(words[3]))
-        #        virt.append(int(words[5]))
-        # spxfileh.close()
+        
+        if self.ioptions['spx_xpy_format'] != 'bin' and self.ioptions['spx_xpy_format'] != 'dat':
+            raise Exception("Please provide either dat or a bin files")
+        
+        #Open a bin file
+        if self.ioptions['spx_xpy_format'] == 'bin':
+            print("Reading bin format")
+            numpy.set_printoptions(precision=16)
+            try:
+                #Reading virtuals and occupied orbitals
+                f = open(self.ioptions['spx_file'], 'rb')
+                x = numpy.fromfile(f, dtype=numpy.intc, count = 1)
+                nxov = x[0]
+                dt = numpy.dtype([('ind', numpy.intc), ('exc', numpy.double), ('osz', numpy.double), ('iocc',numpy.intc), ('ivir',numpy.intc), ('spin', numpy.intc)])
+                spx = numpy.fromfile(f, dtype=dt, count = nxov)
+                f.close()
+        
+                occ = []
+                virt = []
+        
+                for transition in spx:
+                    occ.append(int(transition[3]))
+                    virt.append(int(transition[4]))
+                    
+                #Reading the coefficients
+                state_list = []
+                f = open(self.ioptions['xpy_file'], 'rb')
+                #First line contains the size of the matrix and the number of excitations
+                dt = numpy.dtype([('nmat', numpy.intc), ('nexc', numpy.intc)])
+                x = numpy.fromfile(f, dtype=dt, count = 1)
+                nmat = x[0][0]
+                nexc = x[0][1]
+        
+                for excitation in range(nexc):
+                    state_list.append({})
+                    state = state_list[-1]
+                    #Initialize the state
+                    state['tden'] = self.init_den(mos, rect=True)
+                    
+                    #First line for each exitation contain the sign and the weight
+                    dt = numpy.dtype([('ii', numpy.intc), ('sign', numpy.intc), ('w', numpy.double)])
+                    x = numpy.fromfile(f, dtype=dt, count = 1)
+                    transition = x[0][0]
+                    #sign = x[0][1]
+                    #wexc = x[0][2]
+                    
+                    #Other lines contain the the coefficient
+                    dt = numpy.dtype([('xpy', numpy.double, nmat)])
+                    x = numpy.fromfile(f, dtype=dt, count = 1)
+                    xply = list(x[0][0])
+                    
+                    for j in range (len(xply)-1):
+                        iocc = occ[j]-1
+                        avirt = virt[j]-1
+                        state['tden'][iocc, avirt] = xply[j]
+                        
+                    #Normalize
+                    state['tden']=state['tden']/numpy.linalg.norm(state['tden'])
+                        
+                f.close()
+            except:
+                print("Not a valid binary file, trying with a dat file...")
+                self.ioptions['spx_xpy_format'] = 'dat'
+        
+        #Open a dat file
+        if self.ioptions['spx_xpy_format'] == 'dat':
+            print("Reading dat format")
+            try:
+                state_list = []  # check if state_list is already allocated
+                occ = []
+                virt = []
+                words = []
+                Coeff = False
+                # read the order of iocc, avirt pairs from the SPX.DAT file. It corresponds to the order in which X+Y coeffs are written in XplusY.DAT file
+                spxfileh = open(self.ioptions['spx_file'], 'r') # spxfile is SPX.DAT
+                for line in spxfileh:
+                    words = line.split()
+                    if len(words) == 6:
+                        occ.append(int(words[3]))
+                        virt.append(int(words[5]))
+                spxfileh.close()
+        
+                words = []
+                rfileh = open(self.ioptions['xpy_file'], 'r') # read X+Y coeffs from XplusY.DAT
+                k = 0
+                for line in rfileh:
+                    words = line.split()
+                    if 'S' in line:
+                          k += 1
+                          Coeff = True
+                          xply = []
+                          state_list.append({})
+                          state = state_list[-1]
+                          state['tden'] = self.init_den(mos, rect=True)
+                    elif Coeff:
+                        try:
+                          if words[1] != 'S':
+                              i = -1
+                              for x in range (0,len(words)):
+                                  i += 1
+                                  xply.append(float(words[i]))
+                          else: continue
+                          j = -1
+                          for x in range (0,len(xply)-1):
+                              j += 1
+                              iocc = occ[j]-1
+                              avirt = virt[j]-1
+                              state['tden'][iocc, avirt] = xply[j]
+                        except:
+                          if len(words) == 3 and words[1]=='S': continue
+                        state['tden']=state['tden']/numpy.linalg.norm(state['tden'])
+        
+                rfileh.close()
+            except:
+                raise Exception("Not a valid dat file...")
+    
 
-        # words = []
-        # rfileh = open('XplusY.DAT', 'r') # read X+Y coeffs from XplusY.DAT
-        # k = 0
-        # for line in rfileh:
-        #     words = line.split()
-        #     if 'S' in line:
-        #          k += 1
-        #          Coeff = True
-        #          xply = []
-        #          state_list.append({})
-        #          state = state_list[-1]
-        #          state['tden'] = self.init_den(mos, rect=True)
-        #     elif Coeff:
-        #        try:
-        #          if words[1] != 'S':
-        #              i = -1
-        #              for x in range (0,len(words)):
-        #                  i += 1
-        #                  xply.append(float(words[i]))
-        #          else: continue
-        #          j = -1
-        #          for x in range (0,len(xply)-1):
-        #              j += 1
-        #              iocc = occ[j]-1
-        #              avirt = virt[j]-1
-        #              state['tden'][iocc, avirt] = xply[j]
-        #        except:
-        #          if len(words) == 3 and words[1]=='S': continue
-        #        state['tden']=state['tden']/numpy.linalg.norm(state['tden'])
-
-        # rfileh.close()
-        numpy.set_printoptions(precision=16)
-
-        #Reading virtuals and occupied orbitals
-        f = open('spx.bin', 'rb')
-        x = numpy.fromfile(f, dtype=numpy.intc, count = 1)
-        nxov = x[0]
-        dt = numpy.dtype([('ind', numpy.intc), ('exc', numpy.double), ('osz', numpy.double), ('iocc',numpy.intc), ('ivir',numpy.intc), ('spin', numpy.intc)])
-        spx = numpy.fromfile(f, dtype=dt, count = nxov)
-        f.close()
-
-        occ = []
-        virt = []
-
-        for transition in spx:
-            occ.append(int(transition[3]))
-            virt.append(int(transition[4]))
-            
-        #Reading the coefficients
-        state_list = []
-        f = open('xpy.bin', 'rb')
-        dt = numpy.dtype([('nmat', numpy.intc), ('nexc', numpy.intc)])
-        x = numpy.fromfile(f, dtype=dt, count = 1)
-        nmat = x[0][0]
-        nexc = x[0][1]
-
-
-        for excitation in range(nexc):
-            state_list.append({})
-            state = state_list[-1]
-            state['tden'] = self.init_den(mos, rect=True)
-            
-            dt = numpy.dtype([('ii', numpy.intc), ('sign', numpy.intc), ('w', numpy.double)])
-            x = numpy.fromfile(f, dtype=dt, count = 1)
-            transition = x[0][0]
-            sign = x[0][1]
-            wexc = x[0][2]
-            
-            dt = numpy.dtype([('xpy', numpy.double, nmat)])
-            x = numpy.fromfile(f, dtype=dt, count = 1)
-            xply = list(x[0][0])
-            
-            j = -1
-            for x in range (0,len(xply)-1):
-                j += 1
-                iocc = occ[j]-1
-                avirt = virt[j]-1
-                state['tden'][iocc, avirt] = xply[j]
-                
-            state['tden']=state['tden']/numpy.linalg.norm(state['tden'])
-                
-        f.close()
 
         excfile = open(self.ioptions['rfile'], 'r') # rfile is EXC.DAT
         line = next(excfile)
