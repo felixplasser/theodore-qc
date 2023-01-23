@@ -292,6 +292,8 @@ class tden_ana(dens_ana_base.dens_ana_base):
             state['OmBas'] = OmBas
 
         state['LOC'] = numpy.trace(OmBas)
+        if formula == 2:
+            state['LOCa'] = numpy.trace(abs(SDSh))
         state['Om'] = numpy.sum(OmBas)
         state['OmAt'] = self.mos.comp_OmAt(OmBas)
 
