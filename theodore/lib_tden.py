@@ -195,6 +195,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         pop_pr.add_pop('e-', epop)
         pop_pr.add_pop('sum', hpop+epop)
         pop_pr.add_pop('diff', hpop-epop)
+        pop_pr.add_pop('trans', state['tpop'])
 
         print(pop_pr.ret_table())
 
@@ -279,11 +280,13 @@ class tden_ana(dens_ana_base.dens_ana_base):
 
         if formula <= 1:
             OmBas = self.mos.OmBas_Mulliken(D, formula)
+            state['tpop'] = pop_ana.mullpop_ana().ret_pop(D, self.mos)
         elif formula == 2:
             SDSh = self.mos.lowdin_trans(D)
             if fullmat or self.ioptions['comp_dntos']:
                 state['SDSh'] = SDSh
             OmBas = SDSh * SDSh
+            state['tpop'] = pop_ana.pop_ana().ret_pop(D, self.mos, SDSh)
         else:
             raise error_handler.MsgError("Om_formula=%i for CT numbers not implemented!"%formula)
 
@@ -292,6 +295,8 @@ class tden_ana(dens_ana_base.dens_ana_base):
             state['OmBas'] = OmBas
 
         state['LOC'] = numpy.trace(OmBas)
+        state['QT2'] = numpy.sum(state['tpop']**2)
+        state['QTa'] = numpy.sum(abs(state['tpop']))
         if formula == 2:
             state['LOCa'] = numpy.trace(abs(SDSh))
         state['Om'] = numpy.sum(OmBas)

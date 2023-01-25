@@ -33,12 +33,22 @@ class mullpop_ana(pop_ana):
     """
     def ret_Deff(self, dens, mos):
         """
-        Compute and return the Mulliken population.
+        Compute and return the Mulliken orthogonalized DM.
         """
         temp = mos.CdotD(dens, trnsp=False, inv=False)  # C.DAO
         DS   = mos.MdotC(temp, trnsp=False, inv=True) # DAO.S = C.D.C^(-1)
 
         return DS
+
+class lowdin_ana(pop_ana):
+    """
+    Lowdin population analysis.
+    """
+    def ret_Deff(self, dens, mos):
+        """
+        Compute and return the Lowdin orthogonalized DM.
+        """
+        return mos.lowdin_trans(dens)
 
 class pop_printer:
     """

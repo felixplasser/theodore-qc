@@ -117,6 +117,8 @@ class sden_ana(dens_ana_base.dens_ana_base):
 
         if ana_type == 'mullpop':
             pana = pop_ana.mullpop_ana()
+        elif ana_type == 'lowdin':
+            pana = pop_ana.lowdin_ana()
         else:
             raise error_handler.MsgError('Population analyis type not implmented: %s'%ana_type)
 
