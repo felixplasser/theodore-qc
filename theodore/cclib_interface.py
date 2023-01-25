@@ -9,7 +9,7 @@ import struct
 import numpy
 from . import file_parser, lib_mo, error_handler, units, lib_struc
 try:
-    import openbabel
+    from openbabel import openbabel
 except ImportError:
     print(" *** Warning: python-openbabel not found! ***")
     print(" Using emulation program with limited capabilities ...")
