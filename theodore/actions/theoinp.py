@@ -499,6 +499,7 @@ def run_theoinp():
     elif wopt['rtype'] in ['tddftb']:
         wopt.sto_file()
         wopt.spx_xpy_file()
+        wopt.coor_file()
 
     wopt.output_options()
 
