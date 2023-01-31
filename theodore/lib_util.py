@@ -111,8 +111,8 @@ class cube_file:
 
     def ret_volume(self, iso, lvprt=0):
         """
-        Return the volume associated to a specific isovalue by counting
-        the number of elements above this isovalue.
+        Return the volume (in Bohr^3) associated to a specific isovalue
+        by counting the number of elements above this isovalue.
         """
         if self.vals is None:
             self.read(lvprt=lvprt)
