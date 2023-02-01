@@ -697,7 +697,7 @@ class MO_set_tddftb(MO_set):
             ft.close()
 
         at_symb = []
-
+        atoms_in_xyz = []
         filegeom = open(self.coor_file,'r')
         nline = 0
         for line in filegeom:
@@ -706,6 +706,8 @@ class MO_set_tddftb(MO_set):
             if nline > 2:
                self.at_dicts.append({'Z':'', 'x':words[1], 'y':words[2], 'z':words[3]})
                at_symb.append(str(words[0]))
+               if str(words[0]) not in atoms_in_xyz:
+                   atoms_in_xyz.append(str(words[0]))
                self.num_at += 1
         filegeom.close()
 
@@ -719,6 +721,7 @@ class MO_set_tddftb(MO_set):
         num_orb = 0
         ang_momentum = 0
         curr_at = 0
+        atoms_in_sto = []
         for i in range(0,self.num_at):
             filewfc = open(self.sto_file,'r')
             atom_name_without_equal = at_symb[i] + " {"
@@ -728,6 +731,8 @@ class MO_set_tddftb(MO_set):
                 words = line.split()
                 if atom_name_with_equal in line or atom_name_without_equal in line:
                   curr_at += 1
+                  if at_symb[i] not in atoms_in_sto:
+                      atoms_in_sto.append(at_symb[i])
                   for line in filewfc:
                         words = line.split()
                         if (len(words) == 0): break
@@ -751,7 +756,7 @@ class MO_set_tddftb(MO_set):
                                     if not label in self.bf_labels:
                                       self.bf_labels.append(label)
             filewfc.close()
-                
+              
 
 ### file parsing finished ###
 
@@ -763,6 +768,9 @@ class MO_set_tddftb(MO_set):
             print('Number of basis functions parsed: ', num_orb)
 
         if len(mo_vecs[0])!=num_orb:
+            print('\nAtoms in the geometry file: {}\nAtoms in the sto file: {}\n'.format(
+                                                                     atoms_in_xyz,
+                                                                     atoms_in_sto)) 
             raise error_handler.MsgError('Inconsistent number of basis functions!')
 
 class MO_set_adf(MO_set):
