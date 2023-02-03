@@ -442,7 +442,7 @@ class dens_ana_options(read_options):
         self.set_kd('prop_list', [], 'List of properties for final print out.')
         self.set_kd('print_OmAt', False, 'Print the OmAt to .npy file and use for automatic restart')
         self.set_kd('print_OmFrag', True, 'Print out the fragment Omega matrix to an ASCII file')
-        self.set_kd('eh_pop', 1, 'Print e/h populations: 1 - for fragments, 2 - also for atoms')
+        self.set_kd('eh_pop', 1, 'Print e/h populations: 1 - for fragments, 2 - also for atoms, 3 - bfs')
         self.set_kd('comp_ntos', True, 'Compute natural transition orbitals')
         self.set_kd('comp_dntos', False, 'Compute the domain NTOs')
         self.set_kd('dnto_frags', [], 'Compute DNTOs only for these fragments')

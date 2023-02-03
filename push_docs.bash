@@ -7,6 +7,6 @@ cd doc || exit 1
 rsync -auv html/ fffelix@web.sourceforge.net:/home/project-web/theodore-qc/htdocs
 
 # sphinx documentation
-../bin/print_doc.py > source/keywords.rst
+../bin/print_doc.py > source/keywords.rst || exit 1
 make html || exit 1
 rsync -auv build/html/ fffelix@web.sourceforge.net:/home/project-web/theodore-qc/htdocs/docs
