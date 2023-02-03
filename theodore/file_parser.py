@@ -348,7 +348,7 @@ from the control file.""")
                     if '===' in line: break
 
                     words = line.replace('|','').split()
-                    irrep, mult, state_ind, exc_en = words[0], words[1], int(words[2]), float(words[-1])
+                    irrep, mult, state_ind, exc_en = words[0].replace('*',''), words[1], int(words[2]), float(words[-1])
                     state = ret_list[istate]
                     if state['irrep'] == irrep and state['mult'] == mult and state['state_ind'] == state_ind:
                         state['exc_en'] = exc_en
