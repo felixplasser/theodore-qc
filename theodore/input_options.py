@@ -461,13 +461,13 @@ class dens_ana_options(read_options):
         self.set_kd('vmd_ntos', False, 'VMD network for NTOs')
         self.set_kd('vmd_ntos_iv', 0.01, 'isovalue')
         self.set_kd('comp_p_h_dens', False, 'Electron/hole densities as cube files')
-        self['vmd_ph_dens'] = False
-        self['vmd_ph_dens_iv'] = 0.01
+        self.set_kd('vmd_ph_dens', False)
+        self.set_kd('vmd_ph_dens_iv', 0.01)
         self.set_kd('comp_rho0n', False, 'Transition densities as cube files')
-        self['vmd_rho0n'] = False
-        self['vmd_rho0n_iv'] = 0.01
+        self.set_kd('vmd_rho0n', False)
+        self.set_kd('vmd_rho0n_iv', 0.01)
         self.set_kd('comp_rho', False, 'Densities and unpaired densities as cube files')
-        self['numproc'] = 1
+        self.set_kd('numproc', 1)
         self.set_kd('comp_dnto_dens', 0, 'Cube files for DNTO densities 0 - none, 1 - hole, 2 - elec., 3 - both')
         self.set_kd('fchk_dnto_dens', 0, 'Print DNTO densities to the fchk file (0-3)')
         self.set_kd('normalize_dnto_dens', False, 'Normalize the DNTO densities for each fragment')
@@ -475,13 +475,13 @@ class dens_ana_options(read_options):
         # Additional information
         # irrep labels for output
         self['irrep_labels'] = ['I1', 'I2', 'I3', 'I4', 'I5', 'I6', 'I7', 'I8']
-        self['ncore'] = {} # dictionary: number of frozen core orbitals per irrep
+        self.set_kd('ncore', {}, 'Dictionary: number of frozen core orbitals per irrep')
 
         # Internal switches (these should not be set in the input file)
         self['spin'] = 0 # 0 - RHF orbitals, 1 - alpha spin, -1 - beta spin
 
         # Program specific options
-        self['TDA'] = False
+        self.set_kd('TDA', False, 'Use of TDA rather than full TDDFT (Q-Chem)')
 
 
 class tden_ana_options(dens_ana_options):
