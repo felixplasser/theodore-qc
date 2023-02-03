@@ -4,7 +4,7 @@ Utilities for reading and writing options from/to an input file.
 
 from __future__ import print_function, division
 import sys
-from . import error_handler
+from . import error_handler, lib_file
 
 
 def user_input_py2(inpstr):
@@ -27,6 +27,8 @@ class options:
     """
     def __init__(self, ifile):
         self.opt_dict = {}
+        self.descr_dict = {} # Collect information for documentation
+        self.doc_list = []
         self.ifile = ifile
 
     def __getitem__(self, option):
@@ -45,6 +47,14 @@ class options:
 
     def __setitem__(self, key, val):
         self.opt_dict[key] = val
+
+    def set_kd(self, key, val, descr=''):
+        """
+        Set key, value along with a description.
+        """
+        self.opt_dict[key]   = val
+        self.descr_dict[key] = descr
+        self.doc_list.append(key)
 
     def __contains__(self, option):
         """
@@ -99,6 +109,19 @@ class options:
         for key, val in coptions.opt_dict.items():
             self[key] = val
 
+    def doc_info(self):
+        """
+        Print documentation of keywords.
+        Output is in rst format, which can be read directly or via sphinx.
+        """
+        wt = lib_file.rsttable(3, colw=[20,15,70])
+        wt.add_row(['Keyword', 'Default', 'Description'])
+        for key in self.doc_list:
+            val = self.get(key, strict=False)
+            descr = self.descr_dict[key]
+            wt.add_row([key, val, descr])
+        return wt.ret_table()
+
 class read_options(options):
     """
     General class for handling input options read from file.
@@ -136,6 +159,8 @@ class read_options(options):
         Key and value are separated by '='.
         Leading and trailing whitespace is removed.
         """
+        if self.ifile is None:
+            return 0
         try:
             fileh = open(self.ifile, 'r')
         except:
@@ -379,81 +404,78 @@ class dens_ana_options(read_options):
     """
     def set_defaults(self):
         # General options
-        self['lvprt'] = 1 # print level
+        self.set_kd('lvprt', 1, 'Print level')
 
         # Read options
-        self['mo_file'] = None
-        self['rtype']   = None # type of input
-        self['rfile']   = None # file to read
-        self['ana_files'] = [] # list of files to analyze
-        self['read_binary'] = False # read binary files rather than standard output (if applicable)
-        self['read_libwfa'] = False # switch to libwfa output (applicable for qctddft, rassi)
-        self['s_or_t'] = None # state or transition density matrix analysis
-        self['ignore_irreps'] = [] # ignore irreps in the MO file
-        self['min_bf'] = () # minimal contribution of a basis function type in the MO file, e.g. (2, 0.5)
-        self['rd_ene'] = False # interpret energies as occupations in the NO files
-        self['occ_fac'] = 1. # Multiply NO occpuations by this factor
-        self['unrestricted'] = False # Read unrestricted orbitals
-        self['ana_states'] = [] # Analyze only a set of states (list starts with 1)
+        self.set_kd('mo_file', None, 'MO-coefficient file (Molden format)')
+        self.set_kd('rtype', None, 'Third party program and calculation type')
+        self.set_kd('rfile', None, 'Main output file of the third party program')
+        self.set_kd('ana_files', [], 'List of files to analyze')
+        self.set_kd('read_binary', False, 'Read information from a binary file (if applicable)')
+        self.set_kd('read_libwfa', False, 'Switch to libwfa output (applicable for qctddft, rassi)')
+        self['s_or_t'] = None, # State or transition density matrix analysis (internal only)
+        self.set_kd('ignore_irreps', [],  'Ignore irreps in the MO file')
+        self.set_kd('min_bf', (), 'Min. contrib. of a basis function type in the MO file, e.g. (2, 0.5)')
+        self.set_kd('rd_ene', False, 'Interpret energies as occupations in the NO files')
+        self.set_kd('occ_fac', 1., 'Multiply NO occpuations by this factor')
+        self.set_kd('unrestricted', False,  'Read unrestricted orbitals')
+        self.set_kd('ana_states', [], 'Analyze only a set of states (list starts with 1)')
+
+        # atoms
+        self.set_kd('at_lists', None, 'Fragment definition for CT number analysis')
+        self.set_kd('frag_lists', None, 'List of fragments')
+        self.set_kd('coor_file', None, 'File with coordinates')
+        self.set_kd('coor_format', None, 'Format of coordinate file as defined by Open Babel')
 
         # Output options
-        self['output_file']   = "ana_summ.txt"
-        self['jmol_orbitals'] = True  # output orbitals in jmol format?
-        self['molden_orbitals'] = False  # output orbitals in molden format?
-        self['min_occ'] = 0.05 # Minimal occupation for orbital print out
-        self['alphabeta'] = False # use alpha/beta rather than neg./pos. to code for hole/electron?
-        self['mcfmt']          = '% 10E' # format for molden coefficients
-        self['output_prec']   = (7,3) # number of digits and decimal digits for output summary
-        self['print_sorted']  = True  # final output sorted by energies
+        self.set_kd('output_file', "ana_summ.txt", 'Main output file')
+        self.set_kd('jmol_orbitals', True, 'Export orbitals (NTOs or NDOs) as Jmol script')
+        self.set_kd('molden_orbitals', False, 'Create a Molden file for each set of NTOs or NDOs')
+        self.set_kd('min_occ', 0.05, 'Minimal occupation for orbital print out')
+        self.set_kd('alphabeta', False, 'Use alpha/beta rather than neg./pos. to code for hole/electron?')
+        self.set_kd('mcfmt', '% 10E', 'Output format for Molden coefficients')
+        self.set_kd('output_prec', (7,3), 'Number of total and decimal digits for print-out of the summary')
+        self.set_kd('print_sorted', True, 'Print the final output sorted by energies')
 
         # tden analysis
-        self['Om_formula'] = 1
-        self['prop_list'] = []
-        self['print_OmAt'] = False   # print the atomic Omega matrix to an .npy file and use for automatic restart
-        self['print_OmFrag'] = True # print out the fragment Omega matrix to an ASCII file
-        self['eh_pop'] = 1 # print e/h populations: 1 - for fragments, 2 - also for atoms
-        self['comp_ntos'] = True
-        self['comp_dntos'] = False # Compute the domain NTOs
-        self['dnto_frags'] = [] # Compute DNTOs only for these fragments
+        self.set_kd('Om_formula', 1, 'How to compute Omega: 0 - Mulliken (simple), 1 - Mulliken, 2 - Lowdin')
+        self.set_kd('prop_list', [], 'List of properties for final print out.')
+        self.set_kd('print_OmAt', False, 'Print the OmAt to .npy file and use for automatic restart')
+        self.set_kd('print_OmFrag', True, 'Print out the fragment Omega matrix to an ASCII file')
+        self.set_kd('eh_pop', 1, 'Print e/h populations: 1 - for fragments, 2 - also for atoms')
+        self.set_kd('comp_ntos', True, 'Compute natural transition orbitals')
+        self.set_kd('comp_dntos', False, 'Compute the domain NTOs')
+        self.set_kd('dnto_frags', [], 'Compute DNTOs only for these fragments')
 
         # sden analysis
-        self['pop_ana'] = True
-        self['unpaired_ana'] = True
-        self['NO_ana'] = True
-        self['AD_ana'] = True
-        self['BO_ana'] = True
-        self['min_BO'] = 0.5 # minimal bond order to print
-        self['mo_pop_type'] = -1
+        self.set_kd('pop_ana', True, 'Perform a population analysis')
+        self.set_kd('unpaired_ana', True, 'Perform analysis of unpaired electrons')
+        self.set_kd('NO_ana', True, 'Compute natural orbitals')
+        self.set_kd('AD_ana', True, 'Perform attachment/detachment analysis and compute the NDOs')
+        self.set_kd('BO_ana', True, 'Bond order analysis')
+        self.set_kd('min_BO', 0.5,  'Minimal bond order to print')
+        self.set_kd('mo_pop_type', -1, 'Pop. ana. of MOs: 1 - for atoms, 2 - for basis function types')
 
         # options for orbkit
-        self['cube_orbitals'] = False  # output orbitals as cube files?
-        self['vmd_ntos'] = False
-        self['vmd_ntos_iv'] = 0.01
-        self['comp_p_h_dens'] = False
+        self.set_kd('cube_orbitals', False, 'Output orbitals as cube files (requires orbkit)?')
+        self.set_kd('vmd_ntos', False, 'VMD network for NTOs')
+        self.set_kd('vmd_ntos_iv', 0.01, 'isovalue')
+        self.set_kd('comp_p_h_dens', False, 'Electron/hole densities as cube files')
         self['vmd_ph_dens'] = False
         self['vmd_ph_dens_iv'] = 0.01
-        self['comp_rho0n'] = False
+        self.set_kd('comp_rho0n', False, 'Transition densities as cube files')
         self['vmd_rho0n'] = False
         self['vmd_rho0n_iv'] = 0.01
-        self['comp_rho'] = False # compute densities and unpaired densities
+        self.set_kd('comp_rho', False, 'Densities and unpaired densities as cube files')
         self['numproc'] = 1
-        self['comp_dnto_dens'] = 0 # compute cube files for DNTO densities
-            # 0 - none, 1 - only hole, 2 - only electron, 3 - both
-        self['fchk_dnto_dens'] = 0  # Print densities to the fchk file
-            # 0 - none, 1 - only hole, 2 - only electron, 3 - both
-        self['normalize_dnto_dens'] = False # Normalize the DNTO densities
-            # for each fragment
+        self.set_kd('comp_dnto_dens', 0, 'Cube files for DNTO densities 0 - none, 1 - hole, 2 - elec., 3 - both')
+        self.set_kd('fchk_dnto_dens', 0, 'Print DNTO densities to the fchk file (0-3)')
+        self.set_kd('normalize_dnto_dens', False, 'Normalize the DNTO densities for each fragment')
 
         # Additional information
         # irrep labels for output
         self['irrep_labels'] = ['I1', 'I2', 'I3', 'I4', 'I5', 'I6', 'I7', 'I8']
         self['ncore'] = {} # dictionary: number of frozen core orbitals per irrep
-
-        # atoms
-        self['at_lists'] = None
-        self['frag_lists'] = None
-        self['coor_file'] = None
-        self['coor_format'] = None
 
         # Internal switches (these should not be set in the input file)
         self['spin'] = 0 # 0 - RHF orbitals, 1 - alpha spin, -1 - beta spin
