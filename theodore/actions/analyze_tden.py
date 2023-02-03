@@ -27,6 +27,8 @@ class AnalyzeTden(Action):
     _user_input = """
     # Main input file
     ifile = dens_ana.in :: existing_file, alias=f
+    # Print all keywords and their current values
+    keywords = false :: bool, alias=k
     """
 
     _lazy_imports = LazyImporter({
@@ -37,9 +39,12 @@ class AnalyzeTden(Action):
     })
 
     @timeit
-    def run(ifile):
-        ioptions = input_options.tden_ana_options(ifile)
+    def run(ifile, keywords):
         theo_header.print_header(title=__class__._colt_description, ioptions=ioptions, cfile=__name__)
+        ioptions = input_options.tden_ana_options(ifile)
+        if keywords:
+            print(ioptions.doc_info())
+            exit(0)
 
         tdena = lib_tden.tden_ana(ioptions)
         if 'mo_file' in ioptions: tdena.read_mos()
