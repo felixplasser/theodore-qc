@@ -40,8 +40,8 @@ class AnalyzeTden(Action):
 
     @timeit
     def run(ifile, keywords):
-        theo_header.print_header(title=__class__._colt_description, ioptions=ioptions, cfile=__name__)
         ioptions = input_options.tden_ana_options(ifile)
+        theo_header.print_header(title=__class__._colt_description, ioptions=ioptions, cfile=__name__)
         if keywords:
             print(ioptions.doc_info())
             exit(0)

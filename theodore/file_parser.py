@@ -447,7 +447,7 @@ class file_parser_escf(file_parser_base):
         ret_list = []
         occ_orb = False # section of the file
         for nr,line in enumerate(rlines):
-            if 'excitation' in line and not 'vector' in line:
+            if 'excitation' in line and not 'vector' in line and not 'energies' in line:
                 ret_list.append({})
                 words = line.split()
                 ret_list[-1]['state_ind'] = int(words[0])
