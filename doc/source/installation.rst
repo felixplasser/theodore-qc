@@ -55,7 +55,9 @@ The following external packages are used by TheoDORE and require a separate inst
     - `ORBKIT <https://github.com/felixplasser/orbkit>`_ *(optional)* - For creating cube files of densities
 
     The first three are usually readily available with the standard installation tools, e.g. ``apt-get``, ``yum`` etc.
-    Alternatively, they may be downloaded from the URLs specified. If no integrated installation is performed, then it is necessary to add these libraries to the `PYTHONPATH` (see above).
+    Alternatively, they may be downloaded from the URLs specified.
+    If no integrated installation is performed, then it is necessary to add these libraries to the `PYTHONPATH` (see above).
+    For ORBKIT, please follow the `installation instructions <http://orbkit.github.io/install.html>`_.
 
 The following external packages are provided along with the TheoDORE distribution and do not require installation.
 
@@ -86,7 +88,7 @@ The tests are invoked with ``pytest-3``. In the ``EXAMPLES`` directory run (depe
     pytest-3 EXTRA
 
 The first three tests should always work.
-``EXTRA`` only works if openbabel and ADF are installed.
+For all tests in ``EXTRA`` to pass openbabel, ADF and ORBKIT need to be installed.
 
 The tests are distributed within the standard TheoDORE distribution.
 They are maintained via the `theodore-test <https://github.com/felixplasser/theodore-test>`_ repository.
