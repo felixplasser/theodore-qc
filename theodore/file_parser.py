@@ -1057,12 +1057,14 @@ class file_parser_col(file_parser_base):
                 mos.syms2[isym] = new
 
         tmp = filen.replace('LISTINGS/','').replace('state','').replace('drt','').replace('trncils.FROM','').split('TO')
-        ir_st_ref = tmp[0].split('.')
-        ir_st_exc = tmp[1].split('.')
+        tmp2 = tmp[0].split('.')
+        ir_st_ref = (int(tmp2[0]), int(tmp2[1]))
+        tmp2 = tmp[1].split('.')
+        ir_st_exc = (int(tmp2[0]), int(tmp2[1]))
 
-        state['irrep'] = self.ioptions.get('irrep_labels')[int(ir_st_exc[0]) - 1]
         state['state_ind'] = int(ir_st_exc[1])
-        state['name'] = '%s.%i-%i'%(state['irrep'], int(ir_st_ref[1]), state['state_ind'])
+        #state['name'] = '%s.%i-%s.%i'%(irrep_ref, int(ir_st_ref[1]), state['irrep'], state['state_ind'])
+        state['name'] = 'DRT%i.St%02i'%ir_st_exc
 
         if ir_st_ref==ir_st_exc:
             state['sden'] = self.init_den(mos)
@@ -1152,11 +1154,19 @@ class file_parser_col_mrci(file_parser_col):
         for lfile in sorted(os.listdir('LISTINGS')):
             if not 'trncils' in lfile: continue
 
-            print("Reading %s ..."%lfile)
-            state = {}
-            self.read_trncils(state, mos, 'LISTINGS/%s'%lfile)
-            if 'tden' in state:
-                state_list.append(state)
+            tmp  = lfile.replace('state','').replace('drt','').replace('trncils.FROM','').split('TO')
+            tmp2 = tmp[0].split('.')
+            ir_st_ref = (int(tmp2[0]), int(tmp2[1]))
+            if ir_st_ref == self.ioptions['ref_state']:
+                print("Reading %s ..."%lfile)
+                state = {}
+                self.read_trncils(state, mos, 'LISTINGS/%s'%lfile)
+                if 'tden' in state:
+                    state_list.append(state)
+            else:
+                print("Skipping %s (does not match ref_state)"%lfile)
+                print(ir_st_ref)
+                print(self.ioptions['ref_state'])
 
         return state_list
 
@@ -1251,9 +1261,8 @@ class file_parser_col_mcscf(file_parser_col):
 
     def read_mc_sden(self, state, mos, filen):
         tmp = filen.replace('mcsd1fl.drt','').replace('st','').replace('.iwfmt','').split('.')
-        state['irrep'] = self.ioptions.get('irrep_labels')[int(tmp[0]) - 1]
         state['state_ind'] = int(tmp[1])
-        state['name'] = '%s.%i'%(state['irrep'], state['state_ind'])
+        state['name'] = 'DRT%i.St%02i'%(int(tmp[0]), int(tmp[1]))
         state['sden'] = self.init_den(mos)
 
         (eref, eexc) = self.read_iwfmt(state['sden'], 'WORK/'+filen)

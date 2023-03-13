@@ -51,7 +51,7 @@ class spec_options(input_options.write_options):
 
         print()
 
-    def make_spec(self, lvprt=2):
+    def make_spec(self, lvprt=2, ylabel='Oscillator strength'):
         for filen in self['ana_files']:
             sfile = lib_file.summ_file(filen)
             header = sfile.ret_header()
@@ -91,9 +91,9 @@ class spec_options(input_options.write_options):
         self.spec.ascii_file()
 
         if do_plots:
-            self.spec.plot(xunit='eV', pname='spectrum_eV.png', weight=self['weight'], normalize=self['normalize'])
-            self.spec.plot(xunit='nm', pname='spectrum_nm.png', weight=self['weight'], normalize=self['normalize'])
-            self.spec.plot(xunit='rcm', pname='spectrum_rcm.png', weight=self['weight'], normalize=self['normalize'])
+            self.spec.plot(xunit='eV', pname='spectrum_eV.png', weight=self['weight'], normalize=self['normalize'], ylabel=ylabel)
+            self.spec.plot(xunit='nm', pname='spectrum_nm.png', weight=self['weight'], normalize=self['normalize'], ylabel=ylabel)
+            self.spec.plot(xunit='rcm', pname='spectrum_rcm.png', weight=self['weight'], normalize=self['normalize'], ylabel=ylabel)
 
 # Code adapted from SHARC
 class gauss:
@@ -170,8 +170,9 @@ class spectrum:
         wf.write(wt.ret_table())
         wf.post(lvprt=1)
 
-    def plot(self, xunit=1, pname='spectrum.png', lvprt=1, weight=1, normalize=True):
-        pylab.figure(figsize=(8,6))
+    def plot(self, xunit=1, pname='spectrum.png', lvprt=1, weight=1, normalize=True, ylabel='Oscillator strength'):
+        pylab.figure(figsize=(10,7))
+        matplotlib.rc('font', size=22)
 
         if xunit.lower() == 'ev':
             xlist = self.en
@@ -193,7 +194,7 @@ class spectrum:
             (xmin, xmax) = (self.emin * xfac, self.emax * xfac)
         else:
             raise error_handler.ElseError('xunit', xunit)
-        pylab.ylabel('Oscillator strength')
+        pylab.ylabel(ylabel)
 
         if weight == 1:
             if normalize:
@@ -215,7 +216,7 @@ class spectrum:
             raise error_handler.ElseError('weight', weight)
 
         pylab.axis(xmin=xmin, xmax=xmax, ymin=0., ymax=ymax)
-        pylab.savefig(pname)
+        pylab.savefig(pname, dpi=300)
 
         if lvprt >= 1:
             print("Spectrum file %s created."%pname)

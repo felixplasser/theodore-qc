@@ -446,6 +446,7 @@ class dens_ana_options(read_options):
         self.set_kd('comp_ntos', True, 'Compute natural transition orbitals')
         self.set_kd('comp_dntos', False, 'Compute the domain NTOs')
         self.set_kd('dnto_frags', [], 'Compute DNTOs only for these fragments')
+        self.set_kd('ref_state', (1,1), 'Which state to use as reference (irrep, state)')
 
         # sden analysis
         self.set_kd('pop_ana', True, 'Perform a population analysis')
@@ -474,7 +475,7 @@ class dens_ana_options(read_options):
 
         # Additional information
         # irrep labels for output
-        self['irrep_labels'] = ['I1', 'I2', 'I3', 'I4', 'I5', 'I6', 'I7', 'I8']
+        self['irrep_labels'] = ['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8']
         self.set_kd('ncore', {}, 'Dictionary: number of frozen core orbitals per irrep')
 
         # Internal switches (these should not be set in the input file)
