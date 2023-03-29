@@ -485,12 +485,11 @@ class file_parser_libwfa(file_parser_base):
         self.state_list_om = [] # state_list read from the file ctnum*.om
 
     def read(self):
-        return self.rmatfile_one(old=True)
+        return self.rmatfile_one()
 
-    def rmatfile_one(self, old=False):
+    def rmatfile_one(self):
         """
         Read all om_at data from one file.
-        old - activate old mode if new file is not available.
         """
         state_list = []
 
@@ -527,10 +526,19 @@ class file_parser_libwfa(file_parser_base):
             if len(line) < 3: continue
 
             # Parse the header
-            words = line.split()
             state_list.append({})
             state = state_list[-1]
-            state['name'] = words[0]
+            if '<-->' in line: # ccman2 output
+                line2 = line.split('<-->')[1]
+                words = line2.split()
+                print(line2)
+                print(words)
+            elif 'rho_imag' in line: # ccman2 output, complex
+                l2 = line.split()[-1]
+                words = [l2.split('_')[0]]
+            else:
+                words = line.split()
+            state['name'] = words[0].replace('/', '-')
             state['exc_en'] = float(words[1]) * units.energy['eV'] if len(words) >= 2 else  0.
             state['osc_str'] = float(words[2]) if len(words) >= 3 else -1.
             state['lname'] = line.strip()
