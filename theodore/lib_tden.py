@@ -364,7 +364,11 @@ class tden_ana(dens_ana_base.dens_ana_base):
             for B, Batoms in enumerate(at_lists):
                 for Aatom in Aatoms:
                     for Batom in Batoms:
-                        state['OmFrag'][A, B] += state['OmAt'][Aatom-1, Batom-1]
+                        try:
+                            state['OmFrag'][A, B] += state['OmAt'][Aatom-1, Batom-1]
+                        except IndexError:
+                            print("\n  ERROR: Please check at_lists definition.\n")
+                            raise
 
         return state['Om'], state['OmFrag']
 
