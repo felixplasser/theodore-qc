@@ -895,8 +895,10 @@ class file_parser_qctddft(file_parser_libwfa):
 
                     line = next(rfileh)
                     line = next(rfileh)
-                    if 'Details' in line:
+                    if 'J1' in line:
                         line = next(rfileh)
+                        line = next(rfileh)
+                    if 'J2' in line:
                         line = next(rfileh)
                     words = line.split()
 
