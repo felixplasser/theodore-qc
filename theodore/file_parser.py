@@ -896,10 +896,7 @@ class file_parser_qctddft(file_parser_libwfa):
                     line = next(rfileh)
                     line = next(rfileh)
                     if 'J1' in line:
-                        line = next(rfileh)
-                        line = next(rfileh)
-                    if 'J2' in line:
-                        line = next(rfileh)
+                        line = self.read_ecomp(line, rfileh, state)
                     words = line.split()
 
                     if words[0] == 'Multiplicity:':
@@ -956,6 +953,9 @@ class file_parser_qctddft(file_parser_libwfa):
 
                     state_list[-1]['tden'][iocc, ivirt] += coeff
 
+                elif 'J1' in line:
+                    line = self.read_ecomp(line, rfileh, state_list[-1])
+
             if libwfa:
                 if 'Excited state' in line:
                     words = line.replace(':', '').split()
@@ -983,6 +983,25 @@ class file_parser_qctddft(file_parser_libwfa):
 
         rfileh.close()
         return state_list
+
+    def read_ecomp(self, line, rfileh, state):
+        """
+        Read energy components if available.
+        """
+        words = line.split()
+        state['F1'] = float(words[1]) + float(words[3]) + float(words[5]) + float(words[7])
+        line = next(rfileh)
+        words = line.split()
+        state['J2'] = float(words[1])
+        state['K2'] = float(words[3])
+        state['XC2'] = float(words[5])
+        line = next(rfileh)
+        if 'J2' in line:
+            words = line.split()
+            state['J2'] = float(words[2])
+            line = next(rfileh)
+
+        return line
 
 #---
 
