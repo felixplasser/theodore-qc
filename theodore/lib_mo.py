@@ -292,6 +292,18 @@ class MO_set:
 
         return numpy.dot(self.Sinv2, numpy.dot(D, self.Sinv2))
 
+    def D_element_S(self, D):
+        """
+        Element-wise multiplication of D and S in the AO basis.
+        """
+        if self.S is None:
+            self.S = numpy.dot(self.inv_mo_mat.T, self.inv_mo_mat)
+
+        temp = self.CdotD(D, trnsp=False, inv=False)  # C.D
+        DAO  = self.MdotC(temp, trnsp=True, inv=False)
+
+        return DAO * self.S
+
     def export_MO(self, ens, occs, U, *args, **kwargs):
         """
         Exports NO, NDO etc. coefficients given in the MO basis.

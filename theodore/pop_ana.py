@@ -13,9 +13,16 @@ class pop_ana:
     Base class for population analysis.
     """
     def ret_Deff(self, dens, mos):
+        """
+        Compute the effective density.
+        """
         raise error_handler.PureVirtualError()
 
     def ret_pop(self, dens, mos, Deff=None):
+        """
+        Return the population.
+        Effective density (Deff) can be specified externally.
+        """
         if Deff is None:
             Deff = self.ret_Deff(dens, mos)
 

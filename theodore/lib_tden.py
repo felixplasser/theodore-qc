@@ -287,6 +287,13 @@ class tden_ana(dens_ana_base.dens_ana_base):
                 state['SDSh'] = SDSh
             OmBas = SDSh * SDSh
             state['tpop'] = pop_ana.pop_ana().ret_pop(D, self.mos, SDSh)
+        elif formula == 3: # element-wise multiplication of D and S
+            # The results are to be interpreted differently from the above cases.
+            # This shows overlap populations of covalent states and not charge transfer
+            # The overlap populations are represented via CT or Om - LOC
+            DeS = self.mos.D_element_S(D)
+            OmBas = DeS * DeS
+            state['tpop'] = pop_ana.pop_ana().ret_pop(D, self.mos, DeS)
         else:
             raise error_handler.MsgError("Om_formula=%i for CT numbers not implemented!"%formula)
 
@@ -299,6 +306,8 @@ class tden_ana(dens_ana_base.dens_ana_base):
         state['QTa'] = numpy.sum(abs(state['tpop']))
         if formula == 2:
             state['LOCa'] = numpy.trace(abs(SDSh))
+        elif formula == 3:
+            state['LOCa'] = numpy.trace(abs(DeS))
         state['Om'] = numpy.sum(OmBas)
         state['OmAt'] = self.mos.comp_OmAt(OmBas)
 
