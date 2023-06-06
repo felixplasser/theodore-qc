@@ -700,6 +700,8 @@ class tden_ana(dens_ana_base.dens_ana_base):
             state['MAeh']  = exciton_ana.ret_MAeh(Om, OmAt)
             state['Eb']    = exciton_ana.ret_Eb(Om, OmAt, self.ioptions['Eb_diag'])
 
+            QT2, tpop = state['QT2'], state['tpop']
+            state['rTD']   = exciton_ana.ret_rTD(QT2, tpop)
 #---
 
     def compute_es2es_tden(self, iref=1):

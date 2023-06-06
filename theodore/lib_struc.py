@@ -298,7 +298,7 @@ class structure:
 
     def ret_distance_matrix(self):
         """
-        Return a matrix containing all the distances between atoms.
+        Return a matrix containing all the distances between atoms in Angstrom.
         """
         num_at = self.mol.NumAtoms()
 

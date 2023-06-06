@@ -68,7 +68,12 @@ class AnalyzeTden(Action):
         if ioptions['comp_rho0n']: 
             tdena.compute_rho_0_n()
 
-        if 'RMSeh' in ioptions.get('prop_list') or 'MAeh' in ioptions.get('prop_list') or 'Eb' in ioptions.get('prop_list'):
+        exc_props = ['RMSeh', 'MAeh', 'Eb', 'rTD']
+        do_exc = False
+        for prop in exc_props:
+            if prop in ioptions['prop_list']:
+                do_exc = True
+        if do_exc:
             exca = lib_exciton.exciton_analysis()
             exca.get_distance_matrix(tdena.struc)
             tdena.analyze_excitons(exca)
