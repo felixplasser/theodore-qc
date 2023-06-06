@@ -214,7 +214,9 @@ Alternatively, approximate transition density matrices can be read directly from
 
 TDDFT
 _____
-In the TDDFT case, the ``sing_a`` or ``trip_a`` files are parsed and interpreted as 1TDMs. Unfortunately, this analysis only works if no explicit symmetry is chosen in the initial job setup.
+In the TDDFT case, the ``sing_a`` or ``trip_a`` files are parsed and interpreted as 1TDMs.
+For CIS/TDA, the ``ciss`` or ``cist`` files are read.
+This analysis only works if no explicit symmetry is chosen in the initial job setup.
 
 MO-coefficients have to be supplied by ``tm2molden``.
 
