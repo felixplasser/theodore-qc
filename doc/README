@@ -1,7 +1,9 @@
 Download the newest TheoDORE release and tutorial.
 
-- Fixes for Q-Chem EOM-CC and fchk
+TheoDORE 3.1
 - Transition charges for ionic/covalent states
+- Fixes for Q-Chem EOM-CC and fchk
+- Fixes for Columbus, Turbomole
 
 TheoDORE 3.0
 - New user interface and documentation
