@@ -280,20 +280,23 @@ class tden_ana(dens_ana_base.dens_ana_base):
 
         if formula <= 1:
             OmBas = self.mos.OmBas_Mulliken(D, formula)
-            state['tpop'] = pop_ana.mullpop_ana().ret_pop(D, self.mos)
+            state['tpop'] = 2**.5 * pop_ana.mullpop_ana().ret_pop(D, self.mos)
+            state['LOCa'] = 2**.5 * sum(numpy.sqrt(abs(numpy.diag(OmBas))))
         elif formula == 2:
             SDSh = self.mos.lowdin_trans(D)
             if fullmat or self.ioptions['comp_dntos']:
                 state['SDSh'] = SDSh
             OmBas = SDSh * SDSh
-            state['tpop'] = pop_ana.pop_ana().ret_pop(D, self.mos, SDSh)
+            state['tpop'] = 2**.5 * pop_ana.pop_ana().ret_pop(D, self.mos, SDSh)
+            state['LOCa'] = 2**.5 * numpy.trace(abs(SDSh))
         elif formula == 3: # element-wise multiplication of D and S
             # The results are to be interpreted differently from the above cases.
-            # This shows overlap populations of covalent states and not charge transfer
+            # This shows overlap populations of covalent states, and not charge transfer
             # The overlap populations are represented via CT or Om - LOC
             DeS = self.mos.D_element_S(D)
             OmBas = DeS * DeS
-            state['tpop'] = pop_ana.pop_ana().ret_pop(D, self.mos, DeS)
+            state['tpop'] = 2**.5 * pop_ana.pop_ana().ret_pop(D, self.mos, DeS)
+            state['LOCa'] = 2**.5 * numpy.trace(abs(DeS))
         else:
             raise error_handler.MsgError("Om_formula=%i for CT numbers not implemented!"%formula)
 
@@ -304,10 +307,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         state['LOC'] = numpy.trace(OmBas)
         state['QT2'] = numpy.sum(state['tpop']**2)
         state['QTa'] = numpy.sum(abs(state['tpop']))
-        if formula == 2:
-            state['LOCa'] = numpy.trace(abs(SDSh))
-        elif formula == 3:
-            state['LOCa'] = numpy.trace(abs(DeS))
+
         state['Om'] = numpy.sum(OmBas)
         state['OmAt'] = self.mos.comp_OmAt(OmBas)
 

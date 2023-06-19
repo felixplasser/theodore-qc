@@ -18,11 +18,11 @@
 # -- Project information -----------------------------------------------------
 
 project = 'theodore'
-copyright = '2021, Felix Plasser'
+copyright = '2023, Felix Plasser'
 author = 'Felix Plasser'
 
 # The full version, including alpha/beta/rc tags
-release = '3.0'
+release = '3.1'
 
 
 # -- General configuration ---------------------------------------------------
