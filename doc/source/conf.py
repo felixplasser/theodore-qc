@@ -22,7 +22,7 @@ copyright = '2023, Felix Plasser'
 author = 'Felix Plasser'
 
 # The full version, including alpha/beta/rc tags
-release = '3.1'
+release = '3.1.1'
 
 
 # -- General configuration ---------------------------------------------------
