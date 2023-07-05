@@ -1,5 +1,8 @@
 Download the newest TheoDORE release and tutorial.
 
+TheoDORE 3.1.1
+- Fix for QTa values
+
 TheoDORE 3.1
 - Transition charges for ionic/covalent states
 - Fixes for Q-Chem EOM-CC and fchk

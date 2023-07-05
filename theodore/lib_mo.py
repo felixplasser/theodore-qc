@@ -297,6 +297,7 @@ class MO_set:
         Element-wise multiplication of D and S in the AO basis.
         """
         if self.S is None:
+            if self.inv_mo_mat is None: self.compute_inverse()
             self.S = numpy.dot(self.inv_mo_mat.T, self.inv_mo_mat)
 
         temp = self.CdotD(D, trnsp=False, inv=False)  # C.D

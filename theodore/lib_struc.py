@@ -593,6 +593,19 @@ class structure:
                 outstr += '% 16.10f'%(obatom.y())
                 outstr += '% 16.10f'%(obatom.z())
                 outfile.write(outstr+'\n')
+        elif file_type == 'qcin2':
+            outfile.write('$molecule\n')
+            outfile.write('0 1\n')
+
+            for ind in range(1, num_at+1):
+                obatom  = self.mol.GetAtom(ind)
+                outstr  = '%2s'%Z_symbol_dict[obatom.GetAtomicNum()]
+                outstr += '% 16.10f'%(obatom.x())
+                outstr += '% 16.10f'%(obatom.y())
+                outstr += '% 16.10f'%(obatom.z())
+                outfile.write(outstr+'\n')
+
+            outfile.write('$end\n')
 
         outfile.close()
 
