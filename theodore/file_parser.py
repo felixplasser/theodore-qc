@@ -1492,7 +1492,7 @@ class file_parser_dftmrci(file_parser_base):
                     print(" Analysing state %s"%lab1)
                     state_list.append({})
                     state = state_list[-1]
-                    state['name'] = lab1
+                    state['name'] = lab1.replace("'", "1").replace('"', "11")
                     if en0 is None:
                         state['exc_en'] = 0.
                         en0 = en
@@ -1509,7 +1509,7 @@ class file_parser_dftmrci(file_parser_base):
                     print(" Analysing transition %s -> %s"%(lab1, lab2))
                     state_list.append({})
                     state = state_list[-1]
-                    state['name'] = lab2
+                    state['name'] = lab2.replace("'", "1").replace('"', "11")
                     state['exc_en'] = en * units.energy['eV']
 
                     den_tmp = .5**.5 * numpy.reshape(coeff, [nmo, nmo])

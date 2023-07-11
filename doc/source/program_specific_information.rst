@@ -1,6 +1,6 @@
 .. _prog-spec-info:
 
-Program specific information 
+Program specific information
 ----------------------------
 
 In the case of TDDFT, "Exact" is used for cases where the whole **X** or **X** + **Y** vector is parsed.
@@ -136,7 +136,7 @@ and copy back the ``*.om`` files. In ``theoinp`` specify "y" for
 ::
 
     Did you use &WFA? (read_libwfa):
-    Choice (y/n): [y] 
+    Choice (y/n): [y]
 
 and proceed as usual.
 
@@ -304,7 +304,7 @@ Firefly - TDDFT
 ~~~~~~~~~~~~~~~
 
 Firefly has been succesfully interfaced with TheoDORE,
-see [EXAMPLES/SnH4-ecp.firefly](https://sourceforge.net/p/theodore-qc/code/ci/master/tree/EXAMPLES/SnH4-ecp.firefly/).
+see `EXAMPLES/CCLIB/SnH4-ecp.firefly <https://github.com/felixplasser/theodore-test/tree/master/CCLIB/SnH4-ecp.firefly>`_.
 Firefly output is parsed with the `cclib library <http://cclib.github.io/>`_.
 
 ADF - TDDFT
@@ -337,6 +337,27 @@ An interface to DFTB+ was written by Ljiljana Stojanovic. This interface current
 *  geom.xyz (geometry information)
 *  detailed.out (orbital occupations and energies)
 *  wfc.3ob-3-1.hsd (DFTB parameter file)
+
+DFT/MRCI
+~~~~~~~~
+
+TheoDORE also features an interface to the `DFT/MRCI program <https://www.theochem.hhu.de/en/software/dftci>`_.
+Singlet and triplet states can be analyzed.
+The interface works for :code:`analyze_tden` as well as :code:`analyze_sden`.
+Example inputs/outputs are presented in `EXAMPLES/STANDARD/fa2.dftmrci <https://github.com/felixplasser/theodore-test/tree/master/STANDARD/fa2.dftmrci>`_.
+
+To use TheoDORE, run DFT/MRCI and generate density matrices.
+You can use, for example, the following workflow
+
+::
+
+    mrci_serial < mrci.inp > mrci.out
+    cp mrci.refconf mrci2.inp
+    mrci_serial < mrci2.inp > mrci2.out
+    sed 's/orca/orca\n$dmat/' mrci2.inp > mrci2_dmat.inp
+    mrci_serial < mrci2_dmat.inp > mrci2_dmat.out
+
+This will produce the :code:`mrci2.out` and :code:`mrci.cidens` files to be read by TheoDORE.
 
 ONETEP - TDDFT
 ~~~~~~~~~~~~~~

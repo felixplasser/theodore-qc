@@ -145,7 +145,7 @@ class write_options_theo(input_options.write_options):
             self['coor_file'] = 'geom.xyz'
             self['coor_format'] = 'xyz'
         elif self['rtype'] == 'dftmrci':
-            self['rfile'] = 'mrci.log'
+            self['rfile'] = 'mrci2.out'
             self['mo_file'] = 'orca.molden.input'
             self['coor_file'] = ''
             self['coor_format'] = ''
@@ -493,7 +493,7 @@ def run_theoinp():
         print("\nNow, please run write_den.bash to prepare the MCSCF density matrices!")
 
 
-class TheodoreInput(Action): 
+class TheodoreInput(Action):
 
     name = 'theoinp'
 
