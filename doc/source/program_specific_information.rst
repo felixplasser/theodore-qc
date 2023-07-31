@@ -3,12 +3,12 @@
 Program specific information
 ----------------------------
 
-In the case of TDDFT, "Exact" is used for cases where the whole **X** or **X** + **Y** vector is parsed.
 
 Use the ``rtype`` keyword in ``dens_ana.in`` to specify the respective method.
 
 ..
     TODO include table
+    In the case of TDDFT, "Exact" is used for cases where the whole **X** or **X** + **Y** vector is parsed.
 
 In general, TheoDORE needs two types of information: density matrices and MO coefficients. This page contains specific information about how to obtain this information from the different quantum chemistry programs.
 
@@ -19,7 +19,9 @@ Q-Chem
 ADC
 ___
 
-The ADCMAN module of Q-Chem is already interfaced to the wavefunction analysis library libwfa. Therefore, most analysis steps can be performed within Q-Chem. The main purpose of TheoDORE is to enable [plotting](PLotting) of *electron-hole* correlation plots. Futhermore, specific analysis descriptors can be parsed and put into a convenient table.
+The ADCMAN module of Q-Chem is already interfaced to the wavefunction analysis library libwfa.
+Therefore, most analysis steps can be performed within Q-Chem.
+The main purpose of TheoDORE is to enable :ref:`plotting <plotting>` of *electron-hole* correlation plots and other fragment-based analysis methods.
 
 To run the libwfa analysis set in the input file:
 
@@ -28,17 +30,31 @@ To run the libwfa analysis set in the input file:
     state_analysis    true
     adc_print    3
 
+Make sure the file ``ctnum_mulliken.om`` is copied back to be used by TheoDORE.
+
+Futhermore, specific analysis descriptors can be parsed and put into a convenient table. To do so run
+
+::
+
+    theodore parse_libwfa qchem.out qcadc
+
 TDDFT
 _____
 
 The CIS/TDDFT module of Q-Chem is directly interfaced to the wavefunction analysis library libwfa
-(see `JCP 143, 171101 (2015) <http://dx.doi.org/10.1063/1.4935178>`_ for more details). Most analysis steps are performed within Q-Chem and the main purpose  of TheoDORE is to enable [plotting](PLotting) of *electron-hole* correlation plots.
+(see `JCP 143, 171101 (2015) <http://dx.doi.org/10.1063/1.4935178>`_ for more details). Most analysis steps are performed within Q-Chem and the main purpose  of TheoDORE is to enable :ref:`plotting <plotting>` of *electron-hole* correlation plots.
 
-To run the libwfa analysis set in the input file:
+To run the libwfa analysis set in the input file (and copy back ``ctnum_mulliken.om``):
 
 ::
 
     state_analysis    true
+
+To obtain a summary of the Q-Chem/libwfa job, run
+
+::
+
+    theodore parse_libwfa qchem.out [qctddft / qctda]
 
 Alternatively, the standard output can be parsed. To do this set ``read_libwfa=False`` in ``dens_ana.in``.
 In this case, the X vector is parsed and interpreted as the 1TDM while the Y vector is ignored. The following non-standard options have to be set in the input file:
@@ -55,7 +71,7 @@ Per default RPA vectors are parsed. If you are interested in TDA vectors, specif
 
 ::
 
-    TDA=True
+    TDA   true
 
 in ``dens_ana.in``.
 
@@ -66,12 +82,14 @@ It is also possible to parse formatted checkpoint (fchk) files generated using t
 ::
 
     state_analysis    true
+    gui               2
 
-option. In this case, TheoDORE can read the transition density matrices and do the full analysis.
+options. In this case, TheoDORE can read the transition density matrices and do the full analysis.
 
 libwfa
 ______
 It is also possible to parse generic ``libwfa`` output by using the libwfa keyword.
+This can be used for EOM-CC calculations.
 
 Columbus
 ~~~~~~~~
@@ -197,7 +215,7 @@ ____________
 
 If you have the binary ``CCRE0*`` files, written by Turbomole, available, then choose the option
 
-::
+.. code-block:: text
 
     read_binary=True
 
@@ -234,17 +252,24 @@ A state/difference density matrix analysis is possible by using the NO files pro
 
     cisnos   yes
 
-Parsing of NO files
-~~~~~~~~~~~~~~~~~~~
-NO files can be parsed directly using ``analyze_nos``.
+Natural orbital files
+~~~~~~~~~~~~~~~~~~~~~
+Natural orbital (NO) files can be parsed directly using ``analyze_nos``.
 Alternatively, you can use ``theoinp`` follows by ``analyze_sden``.
-For analysis of NOs, it is important that one reference file is given, which contains the full, invertible MO-matrix.
+This analysis works on NO files, produced for example by Q-Chem/libwfa, Columbus, and OpenMolcas.
+Alternatively, MO files of DFT jobs may be used, for example to compare singlet and triplet states or states with different electron number.
 
-TheoDORE assumes that the NO files are given with respect to spatial orbitals (occupation between 0 and 2).
-If spin NOs are given, then the analysis of unpaired electrons will not give suitable results.
+Run ``theodore analyze_nos -h`` to see all command line options.
+Some care needs to be taken in order for TheoDORE to understand the data given correctly.
+
+For analysis of NOs, it is important that one reference containing the full invertible MO-matrix is given.
+This file can be specified using the ``-r`` option.
+
+ORCA
+~~~~
 
 ORCA - TDDFT
-~~~~~~~~~~~~
+____________
 Starting in TheoDORE 2.0.1, the preferred version of parsing ORCA TDDFT jobs uses a Molden format file and the  ``orca.cis`` file.
 
 1. Run an ORCA job and copy back the `orca.gbw` and `orca.cis` files
@@ -252,7 +277,7 @@ Starting in TheoDORE 2.0.1, the preferred version of parsing ORCA TDDFT jobs use
 2. Create a molden file using ``orca_2mkl orca -molden``
 3. Run TheoDORE and select ``13`` at
 
-::
+.. code-block:: text
 
     Type of job (rtype):
     ...
@@ -262,7 +287,7 @@ Starting in TheoDORE 2.0.1, the preferred version of parsing ORCA TDDFT jobs use
     Choice: 13
 
 ORCA using cclib
-~~~~~~~~~~~~~~~~
+________________
 Alternatively, ORCA can be parsed entirely with the `cclib library <http://cclib.github.io/>`_.
 If you want to do that, set the following output options:
 
@@ -276,11 +301,11 @@ If you want to do that, set the following output options:
 
 It is recommended also in this case to read the CI-vectors from the binary file ``orca.cis`` rather than from standard output. To do this, set
 
-::
+.. code-block:: text
 
     read_binary=True
 
-In the case of TDA both options work, for RPA `read_binary=True` has to be used.
+In the case of TDA both options work, for RPA ``read_binary=True`` has to be used.
 
 Gaussian - TDDFT
 ~~~~~~~~~~~~~~~~
