@@ -538,9 +538,14 @@ class file_parser_libwfa(file_parser_base):
                 words = [l2.split('_')[0]]
             else:
                 words = line.split()
-            state['name'] = words[0].replace('/', '-')
-            state['exc_en'] = float(words[1]) * units.energy['eV'] if len(words) >= 2 else  0.
-            state['osc_str'] = float(words[2]) if len(words) >= 3 else -1.
+            if words[0] == 'Excited' and words[1] == 'State':
+                state['name'] = 'es_%i'%int(words[2])
+                state['exc_en'] = 0.
+                state['osc_str'] = -1.
+            else:
+                state['name'] = words[0].replace('/', '-')
+                state['exc_en'] = float(words[1]) * units.energy['eV'] if len(words) >= 2 else  0.
+                state['osc_str'] = float(words[2]) if len(words) >= 3 else -1.
             state['lname'] = line.strip()
 
             # Dimensions
@@ -694,9 +699,12 @@ class file_parser_libwfa(file_parser_base):
         self.parse_key(state, 'nu', line, 'Number of unpaired electrons:', 2)
         self.parse_key(state, 'nunl', line, 'Number of unpaired electrons')
         self.parse_key(state, 'p', line, 'Number of detached / attached electrons')
-        self.parse_key(state, 'Om_', line, 'Sum of SVs')
-        self.parse_key(state, 'LOC', line, 'LOC')
-        self.parse_key(state, 'Phe', line, '<Phe>')
+        self.parse_key(state, 'Om_', line, 'omega', 2)
+        self.parse_key(state, 'LOC', line, 'LOC', 2)
+        self.parse_key(state, 'LOCa', line, 'LOCa', 2)
+        self.parse_key(state, 'QT2', line, 'QT2')
+        self.parse_key(state, 'QTa', line, 'QTa')
+        self.parse_key(state, 'Phe', line, '<Phe>', 2)
         self.parse_key(state, 'PRNTO', line, 'PR_NTO')
         self.parse_key(state, 'PRD', line, 'PR_D', 6)
         self.parse_key(state, 'PRA', line, 'PR_A')
