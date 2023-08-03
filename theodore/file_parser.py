@@ -1131,6 +1131,45 @@ class file_parser_col(file_parser_base):
                 state['osc_str']=float(words[-1])
         rfile.close()
 
+        try:
+            self.read_ciudgsm(state, ir_st_ref, ir_st_exc)
+        except:
+            print("   WARING: could not read extensivity corrected energies")
+            raise
+
+    def read_ciudgsm(self, state, ir_st_ref, ir_st_exc):
+        """
+        Read extensivity corrected energies from ciudgsm.
+        """
+        filen_ref = 'LISTINGS/ciudgsm.drt%i.sp'%ir_st_ref[0]
+        filen_exc = 'LISTINGS/ciudgsm.drt%i.sp'%ir_st_exc[0]
+
+        eci_ref = []
+        print('ftpmp, reading %s'%filen_ref)
+        for line in open(filen_ref, 'r'):
+            if 'eci' in line:
+                words = line.split()
+                eci_ref.append(float(words[2]))
+
+        if ir_st_exc[0] == ir_st_ref[0]:
+            eci_exc = eci_ref
+        else:
+            print('ftpmp, reading %s'%filen_exc)
+            eci_exc = []
+            for line in open(filen_exc, 'r'):
+                if 'eci' in line:
+                    words = line.split()
+                    eci_exc.append(float(words[2]))
+
+        iref, iexc = ir_st_ref[1] - 1, ir_st_exc[1] - 1
+
+        tmp_en = (eci_exc[5*iexc] - eci_ref[5*iref]) * units.energy['eV']
+        assert(abs(state['exc_en'] - tmp_en) < 1.e-6)
+        state['+DV1'] = (eci_exc[5*iexc+1] - eci_ref[5*iref+1]) * units.energy['eV']
+        state['+DV2'] = (eci_exc[5*iexc+2] - eci_ref[5*iref+2]) * units.energy['eV']
+        state['+DV3'] = (eci_exc[5*iexc+3] - eci_ref[5*iref+3]) * units.energy['eV']
+        state['+P']   = (eci_exc[5*iexc+4] - eci_ref[5*iref+4]) * units.energy['eV']
+
     def read_block_mat(self, mat, mos, rfile, sym, dfac=1.):
         """
         Parse the block matrix output in the listing file.

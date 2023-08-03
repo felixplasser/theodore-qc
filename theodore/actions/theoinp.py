@@ -180,6 +180,7 @@ class write_options_theo(input_options.write_options):
         if self['rtype'] in ['qctddft']:
             self.read_yn('Read TDA rather than full TDDFT results?', 'TDA', False)
 
+        # binary files
         if self['rtype'] == 'ricc2':
             self.read_yn('Read binary CCRE0 files?', 'read_binary', False)
             if not self['read_binary']:
@@ -189,6 +190,11 @@ class write_options_theo(input_options.write_options):
                 print("     from the control file before running tm2molden.")
         elif self['rtype'] == 'orca':
             self.read_yn('Read the binary orca.cis file?', 'read_binary', True)
+
+        # extra read-out
+        if self['rtype'] == 'colmrci':
+            if self.ret_yn('Parse extensivity corrected MRCI energies?', True):
+                self['prop_list'] += ['+DV3', '+P']
 
     def choose_mo_file(self):
         if 'mo_file' not in self: return
@@ -464,11 +470,11 @@ def run_theoinp(afile=''):
         wopt.only_at_lists(afile)
         return
 
+    wopt['prop_list'] = []
+
     wopt.choose_rtype()
     wopt.set_read_options()
     wopt.choose_mo_file()
-
-    wopt['prop_list'] = []
 
     if wopt['rtype'] in ['nos']:
         dotden = False
@@ -490,6 +496,8 @@ def run_theoinp(afile=''):
 
             if wopt.ret_yn('Perform exciton analysis?', True):
                 wopt.exciton_ana()
+            if wopt.ret_yn('Add descriptors for ionic states?', False):
+                wopt['prop_list'] += ['QTa', 'QT2', 'LOCa', 'LOC']
 
     if (not dotden) and (wopt['rtype'] in ['nos', 'colmcscf', 'rassi', 'libwfa']):
         if wopt.ret_yn('Analysis of state density matrices?', True):
