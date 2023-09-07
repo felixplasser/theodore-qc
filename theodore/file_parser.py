@@ -700,7 +700,7 @@ class file_parser_libwfa(file_parser_base):
         self.parse_key(state, 'nunl', line, 'Number of unpaired electrons')
         self.parse_key(state, 'p', line, 'Number of detached / attached electrons')
         self.parse_key(state, 'Om_', line, 'omega', 2)
-        self.parse_key(state, 'LOC', line, 'LOC', 2)
+        self.parse_key(state, 'LOC', line, 'LOC', 2, not_string='LOCa')
         self.parse_key(state, 'LOCa', line, 'LOCa', 2)
         self.parse_key(state, 'QT2', line, 'QT2')
         self.parse_key(state, 'QTa', line, 'QTa')
@@ -1135,7 +1135,6 @@ class file_parser_col(file_parser_base):
             self.read_ciudgsm(state, ir_st_ref, ir_st_exc)
         except:
             print("   WARING: could not read extensivity corrected energies")
-            raise
 
     def read_ciudgsm(self, state, ir_st_ref, ir_st_exc):
         """
@@ -1145,7 +1144,7 @@ class file_parser_col(file_parser_base):
         filen_exc = 'LISTINGS/ciudgsm.drt%i.sp'%ir_st_exc[0]
 
         eci_ref = []
-        print('ftpmp, reading %s'%filen_ref)
+        print('Reading %s ...'%filen_ref)
         for line in open(filen_ref, 'r'):
             if 'eci' in line:
                 words = line.split()
@@ -1154,7 +1153,7 @@ class file_parser_col(file_parser_base):
         if ir_st_exc[0] == ir_st_ref[0]:
             eci_exc = eci_ref
         else:
-            print('ftpmp, reading %s'%filen_exc)
+            print('Reading %s ...'%filen_exc)
             eci_exc = []
             for line in open(filen_exc, 'r'):
                 if 'eci' in line:
@@ -1471,7 +1470,10 @@ class file_parser_dftmrci(file_parser_base):
         self.orb_map = numpy.zeros([mos.ret_num_mo(), mos.ret_num_mo()], int)
 
         self.read_stdout(mos)
-        self.read_cidens(mos, state_list)
+        if self.ioptions['rfile2'] == 'mrci.tcidens':
+          self.read_tcidens(mos, state_list)
+        else:
+          self.read_cidens(mos, state_list)
 
         return state_list
 
@@ -1564,6 +1566,52 @@ class file_parser_dftmrci(file_parser_base):
                         numpy.dot(den_tmp, self.orb_map.T))
                     if lvprt >= 2:
                         self.dens_stat(state['tden'], lvprt)
+
+        df.close()
+
+    def read_tcidens(self, mos, state_list):
+        lvprt = self.ioptions['lvprt']
+
+        df = open('mrci.tcidens', 'rb')
+        print('\nReading file %s ...'%df.name)
+        dummy, nmat = struct.unpack('2i', df.read(8))
+        print('nmat:', nmat)
+
+        en0 = None
+        for imat in range(nmat):
+            df.read(8)
+            lab1 = struct.unpack('6s', df.read(6))[0].strip().decode('UTF-8')
+            lab2 = struct.unpack('6s', df.read(6))[0].strip().decode('UTF-8')
+            df.read(8) # dummy
+            en = struct.unpack('d', df.read(8))[0]
+
+            df.read(8)
+            nmo, dummy  = struct.unpack('2i', df.read(8))
+            dummy, sden = struct.unpack('2i', df.read(8))
+            dummy, reclen = struct.unpack('2i', df.read(8))
+
+            if lvprt >= 2:
+                print("\nParsing <%s|E_pq|%s>.  nmo: %i, reclen: %i"%(lab1, lab2, nmo, reclen))
+
+            if nmo != mos.ret_num_mo():
+                raise error_handler.MsgError('Inconsistent number of MOs')
+            nentry = nmo * nmo
+            if nentry*8 != reclen:
+                raise error_handler.MsgError('Inconsistent record length')
+
+            coeff = struct.unpack(nentry*'d', df.read(nentry*8))
+
+            print(" Analysing transition %s -> %s"%(lab1, lab2))
+            state_list.append({})
+            state = state_list[-1]
+            state['name'] = lab2
+            state['exc_en'] = en * units.energy['eV']
+
+            den_tmp = .5**.5 * numpy.reshape(coeff, [nmo, nmo])
+            state['tden'] = numpy.dot(self.orb_map,\
+                numpy.dot(den_tmp, self.orb_map.T))
+            if lvprt >= 2:
+                self.dens_stat(state['tden'], lvprt)
 
         df.close()
 
@@ -1722,7 +1770,7 @@ class file_parser_nos(file_parser_base):
         """
         nos = lib_mo.MO_set_molden(file=no_file)
         nos.read(spin=spin)
-        nos.compute_inverse()
+        #nos.compute_inverse()
         if self.ioptions['rd_ene']:
             nos.set_ens_occs()
         if not self.ioptions['occ_fac'] == 1:

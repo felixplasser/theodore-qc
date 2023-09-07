@@ -23,8 +23,10 @@ options.no_log = True
 
 class lib_orbkit:
 
-    def __init__(self):
-        self.slice_length = 1e4
+    def __init__(self, extend=4.0, step=0.4):
+        self.slice_length = 1e6
+        self.extend = extend
+        self.step = step
 
     def orbkit_geo_ao_conversion(self,mos):
         """
@@ -84,7 +86,7 @@ class lib_orbkit:
     def orbkit_grid(self,qc):
 
         # Initialize grid
-        grid.adjust_to_geo(qc,extend=5.0,step=0.4)
+        grid.adjust_to_geo(qc,extend=self.extend,step=self.step)
         grid.grid_init(force=True)
         self.slice_length = grid.N_[1]*grid.N_[2]/2
 

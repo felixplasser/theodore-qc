@@ -23,7 +23,7 @@ def ret_header(title=None, ioptions=None, cfile=None, ver='3.1.1'):
 
     hstr += add_stden(cfile)
     hstr += add_exciton(ioptions)
-    hstr += add_entanglement(ioptions)
+    hstr += add_extra(ioptions)
     hstr += add_cclib(ioptions)
     hstr += add_orbkit(ioptions)
     hstr += add_VIST(cfile)
@@ -102,7 +102,7 @@ def add_exciton(ioptions):
 
     return rstr
 
-def add_entanglement(ioptions):
+def add_extra(ioptions):
     try:
         prop_list = ioptions['prop_list']
     except TypeError:
@@ -115,6 +115,12 @@ def add_entanglement(ioptions):
         rstr += addlinel("Electron-hole entanglement:", 3)
         rstr += addlinel("F. Plasser")
         rstr += addlinel("J. Chem. Phys. (2016), 144, 194107.")
+
+    if ('QTa' in prop_list) or ('LOC' in prop_list):
+        rstr += addlinec()
+        rstr += addlinel("Analysis of ionic states:", 3)
+        rstr += addlinel("F. Plasser et al.")
+        rstr += addlinel("in preparation")
 
     return rstr
 

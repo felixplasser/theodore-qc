@@ -31,7 +31,7 @@ class write_options_theo(input_options.write_options):
             rdef = 'colmrci'
         elif os.path.exists('molcas.rasscf.molden'):
             rdef = 'rassi'
-        elif os.path.exists('mrci.cidens'):
+        elif os.path.exists('mrci.cidens') or os.path.exists('mrci.tcidens'):
             rdef = 'dftmrci'
         elif os.path.exists('coord'):
             if os.path.exists('auxbasis'):
@@ -146,6 +146,7 @@ class write_options_theo(input_options.write_options):
             self['coor_format'] = 'xyz'
         elif self['rtype'] == 'dftmrci':
             self['rfile'] = 'mrci2.out'
+            self['rfile2'] = 'mrci.cidens'
             self['mo_file'] = 'orca.molden.input'
             self['coor_file'] = ''
             self['coor_format'] = ''
@@ -190,6 +191,10 @@ class write_options_theo(input_options.write_options):
                 print("     from the control file before running tm2molden.")
         elif self['rtype'] == 'orca':
             self.read_yn('Read the binary orca.cis file?', 'read_binary', True)
+
+        # switch for DFTMRCI singlet-singlet / singlet-triplet densities
+        if self['rtype'] == 'dftmrci':
+            self.read_str('Read mrci.cidens or mrci.tcidens file?', 'rfile2', self['rfile2'], autocomp=True)
 
         # extra read-out
         if self['rtype'] == 'colmrci':

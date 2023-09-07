@@ -425,7 +425,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
                 self.export_NTOs_molden(state, U, lam, Vt, minlam=self.ioptions['min_occ'])
 
             if self.ioptions.get('cube_orbitals'):
-                lib_orbkit = orbkit_interface.lib_orbkit()
+                lib_orbkit = orbkit_interface.lib_orbkit(self.ioptions['orbkit_extend'], self.ioptions['orbkit_step'])
                 cbfid = lib_orbkit.cube_file_creator(state, U, lam, Vt, self.mos,minlam=self.ioptions['min_occ'],numproc=self.ioptions.get('numproc'))
                 cube_ids.append(cbfid)
 
@@ -443,7 +443,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         if len(self.state_list) == 0: return
         if not 'tden' in self.state_list[0]: return
 
-        lib_orbkit = orbkit_interface.lib_orbkit()
+        lib_orbkit = orbkit_interface.lib_orbkit(self.ioptions['orbkit_extend'], self.ioptions['orbkit_step'])
         cube_ids = []
         for state in self.state_list:
             (U, lam, Vt) = self.ret_NTO(state)
@@ -460,7 +460,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         if len(self.state_list) == 0: return
         if not 'tden' in self.state_list[0]: return
 
-        lib_orbkit = orbkit_interface.lib_orbkit()
+        lib_orbkit = orbkit_interface.lib_orbkit(self.ioptions['orbkit_extend'], self.ioptions['orbkit_step'])
         cube_ids = lib_orbkit.compute_rho_0_n(self.state_list,self.mos,numproc=self.ioptions.get('numproc'))
         if self.ioptions.get('vmd_rho0n'):
             print("VMD network for transition densities")
@@ -533,7 +533,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         if len(self.state_list) == 0: return
         if not 'tden' in self.state_list[0]: return
 
-        lib_orbkit = orbkit_interface.lib_orbkit()
+        lib_orbkit = orbkit_interface.lib_orbkit(self.ioptions['orbkit_extend'], self.ioptions['orbkit_step'])
         cube_ids = []
         for state in self.state_list:
             (U, lam, Vt) = self.ret_NTO(state)
@@ -563,7 +563,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
 
         dnto_dens = self.ioptions['comp_dnto_dens']
         if dnto_dens > 0:
-            lib_orbkit = orbkit_interface.lib_orbkit()
+            lib_orbkit = orbkit_interface.lib_orbkit(self.ioptions['orbkit_extend'], self.ioptions['orbkit_step'])
             cube_ids = []
 
         fchk_dens = self.ioptions['fchk_dnto_dens']
@@ -683,7 +683,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         if len(self.state_list) == 0: return
         if not 'tden' in self.state_list[0]: return
 
-        lib_orbkit = orbkit_interface.lib_orbkit()
+        lib_orbkit = orbkit_interface.lib_orbkit(self.ioptions['orbkit_extend'], self.ioptions['orbkit_step'])
         cube_ids = lib_orbkit.compute_rho_0_n(self.state_list,self.mos,numproc=self.ioptions.get('numproc'))
         if self.ioptions.get('vmd_rho0n'):
             print("VMD network for transition densities")

@@ -57,7 +57,14 @@ The following external packages are used by TheoDORE and require a separate inst
     The first three are usually readily available with the standard installation tools, e.g. ``apt-get``, ``yum`` etc.
     Alternatively, they may be downloaded from the URLs specified.
     If no integrated installation is performed, then it is necessary to add these libraries to the `PYTHONPATH` (see above).
-    For ORBKIT, please follow the `installation instructions <http://orbkit.github.io/install.html>`_.
+    For ORBKIT, you can try
+
+::
+
+    cd $THEODIR/external/orbkit
+    python3 setup.py build_ext --inplace
+
+Otherwise, please follow the `ORBKIT installation instructions <http://orbkit.github.io/install.html>`_.
 
 The following external packages are provided along with the TheoDORE distribution and do not require installation.
 
