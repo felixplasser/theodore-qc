@@ -1470,7 +1470,7 @@ class file_parser_dftmrci(file_parser_base):
         self.orb_map = numpy.zeros([mos.ret_num_mo(), mos.ret_num_mo()], int)
 
         self.read_stdout(mos)
-        if self.ioptions['rfile2'] == 'mrci.tcidens':
+        if self.ioptions.get('rfile2', False) == 'mrci.tcidens':
           self.read_tcidens(mos, state_list)
         else:
           self.read_cidens(mos, state_list)

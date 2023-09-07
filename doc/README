@@ -1,7 +1,7 @@
 Download the newest TheoDORE release and tutorial.
 
 - Compute absorption cross section and extinction coefficient in spectrum.py
-- Updates for DFT/MRCI
+- Updates for DFT/MRCI, including triplets
 - OpenMolcas input via: theodore theoinp -a
 
 TheoDORE 3.1.1

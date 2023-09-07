@@ -14,7 +14,7 @@ def ret_header(title=None, ioptions=None, cfile=None, ver='3.1.1'):
     hstr += addlinec()
     hstr += addlinec("Author: Felix Plasser")
     hstr += addlinec("Contributions by: L. Stojanovic, G. Hermann, S. Mai,")
-    hstr += addlinec(" M.F.S.J. Menger, P. Kimber")
+    hstr += addlinec(" M.F.S.J. Menger, P. Kimber, F. Dinkelbach")
 
     hstr += width*'-' + '\n'
 
