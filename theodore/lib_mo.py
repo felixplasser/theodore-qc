@@ -623,6 +623,15 @@ class MO_set_molden(MO_set):
            raise
 
 class MO_set_tddftb(MO_set):
+    
+    def __init__(self, file, coor_file='geom.xyz', sto_file='wfc.3ob-3-1.hsd'):
+        """
+        Add the ability to change the filename of the .xyz
+        """
+        super().__init__(file)
+        self.coor_file = coor_file
+        self.sto_file = sto_file
+    
     def read(self, lvprt=1, spin=0):
         """
         Read in MO coefficients from eigenvec.out file.
@@ -642,7 +651,7 @@ class MO_set_tddftb(MO_set):
 
        # self.header = ''
 
-        filemo = open('eigenvec.out', 'r')
+        filemo = open(self.file, 'r')
         MO = False
 
         for line in filemo:
@@ -667,29 +676,30 @@ class MO_set_tddftb(MO_set):
            print("Is there a mismatch between spherical/cartesian functions?\n ---")
            raise
 
-        Eig = False
-        Occs = False
+        #Eig = False
+        #Occs = False
 
-        filemosec = open('detailed.out', 'r')
-        for line in filemosec:
-            if 'Eigenvalues /eV' in line:
-               Eig = True
-            elif 'Fillings' in line:
-               Occs = True
-            elif line.strip() == '':
-               Eig = False
-               Occs = False
-            elif Eig:
-                self.ens.append(float(line))
-                self.syms.append(str('a'))
-            elif Occs:
-                self.occs.append(float(line))
-        filemosec.close()
+        # filemosec = open('detailed.out', 'r')
+        # for line in filemosec:
+        #     if 'Eigenvalues /eV' in line:
+        #        Eig = True
+        #     elif 'Fillings' in line:
+        #        Occs = True
+        #     elif line.strip() == '':
+        #        Eig = False
+        #        Occs = False
+        #     elif Eig:
+        #         self.ens.append(float(line))
+        #         self.syms.append(str('a'))
+        #     elif Occs:
+        #         self.occs.append(float(line))
+        # filemosec.close()
 
         if len(self.occs) == 0:
             self.ens = []
             self.syms = []
-            print(" WARNING: Parsing of detailed.out failed - using band.out instead")
+            # print(" WARNING: Parsing of detailed.out failed - using band.out instead")
+            print("Parsing of band.out")
             ft = open('band.out', 'r')
             for line in ft.readlines()[1:]:
                 words = line.split()
@@ -700,8 +710,8 @@ class MO_set_tddftb(MO_set):
             ft.close()
 
         at_symb = []
-
-        filegeom = open('geom.xyz','r')
+        atoms_in_xyz = []
+        filegeom = open(self.coor_file,'r')
         nline = 0
         for line in filegeom:
             nline += 1
@@ -709,6 +719,8 @@ class MO_set_tddftb(MO_set):
             if nline > 2:
                self.at_dicts.append({'Z':'', 'x':words[1], 'y':words[2], 'z':words[3]})
                at_symb.append(str(words[0]))
+               if str(words[0]) not in atoms_in_xyz:
+                   atoms_in_xyz.append(str(words[0]))
                self.num_at += 1
         filegeom.close()
 
@@ -722,37 +734,42 @@ class MO_set_tddftb(MO_set):
         num_orb = 0
         ang_momentum = 0
         curr_at = 0
+        atoms_in_sto = []
         for i in range(0,self.num_at):
-            filewfc = open('wfc.3ob-3-1.hsd','r')
-            atom_name = at_symb[i] + " {"
+            filewfc = open(self.sto_file,'r')
+            atom_name_without_equal = at_symb[i] + " {"
+            atom_name_with_equal = at_symb[i] + " = {"
             for line in filewfc:
                 atom = False
                 words = line.split()
-                if atom_name in line:
-                 curr_at += 1
-                 for line in filewfc:
-                       words = line.split()
-                       if (len(words) == 0): break
-                       if 'AngularMomentum' in line:
-                               ang_momentum = int(words[2])
-                               if ang_momentum == 0:
+                if atom_name_with_equal in line or atom_name_without_equal in line:
+                  curr_at += 1
+                  if at_symb[i] not in atoms_in_sto:
+                      atoms_in_sto.append(at_symb[i])
+                  for line in filewfc:
+                        words = line.split()
+                        if (len(words) == 0): break
+                        if 'AngularMomentum' in line:
+                                ang_momentum = int(words[2])
+                                if ang_momentum == 0:
                                     orbsymb = 's'
                                     orb_deg = 1
                                     num_orb = num_orb + orb_deg
-                               elif ang_momentum == 1:
+                                elif ang_momentum == 1:
                                     orbsymb = 'sp'
                                     orb_deg = 3
                                     num_orb = num_orb + orb_deg
-                               elif ang_momentum == 2:
+                                elif ang_momentum == 2:
                                     orbsymb = 'spd'
                                     orb_deg = 5
                                     num_orb = num_orb + orb_deg
-                               for i in range(num_bas[orbsymb]):
-                                   self.basis_fcts.append(basis_fct(curr_at, orbsymb, orient[orbsymb][i]))
-                                   label = self.basis_fcts[-1].label()
-                                   if not label in self.bf_labels:
+                                for i in range(num_bas[orbsymb]):
+                                    self.basis_fcts.append(basis_fct(curr_at, orbsymb, orient[orbsymb][i]))
+                                    label = self.basis_fcts[-1].label()
+                                    if not label in self.bf_labels:
                                       self.bf_labels.append(label)
             filewfc.close()
+              
 
 ### file parsing finished ###
 
@@ -764,6 +781,9 @@ class MO_set_tddftb(MO_set):
             print('Number of basis functions parsed: ', num_orb)
 
         if len(mo_vecs[0])!=num_orb:
+            print('\nAtoms in the geometry file: {}\nAtoms in the sto file: {}\n'.format(
+                                                                     atoms_in_xyz,
+                                                                     atoms_in_sto)) 
             raise error_handler.MsgError('Inconsistent number of basis functions!')
 
 class MO_set_adf(MO_set):

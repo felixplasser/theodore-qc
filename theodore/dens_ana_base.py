@@ -24,7 +24,9 @@ class dens_ana_base:
         """
         rtype = self.ioptions.get('rtype')
         if rtype=='tddftb':
-           self.mos = lib_mo.MO_set_tddftb(file=self.ioptions.get('mo_file'))
+           self.mos = lib_mo.MO_set_tddftb(file=self.ioptions.get('mo_file'),
+                                           coor_file=self.ioptions.get('coor_file'),
+                                           sto_file=self.ioptions.get('sto_file'))
         else:
            self.mos = lib_mo.MO_set_molden(file=self.ioptions.get('mo_file'))
         self.mos.read(lvprt=lvprt, spin=spin)

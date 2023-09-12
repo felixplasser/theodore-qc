@@ -144,6 +144,10 @@ class write_options_theo(input_options.write_options):
             self['mo_file'] = 'eigenvec.out'
             self['coor_file'] = 'geom.xyz'
             self['coor_format'] = 'xyz'
+            self['sto_file'] = 'wfc.3ob-3-1.hsd'
+            self['spx_file'] = 'spx.bin'
+            self['xpy_file'] = 'xpy.bin'
+            self['spx_xpy_format'] = 'bin'
         elif self['rtype'] == 'dftmrci':
             self['rfile'] = 'mrci2.out'
             self['rfile2'] = 'mrci.cidens'
@@ -309,6 +313,14 @@ class write_options_theo(input_options.write_options):
             except error_handler.MsgError:
                 pass
         self.read_str('Format of coordinate file', 'coor_format', self['coor_format'])
+        
+    def sto_file(self):
+        self.read_str('STO coefficients file', 'sto_file', self['sto_file'], True)
+        
+    def spx_xpy_file(self):
+        self.read_str('SPX file', 'spx_file', self['spx_file'], True)
+        self.read_str('XplusY file', 'xpy_file', self['xpy_file'], True)
+        self.read_str('Format of the SPX and XplusY files, bin or dat', 'spx_xpy_format', self['spx_xpy_format'], False)
 
     def set_Om_desc(self):
         """
@@ -521,6 +533,10 @@ def run_theoinp(afile=''):
         wopt.get_ncore()
     elif wopt['rtype'] in ['rassi'] and not wopt['read_libwfa']:
         wopt.get_rassi_list()
+    elif wopt['rtype'] in ['tddftb']:
+        wopt.sto_file()
+        wopt.spx_xpy_file()
+        wopt.coor_file()
 
     wopt.output_options()
 

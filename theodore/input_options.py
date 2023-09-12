@@ -475,6 +475,12 @@ class dens_ana_options(read_options):
         self.set_kd('comp_dnto_dens', 0, 'Cube files for DNTO densities 0 - none, 1 - hole, 2 - elec., 3 - both')
         self.set_kd('fchk_dnto_dens', 0, 'Print DNTO densities to the fchk file (0-3)')
         self.set_kd('normalize_dnto_dens', False, 'Normalize the DNTO densities for each fragment')
+        
+        # options for dftb
+        self.set_kd('sto_file', None, 'STO coefficients file (.hsd)')
+        self.set_kd('spx_file', None, 'SPX bin file (.bin)')
+        self.set_kd('xpy_file', None, 'XplusY bin file (.bin)'
+        self.set_kd('spx_xpy_format', None, 'Format of the SPX and XplusY files')
 
         # Additional information
         # irrep labels for output

@@ -47,7 +47,8 @@ class AnalyzeTden(Action):
             exit(0)
 
         tdena = lib_tden.tden_ana(ioptions)
-        if 'mo_file' in ioptions: tdena.read_mos()
+        if 'mo_file' in ioptions: 
+            tdena.read_mos()
 
         tdena.read_dens()
 
