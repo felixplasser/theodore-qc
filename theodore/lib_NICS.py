@@ -7,6 +7,7 @@ Date: Nov. 2020
 """
 
 import numpy
+from theodore import units
 
 # Input
 
@@ -333,6 +334,61 @@ class NICS_parser_QC(NICS_parser):
                         line = next(f)
 
                         if 'total shielding tensor' in line:
+                            line = next(f)
+                            NICS_iso = float(line.split()[-1])
+                            self.NICS_data[Bqind].set_iso(NICS_iso)
+
+                            line = next(f)
+                            tensor = []
+                            for i in range(3):
+                                words = next(f).split()
+                                tensor.append([float(words[0]), float(words[1]), float(words[2])])
+                            self.NICS_data[Bqind].set_tensor(tensor)
+                            self.NICS_data[Bqind].diag()
+
+                            Bqind += 1
+                            break
+
+        if lvprt >= 1:
+            print(" *** Printing NICS and eigenvalues ***")
+            for ipoint, point in enumerate(self.NICS_data):
+                print("P%i ->"%ipoint, point)
+
+class NICS_parser_TM(NICS_parser):
+    """
+    Parse TURBOMOLE NICS calculations.
+    """
+    def read(self, logfile, lvprt=2):
+        print("Reading TURBOMOLE information")
+        self.NICS_data = []
+        with open(logfile, 'r') as f:
+            Bqind = 0
+            while True:
+                try:
+                    line = next(f)
+                except StopIteration:
+                    print("Finished parsing %s"%logfile)
+                    break
+
+                if '  atomic coordinates  ' in line:
+                    while True:
+                        line = next(f)
+                        words = line.split()
+                        if not len(words) == 6:
+                            break
+                        el = words[3]
+                        if el == 'q':
+                            (x, y, z) = map(float, line.split()[0:3])
+                            x *= units.length['A']
+                            y *= units.length['A']
+                            z *= units.length['A']
+                            self.NICS_data.append(NICS_point(x, y, z))
+
+                if 'ATOM  q' in line:
+                    while True:
+                        line = next(f)
+
+                        if 'total magnetic shielding' in line:
                             line = next(f)
                             NICS_iso = float(line.split()[-1])
                             self.NICS_data[Bqind].set_iso(NICS_iso)
