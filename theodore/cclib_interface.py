@@ -117,6 +117,7 @@ class file_parser_cclib(file_parser.file_parser_base):
         """
         Read binary CI vector file from ORCA.
         Authors: S. Mai, F. Plasser
+        TODO: delte this subroutine (it is moved to file_parser.py)
         """
         print("Reading CI vectors from binary ORCA file %s"%filen)
 
