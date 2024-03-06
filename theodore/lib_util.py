@@ -143,6 +143,21 @@ class cube_file:
 
         return dot
 
+    def dot_power(self, other, pow, lvprt=0):
+        """
+        Compute the dot product between two cube files.
+        Values are raised to the power of pow.
+        This can be used to compute the S_r index (pow=0.5)
+        """
+        self.prep(other, lvprt)
+
+        dot = sum( abs(val * other.vals[ival])**pow for ival, val in enumerate(self.vals)) * self.V
+        if lvprt >= 1:
+            print("Computing dot product (power: %.3f) between %s and %s"%(powe, self.fname, other.fname))
+            print("Dot: % .6f"%dot)
+
+        return dot
+
     def lin_comb(self, other, c, d, outfile, lvprt=0):
         """
         Create linear combination c*self + d*other
