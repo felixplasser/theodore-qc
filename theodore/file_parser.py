@@ -1982,3 +1982,143 @@ class file_parser_onetep(file_parser_base):
             state['tden'] = Dao
 
         return state_list
+
+class file_parser_orca(file_parser_base):
+    """
+    Read Orca job without using cclib.
+    """
+    def read(self, mos):
+        return self.tden_orca(mos, True)
+
+    def tden_orca(self, mos, rect_dens, filen='orca.cis'):
+        """
+        Read binary CI vector file from ORCA.
+        Authors: S. Mai, F. Plasser
+        TODO: delete this part
+        """
+        print("Reading CI vectors from binary ORCA file %s"%filen)
+
+        CCfile=open(filen,'rb')
+        # header
+        # consists of 9 4-byte integers, the first 5 of which give useful info
+        nvec  =struct.unpack('i', CCfile.read(4))[0]
+        print("Number of vectors:", nvec)
+        header=[ struct.unpack('i', CCfile.read(4))[0] for i in range(8) ]
+        #print 'header:', header
+
+        # header array contains:
+        # [0] index of first alpha occ,  is equal to number of frozen alphas
+        # [1] index of last  alpha occ
+        # [2] index of first alpha virt
+        # [3] index of last  alpha virt, header[3]+1 is equal to number of bfs
+        # [4] index of first beta  occ,  for restricted equal to -1
+        # [5] index of last  beta  occ,  for restricted equal to -1
+        # [6] index of first beta  virt, for restricted equal to -1
+        # [7] index of last  beta  virt, for restricted equal to -1
+
+        if any( [ header[i]!=-1 for i in range(4,8) ] ):
+            #raise error_handler.MsgError("No support for unrestricted MOs")
+            print("Detected unrestricted calculation!")
+            restr=False
+        else:
+            restr=True
+
+        if restr:
+            do_Alpha = True
+        else:
+            do_Alpha = (self.ioptions['spin'] >= 0)
+        print("! Reading %s coefficients ..." % (["BETA","ALPHA"][do_Alpha]))
+
+        NFA = header[0]
+        NOA = header[1] - header[0] + 1
+        NVA = header[3] - header[2] + 1
+        NFB = header[4]
+        NOB = header[5] - header[4] + 1
+        NVB = header[7] - header[6] + 1
+
+        if do_Alpha:
+          nfrzc = NFA
+          nocc  = NFA + NOA
+          nact  = NOA
+          nvir  = NVA
+          nmo   = NFA + NOA + NVA
+          lenci = NOA * NVA
+          if restr:
+            skipci = 0
+          else:
+            skipci = NOB * NVB
+        else:
+          nfrzc = NFB
+          nocc  = NFB + NOB
+          nact  = NOB
+          nvir  = NVB
+          nmo   = NFB + NOB + NVB
+          lenci = NOB * NVB
+          skipci = NOA * NVA
+
+        print('  nmo: %i , nocc: %i , nact: %i , nvir: %i'%(nmo,nocc,nact,nvir))
+        if nmo != mos.ret_num_mo():
+            raise error_handler.MsgError("Inconsistent number of MOs")
+
+        # loop over states
+        # for non-TDA order is: X+Y of 1, X-Y of 1, X+Y of 2, X-Y of 2, ...
+        # triplets come after singlets, observe the multiplicity!
+        # for unrestricted: each vector has first alpha part, then beta part
+        # so if we only analyze one spin, then we have to skip the other
+        rootinfo=[]
+        istate = -1
+        iroot2 = -1
+        TDA=True
+        energies = [] # In the case of RPA, the energies are written with the first N entries
+        state_list = []
+        for ivec in range(nvec):
+            # header of each vector
+            # contains 6 4-byte ints, then 1 8-byte double, then 8 byte unknown
+            d0,d1,mult,d2,iroot,d3 = struct.unpack('iiiiii', CCfile.read(24))
+            rootinfo.append( (mult,iroot) )
+            ene,d3 = struct.unpack('dd', CCfile.read(16))
+            print('  mult: %i , iroot: %i'%(mult,iroot))
+            #print(d1,d2,d3)
+            print('  Ene: %.4f eV'%(ene*units.energy['eV']))
+            energies.append(ene)
+            # -> energy looks ok but the order is strange for RPA
+
+            # then comes nact * nvirt 8-byte doubles with the coefficients
+            if not restr and not do_Alpha:
+              CCfile.read(skipci*8)
+            coeff = struct.unpack(lenci*'d', CCfile.read(lenci*8))
+            if not restr and do_Alpha:
+              CCfile.read(skipci*8)
+
+            if ivec==1 and (mult,iroot)==rootinfo[0]:
+              TDA=False
+              print("Detected a non-TDA calculation!")
+
+            if ivec>=1 and mult!=rootinfo[-2][0]:
+              triplets=True
+              #istate=-1
+              iroot2=-1
+
+
+            if TDA or ivec%2==0:
+                istate+=1
+                iroot2+=1
+                state_list.append({})
+                state = state_list[-1]
+                state['state_ind'] = iroot2 + 1
+                state['mult'] = mult
+                state['irrep'] = 'A'
+                state['name'] = '%i(%i)%s'%(state['state_ind'], state['mult'] ,state['irrep'])
+                state['exc_en'] = energies.pop(0)*units.energy['eV']
+                state['tden'] = self.init_den(mos, rect=rect_dens)
+
+                state['tden'][nfrzc:nocc, nocc:nmo] = numpy.reshape(coeff, [nact,nvir])
+            else:
+            # in this case, we have a non-TDA state!
+            # and we need to compute (prevvector+currentvector)/2 = X vector
+            # this is added to the vector from the previous "if"
+                print('Constructing X-vector of RPA state')
+                state['tden'][nfrzc:nocc, nocc:nmo] += numpy.reshape(coeff, [nact,nvir])
+                state['tden'][nfrzc:nocc, nocc:nmo] *= .5
+
+        return state_list
