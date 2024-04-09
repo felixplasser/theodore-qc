@@ -726,6 +726,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
 
             state['tden'] = DIJ_elec
             state['tden'][:DIJ_hole.shape[0], :DIJ_hole.shape[1]] -= DIJ_hole
+            state['tden'] /= 2**.5
 
             state['exc_en'] = state['exc_en'] - enI
             del state['osc_str']
