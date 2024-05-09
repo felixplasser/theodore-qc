@@ -18,7 +18,8 @@ More literature, regarding the individual implemented methods, is given in the h
 Documentation
 ~~~~~~~~~~~~~
 * `Documentation of TheoDORE 3 <https://theodore-qc.sourceforge.io/docs/contents.html>`_
-* `Documentation of TheoDORE 2 (old) <https://sourceforge.net/p/theodore-qc/wiki/Home/>`_
+
+For user support, please use the `forum <https://sourceforge.net/p/theodore-qc/discussion/>`_.
 
 For bugs / feature requests, please use the `issues page <https://github.com/felixplasser/theodore-qc/issues>`_.
 
