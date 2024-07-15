@@ -272,10 +272,11 @@ ORCA - TDDFT
 ____________
 Starting in TheoDORE 2.0.1, the preferred version of parsing ORCA TDDFT jobs uses a Molden format file and the  ``orca.cis`` file.
 
-1. Run an ORCA job and copy back the `orca.gbw` and `orca.cis` files
-*Note*: the filename ``orca.cis`` is hardcoded in TheoDORE
+1. Run an ORCA job and copy back the ``orca.gbw`` and ``orca.cis`` files. *Note*: the filename ``orca.cis`` is hardcoded in TheoDORE.
+
 2. Create a molden file using ``orca_2mkl orca -molden``
-3. Run TheoDORE and select ``13`` at
+
+3. Run ``theodore theoinp`` and select ``13`` at
 
 .. code-block:: text
 
@@ -285,6 +286,16 @@ Starting in TheoDORE 2.0.1, the preferred version of parsing ORCA TDDFT jobs use
       [13]       orca - ORCA TDDFT (using a Molden file and cclib)
     ...
     Choice: 13
+
+This produces the following input file ``dens_ana.in``
+
+.. code-block:: text
+
+  rtype='orca'
+  rfile='orca.out'
+  read_binary=True
+  mo_file='orca.molden.input'
+
 
 ORCA using cclib
 ________________
