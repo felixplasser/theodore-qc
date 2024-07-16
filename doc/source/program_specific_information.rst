@@ -287,7 +287,7 @@ Starting in TheoDORE 2.0.1, the preferred version of parsing ORCA TDDFT jobs use
     ...
     Choice: 13
 
-This produces the following input file ``dens_ana.in``
+This produces the following options in the input file ``dens_ana.in``
 
 .. code-block:: text
 

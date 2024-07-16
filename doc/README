@@ -1,8 +1,12 @@
 Download the newest TheoDORE release and tutorial.
 
+TheoDORE 3.2
 - Compute absorption cross section and extinction coefficient in spectrum.py
 - Updates for DFT/MRCI, including triplets
 - OpenMolcas input via: theodore theoinp -a
+- Standalone Orca interface
+- Fix for es2esa
+- VIST plots for Turbomole
 
 TheoDORE 3.1.1
 - Fix for QTa values
