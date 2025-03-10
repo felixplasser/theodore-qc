@@ -542,6 +542,10 @@ class file_parser_libwfa(file_parser_base):
                 state['name'] = 'es_%i'%int(words[2])
                 state['exc_en'] = 0.
                 state['osc_str'] = -1.
+            elif words[0] == 'Spin-flipped' and words[1] == 'State':
+                state['name'] = 'sf_%i'%int(words[2])
+                state['exc_en'] = 0.
+                state['osc_str'] = -1.
             else:
                 state['name'] = words[0].replace('/', '-')
                 state['exc_en'] = float(words[1]) * units.energy['eV'] if len(words) >= 2 else  0.
@@ -719,6 +723,7 @@ class file_parser_libwfa(file_parser_base):
             self.parse_key(state, 'dD-A', line, '|<r_e - r_h>|')
 
         if exc_1TDM:
+            self.parse_key(state, 'muT',  line, 'Trans. dipole moment [D]:')
             self.parse_key(state, 'dexc', line, 'RMS electron-hole separation', rfile=rfile)
             self.parse_key(state, 'sigH', line, 'Hole size', rfile=rfile)
             self.parse_key(state, 'sigE', line, 'Electron size', rfile=rfile)
@@ -845,6 +850,7 @@ class file_parser_qctddft(file_parser_libwfa):
         """
         state_list = []
         exc_diff = exc_1TDM = tdread = libwfa = False
+        spin_flip = False
         istate = 0
 
         self.state_list_om = self.rmatfile_one()
@@ -871,6 +877,14 @@ class file_parser_qctddft(file_parser_libwfa):
             if ststr in line or ststr2 in line:
                 tdread = True
                 line = next(rfileh)
+            elif 'SF-DFT Excitation Energies' in line:
+                # SF seems to be only possible with TDA
+                # -> no need to check for TDA/RPA
+                tdread = True
+                line = next(rfileh)
+                line = next(rfileh)
+                line = next(rfileh)
+                spin_flip = True
             elif 'TDDFT calculation will be performed' in line:
                 tdread = False
             elif '-----' in line:
@@ -920,6 +934,9 @@ class file_parser_qctddft(file_parser_libwfa):
                         ntrip += 1
                         state['name'] = "T_%i"%ntrip
                         state['lname'] = "Triplet %i"%ntrip
+                    elif spin_flip:
+                        state['name'] = 'sf_%i'%(state['state_num'])
+                        state['lname'] = 'Spin-flipped State %i'%(state['state_num'])
                     else:
                         state['name'] = 'es_%i'%(state['state_num'])
                         state['lname'] = 'Excited State %i'%(state['state_num'])
@@ -997,11 +1014,14 @@ class file_parser_qctddft(file_parser_libwfa):
         Read energy components if available.
         """
         words = line.split()
-        state['F1'] = float(words[1]) + float(words[3]) + float(words[5]) + float(words[7])
+        state['F1']  = float(words[1]) + float(words[3]) + float(words[5]) + float(words[7])
+        state['F1K'] = float(words[1]) + float(words[3]) + float(words[7])
+        state['K1']  = float(words[5])
         line = next(rfileh)
         words = line.split()
         state['J2'] = float(words[1])
         state['K2'] = float(words[3])
+        state['K12']= state['K1'] + state['K2']
         state['XC2'] = float(words[5])
         line = next(rfileh)
         if 'J2' in line:
