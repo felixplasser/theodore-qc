@@ -267,7 +267,7 @@ class summ_file:
             words = line.split()
             state_label = words[0]
             if state_label in self.ddict:
-                errmsg  = "State %s already present.\n"%state_label
+                errmsg  = "State %s already present in %s.\n"%(state_label, f.name)
                 errmsg += "  Please, do not combine tden_summ.txt files here."
                 raise error_handler.MsgError(errmsg)
             self.ddict[state_label] = {}

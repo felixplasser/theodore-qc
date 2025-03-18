@@ -20,12 +20,17 @@ class PlotGraph(Action):
 
     _colt_description = 'Graph plotting for potential curves etc.'
 
+    _user_input = """
+    # List of directories to analyze
+    dlist = :: list(str), optional, alias=f
+
+        """
     _lazy_imports = LazyImporter({
             '..theo_header': 'theo_header',
             '..lib_plot': 'lib_plot',
     })
 
-    def run():
+    def run(dlist):
         theo_header.print_header(title=__class__._colt_description)
         infilen = 'graph.in'
         
@@ -40,7 +45,7 @@ class PlotGraph(Action):
         if copy:
             popt.copy(ropt)
         else:        
-            popt.plot_input()
+            popt.plot_input(dlist)
             popt.flush()
         
         popt.read_data()
