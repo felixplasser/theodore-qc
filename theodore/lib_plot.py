@@ -13,22 +13,25 @@ class write_plot_options(input_options.write_options):
     """
     def __init__(self, *args, **kwargs):
         input_options.write_options.__init__(self, *args, **kwargs)
-        self['symb'] = 'x-'
 
-    def plot_input(self):
+    def plot_input(self, dlist=None):
         """
         Read input from command line.
         """
         print("This script allows to combine information from several TheoDORE runs into one graph.")
         print("   These jobs are assumed to be located in subdirectories of the current directory.")
 
-        sdirs = sorted([dirn for dirn in os.listdir('.') if os.path.isdir(dirn)])
+        if not dlist is None:
+            print("Direcotires already specified via command line:")
+            print(dlist)
+        else:
+            sdirs = sorted([dirn for dirn in os.listdir('.') if os.path.isdir(dirn)])
 
-        print("The following subdirectories were found:")
-        self.print_list(sdirs)
-        rstr = self.ret_str("Please enter the order in which they should appear, e.g. '1 2 4 3'")
-        ilist = [int(idir) - 1 for idir in rstr.split()]
-        dlist = [sdirs[idir] for idir in ilist]
+            print("The following subdirectories were found:")
+            self.print_list(sdirs)
+            rstr = self.ret_str("Please enter the order in which they should appear, e.g. '1 2 4 3'")
+            ilist = [int(idir) - 1 for idir in rstr.split()]
+            dlist = [sdirs[idir] for idir in ilist]
 
         self.write_list('ana_dirs', dlist, "'%s'")
 
@@ -39,6 +42,8 @@ class write_plot_options(input_options.write_options):
 
         rstr = self.ret_str("State labels for the legend", labstr)
         self.write_list('leg_labels', rstr.split())
+
+        self.read_str("Symbol for plotting", "symb", "x-")
 
         self.read_yn('Create plots using pylab?', 'doplots', True)
         if self['doplots']:
