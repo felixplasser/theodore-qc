@@ -28,27 +28,21 @@ The actual charge transfer number analysis is a generalized population analysis.
 
 .. math::
    
-    \begin{eqnarray}
     \Omega_{AB}=\sum_{\mu\in A}\sum_{\nu\in B}\left(\mathbf{D}^{0I}\mathbf{S}\right)_{\mu\nu}\left(\mathbf{S}\mathbf{D}^{0I}\right)_{\mu\nu}
-    \end{eqnarray}
 
 ``Om_formula=1`` yields a somewhat different Mulliken style analysis
 
 .. math::
 
-    \begin{eqnarray}
     \Omega_{AB}=0.5\sum_{\mu\in A}\sum_{\nu\in B}\left(\mathbf{D}^{0I}\mathbf{S}\right)_{\mu\nu}\left(\mathbf{S}\mathbf{D}^{0I}\right)_{\mu\nu}+D^{0I}_{\mu\nu}\left(\mathbf{S}\mathbf{D}^{0I}\mathbf{S}\right)_{\mu\nu}
-    \end{eqnarray}
 
-``Om\_formula=2`` yields a Lowdin style analysis
+``Om_formula=2`` yields a Lowdin style analysis
 
 .. math::
 
-    \begin{eqnarray}
     \Omega_{AB}=\sum_{\mu\in A}\sum_{\nu\in B}\left(\mathbf{S}^{1/2}\mathbf{D}^{0I}\mathbf{S}^{1/2}\right)_{\mu\nu}{}^{2}
-    \end{eqnarray}
 
-The last case (``Om\_formula=2``) is probably the best option in terms of, both, computational effort and numerical stability.
+The last case (``Om_formula=2``) is probably the best option in terms of, both, computational effort and numerical stability.
 
 Subsequently TheoDORE computes fragment based descriptors of the Omega-matrix. These are specified using the ``prop_list`` keyword, e.g.
 
@@ -83,9 +77,7 @@ or the entanglement measures defined in `J. Chem. Phys., 144, 194107 (2016) <htt
 and
 
 .. math::
-    \begin{eqnarray}
     Z_{HE}=2^{S_{H|E}},
-    \end{eqnarray}
 
 which are accessed by the following keywords:
 
