@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation &mdash; theodore 3.1.1 documentation</title>
+  <title>Installation &mdash; TheoDORE 3.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=796a81b5"></script>
+        <script src="_static/documentation_options.js?v=828ea960"></script>
         <script src="_static/doctools.js?v=9bcbadda"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -73,7 +73,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="contents.html">theodore</a>
+          <a href="contents.html">TheoDORE</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -93,7 +93,7 @@
              
   <section id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h1>
-<p>The installation on a Linux system is split into four simple parts:</p>
+<p>The installation on a Linux or Mac system is split into four simple parts:</p>
 <section id="download-and-extract-the-source-file">
 <h2>Download and extract the source file<a class="headerlink" href="#download-and-extract-the-source-file" title="Link to this heading"></a></h2>
 <p>Download the newest release TheoDORE_v.s.tgz from the <a class="reference external" href="https://github.com/felixplasser/theodore-qc/releases">github releases page</a>.</p>
@@ -105,10 +105,10 @@
 <section id="setup-the-path-specification">
 <h2>Setup the path specification<a class="headerlink" href="#setup-the-path-specification" title="Link to this heading"></a></h2>
 <p>To use TheoDORE the <cite>PATH</cite> and <cite>PYTHONPATH</cite> variables have to be adjusted. For this purpose you can use the provided bash script <cite>setpaths.bash</cite></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>#!/bin/bash
-export THEODIR=/yourpath/TheoDORE/TheoDORE_v.s
-export PATH=$THEODIR/bin:$PATH
-export PYTHONPATH=$THEODIR:$PYTHONPATH
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">THEODIR</span><span class="o">=</span>/yourpath/TheoDORE/TheoDORE_v.s
+<span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$THEODIR</span>/bin:<span class="nv">$PATH</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="nv">$THEODIR</span>:<span class="nv">$PYTHONPATH</span>
 </pre></div>
 </div>
 <p><strong>Note:</strong> <cite>PYTHONPATH</cite> no longer points to the <cite>lib</cite> directory starting in TheoDORE_2.0.</p>
@@ -134,7 +134,8 @@ No compatibility to python2 is maintained.</p>
 <li><p><a class="reference external" href="http://openbabel.org/wiki/Python">python3-openbabel</a> <em>(optional)</em> - for extended file-parsing capabilities of molecular structure files</p></li>
 <li><p><a class="reference external" href="https://github.com/felixplasser/orbkit">ORBKIT</a> <em>(optional)</em> - For creating cube files of densities</p></li>
 </ul>
-<p>The first three are usually readily available with the standard installation tools, e.g. <code class="docutils literal notranslate"><span class="pre">apt-get</span></code>, <code class="docutils literal notranslate"><span class="pre">yum</span></code> etc.
+<p>The first three are usually readily available with the standard installation tools,
+e.g. <code class="docutils literal notranslate"><span class="pre">apt-get</span> <span class="pre">install</span></code>, <code class="docutils literal notranslate"><span class="pre">yum</span> <span class="pre">install</span></code>, <code class="docutils literal notranslate"><span class="pre">port</span> <span class="pre">install</span></code> etc.
 Alternatively, they may be downloaded from the URLs specified.
 If no integrated installation is performed, then it is necessary to add these libraries to the <cite>PYTHONPATH</cite> (see above).
 For ORBKIT, you can try</p>
@@ -171,8 +172,17 @@ python3 setup.py build_ext --inplace
 </div>
 <p>The first three tests should always work.
 For all tests in <code class="docutils literal notranslate"><span class="pre">EXTRA</span></code> to pass openbabel, ADF and ORBKIT need to be installed.</p>
-<p>The tests are distributed within the standard TheoDORE distribution.
-They are maintained via the <a class="reference external" href="https://github.com/felixplasser/theodore-test">theodore-test</a> repository.</p>
+<p>For Q-Chem there is a special set of tests where Q-Chem is run before TheoDORE.
+To access these, run</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">QCHEM</span>
+<span class="o">./</span><span class="n">run_qchem</span><span class="o">.</span><span class="n">bash</span> <span class="p">[</span><span class="n">cs</span><span class="p">]</span><span class="o">*</span>
+<span class="n">cd</span> <span class="o">..</span>
+<span class="n">pytest</span><span class="o">-</span><span class="mi">3</span> <span class="n">QCHEM</span>
+</pre></div>
+</div>
+<p>The tests are distributed within the standard TheoDORE releases.
+However, they are maintained via a different repository:
+<a class="reference external" href="https://github.com/felixplasser/theodore-test">theodore-test</a>.</p>
 </section>
 </section>
 
@@ -187,7 +197,7 @@ They are maintained via the <a class="reference external" href="https://github.c
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Felix Plasser.</p>
+    <p>&#169; Copyright 2025, Felix Plasser.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
