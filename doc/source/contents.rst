@@ -29,12 +29,3 @@ post an `issue on github <https://github.com/felixplasser/theodore-qc/issues>`_
 or send me an email to f.plasser(at)lboro.ac.uk.
 
 .. include:: ../../README.rst
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
