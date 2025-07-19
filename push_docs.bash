@@ -10,3 +10,9 @@ rsync -auv html/ fffelix@web.sourceforge.net:/home/project-web/theodore-qc/htdoc
 ../bin/print_doc.py > source/keywords.rst || exit 1
 make html || exit 1
 rsync -auv build/html/ fffelix@web.sourceforge.net:/home/project-web/theodore-qc/htdocs/docs
+
+# push from docs2
+echo
+echo " *** Now run: "
+echo " git checkout docs2 "
+echo " ./push_github_docs.bash "
