@@ -17,12 +17,12 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'theodore'
-copyright = '2023, Felix Plasser'
+project = 'TheoDORE'
+copyright = '2025, Felix Plasser'
 author = 'Felix Plasser'
 
 # The full version, including alpha/beta/rc tags
-release = '3.1.1'
+release = '3.2'
 
 
 # -- General configuration ---------------------------------------------------
