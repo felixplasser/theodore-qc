@@ -28,4 +28,4 @@ write to the `discussion forum <https://sourceforge.net/p/theodore-qc/discussion
 post an `issue on github <https://github.com/felixplasser/theodore-qc/issues>`_
 or send me an email to f.plasser(at)lboro.ac.uk.
 
-.. include:: ../../README.rst
+.. include:: ../README.rst
