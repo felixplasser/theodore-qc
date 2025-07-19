@@ -13,3 +13,5 @@ cd ..
 # submit docs to GIT
 git commit docs
 git push origin docs2
+
+# Static upload to github
