@@ -1,3 +1,5 @@
+.. _plotting:
+
 Plotting
 --------
 
@@ -6,7 +8,7 @@ Electron-hole correlation plots
 
 *Electron-hole* correlation plots can be created with the ``theodore plot_omfrag`` utility.
 You are asked about the output options directly by this script.
-To view the output, simply open the file ``OmFrag.html`` in a web browser (`Example <http://theodore-qc.sourceforge.net/images/OmFrag.html>`_).
+To view the output, simply open the file ``OmFrag.html`` in a web browser (`Example plots <http://theodore-qc.sourceforge.net/images/OmFrag.html>`_).
 
 Generation of property graphs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -16,7 +18,7 @@ For this purpose, it is assumed that several directories with analagous computat
 
 Call ``theodore plot_graph`` and follow the instructions on the screen.
 
-The graphs are collected in a file ``graphs.html`` (`Example <http://theodore-qc.sourceforge.net/images/graphs.html>`_).
+The graphs are collected in a file ``graphs.html`` (`Example graphs <http://theodore-qc.sourceforge.net/images/graphs.html>`_).
 
 For parsing `Newton-X <http://www.newtonx.org/>`_ trajectories, a specialized script ``plot_graph_nx.py`` exists.
 

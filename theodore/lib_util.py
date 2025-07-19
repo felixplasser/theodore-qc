@@ -2,6 +2,8 @@
 Library with some utilities that do not fit anywhere else.
 """
 
+import numpy
+
 class cube_file:
     """
     Analyse a cube file and compute isovalues corresponding to volume integrals.
@@ -107,6 +109,17 @@ class cube_file:
 
         return retvals
 
+    def ret_volume(self, iso, lvprt=0):
+        """
+        Return the volume (in Bohr^3) associated to a specific isovalue
+        by counting the number of elements above this isovalue.
+        """
+        if self.vals is None:
+            self.read(lvprt=lvprt)
+        nval = numpy.count_nonzero(numpy.array(self.avals) > iso)
+
+        return nval * self.V
+
     def prep(self, other, lvprt=0):
         """
         Prepare for mathematical operations.
@@ -126,6 +139,21 @@ class cube_file:
         dot = sum(val * other.vals[ival] for ival, val in enumerate(self.vals)) * self.V
         if lvprt >= 1:
             print("Computing dot product between %s and %s"%(self.fname, other.fname))
+            print("Dot: % .6f"%dot)
+
+        return dot
+
+    def dot_power(self, other, pow, lvprt=0):
+        """
+        Compute the dot product between two cube files.
+        Values are raised to the power of pow.
+        This can be used to compute the S_r index (pow=0.5)
+        """
+        self.prep(other, lvprt)
+
+        dot = sum( abs(val * other.vals[ival])**pow for ival, val in enumerate(self.vals)) * self.V
+        if lvprt >= 1:
+            print("Computing dot product (power: %.3f) between %s and %s"%(powe, self.fname, other.fname))
             print("Dot: % .6f"%dot)
 
         return dot

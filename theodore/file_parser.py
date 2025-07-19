@@ -348,7 +348,7 @@ from the control file.""")
                     if '===' in line: break
 
                     words = line.replace('|','').split()
-                    irrep, mult, state_ind, exc_en = words[0], words[1], int(words[2]), float(words[-1])
+                    irrep, mult, state_ind, exc_en = words[0].replace('*',''), words[1], int(words[2]), float(words[-1])
                     state = ret_list[istate]
                     if state['irrep'] == irrep and state['mult'] == mult and state['state_ind'] == state_ind:
                         state['exc_en'] = exc_en
@@ -447,7 +447,7 @@ class file_parser_escf(file_parser_base):
         ret_list = []
         occ_orb = False # section of the file
         for nr,line in enumerate(rlines):
-            if 'excitation' in line and not 'vector' in line:
+            if 'excitation' in line and not 'vector' in line and not 'energies' in line:
                 ret_list.append({})
                 words = line.split()
                 ret_list[-1]['state_ind'] = int(words[0])
@@ -485,12 +485,11 @@ class file_parser_libwfa(file_parser_base):
         self.state_list_om = [] # state_list read from the file ctnum*.om
 
     def read(self):
-        return self.rmatfile_one(old=True)
+        return self.rmatfile_one()
 
-    def rmatfile_one(self, old=False):
+    def rmatfile_one(self):
         """
         Read all om_at data from one file.
-        old - activate old mode if new file is not available.
         """
         state_list = []
 
@@ -527,12 +526,30 @@ class file_parser_libwfa(file_parser_base):
             if len(line) < 3: continue
 
             # Parse the header
-            words = line.split()
             state_list.append({})
             state = state_list[-1]
-            state['name'] = words[0]
-            state['exc_en'] = float(words[1]) * units.energy['eV'] if len(words) >= 2 else  0.
-            state['osc_str'] = float(words[2]) if len(words) >= 3 else -1.
+            if '<-->' in line: # ccman2 output
+                line2 = line.split('<-->')[1]
+                words = line2.split()
+                print(line2)
+                print(words)
+            elif 'rho_imag' in line: # ccman2 output, complex
+                l2 = line.split()[-1]
+                words = [l2.split('_')[0]]
+            else:
+                words = line.split()
+            if words[0] == 'Excited' and words[1] == 'State':
+                state['name'] = 'es_%i'%int(words[2])
+                state['exc_en'] = 0.
+                state['osc_str'] = -1.
+            elif words[0] == 'Spin-flipped' and words[1] == 'State':
+                state['name'] = 'sf_%i'%int(words[2])
+                state['exc_en'] = 0.
+                state['osc_str'] = -1.
+            else:
+                state['name'] = words[0].replace('/', '-')
+                state['exc_en'] = float(words[1]) * units.energy['eV'] if len(words) >= 2 else  0.
+                state['osc_str'] = float(words[2]) if len(words) >= 3 else -1.
             state['lname'] = line.strip()
 
             # Dimensions
@@ -677,24 +694,21 @@ class file_parser_libwfa(file_parser_base):
 
     def parse_keys(self, state, exc_diff, exc_1TDM, line, rfile=None):
         self.parse_key(state, 'osc_str', line, 'Osc. strength:')
-        # self.parse_key(state, 'mu', line, 'Total dipole')
-        # self.parse_key(state, 'mux', line, 'Dip. moment [a.u.]', -3)
-        # self.parse_key(state, 'muy', line, 'Dip. moment [a.u.]', -2)
-        # self.parse_key(state, 'muz', line, 'Dip. moment [a.u.]', -1)
-        #self.parse_key(state, 'Tmux', line, 'Trans. dip. moment [a.u.]', -3)
-        #self.parse_key(state, 'Tmuy', line, 'Trans. dip. moment [a.u.]', -2)
-        #self.parse_key(state, 'Tmuz', line, 'Trans. dip. moment [a.u.]', -1)
         self.parse_key(state, 'mu', line, ' Dipole moment [D]', rfile=rfile)
         self.parse_key(state, 'Tmu', line, 'Trans. dipole moment [D]', rfile=rfile)
-        self.parse_key(state, 'r2x', line, '<r^2>', -3, not_string='Total')
-        self.parse_key(state, 'r2y', line, '<r^2>', -2, not_string='Total')
-        self.parse_key(state, 'r2z', line, '<r^2>', -1, not_string='Total')
+        self.parse_key(state, 'r2x', line, '  <r^2>', -3, not_string='Total')
+        self.parse_key(state, 'r2y', line, '  <r^2>', -2, not_string='Total')
+        self.parse_key(state, 'r2z', line, '  <r^2>', -1, not_string='Total')
         self.parse_key(state, 'r2', line, 'Total <r^2>')
         self.parse_key(state, 'nu', line, 'Number of unpaired electrons:', 2)
         self.parse_key(state, 'nunl', line, 'Number of unpaired electrons')
         self.parse_key(state, 'p', line, 'Number of detached / attached electrons')
-        self.parse_key(state, 'Om_', line, 'Sum of SVs')
-        self.parse_key(state, 'Phe', line, '<Phe>')
+        self.parse_key(state, 'Om_', line, 'omega', 2)
+        self.parse_key(state, 'LOC', line, 'LOC', 2, not_string='LOCa')
+        self.parse_key(state, 'LOCa', line, 'LOCa', 2)
+        self.parse_key(state, 'QT2', line, 'QT2')
+        self.parse_key(state, 'QTa', line, 'QTa')
+        self.parse_key(state, 'Phe', line, '<Phe>', 2)
         self.parse_key(state, 'PRNTO', line, 'PR_NTO')
         self.parse_key(state, 'PRD', line, 'PR_D', 6)
         self.parse_key(state, 'PRA', line, 'PR_A')
@@ -709,6 +723,7 @@ class file_parser_libwfa(file_parser_base):
             self.parse_key(state, 'dD-A', line, '|<r_e - r_h>|')
 
         if exc_1TDM:
+            self.parse_key(state, 'muT',  line, 'Trans. dipole moment [D]:')
             self.parse_key(state, 'dexc', line, 'RMS electron-hole separation', rfile=rfile)
             self.parse_key(state, 'sigH', line, 'Hole size', rfile=rfile)
             self.parse_key(state, 'sigE', line, 'Electron size', rfile=rfile)
@@ -835,6 +850,7 @@ class file_parser_qctddft(file_parser_libwfa):
         """
         state_list = []
         exc_diff = exc_1TDM = tdread = libwfa = False
+        spin_flip = False
         istate = 0
 
         self.state_list_om = self.rmatfile_one()
@@ -861,6 +877,14 @@ class file_parser_qctddft(file_parser_libwfa):
             if ststr in line or ststr2 in line:
                 tdread = True
                 line = next(rfileh)
+            elif 'SF-DFT Excitation Energies' in line:
+                # SF seems to be only possible with TDA
+                # -> no need to check for TDA/RPA
+                tdread = True
+                line = next(rfileh)
+                line = next(rfileh)
+                line = next(rfileh)
+                spin_flip = True
             elif 'TDDFT calculation will be performed' in line:
                 tdread = False
             elif '-----' in line:
@@ -893,9 +917,8 @@ class file_parser_qctddft(file_parser_libwfa):
 
                     line = next(rfileh)
                     line = next(rfileh)
-                    if 'Details' in line:
-                        line = next(rfileh)
-                        line = next(rfileh)
+                    if 'J1' in line:
+                        line = self.read_ecomp(line, rfileh, state)
                     words = line.split()
 
                     if words[0] == 'Multiplicity:':
@@ -911,6 +934,9 @@ class file_parser_qctddft(file_parser_libwfa):
                         ntrip += 1
                         state['name'] = "T_%i"%ntrip
                         state['lname'] = "Triplet %i"%ntrip
+                    elif spin_flip:
+                        state['name'] = 'sf_%i'%(state['state_num'])
+                        state['lname'] = 'Spin-flipped State %i'%(state['state_num'])
                     else:
                         state['name'] = 'es_%i'%(state['state_num'])
                         state['lname'] = 'Excited State %i'%(state['state_num'])
@@ -952,6 +978,9 @@ class file_parser_qctddft(file_parser_libwfa):
 
                     state_list[-1]['tden'][iocc, ivirt] += coeff
 
+                elif 'J1' in line:
+                    line = self.read_ecomp(line, rfileh, state_list[-1])
+
             if libwfa:
                 if 'Excited state' in line:
                     words = line.replace(':', '').split()
@@ -979,6 +1008,28 @@ class file_parser_qctddft(file_parser_libwfa):
 
         rfileh.close()
         return state_list
+
+    def read_ecomp(self, line, rfileh, state):
+        """
+        Read energy components if available.
+        """
+        words = line.split()
+        state['F1']  = float(words[1]) + float(words[3]) + float(words[5]) + float(words[7])
+        state['F1K'] = float(words[1]) + float(words[3]) + float(words[7])
+        state['K1']  = float(words[5])
+        line = next(rfileh)
+        words = line.split()
+        state['J2'] = float(words[1])
+        state['K2'] = float(words[3])
+        state['K12']= state['K1'] + state['K2']
+        state['XC2'] = float(words[5])
+        line = next(rfileh)
+        if 'J2' in line:
+            words = line.split()
+            state['J2'] = float(words[2])
+            line = next(rfileh)
+
+        return line
 
 #---
 
@@ -1057,12 +1108,14 @@ class file_parser_col(file_parser_base):
                 mos.syms2[isym] = new
 
         tmp = filen.replace('LISTINGS/','').replace('state','').replace('drt','').replace('trncils.FROM','').split('TO')
-        ir_st_ref = tmp[0].split('.')
-        ir_st_exc = tmp[1].split('.')
+        tmp2 = tmp[0].split('.')
+        ir_st_ref = (int(tmp2[0]), int(tmp2[1]))
+        tmp2 = tmp[1].split('.')
+        ir_st_exc = (int(tmp2[0]), int(tmp2[1]))
 
-        state['irrep'] = self.ioptions.get('irrep_labels')[int(ir_st_exc[0]) - 1]
         state['state_ind'] = int(ir_st_exc[1])
-        state['name'] = '%s.%i-%i'%(state['irrep'], int(ir_st_ref[1]), state['state_ind'])
+        #state['name'] = '%s.%i-%s.%i'%(irrep_ref, int(ir_st_ref[1]), state['irrep'], state['state_ind'])
+        state['name'] = 'DRT%i.St%02i'%ir_st_exc
 
         if ir_st_ref==ir_st_exc:
             state['sden'] = self.init_den(mos)
@@ -1097,6 +1150,44 @@ class file_parser_col(file_parser_base):
                 words = line.split()
                 state['osc_str']=float(words[-1])
         rfile.close()
+
+        try:
+            self.read_ciudgsm(state, ir_st_ref, ir_st_exc)
+        except:
+            print("   WARING: could not read extensivity corrected energies")
+
+    def read_ciudgsm(self, state, ir_st_ref, ir_st_exc):
+        """
+        Read extensivity corrected energies from ciudgsm.
+        """
+        filen_ref = 'LISTINGS/ciudgsm.drt%i.sp'%ir_st_ref[0]
+        filen_exc = 'LISTINGS/ciudgsm.drt%i.sp'%ir_st_exc[0]
+
+        eci_ref = []
+        print('Reading %s ...'%filen_ref)
+        for line in open(filen_ref, 'r'):
+            if 'eci' in line:
+                words = line.split()
+                eci_ref.append(float(words[2]))
+
+        if ir_st_exc[0] == ir_st_ref[0]:
+            eci_exc = eci_ref
+        else:
+            print('Reading %s ...'%filen_exc)
+            eci_exc = []
+            for line in open(filen_exc, 'r'):
+                if 'eci' in line:
+                    words = line.split()
+                    eci_exc.append(float(words[2]))
+
+        iref, iexc = ir_st_ref[1] - 1, ir_st_exc[1] - 1
+
+        tmp_en = (eci_exc[5*iexc] - eci_ref[5*iref]) * units.energy['eV']
+        assert(abs(state['exc_en'] - tmp_en) < 1.e-6)
+        state['+DV1'] = (eci_exc[5*iexc+1] - eci_ref[5*iref+1]) * units.energy['eV']
+        state['+DV2'] = (eci_exc[5*iexc+2] - eci_ref[5*iref+2]) * units.energy['eV']
+        state['+DV3'] = (eci_exc[5*iexc+3] - eci_ref[5*iref+3]) * units.energy['eV']
+        state['+P']   = (eci_exc[5*iexc+4] - eci_ref[5*iref+4]) * units.energy['eV']
 
     def read_block_mat(self, mat, mos, rfile, sym, dfac=1.):
         """
@@ -1152,11 +1243,19 @@ class file_parser_col_mrci(file_parser_col):
         for lfile in sorted(os.listdir('LISTINGS')):
             if not 'trncils' in lfile: continue
 
-            print("Reading %s ..."%lfile)
-            state = {}
-            self.read_trncils(state, mos, 'LISTINGS/%s'%lfile)
-            if 'tden' in state:
-                state_list.append(state)
+            tmp  = lfile.replace('state','').replace('drt','').replace('trncils.FROM','').split('TO')
+            tmp2 = tmp[0].split('.')
+            ir_st_ref = (int(tmp2[0]), int(tmp2[1]))
+            if ir_st_ref == self.ioptions['ref_state']:
+                print("Reading %s ..."%lfile)
+                state = {}
+                self.read_trncils(state, mos, 'LISTINGS/%s'%lfile)
+                if 'tden' in state:
+                    state_list.append(state)
+            else:
+                print("Skipping %s (does not match ref_state)"%lfile)
+                print(ir_st_ref)
+                print(self.ioptions['ref_state'])
 
         return state_list
 
@@ -1251,9 +1350,8 @@ class file_parser_col_mcscf(file_parser_col):
 
     def read_mc_sden(self, state, mos, filen):
         tmp = filen.replace('mcsd1fl.drt','').replace('st','').replace('.iwfmt','').split('.')
-        state['irrep'] = self.ioptions.get('irrep_labels')[int(tmp[0]) - 1]
         state['state_ind'] = int(tmp[1])
-        state['name'] = '%s.%i'%(state['irrep'], state['state_ind'])
+        state['name'] = 'DRT%i.St%02i'%(int(tmp[0]), int(tmp[1]))
         state['sden'] = self.init_den(mos)
 
         (eref, eexc) = self.read_iwfmt(state['sden'], 'WORK/'+filen)
@@ -1392,7 +1490,10 @@ class file_parser_dftmrci(file_parser_base):
         self.orb_map = numpy.zeros([mos.ret_num_mo(), mos.ret_num_mo()], int)
 
         self.read_stdout(mos)
-        self.read_cidens(mos, state_list)
+        if self.ioptions.get('rfile2', False) == 'mrci.tcidens':
+          self.read_tcidens(mos, state_list)
+        else:
+          self.read_cidens(mos, state_list)
 
         return state_list
 
@@ -1460,7 +1561,7 @@ class file_parser_dftmrci(file_parser_base):
                     print(" Analysing state %s"%lab1)
                     state_list.append({})
                     state = state_list[-1]
-                    state['name'] = lab1
+                    state['name'] = lab1.replace("'", "1").replace('"', "11")
                     if en0 is None:
                         state['exc_en'] = 0.
                         en0 = en
@@ -1477,7 +1578,7 @@ class file_parser_dftmrci(file_parser_base):
                     print(" Analysing transition %s -> %s"%(lab1, lab2))
                     state_list.append({})
                     state = state_list[-1]
-                    state['name'] = lab2
+                    state['name'] = lab2.replace("'", "1").replace('"', "11")
                     state['exc_en'] = en * units.energy['eV']
 
                     den_tmp = .5**.5 * numpy.reshape(coeff, [nmo, nmo])
@@ -1485,6 +1586,52 @@ class file_parser_dftmrci(file_parser_base):
                         numpy.dot(den_tmp, self.orb_map.T))
                     if lvprt >= 2:
                         self.dens_stat(state['tden'], lvprt)
+
+        df.close()
+
+    def read_tcidens(self, mos, state_list):
+        lvprt = self.ioptions['lvprt']
+
+        df = open('mrci.tcidens', 'rb')
+        print('\nReading file %s ...'%df.name)
+        dummy, nmat = struct.unpack('2i', df.read(8))
+        print('nmat:', nmat)
+
+        en0 = None
+        for imat in range(nmat):
+            df.read(8)
+            lab1 = struct.unpack('6s', df.read(6))[0].strip().decode('UTF-8')
+            lab2 = struct.unpack('6s', df.read(6))[0].strip().decode('UTF-8')
+            df.read(8) # dummy
+            en = struct.unpack('d', df.read(8))[0]
+
+            df.read(8)
+            nmo, dummy  = struct.unpack('2i', df.read(8))
+            dummy, sden = struct.unpack('2i', df.read(8))
+            dummy, reclen = struct.unpack('2i', df.read(8))
+
+            if lvprt >= 2:
+                print("\nParsing <%s|E_pq|%s>.  nmo: %i, reclen: %i"%(lab1, lab2, nmo, reclen))
+
+            if nmo != mos.ret_num_mo():
+                raise error_handler.MsgError('Inconsistent number of MOs')
+            nentry = nmo * nmo
+            if nentry*8 != reclen:
+                raise error_handler.MsgError('Inconsistent record length')
+
+            coeff = struct.unpack(nentry*'d', df.read(nentry*8))
+
+            print(" Analysing transition %s -> %s"%(lab1, lab2))
+            state_list.append({})
+            state = state_list[-1]
+            state['name'] = lab2
+            state['exc_en'] = en * units.energy['eV']
+
+            den_tmp = .5**.5 * numpy.reshape(coeff, [nmo, nmo])
+            state['tden'] = numpy.dot(self.orb_map,\
+                numpy.dot(den_tmp, self.orb_map.T))
+            if lvprt >= 2:
+                self.dens_stat(state['tden'], lvprt)
 
         df.close()
 
@@ -1643,7 +1790,7 @@ class file_parser_nos(file_parser_base):
         """
         nos = lib_mo.MO_set_molden(file=no_file)
         nos.read(spin=spin)
-        nos.compute_inverse()
+        #nos.compute_inverse()
         if self.ioptions['rd_ene']:
             nos.set_ens_occs()
         if not self.ioptions['occ_fac'] == 1:
@@ -1853,5 +2000,145 @@ class file_parser_onetep(file_parser_base):
                     assert(float(words[j+1]) == 0.)
 
             state['tden'] = Dao
+
+        return state_list
+
+class file_parser_orca(file_parser_base):
+    """
+    Read Orca job without using cclib.
+    """
+    def read(self, mos):
+        return self.tden_orca(mos, True)
+
+    def tden_orca(self, mos, rect_dens, filen='orca.cis'):
+        """
+        Read binary CI vector file from ORCA.
+        Authors: S. Mai, F. Plasser
+        TODO: delete this part
+        """
+        print("Reading CI vectors from binary ORCA file %s"%filen)
+
+        CCfile=open(filen,'rb')
+        # header
+        # consists of 9 4-byte integers, the first 5 of which give useful info
+        nvec  =struct.unpack('i', CCfile.read(4))[0]
+        print("Number of vectors:", nvec)
+        header=[ struct.unpack('i', CCfile.read(4))[0] for i in range(8) ]
+        #print 'header:', header
+
+        # header array contains:
+        # [0] index of first alpha occ,  is equal to number of frozen alphas
+        # [1] index of last  alpha occ
+        # [2] index of first alpha virt
+        # [3] index of last  alpha virt, header[3]+1 is equal to number of bfs
+        # [4] index of first beta  occ,  for restricted equal to -1
+        # [5] index of last  beta  occ,  for restricted equal to -1
+        # [6] index of first beta  virt, for restricted equal to -1
+        # [7] index of last  beta  virt, for restricted equal to -1
+
+        if any( [ header[i]!=-1 for i in range(4,8) ] ):
+            #raise error_handler.MsgError("No support for unrestricted MOs")
+            print("Detected unrestricted calculation!")
+            restr=False
+        else:
+            restr=True
+
+        if restr:
+            do_Alpha = True
+        else:
+            do_Alpha = (self.ioptions['spin'] >= 0)
+        print("! Reading %s coefficients ..." % (["BETA","ALPHA"][do_Alpha]))
+
+        NFA = header[0]
+        NOA = header[1] - header[0] + 1
+        NVA = header[3] - header[2] + 1
+        NFB = header[4]
+        NOB = header[5] - header[4] + 1
+        NVB = header[7] - header[6] + 1
+
+        if do_Alpha:
+          nfrzc = NFA
+          nocc  = NFA + NOA
+          nact  = NOA
+          nvir  = NVA
+          nmo   = NFA + NOA + NVA
+          lenci = NOA * NVA
+          if restr:
+            skipci = 0
+          else:
+            skipci = NOB * NVB
+        else:
+          nfrzc = NFB
+          nocc  = NFB + NOB
+          nact  = NOB
+          nvir  = NVB
+          nmo   = NFB + NOB + NVB
+          lenci = NOB * NVB
+          skipci = NOA * NVA
+
+        print('  nmo: %i , nocc: %i , nact: %i , nvir: %i'%(nmo,nocc,nact,nvir))
+        if nmo != mos.ret_num_mo():
+            raise error_handler.MsgError("Inconsistent number of MOs")
+
+        # loop over states
+        # for non-TDA order is: X+Y of 1, X-Y of 1, X+Y of 2, X-Y of 2, ...
+        # triplets come after singlets, observe the multiplicity!
+        # for unrestricted: each vector has first alpha part, then beta part
+        # so if we only analyze one spin, then we have to skip the other
+        rootinfo=[]
+        istate = -1
+        iroot2 = -1
+        TDA=True
+        energies = [] # In the case of RPA, the energies are written with the first N entries
+        state_list = []
+        for ivec in range(nvec):
+            # header of each vector
+            # contains 6 4-byte ints, then 1 8-byte double, then 8 byte unknown
+            d0,d1,mult,d2,iroot,d3 = struct.unpack('iiiiii', CCfile.read(24))
+            rootinfo.append( (mult,iroot) )
+            ene,d3 = struct.unpack('dd', CCfile.read(16))
+            print('  mult: %i , iroot: %i'%(mult,iroot))
+            #print(d1,d2,d3)
+            print('  Ene: %.4f eV'%(ene*units.energy['eV']))
+            energies.append(ene)
+            # -> energy looks ok but the order is strange for RPA
+
+            # then comes nact * nvirt 8-byte doubles with the coefficients
+            if not restr and not do_Alpha:
+              CCfile.read(skipci*8)
+            coeff = struct.unpack(lenci*'d', CCfile.read(lenci*8))
+            if not restr and do_Alpha:
+              CCfile.read(skipci*8)
+
+            if ivec==1 and (mult,iroot)==rootinfo[0]:
+              TDA=False
+              print("Detected a non-TDA calculation!")
+
+            if ivec>=1 and mult!=rootinfo[-2][0]:
+              triplets=True
+              #istate=-1
+              iroot2=-1
+
+
+            if TDA or ivec%2==0:
+                istate+=1
+                iroot2+=1
+                state_list.append({})
+                state = state_list[-1]
+                state['state_ind'] = iroot2 + 1
+                state['mult'] = mult
+                state['irrep'] = 'A'
+                state['name'] = '%i(%i)%s'%(state['state_ind'], state['mult'] ,state['irrep'])
+                state['exc_en'] = energies.pop(0)*units.energy['eV']
+                state['tden'] = self.init_den(mos, rect=rect_dens)
+
+                state['tden'][nfrzc:nocc, nocc:nmo] = numpy.reshape(coeff, [nact,nvir])
+            else:
+            # in this case, we have a non-TDA state!
+            # and we need to compute (prevvector+currentvector)/2 = X vector
+            # this is added to the vector from the previous "if"
+                print('Constructing X-vector of RPA state')
+                state['tden'][nfrzc:nocc, nocc:nmo] += numpy.reshape(coeff, [nact,nvir])
+                state['tden'][nfrzc:nocc, nocc:nmo] *= .5
 
         return state_list

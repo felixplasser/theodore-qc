@@ -31,7 +31,7 @@ class write_options_theo(input_options.write_options):
             rdef = 'colmrci'
         elif os.path.exists('molcas.rasscf.molden'):
             rdef = 'rassi'
-        elif os.path.exists('mrci.cidens'):
+        elif os.path.exists('mrci.cidens') or os.path.exists('mrci.tcidens'):
             rdef = 'dftmrci'
         elif os.path.exists('coord'):
             if os.path.exists('auxbasis'):
@@ -145,7 +145,8 @@ class write_options_theo(input_options.write_options):
             self['coor_file'] = 'geom.xyz'
             self['coor_format'] = 'xyz'
         elif self['rtype'] == 'dftmrci':
-            self['rfile'] = 'mrci.log'
+            self['rfile'] = 'mrci2.out'
+            self['rfile2'] = 'mrci.cidens'
             self['mo_file'] = 'orca.molden.input'
             self['coor_file'] = ''
             self['coor_format'] = ''
@@ -180,6 +181,7 @@ class write_options_theo(input_options.write_options):
         if self['rtype'] in ['qctddft']:
             self.read_yn('Read TDA rather than full TDDFT results?', 'TDA', False)
 
+        # binary files
         if self['rtype'] == 'ricc2':
             self.read_yn('Read binary CCRE0 files?', 'read_binary', False)
             if not self['read_binary']:
@@ -189,6 +191,15 @@ class write_options_theo(input_options.write_options):
                 print("     from the control file before running tm2molden.")
         elif self['rtype'] == 'orca':
             self.read_yn('Read the binary orca.cis file?', 'read_binary', True)
+
+        # switch for DFTMRCI singlet-singlet / singlet-triplet densities
+        if self['rtype'] == 'dftmrci':
+            self.read_str('Read mrci.cidens or mrci.tcidens file?', 'rfile2', self['rfile2'], autocomp=True)
+
+        # extra read-out
+        if self['rtype'] == 'colmrci':
+            if self.ret_yn('Parse extensivity corrected MRCI energies?', True):
+                self['prop_list'] += ['+DV3', '+P']
 
     def choose_mo_file(self):
         if 'mo_file' not in self: return
@@ -211,8 +222,27 @@ class write_options_theo(input_options.write_options):
 
             self.read_yn('Intepret energies as orbital occupations (for Q-Chem)', 'rd_ene', False)
 
+    def only_at_lists(self, afile):
+        """
+        Shortcut for only creating at_lists
+        """
+        print("Coordinate file (afile): %s"%afile)
+        self['coor_file'] = afile
+        tstruc = lib_struc.structure()
+        self['coor_format'] = tstruc.guess_file_type(self['coor_file'])
+        self.make_at_lists(afile)
 
-    def make_at_lists(self):
+        print('\nOpenMolcas input:\n')
+        print('&WFA\n H5FI = $Project.rassi.h5\n ATLISTS')
+        print(' %i'%len(self['at_lists']))
+        for li in self['at_lists']:
+            wstr = ' '
+            for el in li:
+                wstr += '%i '%el
+            wstr += '*'
+            print(wstr)
+
+    def make_at_lists(self, afile=None):
         print("Fragment definition for CT nubmer analysis")
         aexpl = ['Manual input',\
                  'Automatic generation by fragment (using python-openbabel)', \
@@ -225,7 +255,7 @@ class write_options_theo(input_options.write_options):
         if ichoice==1:
             self['at_lists'] = self.read_at_lists()
         elif ichoice in [2,3,4,5]:
-            self['at_lists'] = self.file_at_lists(ichoice)
+            self['at_lists'] = self.file_at_lists(ichoice, afile)
         elif ichoice==6:
             self['at_lists'] = [[]]
             self.ostr += 'at_lists=\n'
@@ -246,9 +276,10 @@ class write_options_theo(input_options.write_options):
 
         return atl_tmp
 
-    def file_at_lists(self, mode):
+    def file_at_lists(self, mode, afile=None):
         print("Automatic generation of at_lists partitioning ...")
-        self.coor_file()
+        if afile is None:
+            self.coor_file()
 
         struc = lib_struc.structure()
         struc.read_file(file_path=self['coor_file'], file_type=self['coor_format'])
@@ -437,14 +468,18 @@ Please specify this directory and choose, which files will be analyzed,
         dlist = [os.path.join(ddir,lfiles[dind]) for dind in dinds]
         self.write_option('ana_files', dlist)
 
-def run_theoinp():
+def run_theoinp(afile=''):
     wopt = write_options_theo('dens_ana.in')
+
+    if not afile is None:
+        wopt.only_at_lists(afile)
+        return
+
+    wopt['prop_list'] = []
 
     wopt.choose_rtype()
     wopt.set_read_options()
     wopt.choose_mo_file()
-
-    wopt['prop_list'] = []
 
     if wopt['rtype'] in ['nos']:
         dotden = False
@@ -466,6 +501,8 @@ def run_theoinp():
 
             if wopt.ret_yn('Perform exciton analysis?', True):
                 wopt.exciton_ana()
+            if wopt.ret_yn('Add descriptors for ionic states?', False):
+                wopt['prop_list'] += ['QTa', 'QT2', 'LOCa', 'LOC']
 
     if (not dotden) and (wopt['rtype'] in ['nos', 'colmcscf', 'rassi', 'libwfa']):
         if wopt.ret_yn('Analysis of state density matrices?', True):
@@ -492,12 +529,14 @@ def run_theoinp():
     if wopt['rtype'] == 'colmcscf':
         print("\nNow, please run write_den.bash to prepare the MCSCF density matrices!")
 
-
-class TheodoreInput(Action): 
+class TheodoreInput(Action):
 
     name = 'theoinp'
 
-    _user_input = ""
+    _user_input = """
+    # Fragment def (at_lists) using coords from afile
+    afile = :: str, optional, alias=a
+    """
 
     _colt_description = "Input generation for TheoDORE"
 
@@ -509,6 +548,6 @@ class TheodoreInput(Action):
             '..orbkit_interface': 'orbkit_interface',
     })
 
-    def run():
+    def run(afile):
         theo_header.print_header(__class__._colt_description)
-        run_theoinp()
+        run_theoinp(afile)

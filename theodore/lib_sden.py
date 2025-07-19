@@ -117,6 +117,8 @@ class sden_ana(dens_ana_base.dens_ana_base):
 
         if ana_type == 'mullpop':
             pana = pop_ana.mullpop_ana()
+        elif ana_type == 'lowdin':
+            pana = pop_ana.lowdin_ana()
         else:
             raise error_handler.MsgError('Population analyis type not implmented: %s'%ana_type)
 
@@ -272,6 +274,9 @@ class sden_ana(dens_ana_base.dens_ana_base):
         nBB = 0.5 * numpy.sum(state['sden'] * state['sden'])
         nAB = 0.5 * numpy.sum(state['sden'] * ref_state['sden'])
         state["eta"] = max(nAA, nBB) - nAB
+        state["eta_A"] = numpy.trace(ref_state['sden']) - nAB
+        state["eta_av"] = 0.5*(nAA+nBB) - nAB
+        state["eta_ch"] = numpy.trace(ref_state['sden']) - ref_state['nu'] - nAB
 
         return ad, W
 

@@ -49,9 +49,14 @@ class wtable:
     """
     Virtual class with routines for creating a general table.
     """
-    def __init__(self, ncol=2):
+    def __init__(self, ncol=2, colw=None, **kwargs):
         self.ncol = ncol
         self.icol = 0
+        if colw is None:
+            self.colw = ncol * [10]
+        else:
+            self.colw = colw
+        self.kwargs = kwargs
 
         self.str = self.init_extra()
 
@@ -203,6 +208,38 @@ class latextabular(wtable):
     def close_table(self):
         return "\n\\end{tabular}\n"
 
+class rsttable(wtable):
+    """
+    Routines for creating restructured text table.
+    """
+    def init_extra(self):
+        self.irow = 0
+        return self.hline()
+
+    def new_row(self):
+        ret_str  = '|\n'
+        ret_str += self.hline()
+        return ret_str
+
+    def new_el(self, el):
+        w = self.colw[self.icol] - 1
+        return f'| {str(el):<{w}}'
+
+    def close_table(self):
+        ret_str  = '|\n'
+        ret_str += self.hline()
+        return ret_str
+
+    def hline(self):
+        dash = '-'
+        if self.irow == 1: dash = '='
+        self.irow += 1
+        ret_str = '+'
+        for icol in range(self.ncol):
+            ret_str += self.colw[icol]*dash + '+'
+        ret_str += '\n'
+        return ret_str
+
 class summ_file:
     """
     Class for analyzing the summary files.
@@ -230,7 +267,7 @@ class summ_file:
             words = line.split()
             state_label = words[0]
             if state_label in self.ddict:
-                errmsg  = "State %s already present.\n"%state_label
+                errmsg  = "State %s already present in %s.\n"%(state_label, f.name)
                 errmsg += "  Please, do not combine tden_summ.txt files here."
                 raise error_handler.MsgError(errmsg)
             self.ddict[state_label] = {}

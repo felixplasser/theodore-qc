@@ -9,7 +9,7 @@ import struct
 import numpy
 from . import file_parser, lib_mo, error_handler, units, lib_struc
 try:
-    import openbabel
+    from openbabel import openbabel
 except ImportError:
     print(" *** Warning: python-openbabel not found! ***")
     print(" Using emulation program with limited capabilities ...")
@@ -67,7 +67,10 @@ class file_parser_cclib(file_parser.file_parser_base):
                 state['osc_str'] = self.data.etoscs[ist]
             except AttributeError:
                 state['osc_str'] = -1.
-            state['irrep'] = self.data.etsyms[ist].replace('let-', '').replace('Not specified', 'X')
+            try:
+                state['irrep'] = self.data.etsyms[ist].replace('let-', '').replace('Not specified', 'X')
+            except AttributeError:
+                state['irrep'] = 'X'
 
         if self.prog == 'ADF':
             self.tden_adf(state_list, mos, rect_dens)
@@ -114,6 +117,7 @@ class file_parser_cclib(file_parser.file_parser_base):
         """
         Read binary CI vector file from ORCA.
         Authors: S. Mai, F. Plasser
+        TODO: delte this subroutine (it is moved to file_parser.py)
         """
         print("Reading CI vectors from binary ORCA file %s"%filen)
 

@@ -1,5 +1,25 @@
 Download the newest TheoDORE release and tutorial.
 
+- Include Q-Chem SF-TDDFT
+
+TheoDORE 3.2
+- Compute absorption cross section and extinction coefficient in spectrum.py
+- Updates for DFT/MRCI, including triplets
+- OpenMolcas input via: theodore theoinp -a
+- Standalone Orca interface
+- Fix for es2es
+- VIST plots for Turbomole
+
+TheoDORE 3.1.1
+- Fix for QTa values
+
+TheoDORE 3.1
+- Transition charges for ionic/covalent states
+- Fixes for Q-Chem EOM-CC and fchk
+- Fixes for Columbus, Turbomole
+
+TheoDORE 3.0
+- New user interface and documentation
 - LOC for ionic states (analyze_tden)
 - Analysis of unrestricted NOs (analyze_nos)
 - Improvement for VIST (plot_vist)

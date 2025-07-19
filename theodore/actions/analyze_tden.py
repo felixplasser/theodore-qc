@@ -27,6 +27,8 @@ class AnalyzeTden(Action):
     _user_input = """
     # Main input file
     ifile = dens_ana.in :: existing_file, alias=f
+    # Print all keywords and their current values
+    keywords = false :: bool, alias=k
     """
 
     _lazy_imports = LazyImporter({
@@ -37,9 +39,12 @@ class AnalyzeTden(Action):
     })
 
     @timeit
-    def run(ifile):
+    def run(ifile, keywords):
         ioptions = input_options.tden_ana_options(ifile)
         theo_header.print_header(title=__class__._colt_description, ioptions=ioptions, cfile=__name__)
+        if keywords:
+            print(ioptions.doc_info())
+            exit(0)
 
         tdena = lib_tden.tden_ana(ioptions)
         if 'mo_file' in ioptions: tdena.read_mos()
@@ -63,7 +68,12 @@ class AnalyzeTden(Action):
         if ioptions['comp_rho0n']: 
             tdena.compute_rho_0_n()
 
-        if 'RMSeh' in ioptions.get('prop_list') or 'MAeh' in ioptions.get('prop_list') or 'Eb' in ioptions.get('prop_list'):
+        exc_props = ['RMSeh', 'MAeh', 'Eb', 'rTD']
+        do_exc = False
+        for prop in exc_props:
+            if prop in ioptions['prop_list']:
+                do_exc = True
+        if do_exc:
             exca = lib_exciton.exciton_analysis()
             exca.get_distance_matrix(tdena.struc)
             tdena.analyze_excitons(exca)

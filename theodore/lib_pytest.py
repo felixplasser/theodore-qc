@@ -154,6 +154,9 @@ class pytest_job:
         rwords = rline.split()
         words  = line.split()
 
+        if not len(rwords) == len(words):
+            return 2
+
         for i, rword in enumerate(rwords):
             try:
                 rval = float(rword)

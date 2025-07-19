@@ -33,7 +33,7 @@ Molecular fragment definition
 
 A key input quantity for the charge transfer number analysis in TheoDORE is the molecular fragment definition. First, the user has to decide on how to separate the system under study into fragments. There is no unique way to do so, and it may be necessary to try out different fragmentation schemes to produce the most meaningful results.
 
-There are five different ways of specifying the fragment information in `theoinp`.
+There are six different ways of specifying the fragment information in `theoinp`.
 
 .. code-block:: text
 
@@ -62,3 +62,5 @@ There are five different ways of specifying the fragment information in `theoinp
     at_lists = [ [1,3,4], [2,5,6] ]
 
 means that there are two molecular fragments. The first contains atoms 1, 3, and 4, the second 2, 5, and 6.
+
+**Note:** For Modes 2-4, the molecule should be given in a file format containing information about bonds, for example ``.mol`` format.

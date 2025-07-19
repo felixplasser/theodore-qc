@@ -88,7 +88,9 @@ class dens_ana_base:
         elif rtype == 'nos':
             self.ioptions['NO_ana'] = False # Do not do explicit NO analysis
             self.state_list = file_parser.file_parser_nos(self.ioptions).read(self.mos)
-        elif rtype in ['cclib', 'gamess', 'orca']:
+        elif rtype == 'orca':
+            self.state_list = file_parser.file_parser_orca(self.ioptions).read(self.mos)
+        elif rtype in ['cclib', 'gamess']:
             # these are parsed with the external cclib library
             ccli = cclib_interface.file_parser_cclib(self.ioptions)
 
@@ -120,7 +122,7 @@ class dens_ana_base:
                 print(("\nReading structure from coor_file %s"%self.ioptions['coor_file']))
             self.struc = lib_struc.structure()
             self.struc.read_file(self.ioptions['coor_file'], self.ioptions['coor_format'])
-        elif self.ioptions['rtype'].lower() in ['cclib', 'gamess', 'orca']:
+        elif self.ioptions['rtype'].lower() in ['cclib', 'gamess']:
             if lvprt >= 1:
                 print("\nUsing cclib structure")
         elif self.ioptions['rtype'].lower() in ['adf']:

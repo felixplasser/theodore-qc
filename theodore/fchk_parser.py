@@ -20,6 +20,8 @@ class file_parser_fchk(file_parser.file_parser_base):
         dummy_en = 1.
 
         self.rfileh = open(self.ioptions['rfile'], 'r')
+        exc_ens  = []
+        osc_strs = []
         while True: # loop over all lines
             try:
                 line = next(self.rfileh)
@@ -27,20 +29,28 @@ class file_parser_fchk(file_parser.file_parser_base):
                 print("Reached end of file %s"%self.ioptions.get('rfile'))
                 break
 
-            if 'Transition DM' in line or 'Transition density matrix' in line:
+            if 'Excitation Energies' in line:
+                exc_ens  = self.fchk_list(line)
+            elif 'Oscillator Strengths' in line:
+                osc_strs = self.fchk_list(line)
+            elif 'Transition DM' in line or 'Transition density matrix' in line:
                 print(line.strip())
                 state_list.append({})
                 state = state_list[-1]
                 words = line.replace('let ', 'let').replace('Excited State ', 'ES').split()
 
                 state['name']    = words[0].lower().replace('singlet','S').replace('triplet','T').replace("'", '1').replace('"', '11')
-                try:
-                    state['exc_en'] = float(words[1]) * units.energy['eV']
-                    state['osc_str'] = float(words[2])
-                except ValueError:
-                    state['exc_en'] = dummy_en
-                    dummy_en += 1.
-                    state['osc_str'] = -1.
+                if len(exc_ens) > 0:
+                    state['exc_en']  = float(exc_ens.pop(0)) * units.energy['eV']
+                    state['osc_str'] = float(osc_strs.pop(0))
+                else:
+                    try:
+                        state['exc_en'] = float(words[1]) * units.energy['eV']
+                        state['osc_str'] = float(words[2])
+                    except ValueError:
+                        state['exc_en'] = dummy_en
+                        dummy_en += 1.
+                        state['osc_str'] = -1.
                 dim = int(words[-1])
 
                 refdim = num_bas * num_bas

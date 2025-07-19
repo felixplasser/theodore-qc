@@ -6,7 +6,7 @@ width=80
 def print_header(*args, **kwargs):
     print((ret_header(*args, **kwargs)))
 
-def ret_header(title=None, ioptions=None, cfile=None, ver='3.0_alpha'):
+def ret_header(title=None, ioptions=None, cfile=None, ver='3.3-pre'):
     hstr  = width*'=' + '\n'
 
     hstr += addlinec("TheoDORE %s"%ver)
@@ -14,7 +14,7 @@ def ret_header(title=None, ioptions=None, cfile=None, ver='3.0_alpha'):
     hstr += addlinec()
     hstr += addlinec("Author: Felix Plasser")
     hstr += addlinec("Contributions by: L. Stojanovic, G. Hermann, S. Mai,")
-    hstr += addlinec(" M.F.S.J. Menger, P. Kimber")
+    hstr += addlinec(" M.F.S.J. Menger, P. Kimber, F. Dinkelbach")
 
     hstr += width*'-' + '\n'
 
@@ -23,7 +23,7 @@ def ret_header(title=None, ioptions=None, cfile=None, ver='3.0_alpha'):
 
     hstr += add_stden(cfile)
     hstr += add_exciton(ioptions)
-    hstr += add_entanglement(ioptions)
+    hstr += add_extra(ioptions)
     hstr += add_cclib(ioptions)
     hstr += add_orbkit(ioptions)
     hstr += add_VIST(cfile)
@@ -102,7 +102,7 @@ def add_exciton(ioptions):
 
     return rstr
 
-def add_entanglement(ioptions):
+def add_extra(ioptions):
     try:
         prop_list = ioptions['prop_list']
     except TypeError:
@@ -115,6 +115,12 @@ def add_entanglement(ioptions):
         rstr += addlinel("Electron-hole entanglement:", 3)
         rstr += addlinel("F. Plasser")
         rstr += addlinel("J. Chem. Phys. (2016), 144, 194107.")
+
+    if ('QTa' in prop_list) or ('LOC' in prop_list):
+        rstr += addlinec()
+        rstr += addlinel("Analysis of ionic states:", 3)
+        rstr += addlinel("F. Plasser et al.")
+        rstr += addlinel("in preparation")
 
     return rstr
 

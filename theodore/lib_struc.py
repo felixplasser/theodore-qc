@@ -9,7 +9,7 @@ import os, shutil, locale
 import numpy
 obabel_avail = True
 try:
-    import openbabel
+    from openbabel import openbabel
 except ImportError:
     obabel_avail = False
     print(" *** Warning: python-openbabel not found! ***")
@@ -26,7 +26,8 @@ class structure:
     """
     def __init__(self, name=''):
         self.name = name
-        self.new_types = ['txyz2', 'Bqxyz','col','colr','nx'] # these are defined here
+        # these are defined here. xyz is redefined to get more decimal digits
+        self.new_types = ['txyz2', 'Bqxyz','col','colr','nx', 'qcin2', 'xyz']
 
     def read_file(self, file_path, file_type=None):
         """
@@ -51,14 +52,14 @@ class structure:
             return 'col'
         elif file_name == 'coord':
             return 'tmol'
-        elif file_name == 'coord.qchem':
-            return 'qcin'
+        elif file_name == 'molecule':
+            return 'qcin2'
         elif file_name == 'qchem.out':
             return 'qcout'
 
         fparts = file_name.split('.')
         if len(fparts) == 1:
-            raise error_handler.MsgError('File format cannot be detected for %s'%file_name)
+            raise error_handler.MsgError('File format cannot be detected for "%s"'%file_name)
         else:
             ret_type = fparts[-1]
             if ret_type == 'cb':
@@ -114,6 +115,31 @@ class structure:
 
               self.mol.AddAtom(obatom)
               line = infile.readline()
+        elif self.file_type == 'qcin2':
+            line = infile.readline() # multiplicity and charge
+            line = infile.readline() # first coordinates
+            while(not '$end' in line):
+                words = line.split()
+                obatom = openbabel.OBAtom()
+                obatom.SetAtomicNum(symbol_Z_dict[words[0]])
+                coords = [float(word) for word in words[1:4]]
+                obatom.SetVector(*coords)
+
+                self.mol.AddAtom(obatom)
+                line = infile.readline()
+        elif self.file_type == 'xyz':
+            line = infile.readline()
+            line = infile.readline()
+
+            while(line!=''):
+                  words = line.split()
+                  obatom = openbabel.OBAtom()
+                  obatom.SetAtomicNum(symbol_Z_dict[words[0]])
+                  coords = [float(word) for word in words[1:4]]
+                  obatom.SetVector(*coords)
+
+                  self.mol.AddAtom(obatom)
+                  line = infile.readline()
         else:
            print('type %s not supported for input'%self.file_type)
            exit(1)
@@ -272,7 +298,7 @@ class structure:
 
     def ret_distance_matrix(self):
         """
-        Return a matrix containing all the distances between atoms.
+        Return a matrix containing all the distances between atoms in Angstrom.
         """
         num_at = self.mol.NumAtoms()
 
@@ -557,6 +583,29 @@ class structure:
           for Z in atnums:
               for ostr in atstrs[Z]:
                   outfile.write(ostr)
+        elif file_type == 'xyz':
+            outfile.write('%i\n\n'%num_at)
+
+            for ind in range(1, num_at+1):
+                obatom  = self.mol.GetAtom(ind)
+                outstr  = '%2s'%Z_symbol_dict[obatom.GetAtomicNum()]
+                outstr += '% 16.10f'%(obatom.x())
+                outstr += '% 16.10f'%(obatom.y())
+                outstr += '% 16.10f'%(obatom.z())
+                outfile.write(outstr+'\n')
+        elif file_type == 'qcin2':
+            outfile.write('$molecule\n')
+            outfile.write('0 1\n')
+
+            for ind in range(1, num_at+1):
+                obatom  = self.mol.GetAtom(ind)
+                outstr  = '%2s'%Z_symbol_dict[obatom.GetAtomicNum()]
+                outstr += '% 16.10f'%(obatom.x())
+                outstr += '% 16.10f'%(obatom.y())
+                outstr += '% 16.10f'%(obatom.z())
+                outfile.write(outstr+'\n')
+
+            outfile.write('$end\n')
 
         outfile.close()
 

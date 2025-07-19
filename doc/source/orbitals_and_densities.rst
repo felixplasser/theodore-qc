@@ -1,4 +1,5 @@
 .. _orb-dens:
+
 Orbitals and Densities
 ----------------------
 

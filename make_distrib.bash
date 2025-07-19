@@ -21,9 +21,9 @@ LTDIR="TheoDORE_$1"
 TDIR="$SDIR/../Versions/$LTDIR"
 echo "Creating new version in $TDIR"
 
-git tag -a v$1
-
 mkdir $TDIR || exit 2
+
+git tag -a v$1
 
 cp README.rst COPYRIGHT.txt LICENSE.txt $TDIR
 
@@ -34,7 +34,9 @@ cp -r bin $TDIR
 mkdir $TDIR/EXAMPLES
 cp -r ../EXAMPLES/STANDARD $TDIR/EXAMPLES
 cp -r ../EXAMPLES/CCLIB    $TDIR/EXAMPLES
+cp -r ../EXAMPLES/UTILS    $TDIR/EXAMPLES
 cp -r ../EXAMPLES/EXTRA    $TDIR/EXAMPLES
+rm -r $TDIR/EXAMPLES/*/*/RUN
 
 cp -r theodore $TDIR
 
@@ -42,15 +44,16 @@ cp -r theodore $TDIR
 cp -r external/cclib/cclib $TDIR
 cp external/cclib/LICENSE $TDIR/cclib
 
+# periodictable
+cp -r external/periodictable/periodictable $TDIR
+cp external/periodictable/LICENSE.txt $TDIR/periodictable
+
 # colt as used by TheoDORE
 cp -r external/colt/colt $TDIR
 cp external/colt/LICENSE $TDIR/colt
 
-# remove extra files in EXAMPLE directory
-rm -r $TDIR/EXAMPLES/*/*/RUN
-
 echo "Removing binary pyc files"
-find $TDIR -name '*pyc' -exec rm -v {} \;
+find $TDIR -name '*pyc' -exec rm {} \;
 
 # create tar with shorter relative paths
 cd $SDIR/../Versions

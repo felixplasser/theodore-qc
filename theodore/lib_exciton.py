@@ -13,10 +13,18 @@ class exciton_analysis:
     
     def __init__(self):
         self.distmat = None
+        self.Ohnomat = None
     
-    def get_distance_matrix(self, struc):
+    def get_distance_matrix(self, struc, U = 8.0, eps = 2):
+        """
+        Get distance matrix and compute ERIs according to Ohno formula.
+        """
         self.distmat = struc.ret_distance_matrix()
-                        
+
+        # Ohno formula from W. Barford, PRB, 106, 035201 (2022)
+        self.Ohnomat = U / (1 + (U * eps * self.distmat)**2)**.5
+        # TODO: use for K2 and J2
+
     def ret_RMSeh(self, Om, OmAt):
         """
         Return the root mean square electron-hole distance (Ang).
@@ -51,6 +59,7 @@ class exciton_analysis:
     def ret_Eb(self, Om, OmAt, Eb_diag=1.0):
         """
         Return an approximate exciton binding energy (eV).
+        TODO: One could use the Ohno formula here.
         """
         if not type(self.distmat) is numpy.ndarray:
             raise error_handler.MsgError("Compute the distance matrix first!")
@@ -63,3 +72,19 @@ class exciton_analysis:
         Eb_au = numpy.dot(OmAt.flatten(), Eb_dist**-1.) / Om
         
         return Eb_au * units.energy['eV']
+
+    def ret_rTD(self, QT2, tpop):
+        """
+        Compute effective transition density size.
+        """
+        if QT2 < 0.01:
+            return None
+        pot = 0
+        for A, popA in enumerate(tpop):
+            for B, popB in enumerate(tpop):
+                if A != B:
+                    pot += popA * popB / self.distmat[A, B]
+                    #if abs(popA * popB / self.distmat[A, B]) > 0.01:
+                    #    print('%3i %3i % .5f % .5f % .5f % .5f'%(A, B, popA, popB, popA*popB / self.distmat[A, B], pot))
+
+        return -QT2 / pot

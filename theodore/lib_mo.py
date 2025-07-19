@@ -5,6 +5,7 @@ Handling and manipulation of MO-coefficients.
 from __future__ import print_function, division
 
 from . import error_handler, lib_file, units
+from .atominfo import symbol_Z_dict, Z_symbol_dict
 import numpy
 
 class MO_set:
@@ -291,6 +292,19 @@ class MO_set:
         #    self.Sinv2 = self.CdotD(self.lowdin_mat.T)
 
         return numpy.dot(self.Sinv2, numpy.dot(D, self.Sinv2))
+
+    def D_element_S(self, D):
+        """
+        Element-wise multiplication of D and S in the AO basis.
+        """
+        if self.S is None:
+            if self.inv_mo_mat is None: self.compute_inverse()
+            self.S = numpy.dot(self.inv_mo_mat.T, self.inv_mo_mat)
+
+        temp = self.CdotD(D, trnsp=False, inv=False)  # C.D
+        DAO  = self.MdotC(temp, trnsp=True, inv=False)
+
+        return DAO * self.S
 
     def export_MO(self, ens, occs, U, *args, **kwargs):
         """
@@ -694,8 +708,8 @@ class MO_set_tddftb(MO_set):
             nline += 1
             words = line.split()
             if nline > 2:
-               self.at_dicts.append({'Z':'', 'x':words[1], 'y':words[2], 'z':words[3]})
-               at_symb.append(str(words[0]))
+               self.at_dicts.append({'Z':symbol_Z_dict[words[0]], 'x':float(words[1]), 'y':float(words[2]), 'z':float(words[3])})
+               at_symb.append(words[0])
                self.num_at += 1
         filegeom.close()
 

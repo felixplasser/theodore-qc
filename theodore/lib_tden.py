@@ -195,6 +195,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         pop_pr.add_pop('e-', epop)
         pop_pr.add_pop('sum', hpop+epop)
         pop_pr.add_pop('diff', hpop-epop)
+        pop_pr.add_pop('trans', state['tpop'])
 
         print(pop_pr.ret_table())
 
@@ -279,11 +280,23 @@ class tden_ana(dens_ana_base.dens_ana_base):
 
         if formula <= 1:
             OmBas = self.mos.OmBas_Mulliken(D, formula)
+            state['tpop'] = 2**.5 * pop_ana.mullpop_ana().ret_pop(D, self.mos)
+            state['LOCa'] = 2**.5 * sum(numpy.sqrt(abs(numpy.diag(OmBas))))
         elif formula == 2:
             SDSh = self.mos.lowdin_trans(D)
             if fullmat or self.ioptions['comp_dntos']:
                 state['SDSh'] = SDSh
             OmBas = SDSh * SDSh
+            state['tpop'] = 2**.5 * pop_ana.pop_ana().ret_pop(D, self.mos, SDSh)
+            state['LOCa'] = 2**.5 * numpy.trace(abs(SDSh))
+        elif formula == 3: # element-wise multiplication of D and S
+            # The results are to be interpreted differently from the above cases.
+            # This shows overlap populations of covalent states, and not charge transfer
+            # The overlap populations are represented via CT or Om - LOC
+            DeS = self.mos.D_element_S(D)
+            OmBas = DeS * DeS
+            state['tpop'] = 2**.5 * pop_ana.pop_ana().ret_pop(D, self.mos, DeS)
+            state['LOCa'] = 2**.5 * numpy.trace(abs(DeS))
         else:
             raise error_handler.MsgError("Om_formula=%i for CT numbers not implemented!"%formula)
 
@@ -292,6 +305,9 @@ class tden_ana(dens_ana_base.dens_ana_base):
             state['OmBas'] = OmBas
 
         state['LOC'] = numpy.trace(OmBas)
+        state['QT2'] = numpy.sum(state['tpop']**2)
+        state['QTa'] = numpy.sum(abs(state['tpop']))
+
         state['Om'] = numpy.sum(OmBas)
         state['OmAt'] = self.mos.comp_OmAt(OmBas)
 
@@ -357,7 +373,11 @@ class tden_ana(dens_ana_base.dens_ana_base):
             for B, Batoms in enumerate(at_lists):
                 for Aatom in Aatoms:
                     for Batom in Batoms:
-                        state['OmFrag'][A, B] += state['OmAt'][Aatom-1, Batom-1]
+                        try:
+                            state['OmFrag'][A, B] += state['OmAt'][Aatom-1, Batom-1]
+                        except IndexError:
+                            print("\n  ERROR: Please check at_lists definition.\n")
+                            raise
 
         return state['Om'], state['OmFrag']
 
@@ -405,7 +425,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
                 self.export_NTOs_molden(state, U, lam, Vt, minlam=self.ioptions['min_occ'])
 
             if self.ioptions.get('cube_orbitals'):
-                lib_orbkit = orbkit_interface.lib_orbkit()
+                lib_orbkit = orbkit_interface.lib_orbkit(self.ioptions['orbkit_extend'], self.ioptions['orbkit_step'])
                 cbfid = lib_orbkit.cube_file_creator(state, U, lam, Vt, self.mos,minlam=self.ioptions['min_occ'],numproc=self.ioptions.get('numproc'))
                 cube_ids.append(cbfid)
 
@@ -423,7 +443,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         if len(self.state_list) == 0: return
         if not 'tden' in self.state_list[0]: return
 
-        lib_orbkit = orbkit_interface.lib_orbkit()
+        lib_orbkit = orbkit_interface.lib_orbkit(self.ioptions['orbkit_extend'], self.ioptions['orbkit_step'])
         cube_ids = []
         for state in self.state_list:
             (U, lam, Vt) = self.ret_NTO(state)
@@ -440,7 +460,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         if len(self.state_list) == 0: return
         if not 'tden' in self.state_list[0]: return
 
-        lib_orbkit = orbkit_interface.lib_orbkit()
+        lib_orbkit = orbkit_interface.lib_orbkit(self.ioptions['orbkit_extend'], self.ioptions['orbkit_step'])
         cube_ids = lib_orbkit.compute_rho_0_n(self.state_list,self.mos,numproc=self.ioptions.get('numproc'))
         if self.ioptions.get('vmd_rho0n'):
             print("VMD network for transition densities")
@@ -513,7 +533,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         if len(self.state_list) == 0: return
         if not 'tden' in self.state_list[0]: return
 
-        lib_orbkit = orbkit_interface.lib_orbkit()
+        lib_orbkit = orbkit_interface.lib_orbkit(self.ioptions['orbkit_extend'], self.ioptions['orbkit_step'])
         cube_ids = []
         for state in self.state_list:
             (U, lam, Vt) = self.ret_NTO(state)
@@ -543,7 +563,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
 
         dnto_dens = self.ioptions['comp_dnto_dens']
         if dnto_dens > 0:
-            lib_orbkit = orbkit_interface.lib_orbkit()
+            lib_orbkit = orbkit_interface.lib_orbkit(self.ioptions['orbkit_extend'], self.ioptions['orbkit_step'])
             cube_ids = []
 
         fchk_dens = self.ioptions['fchk_dnto_dens']
@@ -663,7 +683,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
         if len(self.state_list) == 0: return
         if not 'tden' in self.state_list[0]: return
 
-        lib_orbkit = orbkit_interface.lib_orbkit()
+        lib_orbkit = orbkit_interface.lib_orbkit(self.ioptions['orbkit_extend'], self.ioptions['orbkit_step'])
         cube_ids = lib_orbkit.compute_rho_0_n(self.state_list,self.mos,numproc=self.ioptions.get('numproc'))
         if self.ioptions.get('vmd_rho0n'):
             print("VMD network for transition densities")
@@ -680,6 +700,10 @@ class tden_ana(dens_ana_base.dens_ana_base):
             state['MAeh']  = exciton_ana.ret_MAeh(Om, OmAt)
             state['Eb']    = exciton_ana.ret_Eb(Om, OmAt, self.ioptions['Eb_diag'])
 
+            try:
+                state['rTD']   = exciton_ana.ret_rTD(state['QT2'], state['tpop'])
+            except KeyError:
+                pass
 #---
 
     def compute_es2es_tden(self, iref=1):
@@ -702,6 +726,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
 
             state['tden'] = DIJ_elec
             state['tden'][:DIJ_hole.shape[0], :DIJ_hole.shape[1]] -= DIJ_hole
+            state['tden'] /= 2**.5
 
             state['exc_en'] = state['exc_en'] - enI
             del state['osc_str']

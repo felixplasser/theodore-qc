@@ -28,16 +28,31 @@ class spec_options(input_options.write_options):
         self.read_float("Minimum energy in the plot (eV)", "emin", 2.0)
         self.read_float("Maximum energy in the plot (eV)", "emax", 8.0)
         self.read_float("FWHM broadening (eV)", "fwhm", 0.5)
-        self.read_int("Lineshape: 1 - Lorentzian, 2 - Gaussian", "lineshape", 1)
 
+        self.choose_list(
+            "What do you want to plot?",
+            "weight",
+        [
+            (1, "Spectrum weighted by oscillator strength"),
+            (2, "Density of states (uniform weighting)"),
+            (3, "Absorption cross section"),
+            (4, "Molar extinction coefficient")
+        ], 1)
+
+        if self["weight"] <= 2:
+            self.read_int("Lineshape: 1 - Lorentzian, 2 - Gaussian", "lineshape", 1)
+        else:
+            self["lineshape"] = 1
         self.spec = spectrum(**self.opt_dict)
 
-        self.read_int("Weighting: 1 - osc. str., 2 - uniform (DOS)", "weight", 1)
         self.read_yn("Use restrictions?", "restr", False)
         if self['restr']:
             self.restrictions()
 
-        self.read_yn("Normalize the spectrum?", "normalize", not self['restr'])
+        if self["weight"] <= 2:
+            self.read_yn("Normalize the spectrum?", "normalize", not self['restr'])
+        else:
+            self["normalize"] = False
 
     def restrictions(self):
         self['rlist'] = []
@@ -51,7 +66,7 @@ class spec_options(input_options.write_options):
 
         print()
 
-    def make_spec(self, lvprt=2):
+    def make_spec(self, lvprt=2, ylabel=None):
         for filen in self['ana_files']:
             sfile = lib_file.summ_file(filen)
             header = sfile.ret_header()
@@ -91,9 +106,9 @@ class spec_options(input_options.write_options):
         self.spec.ascii_file()
 
         if do_plots:
-            self.spec.plot(xunit='eV', pname='spectrum_eV.png', weight=self['weight'], normalize=self['normalize'])
-            self.spec.plot(xunit='nm', pname='spectrum_nm.png', weight=self['weight'], normalize=self['normalize'])
-            self.spec.plot(xunit='rcm', pname='spectrum_rcm.png', weight=self['weight'], normalize=self['normalize'])
+            self.spec.plot(xunit='eV',  weight=self['weight'], normalize=self['normalize'], ylabel=ylabel)
+            self.spec.plot(xunit='nm',  weight=self['weight'], normalize=self['normalize'], ylabel=ylabel)
+            self.spec.plot(xunit='rcm', weight=self['weight'], normalize=self['normalize'], ylabel=ylabel)
 
 # Code adapted from SHARC
 class gauss:
@@ -106,18 +121,27 @@ class gauss:
 class lorentz:
     def __init__(self,fwhm):
         self.c=0.25*fwhm**2
+        self.N = 1/numpy.pi * 2*units.energy['eV']/fwhm # Normalisation factor
 
     def ev(self,A,x0,x):
+        """
+        Compute value of peak at x.
+
+        This is normalised in order to have
+            ev(A, x0, x0) = A
+        Not in order to have a normalised integral.
+        -> use self.N to normalise the integral
+        """
         return A/( (x-x0)**2/self.c+1)
 
 class spectrum:
-    def __init__(self,npts,emin,emax,fwhm,lineshape,ana_files):
+    def __init__(self,npts,emin,emax,fwhm,weight,lineshape,ana_files):
       self.npts=npts
       (self.emin, self.emax) = (emin, emax)
       if lineshape==1:
-          self.f=gauss(fwhm)
-      elif lineshape==2:
           self.f=lorentz(fwhm)
+      elif lineshape==2:
+          self.f=gauss(fwhm)
 
       self.en = [emin + float(i)/self.npts*(emax-emin) for i in range(self.npts+1)]       # the energy grid needs to be calculated only once
       lamev = units.energy['nm'] * units.energy['eV']
@@ -170,32 +194,37 @@ class spectrum:
         wf.write(wt.ret_table())
         wf.post(lvprt=1)
 
-    def plot(self, xunit=1, pname='spectrum.png', lvprt=1, weight=1, normalize=True):
-        pylab.figure(figsize=(8,6))
+    def plot(self, xunit=1, lvprt=1, weight=1, normalize=True, ylabel=None):
+        pylab.figure(figsize=(10,7))
+        matplotlib.rc('font', size=22)
 
         if xunit.lower() == 'ev':
             xlist = self.en
             pylab.xlabel('Energy (eV)')
             plot_sticks = self.sticks
             (xmin, xmax) = (self.emin, self.emax)
+            pname = 'ev.png'
         elif xunit.lower() == 'nm':
             xfac = units.energy['nm'] * units.energy['eV']
             xlist = self.lam
             #pylab.xlabel(r'$\lambda$') not working ...
             pylab.xlabel('Wavelength (nm)')
             plot_sticks = [(A, xfac/x0) for A,x0 in self.sticks]
-            (xmin, xmax) = (xfac / self.emin, xfac / self.emax)
+            (xmin, xmax) = (xfac / self.emax, xfac / self.emin) # reverse the plot
+            pname = 'nm.png'
         elif xunit.lower() == 'rcm':
             xfac = 1. / units.energy['eV'] * units.energy['rcm']
             xlist = [en * xfac for en in self.en]
             pylab.xlabel('Wavenumber (1/cm)')
             plot_sticks = [(A, x0 * xfac) for A,x0 in self.sticks]
             (xmin, xmax) = (self.emin * xfac, self.emax * xfac)
+            pname = 'rcm.png'
         else:
             raise error_handler.ElseError('xunit', xunit)
-        pylab.ylabel('Oscillator strength')
 
-        if weight == 1:
+        if weight == 1: # oscillator strength
+            if ylabel is None:
+                ylabel = "Oscillator strength"
             if normalize:
                 pylab.plot(xlist, self.spec / max(self.spec), 'k-')
                 ymax = 1.
@@ -204,18 +233,43 @@ class spectrum:
                 ymax = max(self.spec)
             for A,x0 in plot_sticks:
                 pylab.plot([x0, x0], [-1., A], 'rx-')
-        elif weight == 2:
+            pname = 'f_' + pname
+        elif weight == 2: # DOS
+            if ylabel is None:
+                ylabel = "DOS"
             if normalize:
                 pylab.plot(xlist, self.dos / max(self.dos), 'k-')
                 ymax = 1
             else:
                 pylab.plot(xlist, self.dos, 'k-')
                 ymax = max(self.dos)
+            pname = 'dos_' + pname
+        elif weight == 3: # Absorption cross section
+            if ylabel is None:
+                ylabel = "Absorption cross section (Ang^2)"
+            pre = self.f.N * 2 * numpy.pi**2 / units.constants['c0'] * units.length['A']**2
+            pylab.plot(xlist, pre * self.spec, 'k-')
+            ymax = max(pre * self.spec)
+            for A,x0 in plot_sticks:
+                pylab.plot([x0, x0], [-1., pre*A], 'rx-')
+            pname = 'cross_' + pname
+        elif weight == 4: # Extinction coefficient
+            if ylabel is None:
+                ylabel = r'$\epsilon/10^5$ (M$^{-1}$cm$^{-1}$)' #"Exctinction coeff. (M^-1cm^-1)"
+            pre  = self.f.N * 2 * numpy.pi**2 / units.constants['c0'] * units.length['cm']**2
+            pre *= units.constants['Nl'] / numpy.log(10) / 1000
+            pre *= 1e-5
+            pylab.plot(xlist, pre * self.spec, 'k-')
+            ymax = max(pre * self.spec)
+            for A,x0 in plot_sticks:
+                pylab.plot([x0, x0], [-1., pre*A], 'rx-')
+            pname = 'eps_' + pname
         else:
             raise error_handler.ElseError('weight', weight)
 
+        pylab.ylabel(ylabel)
         pylab.axis(xmin=xmin, xmax=xmax, ymin=0., ymax=ymax)
-        pylab.savefig(pname)
+        pylab.savefig(pname, dpi=300)
 
         if lvprt >= 1:
             print("Spectrum file %s created."%pname)
@@ -225,7 +279,7 @@ class Spectrum(Action):
     name = 'spectrum'
 
     _colt_description = 'Convoluted spectrum from analyze_tden output'
-    
+
     _user_input = """
     # Files produced by analyze_tden.py
     tden_summs = :: list(existing_file)

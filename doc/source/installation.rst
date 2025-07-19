@@ -39,26 +39,38 @@ Alternatively, a csh script setpaths.csh is provided.
 Python3
 ~~~~~~~
 
-TheoDORE 3 is compatible with python3 and no compatibility to python2 is maintained.
+TheoDORE 3 is compatible with python3 (ideally >3.7).
+No compatibility to python2 is maintained.
 
 The older release, TheoDORE 2.4, is still compatible with python v2.7.14.
 
 External packages
 ~~~~~~~~~~~~~~~~~
 
-The following external packages are used by TheoDORE and require a separate instatllation:
+The following external packages are used by TheoDORE and require a separate installation:
 
     - `python3-numpy <http://numpy.scipy.org/>`_ - for basic numerical manipulations
     - `python3-matplotlib <http://matplotlib.sourceforge.net/>`_ *(optional)* - for plotting of graphs
-    - `python-openbabel <http://openbabel.org/wiki/Python>`_ *(optional)* - for extended file-parsing capabilities of molecular structure files
+    - `python3-openbabel <http://openbabel.org/wiki/Python>`_ *(optional)* - for extended file-parsing capabilities of molecular structure files
+    - `ORBKIT <https://github.com/felixplasser/orbkit>`_ *(optional)* - For creating cube files of densities
 
-    The ``numpy`` and ``matplotlib`` packages are usually readily available with the standard installation tools, e.g. ``apt-get``, ``yum`` etc. Alternatively, they may be downloaded from the URLs specified. If no integrated installation is performed, then it is necessary to add these libraries to the `PYTHONPATH` (see above).
+    The first three are usually readily available with the standard installation tools, e.g. ``apt-get``, ``yum`` etc.
+    Alternatively, they may be downloaded from the URLs specified.
+    If no integrated installation is performed, then it is necessary to add these libraries to the `PYTHONPATH` (see above).
+    For ORBKIT, you can try
 
-The following external packages are provided along with the TheoDORE distribution in the ``external`` directory.
+::
 
-    - `cclib <http://cclib.github.io/>`_ - For file parsing work. Installation not required, activated via symbolic link from main TheoDORE directory
-    - `colt <https://github.com/mfsjmenger/colt>`_ - User interface. Installation not required, activated via symbolic link from main TheoDORE directory
-    - `ORBKIT <http://orbkit.github.io/>`_ *(optional)* - For creating cube files of densities. Installation required.
+    cd $THEODIR/external/orbkit
+    python3 setup.py build_ext --inplace
+
+Otherwise, please follow the `ORBKIT installation instructions <http://orbkit.github.io/install.html>`_.
+
+The following external packages are provided along with the TheoDORE distribution and do not require installation.
+
+    - `cclib <http://cclib.github.io/>`_ - for file parsing work
+    - `periodictable <https://github.com/pkienzle/periodictable>`_ - information about periodic table (needed by cclib)
+    - `colt <https://github.com/mfsjmenger/colt>`_ - user interface
 
 Using anaconda
 ~~~~~~~~~~~~~~
@@ -75,12 +87,15 @@ First download the `anaconda distribution <https://www.anaconda.com/distribution
 Testing
 ~~~~~~~
 
-The tests are invoked with pytest. In the ``EXAMPLES`` directory run (depending on the packages you want to test)
+The tests are invoked with ``pytest-3``. In the ``EXAMPLES`` directory run (depending on the packages you want to test)
 
 ::
 
-    pytest STANDARD
-    pytest CCLIB
-    pytest EXTRA
+    pytest-3 UTILS STANDARD CCLIB
+    pytest-3 EXTRA
 
-The tests are available at the `theodore-test <https://github.com/felixplasser/theodore-test>`_ repository.
+The first three tests should always work.
+For all tests in ``EXTRA`` to pass openbabel, ADF and ORBKIT need to be installed.
+
+The tests are distributed within the standard TheoDORE distribution.
+They are maintained via the `theodore-test <https://github.com/felixplasser/theodore-test>`_ repository.
