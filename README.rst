@@ -13,7 +13,7 @@ TheoDORE is distributed under the GNU General Public License 3.0 (see `LICENSE.t
 *J. Chem. Phys.*, (**2020**), 152, 084108.
 More literature, regarding the individual implemented methods, is given in the header file when calling TheoDORE.
 
-.. image:: ./doc/source/_static/theodore.png
+.. image:: ./docs/source/_static/theodore.png
 
 Documentation
 ~~~~~~~~~~~~~
