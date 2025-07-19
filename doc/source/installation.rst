@@ -1,7 +1,7 @@
 Installation
 ------------
 
-The installation on a Linux system is split into four simple parts:
+The installation on a Linux or Mac system is split into four simple parts:
 
 Download and extract the source file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -18,7 +18,7 @@ Setup the path specification
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 To use TheoDORE the `PATH` and `PYTHONPATH` variables have to be adjusted. For this purpose you can use the provided bash script `setpaths.bash`
 
-::
+.. code:: bash
 
     #!/bin/bash
     export THEODIR=/yourpath/TheoDORE/TheoDORE_v.s
@@ -54,7 +54,8 @@ The following external packages are used by TheoDORE and require a separate inst
     - `python3-openbabel <http://openbabel.org/wiki/Python>`_ *(optional)* - for extended file-parsing capabilities of molecular structure files
     - `ORBKIT <https://github.com/felixplasser/orbkit>`_ *(optional)* - For creating cube files of densities
 
-    The first three are usually readily available with the standard installation tools, e.g. ``apt-get``, ``yum`` etc.
+    The first three are usually readily available with the standard installation tools,
+    e.g. ``apt-get install``, ``yum install``, ``port install`` etc.
     Alternatively, they may be downloaded from the URLs specified.
     If no integrated installation is performed, then it is necessary to add these libraries to the `PYTHONPATH` (see above).
     For ORBKIT, you can try
@@ -97,5 +98,16 @@ The tests are invoked with ``pytest-3``. In the ``EXAMPLES`` directory run (depe
 The first three tests should always work.
 For all tests in ``EXTRA`` to pass openbabel, ADF and ORBKIT need to be installed.
 
-The tests are distributed within the standard TheoDORE distribution.
-They are maintained via the `theodore-test <https://github.com/felixplasser/theodore-test>`_ repository.
+For Q-Chem there is a special set of tests where Q-Chem is run before TheoDORE.
+To access these, run
+
+::
+
+    cd QCHEM
+    ./run_qchem.bash [cs]*
+    cd ..
+    pytest-3 QCHEM
+
+The tests are distributed within the standard TheoDORE releases.
+However, they are maintained via a different repository:
+`theodore-test <https://github.com/felixplasser/theodore-test>`_.
