@@ -2087,7 +2087,7 @@ class file_parser_orca(file_parser_base):
         # so if we only analyze one spin, then we have to skip the other
         rootinfo=[]
         istate = -1
-        iroot2 = -1
+        irootdict = {}
         TDA=True
         energies = [] # In the case of RPA, the energies are written with the first N entries
         state_list = []
@@ -2117,15 +2117,14 @@ class file_parser_orca(file_parser_base):
             if ivec>=1 and mult!=rootinfo[-2][0]:
               triplets=True
               #istate=-1
-              iroot2=-1
 
 
             if TDA or ivec%2==0:
                 istate+=1
-                iroot2+=1
+                irootdict.get[mult] = irootdict.get(mult, -1) + 1
                 state_list.append({})
                 state = state_list[-1]
-                state['state_ind'] = iroot2 + 1
+                state['state_ind'] = irootdict[mult] + 1
                 state['mult'] = mult
                 state['irrep'] = 'A'
                 state['name'] = '%i(%i)%s'%(state['state_ind'], state['mult'] ,state['irrep'])
