@@ -2121,7 +2121,7 @@ class file_parser_orca(file_parser_base):
 
             if TDA or ivec%2==0:
                 istate+=1
-                irootdict.get[mult] = irootdict.get(mult, -1) + 1
+                irootdict[mult] = irootdict.get(mult, -1) + 1
                 state_list.append({})
                 state = state_list[-1]
                 state['state_ind'] = irootdict[mult] + 1
