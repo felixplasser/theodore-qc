@@ -426,8 +426,12 @@ class tden_ana(dens_ana_base.dens_ana_base):
 
             if self.ioptions.get('cube_orbitals'):
                 lib_orbkit = orbkit_interface.lib_orbkit(self.ioptions['orbkit_extend'], self.ioptions['orbkit_step'])
-                cbfid = lib_orbkit.cube_file_creator(state, U, lam, Vt, self.mos,minlam=self.ioptions['min_occ'],numproc=self.ioptions.get('numproc'))
-                cube_ids.append(cbfid)
+                if (lam > self.ioptions['min_occ']).any():
+                    cbfid = lib_orbkit.cube_file_creator(state, U, lam, Vt, self.mos,minlam=self.ioptions['min_occ'],numproc=self.ioptions.get('numproc'))
+                    cube_ids.append(cbfid)
+                else:
+                    print(f"WARNING: no singular values above the default min_occ={self.ioptions['min_occ']} found. No NTO cube files will be created.")
+                    print(f"WARNING: Specify a smaller min_occ in your input file") 
 
         if self.ioptions.get('vmd_ntos'):
             print("VMD network for NTOs")
