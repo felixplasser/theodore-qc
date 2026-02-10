@@ -430,8 +430,7 @@ class tden_ana(dens_ana_base.dens_ana_base):
                     cbfid = lib_orbkit.cube_file_creator(state, U, lam, Vt, self.mos,minlam=self.ioptions['min_occ'],numproc=self.ioptions.get('numproc'))
                     cube_ids.append(cbfid)
                 else:
-                    print(f"WARNING: no singular values above the default min_occ={self.ioptions['min_occ']} found. No NTO cube files will be created.")
-                    print(f"WARNING: Specify a smaller min_occ in your input file") 
+                    print(f"WARNING: no singular values above the default min_occ={self.ioptions['min_occ']} found. No NTO cube files will be created for this state.")
 
         if self.ioptions.get('vmd_ntos'):
             print("VMD network for NTOs")
@@ -451,8 +450,12 @@ class tden_ana(dens_ana_base.dens_ana_base):
         cube_ids = []
         for state in self.state_list:
             (U, lam, Vt) = self.ret_NTO(state)
-            cbfid = lib_orbkit.compute_p_h_dens(state, U, lam, Vt, self.mos, minlam=self.ioptions['min_occ'],numproc=self.ioptions.get('numproc'))
-            cube_ids.append(cbfid)
+            if (lam > self.ioptions['min_occ']).any():
+                cbfid = lib_orbkit.compute_p_h_dens(state, U, lam, Vt, self.mos, minlam=self.ioptions['min_occ'],numproc=self.ioptions.get('numproc'))
+                cube_ids.append(cbfid)
+            else:
+                print(f"WARNING: no singular values above the default min_occ={self.ioptions['min_occ']} found. No p_h_dens will be created for this state.")
+
         if self.ioptions.get('vmd_ph_dens'):
             print("VMD network for particle/hole densities")
             lib_orbkit.vmd_network_creator(filename='p_h_dens',cube_ids=numpy.hstack(cube_ids),isovalue=self.ioptions.get('vmd_ph_dens_iv'))
@@ -527,26 +530,6 @@ class tden_ana(dens_ana_base.dens_ana_base):
                            cfmt=self.ioptions['mcfmt'], occmin=minlam, alphabeta=self.ioptions['alphabeta'])
 
 #---
-    def compute_p_h_dens(self):
-        """
-        Computation of electron/hole densities.
-        """
-        # This could be joined with the primary NTO computation but it would
-        #   not save much time anyway, since the cube file generation is the
-        #   dominant step.
-        if len(self.state_list) == 0: return
-        if not 'tden' in self.state_list[0]: return
-
-        lib_orbkit = orbkit_interface.lib_orbkit(self.ioptions['orbkit_extend'], self.ioptions['orbkit_step'])
-        cube_ids = []
-        for state in self.state_list:
-            (U, lam, Vt) = self.ret_NTO(state)
-            cbfid = lib_orbkit.compute_p_h_dens(state, U, lam, Vt, self.mos, minlam=self.ioptions['min_occ'],numproc=self.ioptions.get('numproc'))
-            cube_ids.append(cbfid)
-        if self.ioptions.get('vmd_ph_dens'):
-            print("VMD network for particle/hole densities")
-            lib_orbkit.vmd_network_creator(filename='p_h_dens',cube_ids=numpy.hstack(cube_ids),isovalue=self.ioptions.get('vmd_ph_dens_iv'))
-
     def compute_all_DNTO(self):
         """
         Computation of domain NTOs and conditional electron/hole densities.
