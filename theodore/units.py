@@ -29,13 +29,13 @@ time={'au':1.0,
 }
 
 mass={'au':1.0,
-      'kg':9.10938188E-31,
-      'amu':1822.889 # atomic mass unit in a.u. = 1/constants['Nl']/mass['kg']/1000
+      'kg':9.10938188E-31, # electron mass in kg
+      'amu':0.000548579893 # atomic mass unit in a.u. = constants['Nl']*mass['kg']*1000
 }
 dipole={'D':2.54174619,
         'Cm':8.47835267E-30
 }
-constants={'Nl':6.02214179E23,
+constants={'Nl':6.02214179E23, # Avogadro's number
            'c0':137.035999 # speed of light in a.u., 1/alpha
 }
 
