@@ -1,23 +1,17 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="./">
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Analysis of chemical shielding &mdash; TheoDORE 3.2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
-
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=828ea960"></script>
-        <script src="_static/doctools.js?v=9bcbadda"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -30,16 +24,12 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="contents.html">
-            
-              <img src="_static/theodore.png" class="logo" alt="Logo"/>
+            <a href="contents.html">
+            <img src="_static/theodore.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -80,8 +70,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="contents.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Analysis of chemical shielding</li>
+      <li><a href="contents.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Analysis of chemical shielding</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/chemical_shielding.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -92,10 +82,10 @@
            <div itemprop="articleBody">
              
   <section id="analysis-of-chemical-shielding">
-<h1>Analysis of chemical shielding<a class="headerlink" href="#analysis-of-chemical-shielding" title="Link to this heading"></a></h1>
+<h1>Analysis of chemical shielding<a class="headerlink" href="#analysis-of-chemical-shielding" title="Permalink to this headline"></a></h1>
 <p>TheoDORE provides functionalities to analyse chemical shielding tensors and, in particular their use to analyze aromaticity.</p>
 <section id="visualisation-of-chemical-shielding-tensors-vist">
-<h2>Visualisation of chemical shielding tensors (VIST)<a class="headerlink" href="#visualisation-of-chemical-shielding-tensors-vist" title="Link to this heading"></a></h2>
+<h2>Visualisation of chemical shielding tensors (VIST)<a class="headerlink" href="#visualisation-of-chemical-shielding-tensors-vist" title="Permalink to this headline"></a></h2>
 <p>The VIST method [<a class="reference external" href="https://doi.org/10.1002/ejoc.202100352">Eur. J. Org. Chem., (2021)</a>] allows to visualise chemical shielding tensors in the context of the molecular structure showing local variations of the shielding along with its anisotropy. The method proceeds in the following order</p>
 <ul class="simple">
 <li><p>Computation of shielding tensors</p></li>
@@ -105,7 +95,7 @@
 </ul>
 <p>The tools have only been recently developed and still might require a bit of manual tuning of script files by the user. Any feedback on the user-friendliness of the tools is appreciated.</p>
 <section id="command-line-options">
-<h3>Command line options<a class="headerlink" href="#command-line-options" title="Link to this heading"></a></h3>
+<h3>Command line options<a class="headerlink" href="#command-line-options" title="Permalink to this headline"></a></h3>
 <p>Run <code class="docutils literal notranslate"><span class="pre">theodore</span> <span class="pre">plot_vist</span> <span class="pre">-h</span></code> to see all command line options</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>plot_VIST.py [options] &lt;logfile1&gt; &lt;logfile2&gt;
 Command line options:
@@ -121,7 +111,7 @@ Command line options:
 </div>
 </section>
 <section id="simple-example">
-<h3>Simple example<a class="headerlink" href="#simple-example" title="Link to this heading"></a></h3>
+<h3>Simple example<a class="headerlink" href="#simple-example" title="Permalink to this headline"></a></h3>
 <p>Create a Gaussian input file for an NMR calculation with the positions of the shielding tensors indicated as dummy (Bq) atoms and run Gaussian.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># PBE1PBE/Def2SVP scf=tight nmr</span>
 
@@ -157,7 +147,7 @@ Command line options:
 <p>Use, the <cite>-p</cite> option to plot them all individually or use the <cite>-v</cite> option to select individual tensors.</p>
 </section>
 <section id="processing-several-output-files">
-<h3>Processing several output files<a class="headerlink" href="#processing-several-output-files" title="Link to this heading"></a></h3>
+<h3>Processing several output files<a class="headerlink" href="#processing-several-output-files" title="Permalink to this headline"></a></h3>
 <p>In many cases, it is desirable to process several output files at the same time to produce a consistent representation of several output files, for example to represent the shielding in different electronic states. The following figures represent the shielding in the dication, neutral state, and dianion of a macrocycle.</p>
 <img alt="_images/2P.png" src="_images/2P.png" />
 <img alt="_images/neut.png" src="_images/neut.png" />

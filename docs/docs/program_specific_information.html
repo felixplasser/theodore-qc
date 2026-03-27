@@ -1,23 +1,17 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="./">
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Program specific information &mdash; TheoDORE 3.2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
-
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=828ea960"></script>
-        <script src="_static/doctools.js?v=9bcbadda"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -30,16 +24,12 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="contents.html">
-            
-              <img src="_static/theodore.png" class="logo" alt="Logo"/>
+            <a href="contents.html">
+            <img src="_static/theodore.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -111,8 +101,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="contents.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Program specific information</li>
+      <li><a href="contents.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Program specific information</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/program_specific_information.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -123,17 +113,17 @@
            <div itemprop="articleBody">
              
   <section id="program-specific-information">
-<span id="prog-spec-info"></span><h1>Program specific information<a class="headerlink" href="#program-specific-information" title="Link to this heading"></a></h1>
+<span id="prog-spec-info"></span><h1>Program specific information<a class="headerlink" href="#program-specific-information" title="Permalink to this headline"></a></h1>
 <p>Use the <code class="docutils literal notranslate"><span class="pre">rtype</span></code> keyword in <code class="docutils literal notranslate"><span class="pre">dens_ana.in</span></code> to specify the respective method.</p>
 <p>In general, TheoDORE needs two types of information: density matrices and MO coefficients. This page contains specific information about how to obtain this information from the different quantum chemistry programs.</p>
 <section id="q-chem">
-<h2>Q-Chem<a class="headerlink" href="#q-chem" title="Link to this heading"></a></h2>
+<h2>Q-Chem<a class="headerlink" href="#q-chem" title="Permalink to this headline"></a></h2>
 <section id="adc">
-<h3>ADC<a class="headerlink" href="#adc" title="Link to this heading"></a></h3>
+<h3>ADC<a class="headerlink" href="#adc" title="Permalink to this headline"></a></h3>
 <p>The ADCMAN module of Q-Chem is already interfaced to the wavefunction analysis library libwfa.
 Therefore, most analysis steps can be performed within Q-Chem.
 The main purpose of TheoDORE is to enable <a class="reference internal" href="plotting.html#plotting"><span class="std std-ref">plotting</span></a> of <em>electron-hole</em> correlation plots and other fragment-based analysis methods.</p>
-<p>To run the libwfa analysis set in the input file:</p>
+<p>To run the libwfa analysis set in the Q-Chem input file:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">state_analysis</span>    <span class="n">true</span>
 <span class="n">adc_print</span>    <span class="mi">3</span>
 </pre></div>
@@ -145,14 +135,19 @@ The main purpose of TheoDORE is to enable <a class="reference internal" href="pl
 </div>
 </section>
 <section id="tddft">
-<h3>TDDFT<a class="headerlink" href="#tddft" title="Link to this heading"></a></h3>
+<h3>TDDFT<a class="headerlink" href="#tddft" title="Permalink to this headline"></a></h3>
 <p>The CIS/TDDFT module of Q-Chem is directly interfaced to the wavefunction analysis library libwfa
 (see <a class="reference external" href="http://dx.doi.org/10.1063/1.4935178">JCP 143, 171101 (2015)</a> for more details). Most analysis steps are performed within Q-Chem and the main purpose  of TheoDORE is to enable <a class="reference internal" href="plotting.html#plotting"><span class="std std-ref">plotting</span></a> of <em>electron-hole</em> correlation plots.</p>
-<p>To run the libwfa analysis set in the input file (and copy back <code class="docutils literal notranslate"><span class="pre">ctnum_mulliken.om</span></code>):</p>
+<p>To run the libwfa analysis set in the Q-Chem input file (and copy back <code class="docutils literal notranslate"><span class="pre">ctnum_mulliken.om</span></code>):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">state_analysis</span>    <span class="n">true</span>
 </pre></div>
 </div>
-<p>To obtain a summary of the Q-Chem/libwfa job, run</p>
+<p>Then run <code class="docutils literal notranslate"><span class="pre">theodore</span> <span class="pre">theoinp</span></code> specifying the <code class="docutils literal notranslate"><span class="pre">qcttdft</span></code> option, and stating that you used <code class="docutils literal notranslate"><span class="pre">state_analysis=True</span></code>.
+The job is analysed as usual with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">theodore</span> <span class="n">analyze_tden</span>
+</pre></div>
+</div>
+<p>Alternatively, to obtain a summary of the Q-Chem/libwfa job, run</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">theodore</span> <span class="n">parse_libwfa</span> <span class="n">qchem</span><span class="o">.</span><span class="n">out</span> <span class="p">[</span><span class="n">qctddft</span> <span class="o">/</span> <span class="n">qctda</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -171,24 +166,25 @@ In this case, the X vector is parsed and interpreted as the 1TDM while the Y vec
 <p>in <code class="docutils literal notranslate"><span class="pre">dens_ana.in</span></code>.</p>
 </section>
 <section id="fchk-files">
-<h3>fchk files<a class="headerlink" href="#fchk-files" title="Link to this heading"></a></h3>
+<h3>fchk files<a class="headerlink" href="#fchk-files" title="Permalink to this headline"></a></h3>
 <p>It is also possible to parse formatted checkpoint (fchk) files generated using the</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">state_analysis</span>    <span class="n">true</span>
 <span class="n">gui</span>               <span class="mi">2</span>
 </pre></div>
 </div>
-<p>options. In this case, TheoDORE can read the transition density matrices and do the full analysis.</p>
+<p>options. In this case, TheoDORE can read the transition density matrices and do the full analysis internally.
+The fchk option is only recommended for testing purposes and there is no need to use it for most production calculations.</p>
 </section>
 <section id="libwfa">
-<h3>libwfa<a class="headerlink" href="#libwfa" title="Link to this heading"></a></h3>
+<h3>libwfa<a class="headerlink" href="#libwfa" title="Permalink to this headline"></a></h3>
 <p>It is also possible to parse generic <code class="docutils literal notranslate"><span class="pre">libwfa</span></code> output by using the libwfa keyword.
 This can be used for EOM-CC calculations.</p>
 </section>
 </section>
 <section id="columbus">
-<h2>Columbus<a class="headerlink" href="#columbus" title="Link to this heading"></a></h2>
+<h2>Columbus<a class="headerlink" href="#columbus" title="Permalink to this headline"></a></h2>
 <section id="mcscf">
-<h3>MCSCF<a class="headerlink" href="#mcscf" title="Link to this heading"></a></h3>
+<h3>MCSCF<a class="headerlink" href="#mcscf" title="Permalink to this headline"></a></h3>
 <p>MCSCF transition density matrices are written by the program <code class="docutils literal notranslate"><span class="pre">mcscf.x</span></code>.
 To compute these, it is either possible to compute non-adiabatic coupling vectors or to use the shortcut of creating an <code class="docutils literal notranslate"><span class="pre">mcdenin</span></code> file.
 This file has the same structure as the <code class="docutils literal notranslate"><span class="pre">transmomin</span></code> file, e.g.</p>
@@ -201,12 +197,12 @@ This file has the same structure as the <code class="docutils literal notranslat
 </pre></div>
 </div>
 <p>will compute all transition moments between the 1st and the 2nd through 6th states in DRT 1.</p>
-<p>After the computation call <code class="docutils literal notranslate"><span class="pre">write_den.bas`h</span></code> to convert the binary files into a form that can be read by TheoDORE. For this purpose the $COLUMBUS variable has to be set.</p>
+<p>After the computation call <code class="docutils literal notranslate"><span class="pre">write_den.bash</span></code> to convert the binary files into a form that can be read by TheoDORE. For this purpose the $COLUMBUS variable has to be set.</p>
 <p>State density matrix analysis is possible when the computation of dipole moments was requested.
 In this case it is possible to use the above procedure or to simply analyze the NO coefficient files in the <code class="docutils literal notranslate"><span class="pre">MOLDEN</span></code> directory.</p>
 </section>
 <section id="mr-ci">
-<h3>MR-CI<a class="headerlink" href="#mr-ci" title="Link to this heading"></a></h3>
+<h3>MR-CI<a class="headerlink" href="#mr-ci" title="Permalink to this headline"></a></h3>
 <p>The MR-CI transition density analysis works in the case that transition moments were requested in the job control stage.
 After this it is assumed that <code class="docutils literal notranslate"><span class="pre">LISTINGS/trncils*</span></code> files with the transition density matrices are available.
 Frozen core orbitals have to be specified explicitly in the input file to get correct results.
@@ -220,7 +216,7 @@ Alternatively, an attachment/detachment analysis can be done with the <a class="
 </section>
 </section>
 <section id="molcas">
-<h2>Molcas<a class="headerlink" href="#molcas" title="Link to this heading"></a></h2>
+<h2>Molcas<a class="headerlink" href="#molcas" title="Permalink to this headline"></a></h2>
 <p>The prefered way to use Molcas is through the <a class="reference external" href="https://github.com/libwfa/libwfa">libwfa library</a>,
 which is available through <a class="reference external" href="https://gitlab.com/Molcas/OpenMolcas">OpenMolcas</a> as described in <a class="reference external" href="http://dx.doi.org/10.1021/acs.jctc.7b00718">JCTC, 13, 5343 (2017)</a>.
 In this way it is possible to analyze RASSCF and MS-CASPT2 computations.</p>
@@ -240,10 +236,10 @@ Choice (y/n): [y]
 <p>and proceed as usual.</p>
 </section>
 <section id="molcas-old">
-<h2>Molcas (old)<a class="headerlink" href="#molcas-old" title="Link to this heading"></a></h2>
+<h2>Molcas (old)<a class="headerlink" href="#molcas-old" title="Permalink to this headline"></a></h2>
 <p>It is also possible to parse Molcas RASSI output but this only works for singlet states.</p>
 <section id="rasscf">
-<h3>RASSCF<a class="headerlink" href="#rasscf" title="Link to this heading"></a></h3>
+<h3>RASSCF<a class="headerlink" href="#rasscf" title="Permalink to this headline"></a></h3>
 <p>In the case of Molcas, the output of the RASSI program is parsed. This gives access to RASSCF density and transition density matrices, so far without explicit point group symmetry. <strong>Note</strong>: The output is only parsed correctly if all states in the RASSI computation derive from the same RASSCF computation and if the specified Molden file derives from this calculation.</p>
 <p>First run a RASSCF + RASSI job with the (undocumented) <cite>TRD1</cite> keyword:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="n">RASSI</span>
@@ -257,7 +253,7 @@ Choice (y/n): [y]
 <p>Alternatively, a state density matrix analysis can be performed by using the natural orbitals created by Molcas. However, for an analysis of unpaired electrons the NOs have to be changed from spin-orbitals to spatial orbitals.</p>
 </section>
 <section id="ms-caspt2">
-<h3>MS-CASPT2<a class="headerlink" href="#ms-caspt2" title="Link to this heading"></a></h3>
+<h3>MS-CASPT2<a class="headerlink" href="#ms-caspt2" title="Permalink to this headline"></a></h3>
 <p>For an MS-CASPT2 calculation, the following input sections can be used</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&amp;CASPT2
 multistate = 4 1 2 3 4
@@ -278,9 +274,9 @@ TRD1
 </section>
 </section>
 <section id="tubomole">
-<h2>Tubomole<a class="headerlink" href="#tubomole" title="Link to this heading"></a></h2>
+<h2>Tubomole<a class="headerlink" href="#tubomole" title="Permalink to this headline"></a></h2>
 <section id="cc2-adc-2">
-<h3>CC2 / ADC(2)<a class="headerlink" href="#cc2-adc-2" title="Link to this heading"></a></h3>
+<h3>CC2 / ADC(2)<a class="headerlink" href="#cc2-adc-2" title="Permalink to this headline"></a></h3>
 <p>If you have the binary <code class="docutils literal notranslate"><span class="pre">CCRE0*</span></code> files, written by Turbomole, available, then choose the option</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>read_binary=True
 </pre></div>
@@ -294,7 +290,7 @@ TRD1
 </div>
 </section>
 <section id="id1">
-<h3>TDDFT<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<h3>TDDFT<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h3>
 <p>In the TDDFT case, the <code class="docutils literal notranslate"><span class="pre">sing_a</span></code> or <code class="docutils literal notranslate"><span class="pre">trip_a</span></code> files are parsed and interpreted as 1TDMs.
 For CIS/TDA, the <code class="docutils literal notranslate"><span class="pre">ciss</span></code> or <code class="docutils literal notranslate"><span class="pre">cist</span></code> files are read.
 This analysis only works if no explicit symmetry is chosen in the initial job setup.</p>
@@ -302,7 +298,7 @@ This analysis only works if no explicit symmetry is chosen in the initial job se
 </section>
 </section>
 <section id="terachem-tddft">
-<h2>Terachem - TDDFT<a class="headerlink" href="#terachem-tddft" title="Link to this heading"></a></h2>
+<h2>Terachem - TDDFT<a class="headerlink" href="#terachem-tddft" title="Permalink to this headline"></a></h2>
 <p>For a trans. dens. mat. analysis, the CI vectors are read from standard output and the MO coefficients from a Molden file produced by Terachem. To print more CI vector elements, use</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cisprintthresh</span> <span class="mf">0.01</span>
 </pre></div>
@@ -313,7 +309,7 @@ This analysis only works if no explicit symmetry is chosen in the initial job se
 </div>
 </section>
 <section id="natural-orbital-files">
-<h2>Natural orbital files<a class="headerlink" href="#natural-orbital-files" title="Link to this heading"></a></h2>
+<h2>Natural orbital files<a class="headerlink" href="#natural-orbital-files" title="Permalink to this headline"></a></h2>
 <p>Natural orbital (NO) files can be parsed directly using <code class="docutils literal notranslate"><span class="pre">analyze_nos</span></code>.
 Alternatively, you can use <code class="docutils literal notranslate"><span class="pre">theoinp</span></code> follows by <code class="docutils literal notranslate"><span class="pre">analyze_sden</span></code>.
 This analysis works on NO files, produced for example by Q-Chem/libwfa, Columbus, and OpenMolcas.
@@ -324,9 +320,9 @@ Some care needs to be taken in order for TheoDORE to understand the data given c
 This file can be specified using the <code class="docutils literal notranslate"><span class="pre">-r</span></code> option.</p>
 </section>
 <section id="orca">
-<h2>ORCA<a class="headerlink" href="#orca" title="Link to this heading"></a></h2>
+<h2>ORCA<a class="headerlink" href="#orca" title="Permalink to this headline"></a></h2>
 <section id="orca-tddft">
-<h3>ORCA - TDDFT<a class="headerlink" href="#orca-tddft" title="Link to this heading"></a></h3>
+<h3>ORCA - TDDFT<a class="headerlink" href="#orca-tddft" title="Permalink to this headline"></a></h3>
 <p>Starting in TheoDORE 2.0.1, the preferred version of parsing ORCA TDDFT jobs uses a Molden format file and the  <code class="docutils literal notranslate"><span class="pre">orca.cis</span></code> file.</p>
 <ol class="arabic simple">
 <li><p>Run an ORCA job and copy back the <code class="docutils literal notranslate"><span class="pre">orca.gbw</span></code> and <code class="docutils literal notranslate"><span class="pre">orca.cis</span></code> files. <em>Note</em>: the filename <code class="docutils literal notranslate"><span class="pre">orca.cis</span></code> is hardcoded in TheoDORE.</p></li>
@@ -350,7 +346,7 @@ mo_file=&#39;orca.molden.input&#39;
 </div>
 </section>
 <section id="orca-using-cclib">
-<h3>ORCA using cclib<a class="headerlink" href="#orca-using-cclib" title="Link to this heading"></a></h3>
+<h3>ORCA using cclib<a class="headerlink" href="#orca-using-cclib" title="Permalink to this headline"></a></h3>
 <p>Alternatively, ORCA can be parsed entirely with the <a class="reference external" href="http://cclib.github.io/">cclib library</a>.
 If you want to do that, set the following output options:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">output</span>
@@ -368,7 +364,7 @@ If you want to do that, set the following output options:</p>
 </section>
 </section>
 <section id="gaussian-tddft">
-<h2>Gaussian - TDDFT<a class="headerlink" href="#gaussian-tddft" title="Link to this heading"></a></h2>
+<h2>Gaussian - TDDFT<a class="headerlink" href="#gaussian-tddft" title="Permalink to this headline"></a></h2>
 <p>Gaussian is parsed with the <a class="reference external" href="http://cclib.github.io/">cclib library</a>. Set the <code class="docutils literal notranslate"><span class="pre">pop=full</span> <span class="pre">iop(9/40=3)`</span></code> option to increase the number of CI vector elements printed.
 Use <code class="docutils literal notranslate"><span class="pre">GFINPUT</span></code> to print the basis functions and <code class="docutils literal notranslate"><span class="pre">iop(3/33=4)`</span></code> to get the overlap matrix.</p>
 <p>Example input:</p>
@@ -382,13 +378,13 @@ For this purpose, open the Gaussian-log file in Molden. Choose “Write - Molden
 </div>
 </section>
 <section id="firefly-tddft">
-<h2>Firefly - TDDFT<a class="headerlink" href="#firefly-tddft" title="Link to this heading"></a></h2>
+<h2>Firefly - TDDFT<a class="headerlink" href="#firefly-tddft" title="Permalink to this headline"></a></h2>
 <p>Firefly has been succesfully interfaced with TheoDORE,
 see <a class="reference external" href="https://github.com/felixplasser/theodore-test/tree/master/CCLIB/SnH4-ecp.firefly">EXAMPLES/CCLIB/SnH4-ecp.firefly</a>.
 Firefly output is parsed with the <a class="reference external" href="http://cclib.github.io/">cclib library</a>.</p>
 </section>
 <section id="adf-tddft">
-<h2>ADF - TDDFT<a class="headerlink" href="#adf-tddft" title="Link to this heading"></a></h2>
+<h2>ADF - TDDFT<a class="headerlink" href="#adf-tddft" title="Permalink to this headline"></a></h2>
 <p>In the new ADF interface all information is read from the binary <code class="docutils literal notranslate"><span class="pre">TAPE21</span></code> file. Use the <code class="docutils literal notranslate"><span class="pre">rfile</span></code> option to point to this file.</p>
 <p>To run the analysis, you need to activate the ADF scripts and license, e.g.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>. ~/adfrc.sh
@@ -401,7 +397,7 @@ export PYTHONPATH=$PYTHONPATH:/usr/license/adf/adf2016.101/scripting
 <p>The atom-numbering for <cite>at_lists</cite> pertains to the original ordering in the input file rather than the internal ordering used by ADF.</p>
 </section>
 <section id="dftb-tddftb">
-<h2>DFTB+ - TDDFTB<a class="headerlink" href="#dftb-tddftb" title="Link to this heading"></a></h2>
+<h2>DFTB+ - TDDFTB<a class="headerlink" href="#dftb-tddftb" title="Permalink to this headline"></a></h2>
 <p>An interface to DFTB+ was written by Ljiljana Stojanovic. This interface currently reads the following files:</p>
 <ul class="simple">
 <li><p>EXC.DAT (main excited state information) - specified as ‘rfile’</p></li>
@@ -414,7 +410,7 @@ export PYTHONPATH=$PYTHONPATH:/usr/license/adf/adf2016.101/scripting
 </ul>
 </section>
 <section id="dft-mrci">
-<h2>DFT/MRCI<a class="headerlink" href="#dft-mrci" title="Link to this heading"></a></h2>
+<h2>DFT/MRCI<a class="headerlink" href="#dft-mrci" title="Permalink to this headline"></a></h2>
 <p>TheoDORE also features an interface to the <a class="reference external" href="https://www.theochem.hhu.de/en/software/dftci">DFT/MRCI program</a>.
 Singlet and triplet states can be analyzed.
 The interface works for <code class="code docutils literal notranslate"><span class="pre">analyze_tden</span></code> as well as <code class="code docutils literal notranslate"><span class="pre">analyze_sden</span></code>.
@@ -431,7 +427,7 @@ You can use, for example, the following workflow</p>
 <p>This will produce the <code class="code docutils literal notranslate"><span class="pre">mrci2.out</span></code> and <code class="code docutils literal notranslate"><span class="pre">mrci.cidens</span></code> files to be read by TheoDORE.</p>
 </section>
 <section id="onetep-tddft">
-<h2>ONETEP - TDDFT<a class="headerlink" href="#onetep-tddft" title="Link to this heading"></a></h2>
+<h2>ONETEP - TDDFT<a class="headerlink" href="#onetep-tddft" title="Permalink to this headline"></a></h2>
 <p>An interface for TDDFT computations in ONETEP is available.
 Currently (October 2021) this interface requires a developoment version of ONETEP.
 The interface can perform an analysis of CT numbers
@@ -450,7 +446,7 @@ The following files are required:</p>
 the input file <code class="code docutils literal notranslate"><span class="pre">dens_ana.in</span></code> and can be specified via <code class="code docutils literal notranslate"><span class="pre">theoinp</span></code>.</p>
 </section>
 <section id="other-programs-cclib">
-<h2>Other programs (cclib)<a class="headerlink" href="#other-programs-cclib" title="Link to this heading"></a></h2>
+<h2>Other programs (cclib)<a class="headerlink" href="#other-programs-cclib" title="Permalink to this headline"></a></h2>
 <p>In principle all third party programs, which are parsed by the <a class="reference external" href="http://cclib.github.io/">cclib library</a> can be used.
 These are: ADF, Firefly, GAMESS, Gaussian, Jaguar, Molpro, ORCA.
 But not all of these have been tested by the developers and it may be necessary to set some additional program specific options.

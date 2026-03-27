@@ -1,23 +1,17 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="./">
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Installation &mdash; TheoDORE 3.2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
-
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=828ea960"></script>
-        <script src="_static/doctools.js?v=9bcbadda"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -30,16 +24,12 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="contents.html">
-            
-              <img src="_static/theodore.png" class="logo" alt="Logo"/>
+            <a href="contents.html">
+            <img src="_static/theodore.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -80,8 +70,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="contents.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Installation</li>
+      <li><a href="contents.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Installation</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/installation.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -92,10 +82,10 @@
            <div itemprop="articleBody">
              
   <section id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h1>
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h1>
 <p>The installation on a Linux or Mac system is split into four simple parts:</p>
 <section id="download-and-extract-the-source-file">
-<h2>Download and extract the source file<a class="headerlink" href="#download-and-extract-the-source-file" title="Link to this heading"></a></h2>
+<h2>Download and extract the source file<a class="headerlink" href="#download-and-extract-the-source-file" title="Permalink to this headline"></a></h2>
 <p>Download the newest release TheoDORE_v.s.tgz from the <a class="reference external" href="https://github.com/felixplasser/theodore-qc/releases">github releases page</a>.</p>
 <p>Extract the source file</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tar</span> <span class="o">-</span><span class="n">xf</span> <span class="n">TheoDORE_v</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">tgz</span>
@@ -103,12 +93,12 @@
 </div>
 </section>
 <section id="setup-the-path-specification">
-<h2>Setup the path specification<a class="headerlink" href="#setup-the-path-specification" title="Link to this heading"></a></h2>
+<h2>Setup the path specification<a class="headerlink" href="#setup-the-path-specification" title="Permalink to this headline"></a></h2>
 <p>To use TheoDORE the <cite>PATH</cite> and <cite>PYTHONPATH</cite> variables have to be adjusted. For this purpose you can use the provided bash script <cite>setpaths.bash</cite></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">THEODIR</span><span class="o">=</span>/yourpath/TheoDORE/TheoDORE_v.s
-<span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$THEODIR</span>/bin:<span class="nv">$PATH</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="nv">$THEODIR</span>:<span class="nv">$PYTHONPATH</span>
+<span class="nb">export</span> <span class="nv">THEODIR</span><span class="o">=</span>/yourpath/TheoDORE/TheoDORE_v.s
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$THEODIR</span>/bin:<span class="nv">$PATH</span>
+<span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span><span class="nv">$THEODIR</span>:<span class="nv">$PYTHONPATH</span>
 </pre></div>
 </div>
 <p><strong>Note:</strong> <cite>PYTHONPATH</cite> no longer points to the <cite>lib</cite> directory starting in TheoDORE_2.0.</p>
@@ -119,13 +109,13 @@
 <p>Alternatively, a csh script setpaths.csh is provided.</p>
 </section>
 <section id="python3">
-<h2>Python3<a class="headerlink" href="#python3" title="Link to this heading"></a></h2>
+<h2>Python3<a class="headerlink" href="#python3" title="Permalink to this headline"></a></h2>
 <p>TheoDORE 3 is compatible with python3 (ideally &gt;3.7).
 No compatibility to python2 is maintained.</p>
 <p>The older release, TheoDORE 2.4, is still compatible with python v2.7.14.</p>
 </section>
 <section id="external-packages">
-<h2>External packages<a class="headerlink" href="#external-packages" title="Link to this heading"></a></h2>
+<h2>External packages<a class="headerlink" href="#external-packages" title="Permalink to this headline"></a></h2>
 <p>The following external packages are used by TheoDORE and require a separate installation:</p>
 <blockquote>
 <div><ul class="simple">
@@ -155,7 +145,7 @@ python3 setup.py build_ext --inplace
 </div></blockquote>
 </section>
 <section id="using-anaconda">
-<h2>Using anaconda<a class="headerlink" href="#using-anaconda" title="Link to this heading"></a></h2>
+<h2>Using anaconda<a class="headerlink" href="#using-anaconda" title="Permalink to this headline"></a></h2>
 <p>A straightforward and universal way of installing most of the required packages is through the use of Anaconda.</p>
 <p>First download the <a class="reference external" href="https://www.anaconda.com/distribution/">anaconda distribution</a> and do the installation. Then run the commands:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="n">numpy</span> <span class="n">matplotlib</span>
@@ -164,7 +154,7 @@ python3 setup.py build_ext --inplace
 </div>
 </section>
 <section id="testing">
-<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h2>
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline"></a></h2>
 <p>The tests are invoked with <code class="docutils literal notranslate"><span class="pre">pytest-3</span></code>. In the <code class="docutils literal notranslate"><span class="pre">EXAMPLES</span></code> directory run (depending on the packages you want to test)</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span><span class="o">-</span><span class="mi">3</span> <span class="n">UTILS</span> <span class="n">STANDARD</span> <span class="n">CCLIB</span>
 <span class="n">pytest</span><span class="o">-</span><span class="mi">3</span> <span class="n">EXTRA</span>
