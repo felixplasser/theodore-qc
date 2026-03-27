@@ -23,7 +23,7 @@ The ADCMAN module of Q-Chem is already interfaced to the wavefunction analysis l
 Therefore, most analysis steps can be performed within Q-Chem.
 The main purpose of TheoDORE is to enable :ref:`plotting <plotting>` of *electron-hole* correlation plots and other fragment-based analysis methods.
 
-To run the libwfa analysis set in the input file:
+To run the libwfa analysis set in the Q-Chem input file:
 
 ::
 
@@ -44,13 +44,21 @@ _____
 The CIS/TDDFT module of Q-Chem is directly interfaced to the wavefunction analysis library libwfa
 (see `JCP 143, 171101 (2015) <http://dx.doi.org/10.1063/1.4935178>`_ for more details). Most analysis steps are performed within Q-Chem and the main purpose  of TheoDORE is to enable :ref:`plotting <plotting>` of *electron-hole* correlation plots.
 
-To run the libwfa analysis set in the input file (and copy back ``ctnum_mulliken.om``):
+To run the libwfa analysis set in the Q-Chem input file (and copy back ``ctnum_mulliken.om``):
 
 ::
 
     state_analysis    true
 
-To obtain a summary of the Q-Chem/libwfa job, run
+Then run ``theodore theoinp`` specifying the ``qcttdft`` option, and stating that you used ``state_analysis=True``.
+The job is analysed as usual with
+
+::
+
+    theodore analyze_tden
+
+
+Alternatively, to obtain a summary of the Q-Chem/libwfa job, run
 
 ::
 
@@ -84,7 +92,8 @@ It is also possible to parse formatted checkpoint (fchk) files generated using t
     state_analysis    true
     gui               2
 
-options. In this case, TheoDORE can read the transition density matrices and do the full analysis.
+options. In this case, TheoDORE can read the transition density matrices and do the full analysis internally.
+The fchk option is only recommended for testing purposes and there is no need to use it for most production calculations.
 
 libwfa
 ______
@@ -111,7 +120,7 @@ This file has the same structure as the ``transmomin`` file, e.g.
 
 will compute all transition moments between the 1st and the 2nd through 6th states in DRT 1.
 
-After the computation call ``write_den.bas`h`` to convert the binary files into a form that can be read by TheoDORE. For this purpose the $COLUMBUS variable has to be set.
+After the computation call ``write_den.bash`` to convert the binary files into a form that can be read by TheoDORE. For this purpose the $COLUMBUS variable has to be set.
 
 State density matrix analysis is possible when the computation of dipole moments was requested.
 In this case it is possible to use the above procedure or to simply analyze the NO coefficient files in the ``MOLDEN`` directory.
