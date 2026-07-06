@@ -4,7 +4,6 @@ Create a convoluted spectrum from the oscillator strengths.
 """
 
 from __future__ import print_function, division
-import sys
 import math, numpy
 from .actions import Action
 from colt.lazyimport import LazyImportCreator, LazyImporter
@@ -36,7 +35,8 @@ class spec_options(input_options.write_options):
             (1, "Spectrum weighted by oscillator strength"),
             (2, "Density of states (uniform weighting)"),
             (3, "Absorption cross section"),
-            (4, "Molar extinction coefficient")
+            (4, "Molar extinction coefficient"),
+            (5, "Emission power")
         ], 1)
 
         if self["weight"] <= 2:
@@ -113,19 +113,28 @@ class spec_options(input_options.write_options):
 # Code adapted from SHARC
 class gauss:
     def __init__(self,fwhm):
+        """
+        Initialise spectrum; fwhm in eV.
+        """
         self.c=-4.*math.log(2.)/fwhm**2
 
     def ev(self,A,x0,x):
+        """
+        Evaluate spectrum at point x.
+        """
         return A*math.exp( self.c*(x-x0)**2)
 
 class lorentz:
     def __init__(self,fwhm):
+        """
+        Initialise spectrum; fwhm in eV.
+        """
         self.c=0.25*fwhm**2
         self.N = 1/numpy.pi * 2*units.energy['eV']/fwhm # Normalisation factor
 
     def ev(self,A,x0,x):
         """
-        Compute value of peak at x.
+        Evaluate spectrum at point x.
 
         This is normalised in order to have
             ev(A, x0, x0) = A
@@ -142,6 +151,7 @@ class spectrum:
           self.f=lorentz(fwhm)
       elif lineshape==2:
           self.f=gauss(fwhm)
+      self.weight = weight
 
       self.en = [emin + float(i)/self.npts*(emax-emin) for i in range(self.npts+1)]       # the energy grid needs to be calculated only once
       lamev = units.energy['nm'] * units.energy['eV']
@@ -156,10 +166,20 @@ class spectrum:
             self.dos[i] +=self.f.ev(.1,x0,self.en[i])
 
         if A!=0.:
-            self.sticks += [(A,x0)]
-
+            pre = 1
+            if self.weight == 3: # Absorption cross section
+                pre = self.f.N * 2 * numpy.pi**2 / units.constants['c0'] * units.length['A']**2
+            elif self.weight == 4: # Exctinction coefficient
+                pre  = self.f.N * 2 * numpy.pi**2 / units.constants['c0'] * units.length['cm']**2
+                pre *= units.constants['Nl'] / numpy.log(10) / 1000
+                pre *= 1e-5
+            elif self.weight == 5: # Emission power
+                pre  = self.f.N * 2 / units.constants['c0']**3
+                pre *= units.energy['J'] / units.time['s']
+                pre *= (x0 / units.energy['eV'])**3
+            self.sticks += [(pre*A,x0)]
             for i in range(self.npts+1):
-                self.spec[i]+=self.f.ev(A,x0,self.en[i])
+                self.spec[i]+=self.f.ev(pre*A,x0,self.en[i])
 
     def info(self):
         print("\nSpectrum costructed from %i states with non-vanishing osc. strength"%len(self.sticks))
@@ -222,19 +242,7 @@ class spectrum:
         else:
             raise error_handler.ElseError('xunit', xunit)
 
-        if weight == 1: # oscillator strength
-            if ylabel is None:
-                ylabel = "Oscillator strength"
-            if normalize:
-                pylab.plot(xlist, self.spec / max(self.spec), 'k-')
-                ymax = 1.
-            else:
-                pylab.plot(xlist, self.spec, 'k-')
-                ymax = max(self.spec)
-            for A,x0 in plot_sticks:
-                pylab.plot([x0, x0], [-1., A], 'rx-')
-            pname = 'f_' + pname
-        elif weight == 2: # DOS
+        if weight == 2: # DOS
             if ylabel is None:
                 ylabel = "DOS"
             if normalize:
@@ -244,28 +252,30 @@ class spectrum:
                 pylab.plot(xlist, self.dos, 'k-')
                 ymax = max(self.dos)
             pname = 'dos_' + pname
-        elif weight == 3: # Absorption cross section
-            if ylabel is None:
-                ylabel = "Absorption cross section (Ang^2)"
-            pre = self.f.N * 2 * numpy.pi**2 / units.constants['c0'] * units.length['A']**2
-            pylab.plot(xlist, pre * self.spec, 'k-')
-            ymax = max(pre * self.spec)
-            for A,x0 in plot_sticks:
-                pylab.plot([x0, x0], [-1., pre*A], 'rx-')
-            pname = 'cross_' + pname
-        elif weight == 4: # Extinction coefficient
-            if ylabel is None:
-                ylabel = r'$\epsilon/10^5$ (M$^{-1}$cm$^{-1}$)' #"Exctinction coeff. (M^-1cm^-1)"
-            pre  = self.f.N * 2 * numpy.pi**2 / units.constants['c0'] * units.length['cm']**2
-            pre *= units.constants['Nl'] / numpy.log(10) / 1000
-            pre *= 1e-5
-            pylab.plot(xlist, pre * self.spec, 'k-')
-            ymax = max(pre * self.spec)
-            for A,x0 in plot_sticks:
-                pylab.plot([x0, x0], [-1., pre*A], 'rx-')
-            pname = 'eps_' + pname
         else:
-            raise error_handler.ElseError('weight', weight)
+            if weight == 1: # oscillator strength
+                if ylabel is None:
+                    ylabel = "Oscillator strength"
+                pname = 'f_' + pname
+            elif weight == 3: # Absorption cross section
+                ylabel = "Absorption cross section (Ang^2)"
+                pname = 'cross_' + pname
+            elif weight == 4: # Extinction coefficient
+                ylabel = r'$\epsilon/10^5$ (M$^{-1}$cm$^{-1}$)'
+                pname = 'eps_' + pname
+            elif weight == 5: # Emission power
+                ylabel = "Emission power (W)"
+                pname = 'power_' + pname
+            else:
+                raise error_handler.ElseError('weight', weight)
+            if normalize:
+                pylab.plot(xlist, self.spec / max(self.spec), 'k-')
+                ymax = 1.
+            else:
+                pylab.plot(xlist, self.spec, 'k-')
+                ymax = max(self.spec)
+            for A,x0 in plot_sticks:
+                pylab.plot([x0, x0], [-1., A], 'rx-')
 
         pylab.ylabel(ylabel)
         pylab.axis(xmin=xmin, xmax=xmax, ymin=0., ymax=ymax)
