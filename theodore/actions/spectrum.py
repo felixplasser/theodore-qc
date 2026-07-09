@@ -114,13 +114,12 @@ class gauss:
         """
         self.sig = fwhm / (8 * math.log(2))
         self.N = units.energy['eV'] / self.sig * (2*numpy.pi)**(-.5)
-        print('N', self.N)
 
     def ev(self,A,x0,x):
         """
         Evaluate spectrum at point x.
         """
-        return self.N * A * math.exp( -(x-x0)**2 / (2 * self.sig))
+        return self.N * A * math.exp( -0.5*((x-x0)/self.sig)**2)
 
 class lorentz:
     def __init__(self,fwhm):
@@ -129,7 +128,6 @@ class lorentz:
         """
         self.c = 0.25*fwhm**2
         self.N = 2 / numpy.pi * units.energy['eV'] / fwhm # Normalisation factor
-        print('N', self.N)
 
     def ev(self,A,x0,x):
         """
