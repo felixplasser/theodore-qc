@@ -39,10 +39,7 @@ class spec_options(input_options.write_options):
             (5, "Emission power")
         ], 1)
 
-        if self["weight"] <= 2:
-            self.read_int("Lineshape: 1 - Lorentzian, 2 - Gaussian", "lineshape", 1)
-        else:
-            self["lineshape"] = 1
+        self.read_int("Lineshape: 1 - Lorentzian, 2 - Gaussian", "lineshape", 1)
         self.spec = spectrum(**self.opt_dict)
 
         self.read_yn("Use restrictions?", "restr", False)
@@ -50,7 +47,7 @@ class spec_options(input_options.write_options):
             self.restrictions()
 
         if self["weight"] <= 2:
-            self.read_yn("Normalize the spectrum?", "normalize", not self['restr'])
+            self.read_yn("Normalize the spectrum?", "normalize", False)
         else:
             self["normalize"] = False
 
@@ -110,38 +107,35 @@ class spec_options(input_options.write_options):
             self.spec.plot(xunit='nm',  weight=self['weight'], normalize=self['normalize'], ylabel=ylabel)
             self.spec.plot(xunit='rcm', weight=self['weight'], normalize=self['normalize'], ylabel=ylabel)
 
-# Code adapted from SHARC
 class gauss:
     def __init__(self,fwhm):
         """
         Initialise spectrum; fwhm in eV.
         """
-        self.c=-4.*math.log(2.)/fwhm**2
+        self.sig = fwhm / (8 * math.log(2))
+        self.N = units.energy['eV'] / self.sig * (2*numpy.pi)**(-.5)
+        print('N', self.N)
 
     def ev(self,A,x0,x):
         """
         Evaluate spectrum at point x.
         """
-        return A*math.exp( self.c*(x-x0)**2)
+        return self.N * A * math.exp( -(x-x0)**2 / (2 * self.sig))
 
 class lorentz:
     def __init__(self,fwhm):
         """
         Initialise spectrum; fwhm in eV.
         """
-        self.c=0.25*fwhm**2
-        self.N = 1/numpy.pi * 2*units.energy['eV']/fwhm # Normalisation factor
+        self.c = 0.25*fwhm**2
+        self.N = 2 / numpy.pi * units.energy['eV'] / fwhm # Normalisation factor
+        print('N', self.N)
 
     def ev(self,A,x0,x):
         """
         Evaluate spectrum at point x.
-
-        This is normalised in order to have
-            ev(A, x0, x0) = A
-        Not in order to have a normalised integral.
-        -> use self.N to normalise the integral
         """
-        return A/( (x-x0)**2/self.c+1)
+        return self.N * A/( (x-x0)**2/self.c + 1)
 
 class spectrum:
     def __init__(self,npts,emin,emax,fwhm,weight,lineshape,ana_files):
@@ -167,17 +161,20 @@ class spectrum:
 
         if A!=0.:
             pre = 1
-            if self.weight == 3: # Absorption cross section
-                pre = self.f.N * 2 * numpy.pi**2 / units.constants['c0'] * units.length['A']**2
+            if self.weight == 1: # Oscillator strength
+                pre = 1 #/ self.f.N # Take out normalisation factor to make sticks as big as the oscillator strength
+            elif self.weight == 3: # Absorption cross section
+                pre = 2 * numpy.pi**2 / units.constants['c0'] * units.length['A']**2
             elif self.weight == 4: # Exctinction coefficient
-                pre  = self.f.N * 2 * numpy.pi**2 / units.constants['c0'] * units.length['cm']**2
+                pre  = 2 * numpy.pi**2 / units.constants['c0'] * units.length['cm']**2
                 pre *= units.constants['Nl'] / numpy.log(10) / 1000
                 pre *= 1e-5
             elif self.weight == 5: # Emission power
-                pre  = self.f.N * 2 / units.constants['c0']**3
+                pre  = 2 / units.constants['c0']**3
                 pre *= units.energy['J'] / units.time['s']
                 pre *= (x0 / units.energy['eV'])**3
-            self.sticks += [(pre*A,x0)]
+                pre *= 1e9
+            self.sticks += [(self.f.N * pre * A,x0)]
             for i in range(self.npts+1):
                 self.spec[i]+=self.f.ev(pre*A,x0,self.en[i])
 
@@ -264,7 +261,7 @@ class spectrum:
                 ylabel = r'$\epsilon/10^5$ (M$^{-1}$cm$^{-1}$)'
                 pname = 'eps_' + pname
             elif weight == 5: # Emission power
-                ylabel = "Emission power (W)"
+                ylabel = "Emission power (nW)"
                 pname = 'power_' + pname
             else:
                 raise error_handler.ElseError('weight', weight)
