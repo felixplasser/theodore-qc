@@ -31,7 +31,7 @@ class PlotVist(Action):
     lab_min = 1000. :: float, alias=l
     # Log files to be parsed
     logfiles = :: list(str)
-    # Quantum chemistry code (g09, qchem, turbomole)
+    # Quantum chemistry code (g09, qchem, turbomole, dalton)
     qccode = g09 :: str, alias=q
     """
 
@@ -63,6 +63,8 @@ class PlotVist(Action):
             nv = lib_NICS.NICS_parser_QC()
         elif qccode == 'turbomole':
             nv = lib_NICS.NICS_parser_TM()
+        elif qccode == 'dalton':
+            nv = lib_NICS.NICS_parser_dalton()
         else:
             raise error_handler.ElseError(qccode, 'qccode')
 
