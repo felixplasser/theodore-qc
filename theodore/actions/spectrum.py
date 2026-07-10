@@ -36,7 +36,7 @@ class spec_options(input_options.write_options):
             (2, "Density of states (uniform weighting)"),
             (3, "Absorption cross section"),
             (4, "Molar extinction coefficient"),
-            (5, "Emission power")
+            (5, "Radiative emission rate")
         ], 1)
 
         self.read_int("Lineshape: 1 - Lorentzian, 2 - Gaussian", "lineshape", 1)
@@ -112,7 +112,7 @@ class gauss:
         """
         Initialise spectrum; fwhm in eV.
         """
-        self.sig = fwhm / (8 * math.log(2))
+        self.sig = fwhm * (8 * math.log(2))**(-0.5)
         self.N = units.energy['eV'] / self.sig * (2*numpy.pi)**(-.5)
 
     def ev(self,A,x0,x):
@@ -160,24 +160,27 @@ class spectrum:
         if A!=0.:
             pre = 1
             if self.weight == 1: # Oscillator strength
-                pre = 1 #/ self.f.N # Take out normalisation factor to make sticks as big as the oscillator strength
+                pre = 1 / self.f.N # Take out normalisation factor to make sticks as big as the oscillator strength
             elif self.weight == 3: # Absorption cross section
                 pre = 2 * numpy.pi**2 / units.constants['c0'] * units.length['A']**2
+                # Einstein B. Does not look correct
+                #B   = 2 * numpy.pi**2 / units.constants['c0'] / (x0 / units.energy['eV']) * units.time['s'] / units.mass['kg']
+                #print('B (Einstein) at %.6f: %.6f s/kg'%(x0, B*A))
             elif self.weight == 4: # Exctinction coefficient
                 pre  = 2 * numpy.pi**2 / units.constants['c0'] * units.length['cm']**2
                 pre *= units.constants['Nl'] / numpy.log(10) / 1000
                 pre *= 1e-5
-            elif self.weight == 5: # Emission power
+            elif self.weight == 5: # Differential emission rate
                 pre  = 2 / units.constants['c0']**3
-                pre *= units.energy['J'] / units.time['s']
-                pre *= (x0 / units.energy['eV'])**3
-                pre *= 1e9
+                pre *= (x0 / units.energy['eV'])**2
+                AA   = pre / units.time['s']
+                print('A (Einstein) at %.4f: %12.2f s-1'%(x0, AA*A))
             self.sticks += [(self.f.N * pre * A,x0)]
             for i in range(self.npts+1):
                 self.spec[i]+=self.f.ev(pre*A,x0,self.en[i])
 
     def info(self):
-        print("\nSpectrum costructed from %i states with non-vanishing osc. strength"%len(self.sticks))
+        print("\nSpectrum constructed from %i states with non-vanishing osc. strength"%len(self.sticks))
 
     def normalize(self):
         """
@@ -258,9 +261,9 @@ class spectrum:
             elif weight == 4: # Extinction coefficient
                 ylabel = r'$\epsilon/10^5$ (M$^{-1}$cm$^{-1}$)'
                 pname = 'eps_' + pname
-            elif weight == 5: # Emission power
-                ylabel = "Emission power (nW)"
-                pname = 'power_' + pname
+            elif weight == 5: # Emission rate
+                ylabel = "Emission rate (dim. less)"
+                pname = 'emission_' + pname
             else:
                 raise error_handler.ElseError('weight', weight)
             if normalize:
