@@ -2141,3 +2141,116 @@ class file_parser_orca(file_parser_base):
                 state['tden'][nfrzc:nocc, nocc:nmo] *= .5
 
         return state_list
+
+class file_parser_orca_CAS(file_parser_base):
+
+    def read(self, mos):
+        return self.tden_orca(mos, False)
+
+    def tden_orca(self, mos, rect_dens, filen1='orca.densities', filen2='orca.densitiesinfo'):
+        '''
+        as far as i found out by looking into multiple files produced by orca6.1 each section has length of 661 bytes starting
+        with a nul terminated string representing that densities name. The header seed to variied in length. It might be also due 
+        the presents of a nul terminated string starting at byte 4 in the data.
+        The first 4 bytes seem to be a uint32/int32 stating the number of available densities.
+
+        '''
+        state_list = []
+
+        outFile = open(self.ioptions['rfile'], 'r')
+        startRead = False
+        for l in outFile:
+            if startRead:
+                if l =="\n":
+                    startRead = False
+                    continue
+
+                words = l.split()
+                state = {'mult': int(words[2].split("-")[1][0]), 'irrep': words[2].split("-")[1][1:], 'state_ind': int(words[2].split("-")[0]), 'exc_en': float(words[3])}
+                state['name'] = '%i(%i)%s'%(state['state_ind'], state['mult'] ,state['irrep'])
+                state_list.append(state)
+                
+            elif "                     ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS    \n" == l:
+                [next(outFile) for i in range(4)]
+                state_list = []
+                startRead=True
+            
+
+        dens_info = open(filen2, 'rb')
+        data = dens_info.read()
+        dens_info.close()
+        file_size = len(data)
+        n_sections = struct.unpack('<i', data[:4])[0]
+        header_len = file_size - 661 * n_sections
+        header = data[:header_len]
+
+        parse_instructions = []
+        for i, d in enumerate([data[i : i + 661] for i in range(header_len, len(data), 661)]):
+            name_end = d.find(b'\x00')
+            
+            if name_end != -1:
+                section_name = d[0:name_end].decode('utf-8', errors='ignore')
+            else:
+                section_name = "UNKNOWN_SECTION"
+
+            descript_pos = d.find(b'\xff\xff\xff\xff\xff\xff\xff\xff') + 8
+
+            ambiguous_bytes = d[descript_pos + 8 : descript_pos + 13]     
+            if ambiguous_bytes != b'\x08\x00\x00\x00\x00':
+                print(f'Notice: Ambiguous bytes changed at section {i}: {ambiguous_bytes.hex()}')
+            
+            # in all files i looked the 661 byte long regions starts a 8 byte long FF terminater starting at byte 520, than based on the nuls in the hex
+            # there seed to be multiple int32s and int64s in that region afterwords. The only important here are the first two int32 after the terminator
+            # as these provide the size of the corresponding matrix in .densities. i am not sure which is row and which is call as in all my files they
+            # where square matrixes, i still parse out all the numbers i think i found but i will only use the two mentioned
+            int32_block = d[descript_pos : descript_pos + 8] + d[descript_pos + 13 : descript_pos + 37]
+            int64_block = d[descript_pos + 37:]
+            assert len(int32_block) == 32, len(int32_block)
+            assert len(int64_block) == 96, len(int64_block)
+            
+            unpacked_uint32s = struct.unpack('<IIIIIIII', int32_block)
+            unpacked_uint64s = struct.unpack('<QQQQQQQQQQQQ', int64_block)
+            
+            # selecting only the transition densities starting from the ground root 
+            if ("Tdens-CAS-" in section_name) and (section_name.split('-')[4]=="0") and (section_name.split('-')[5]!="0"):
+                parse_instructions.append((unpacked_uint32s[0], unpacked_uint32s[1]))
+                print(section_name)
+            else:
+                parse_instructions.append(unpacked_uint32s[0] * unpacked_uint32s[1])
+
+
+        # starting here i will actually parse the .densities file. When using a double for each value expected by the matrix sizes gained from the the
+        # densitiesinfo, the length of the densities file fits exactly.
+        bytes_per_value = 8
+        densfile = open(filen1, 'rb')
+
+        print(f"found {len(state_list)} states")
+        i = 0
+        for item in parse_instructions:
+            if isinstance(item, int):
+                densfile.seek(bytes_per_value * item, 1)
+            elif isinstance(item, tuple):
+                rows, cols = item # might be flipped. In my data only square matrixes where present."
+                bytes_to_read = bytes_per_value * rows * cols 
+                raw = densfile.read(bytes_to_read)
+
+                if len(raw) != bytes_to_read:
+                    raise EOFError(f"Unexpected end of file while reading matrix of size {rows}x{cols}. Expected {bytes_to_read} bytes, but got {len(raw)} bytes.")
+
+                D_AO = numpy.frombuffer(raw, dtype=numpy.float64).reshape((rows,cols))
+                temp   = mos.CdotD(D_AO.T, trnsp=False, inv=True)   # C⁻¹ @ D_AOᵀ      → (nmo × nbas)
+                D_MO   = mos.MdotC(temp, trnsp=True, inv=True)      # C⁻¹ @ D_AOᵀ @ C⁻ᵀ  → (nmo × nmo)
+                state_list[i]['tden'] = D_MO
+                i += 1
+
+        # just doing some sanity check that everything was as expected and we now reached the end of the densities file.
+        extra_byte = densfile.read(1)
+        if extra_byte != b'':
+            current_pos = densfile.tell() - 1  
+            densfile.seek(0, 2)               
+            total_size = densfile.tell()
+            remaining_bytes = total_size - current_pos
+            
+            raise ValueError(f"Layout fully processed, but the end of the file was not reached! There are still {remaining_bytes} unparsed bytes left in '{filen1}'.")
+            
+        return state_list

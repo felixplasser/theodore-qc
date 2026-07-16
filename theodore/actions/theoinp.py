@@ -60,6 +60,7 @@ class write_options_theo(input_options.write_options):
             ('terachem', 'Terachem (TDDFT)'),
             ('cclib', 'Use external cclib library: Gaussian, GAMESS, ...'),
             ('orca', 'ORCA TDDFT (using a Molden file and cclib)'),
+            ('orcaCAS', 'ORCA CAS (using .molden, .densities and .densitiesinfo)'),
             ('adf', 'ADF (TDDFT)'),
             ('tddftb', 'DFTB+ - TDDFTB'),
             ('dftmrci', 'DFT/MRCI'),
@@ -129,7 +130,7 @@ class write_options_theo(input_options.write_options):
             self['mo_file'] = 'orbs.mld'
             self['coor_file'] = ''
             self['coor_format'] = ''
-        elif self['rtype'] == 'orca':
+        elif self['rtype'] == 'orca' or self['rtype'] == 'orcaCAS':
             self['rfile'] = 'orca.out'
             self['mo_file'] = 'orca.molden.input'
             self['coor_file'] = ''
@@ -191,6 +192,8 @@ class write_options_theo(input_options.write_options):
                 print("     from the control file before running tm2molden.")
         elif self['rtype'] == 'orca':
             self.read_yn('Read the binary orca.cis file?', 'read_binary', True)
+        elif self['rtype'] == 'orcaCAS':
+            self.read_yn('Read the binary orca.densities and orca.densitiesinfo files?', 'read_binary', True)
 
         # switch for DFTMRCI singlet-singlet / singlet-triplet densities
         if self['rtype'] == 'dftmrci':
