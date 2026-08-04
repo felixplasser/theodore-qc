@@ -140,7 +140,7 @@ To specify, for example, four frozen orbitals of *a* symmetry and three of *b* u
 In addition, the MO-coefficients of the preceeding MCSCF calculation have to be made available, typically in ``MOLDEN/molden_mo_mc.sp``.
 
 For a state density analysis at the MR-CI level, the NO files should be read in rather than using the ``colmrci`` functionality.
-Alternatively, an attachment/detachment analysis can be done with the `densav.x <https://www.univie.ac.at/columbus/docs_COL70/utilities.html#densav>`_ functionality of COLUMBUS.
+Alternatively, an attachment/detachment analysis can be done with the `densav.x <https://columbus-program-system.gitlab.io/columbus/utilities.html#densav>`_ functionality of COLUMBUS.
 
 Molcas
 ~~~~~~
