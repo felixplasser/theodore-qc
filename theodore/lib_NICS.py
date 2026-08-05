@@ -419,22 +419,6 @@ class NICS_parser_dalton(NICS_parser):
         with open(logfile, 'r') as f:
             bq_coords = []
             for line in f:
-                #if 'Cartesian Coordinates (xyz format; angstrom)' in line:
-                    #next(f)
-                    #next(f)
-                    #next(f)
-                    #next(f)
-                    #while True:
-                        #ln = next(f)
-                        #if not ln.strip():
-                            #break
-                        #words = ln.split()
-                        #if words[0] == 'Bq':
-                            #bq_coords.append((float(words[1]),
-                                              #float(words[2]),
-                                              #float(words[3])))
-                    #break
-
                 if 'Cartesian Coordinates (xyz format; angstrom)' in line:
                     in_coords = False
 
@@ -448,10 +432,8 @@ class NICS_parser_dalton(NICS_parser):
 
                         if not words and not in_coords:
                             continue
-
                         if not words and in_coords:
                             break
-
                         if len(words) < 4:
                             continue
                         try:
