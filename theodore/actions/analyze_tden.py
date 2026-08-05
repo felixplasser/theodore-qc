@@ -129,7 +129,14 @@ class AnalyzeTdenUnr(Action):
         if 'at_lists' in ioptions:
             tdena_alpha.compute_all_OmFrag()
             if ioptions['print_OmFrag']: tdena_alpha.fprint_OmFrag()
-        if ioptions['comp_ntos']:  tdena_alpha.compute_all_NTO()
+        if ioptions['comp_ntos']:
+            tdena_alpha.compute_all_NTO()
+        if ioptions['comp_dntos']:
+            tdena_alpha.compute_all_DNTO()
+        if ioptions['comp_p_h_dens']:
+            tdena_alpha.compute_p_h_dens()
+        if ioptions['comp_rho0n']:
+            tdena_alpha.compute_rho_0_n()
 
         print("\n *** ALPHA-spin results ***")
         tdena_alpha.print_summary()
@@ -151,7 +158,14 @@ class AnalyzeTdenUnr(Action):
         if 'at_lists' in ioptions:
             tdena_beta.compute_all_OmFrag()
             if ioptions['print_OmFrag']: tdena_beta.fprint_OmFrag()
-        if ioptions['comp_ntos']:  tdena_beta.compute_all_NTO()
+        if ioptions['comp_ntos']:
+            tdena_beta.compute_all_NTO()
+        if ioptions['comp_dntos']:
+            tdena_beta.compute_all_DNTO()
+        if ioptions['comp_p_h_dens']:
+            tdena_beta.compute_p_h_dens()
+        if ioptions['comp_rho0n']:
+            tdena_beta.compute_rho_0_n()
 
         print("\n *** BETA-spin results ***")
         tdena_beta.print_summary()
